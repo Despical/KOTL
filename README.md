@@ -1,4 +1,4 @@
-# King of the Ladder [![Discord](https://img.shields.io/discord/345628548716822530.svg?color=7289DA&label=discord)](https://discord.gg/Vhyy4HA)
+# King of the Ladder [![Discord](https://img.shields.io/discord/719922452259668000.svg?color=7289DA&label=discord)](https://discord.gg/Vhyy4HA)
 King of the Ladder is a Minecraft minigame designed for small and big servers. This minigame is unique and very configurable, 100% free and open source! 
 
 Don't let other players to climb top of the ladders, punch them to out of the game to win! Who will be the winner? Have fun using it!
