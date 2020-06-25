@@ -1,0 +1,53 @@
+#    You can translate KOTL messages here.
+#             Color codes (&) supported.
+#
+#              Use \n to make new line
+#        Some messages like kit and kit items
+#        descriptions dont't support new lines
+# they are wrapped every 40 characters automatically
+#
+#     Some messages support their own placeholders
+#  
+
+# King of the Ladder Commands
+Commands:
+  Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Removed-Game-Instance: "&aSuccessfully removed game instance."
+  No-Arena-Like-That: "&cThere is no arena with that ID!"
+  Only-By-Player: "&cYou can execute this command only as player!"
+  No-Permission: "&cYou don't have enough permission to use this command!"
+  Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
+  Player-Not-Found: "&cPlayer not found with that name!"
+  Statistics:
+    Type-Name: "&cPlease type statistic name to view!"
+    Invalid-Name: "&cName of statistic is invalid! Type: score or tours_played"
+    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
+    Format: "&e#%position% %name% - %value% &7%statistic%"
+  Stats-Command:
+    Header: "&l[-----YOUR STATS-----]"  
+    Header-Other: "&l[-----STATS FOR %player%-----]"
+    Footer: "&l[--------------------]"
+    Score: "&aScore: &e"
+    Tours-Played: "&aTours played: &e"
+  List-Command:
+    No-Arenas-Created: "&cThere aren't any arena to show!"
+    Format: "&aExisting arenas: &7%list%"
+
+In-Game:
+  # Used in most game messages.
+  Plugin-Prefix: "&8[&6KOTL&8] "
+  Join: "&7%player% &bjoined the game!"
+  Leave: "&7%player% &bleft the game!"
+  Chat-Format: "&7%player%: &f%message%"
+  Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands."
+  New-King: "&7%king% &bis the new king!"
+  Last-King-Hologram: "&bLast king: &e%king%"
+
+# Has usage only when bossbar is enabled in config.yml
+Bossbar:
+  Game-Info: "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
+  
+Validator:
+  Invalid-Arena-Configuration: "[KOTL] Arena %arena% has invalid configuration! Missing node: %error%"
+  Instance-Started: "[KOTL] Arena %arena% instance successfully started!"
+  No-Instances-Created: "[KOTL] There are no arena instances created in configuration!"

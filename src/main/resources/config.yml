@@ -1,0 +1,50 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# +---------------------------------------------------------+ #
+# |     King of the Ladder by Despical (Version 1.0.0)      | #
+# +---------------------------------------------------------+ #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Enable bossbar support?
+Bossbar-Enabled: true
+
+# Enable this option when you're using MySQL, otherwise it won't work.
+# Be careful when changing this because there is NO migrator between
+# flat file and MySQL for player stats.
+DatabaseActivated: false
+
+# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# This saves inventory of players and restores it after player leaves arena.
+# Saved elements: max health, health, food, experience, full inventory, armor contents, and more...
+InventoryManager: true
+
+# Should in-game chat format be enabled?
+# You can edit the formatting in messages.yml
+ChatFormat-Enabled: true
+
+# Should players get no fall damage?
+Disable-Fall-Damage: true
+
+# Commands which can be used in game, remove all of them to disable
+Whitelisted-Commands:
+  - me
+  - help
+
+# Should we block every not King of the Ladder associated commands in game?
+Block-Commands-In-Game: true
+
+# When player enters the game area should we notify players?
+# You can edit the formatting in messages.yml
+Join-Notify: true
+
+# When player leaves the game area should we notify players?
+# You can edit the formatting in messages.yml
+Leave-Notify: true
+
+Update-Notifier:
+  # Should we check for updates on plugin start/after admin join?
+  Enabled: true
+  # Should we inform you when beta version is out?
+  # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
+  Notify-Beta-Versions: true
+  
+# No way! You've reached the end! But... where's the dragon!?
