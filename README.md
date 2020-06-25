@@ -18,9 +18,8 @@ Have fun using it! Leave a good rating if you really like it.
 | [bStats](https://github.com/Bastian/bStats-Metrics)         | [Bastian](https://github.com/Bastian)           | [LGPLv3](https://github.com/Bastian/bStats-Metrics/blob/master/LICENSE)    |
 | [Commons Box](https://github.com/Despical/Commons-Box)        | [Despical](https://github.com/Despical)             | [GPLv3](https://github.com/Despical/Commons-Box/blob/master/LICENSE.md)      |
 
-Want to access Developer API? Here are the details:
 
-## Maven repo
+## Want to use King of the Ladder API?
 Add repository
 ```xml
     <repositories>
