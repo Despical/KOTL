@@ -1,10 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -59,6 +57,7 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.destroystokyo.paper</groupId>
@@ -96,7 +95,6 @@
 			<version>13.0</version>
 			<scope>compile</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.bstats.bStats-Metrics</groupId>
 			<artifactId>bstats-bukkit</artifactId>
@@ -106,7 +104,7 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons-Box</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.9</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

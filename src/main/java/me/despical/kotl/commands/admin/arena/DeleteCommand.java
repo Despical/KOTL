@@ -53,7 +53,7 @@ public class DeleteCommand extends SubCommand {
 		if (!confirmations.contains(sender)) {
 			confirmations.add(sender);
 			Bukkit.getScheduler().runTaskLater(this.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorRawMessage("&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"));
+			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Are-You-Sure"));
 			return;
 		}
 		confirmations.remove(sender);

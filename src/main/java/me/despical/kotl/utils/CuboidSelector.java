@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.despical.commonsbox.item.ItemBuilder;
+import me.despical.commonsbox.item.ItemUtils;
 import me.despical.kotl.Main;
 
 /**
@@ -47,7 +48,7 @@ public class CuboidSelector implements Listener {
 
 	@EventHandler
 	public void onWandUse(PlayerInteractEvent e) {
-		if (!isNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lArea selector"))) {
+		if (!ItemUtils.isItemStackNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lArea selector"))) {
 			return;
 		}
 		e.setCancelled(true);
@@ -73,13 +74,6 @@ public class CuboidSelector implements Listener {
 		}
 	}
 
-	private boolean isNamed(ItemStack stack) {
-		if (stack == null) {
-			return false;
-		}
-		return stack.hasItemMeta() && stack.getItemMeta().hasDisplayName();
-	}
-	
 	public class Selection {
 
 		private Location firstPos;

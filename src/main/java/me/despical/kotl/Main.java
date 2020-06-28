@@ -91,11 +91,12 @@ public class Main extends JavaPlugin {
 	
 	private boolean validateIfPluginShouldStart() {
 		version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-		if (!(version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_9_R2")
+		if (!(version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3")
+			|| version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_9_R2") 
 			|| version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
-			|| version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
-			|| version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1")
-			|| version.equalsIgnoreCase("v1_15_R1") /**|| version.equalsIgnoreCase("v1_16_R1") Still waiting for dependency update*/)) {
+			|| version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1") 
+			|| version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") 
+			|| version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1"))) {
 			MessageUtils.thisVersionIsNotSupported();
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by King of the Ladder!");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -204,22 +205,22 @@ public class Main extends JavaPlugin {
 		if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 			return;
 		}
-		UpdateChecker.init(this, 1).requestUpdateCheck().whenComplete((result, exception) -> {
+		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
 			}
 			if (result.getNewestVersion().contains("b")) {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-					Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[KOTL] " + ChatColor.AQUA + "Your software is ready for update! However it's a BETA VERSION. Proceed with caution.");
-					Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[KOTL] " + ChatColor.AQUA + "Current version %old%, latest version %new%".replace("%old%", getDescription().getVersion())
-						.replace("%new%", result.getNewestVersion()));
+					Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
+					Bukkit.getConsoleSender().sendMessage("[KOTL] Download it on SpigotMC:");
+					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-9-1-15-2.80686/");
 				}
 				return;
 			}
 			MessageUtils.updateIsHere();
-			Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new version avaible: v" + result.getNewestVersion());
-			Bukkit.getConsoleSender().sendMessage("[KOTL] Download it on SpigotMC:");
-			Bukkit.getConsoleSender().sendMessage("[KOTL] NOT IMPLEMENTED YET");
+			Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
+			Bukkit.getConsoleSender().sendMessage("[KOTL] Download it SpigotMC:");
+			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-9-1-15-2.80686/");
 		});
 	}
 	
@@ -230,6 +231,10 @@ public class Main extends JavaPlugin {
 				saveResource(fileName + ".yml", false);
 			}
 		}
+	}
+	
+	public boolean isBefore1_9_R1() {
+		return version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3");
 	}
 	
 	public HookManager getHookManager() {
@@ -266,8 +271,7 @@ public class Main extends JavaPlugin {
 
 			for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 				if (userManager.getDatabase() instanceof MysqlManager) {
-					((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat)
-						+ " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+					((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 					Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 					continue;
 				}

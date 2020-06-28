@@ -12,6 +12,7 @@
 # King of the Ladder Commands
 Commands:
   Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
   Removed-Game-Instance: "&aSuccessfully removed game instance."
   No-Arena-Like-That: "&cThere is no arena with that ID!"
   Only-By-Player: "&cYou can execute this command only as player!"
@@ -44,6 +45,7 @@ In-Game:
   Last-King-Hologram: "&bLast king: &e%king%"
 
 # Has usage only when bossbar is enabled in config.yml
+# Also not compatible with the versions before 1.9 for a short time
 Bossbar:
   Game-Info: "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
   

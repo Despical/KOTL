@@ -3,6 +3,7 @@ package me.despical.kotl.handler.setup.components;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
@@ -42,6 +43,7 @@ public class MiscComponents implements SetupComponent {
 			.name(plugin.getChatManager().colorRawMessage("&eSet King Hologram"))
 			.lore(ChatColor.GRAY + "Click to set king's hologram location")
 			.lore(ChatColor.GRAY + "on the place where you are standing.")
+			.lore(ChatColor.DARK_GRAY + "(where the last king displays)")
 			.lore("", setupInventory.getSetupUtilities()
 			.isOptionDoneBool("instances." + arena.getId() + ".hologramLocation"))
 			.build(), e -> {
@@ -61,5 +63,27 @@ public class MiscComponents implements SetupComponent {
 			arena.setHologramLocation(hologram.getLocation());
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 3, 0);		
+		
+		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
+			.name(plugin.getChatManager().colorRawMessage("&e&lView Wiki Page"))
+			.lore(ChatColor.GRAY + "Having problems with setup or wanna know")
+			.lore(ChatColor.GRAY + "some useful tips? Click to get wiki link!").build(), e -> {
+			e.getWhoClicked().closeInventory();
+			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out our wiki: https://github.com/Despical/KOTL/wiki"));
+		}), 7, 0);
+		
+		if (plugin.isBefore1_9_R1()) {
+			ItemStack warningItem = new ItemBuilder(XMaterial.BARRIER.parseItem())
+				.name(plugin.getChatManager().colorRawMessage("&c&lWarning!"))
+				.lore(ChatColor.GRAY + "Your server version is outdated, some features")
+				.lore(ChatColor.GRAY + "of the plugin may not be work properly. Also")
+				.lore(ChatColor.GRAY + "if you find any bug please use issue tracker")
+				.lore(ChatColor.GRAY + "on Github or contact us by our Discord server.")
+				.build();
+			
+			pane.addItem(new GuiItem(warningItem), 4, 0);
+			pane.addItem(new GuiItem(warningItem), 5, 0);
+			pane.addItem(new GuiItem(warningItem), 6, 0);
+		}
 	}
 }

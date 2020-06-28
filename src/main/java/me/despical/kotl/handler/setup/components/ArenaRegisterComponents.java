@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import com.github.stefvanschie.inventoryframework.GuiItem;
@@ -50,9 +52,11 @@ public class ArenaRegisterComponents implements SetupComponent {
 				.name(plugin.getChatManager().colorRawMessage("&a&lArena Registered - Congratulations"))
 				.lore(ChatColor.GRAY + "This arena is already registered!")
 				.lore(ChatColor.GRAY + "Good job, you went through whole setup!")
-				.lore(ChatColor.GRAY + "You can play on this arena now!")
+				.enchantment(Enchantment.ARROW_DAMAGE)
+				.flag(ItemFlag.HIDE_ENCHANTS)
 				.build();
 		}
+
 		pane.addItem(new GuiItem(registeredItem, e -> {
 			Arena arena = setupInventory.getArena();
 			e.getWhoClicked().closeInventory();

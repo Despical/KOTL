@@ -43,7 +43,6 @@ public class SetupInventory {
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 		StaticPane pane = new StaticPane(9, 1);
 		this.gui.addPane(pane);
-
 		prepareComponents(pane);
 	}
 
@@ -62,7 +61,7 @@ public class SetupInventory {
 	}
 
 	private void sendProTip(Player p) {
-		int rand = random.nextInt(9 + 1);
+		int rand = random.nextInt(7 + 1);
 		switch (rand) {
 		case 0:
 			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
@@ -70,6 +69,8 @@ public class SetupInventory {
 		case 1:
 			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
 			break;
+		case 2:
+			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
 		default:
 			break;
 		}

@@ -39,8 +39,8 @@ public class SpawnComponents implements SetupComponent {
 		Main plugin = setupInventory.getPlugin();
 		pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
 			.name(plugin.getChatManager().colorRawMessage("&e&lSet Ending Location"))
-			.lore(ChatColor.GRAY + "Click to set the ending location")
-			.lore(ChatColor.GRAY + "on the place where you are standing.")
+			.lore(ChatColor.GRAY + "Click to set ending location on")
+			.lore(ChatColor.GRAY + "the place where you are standing.")
 			.lore(ChatColor.DARK_GRAY + "(location where players will be")
 			.lore(ChatColor.DARK_GRAY + "teleported after the reloading)")
 			.lore("", setupInventory.getSetupUtilities()
@@ -55,10 +55,10 @@ public class SpawnComponents implements SetupComponent {
 		
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE.parseMaterial())
 			.name(plugin.getChatManager().colorRawMessage("&e&lSet Plate Location"))
-			.lore(ChatColor.GRAY + "Click to set the plate location")
-			.lore(ChatColor.GRAY + "on the place where you are standing.")
-			.lore(ChatColor.DARK_GRAY + "(location where players")
-			.lore(ChatColor.DARK_GRAY + "will try to reach)")
+			.lore(ChatColor.GRAY + "Click to set plate location on")
+			.lore(ChatColor.GRAY + "the place where you are standing.")
+			.lore(ChatColor.DARK_GRAY + "(location where players will try to")
+			.lore(ChatColor.DARK_GRAY + "reach)")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".plateLocation"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
@@ -70,10 +70,10 @@ public class SpawnComponents implements SetupComponent {
 		}), 1, 0);
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
-			.name(plugin.getChatManager().colorRawMessage("&eSet Arena Region"))
-			.lore(ChatColor.GRAY + "Click to set arena's region on")
-			.lore(ChatColor.GRAY + "the place where you are standing.")
-			.lore(ChatColor.DARK_GRAY + "(area where game will be playing")
+			.name(plugin.getChatManager().colorRawMessage("&e&lSet Arena Region"))
+			.lore(ChatColor.GRAY + "Click to set arena's region")
+			.lore(ChatColor.GRAY + "with the cuboid selector.")
+			.lore(ChatColor.DARK_GRAY + "(area where game will be playing)")
 			.lore("", setupInventory.getSetupUtilities()
 			.isOptionDoneBool("instances." + arena.getId() + ".areaMax"))
 			.build(), e -> {

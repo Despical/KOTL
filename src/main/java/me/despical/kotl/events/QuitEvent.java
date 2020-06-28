@@ -28,7 +28,7 @@ public class QuitEvent implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		if (ArenaRegistry.getArena(player) != null) {
+		if (ArenaRegistry.isInArena(player)) {
 			plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ActionType.LEAVE);
 			ArenaRegistry.getArena(player).getPlayers().remove(player);
 		}

@@ -32,45 +32,36 @@ public class TabCompletion implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> completions = new ArrayList<>();
-		
 		if (!(sender instanceof Player)) {
 			return Collections.emptyList();
 		}
-		
 		Player player = (Player) sender;
-		
-		if(!(player.hasPermission("kotl.admin"))) {
+		if (!(player.hasPermission("kotl.admin"))) {
 			return Collections.emptyList();
 		}
-		
-		if(args.length == 1) {
+		if (args.length == 1) {
 			StringUtil.copyPartialMatches(args[0], commands, completions);
 		} 
-		
 		if (args.length == 2) {
-			if(args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") ||
-				args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("stats")) {
+			if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") ||
+				args[0].equalsIgnoreCase("reload")) {
 				return Collections.emptyList();
 			}
-			
-			if(args[0].equalsIgnoreCase("top")) {
+			if (args[0].equalsIgnoreCase("top")) {
 				List<String> possibilities = new ArrayList<>();
-				for(StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
+				for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
 					possibilities.add(statistic.name().toLowerCase());
 				}
 				return possibilities;
 			}
-			
 			List<String> arenas = new ArrayList<>();
-			for(Arena arena : ArenaRegistry.getArenas()) {
+			for (Arena arena : ArenaRegistry.getArenas()) {
 				arenas.add(arena.getId());
 			}
-			
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 			Collections.sort(arenas);
 			return arenas;
 		}
-		
 		Collections.sort(completions);
 		return completions;
 	}

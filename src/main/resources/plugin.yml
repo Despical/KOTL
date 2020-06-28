@@ -19,5 +19,5 @@ permissions:
       kotl.admin: true
       kotl.admin.edit: true
       kotl.admin.create: true
-      kotl.admin.remove: true
+      kotl.admin.delete: true
       kotl.admin.list: true

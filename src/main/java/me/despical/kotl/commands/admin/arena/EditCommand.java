@@ -40,7 +40,7 @@ public class EditCommand extends SubCommand {
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
 		if (arena == null) {
-			player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorRawMessage("&cThere is no arena with that ID!"));
+			player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
 			return;
 		}
 		new SetupInventory(arena, player).openInventory();

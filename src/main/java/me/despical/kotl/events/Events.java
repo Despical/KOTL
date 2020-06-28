@@ -63,7 +63,7 @@ public class Events implements Listener {
 			}
 		}
 		if (event.getPlayer().isOp() || event.getPlayer().hasPermission("kotl.admin")
-			|| event.getPlayer().hasPermission("kotl.command.bypass")) {
+			|| event.getPlayer().hasPermission("kotl.command.override")) {
 			return;
 		}
 		if (event.getMessage().startsWith("/kotl") || event.getMessage().startsWith("/kingoftheladder")
