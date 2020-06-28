@@ -16,7 +16,7 @@ Don't let other players to climb top of the ladders, punch them to out of the ga
 | [Commons Box](https://github.com/Despical/Commons-Box)        | [Despical](https://github.com/Despical)             | [GPLv3](https://github.com/Despical/Commons-Box/blob/master/LICENSE.md)      |
 
 
-## Want to use King of the Ladder API?
+## Want to use King of the Ladder API? [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 Add repository
 ```xml
     <repositories>
@@ -32,7 +32,7 @@ Then add the dependency
             <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>KOTL</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
