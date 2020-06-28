@@ -29,7 +29,7 @@ Add repository
 Then add the dependency
 ```xml
     <dependencies>
-            <dependency>
+        <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>KOTL</artifactId>
             <version>1.0.2</version>
