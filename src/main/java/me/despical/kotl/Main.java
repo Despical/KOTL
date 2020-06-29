@@ -17,6 +17,7 @@ import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
+import me.despical.commonsbox.scoreboard.ScoreboardLib;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
@@ -145,6 +146,7 @@ public class Main extends JavaPlugin {
 				}
 				player.teleport(arena.getEndLocation());
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
+				arena.getScoreboardManager().removeScoreboard(getUserManager().getUser(player));
 			}
 			arena.getPlayers().clear();
 		}
@@ -152,6 +154,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void initializeClasses() {
+		ScoreboardLib.setPluginInstance(this);
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
 			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
@@ -213,14 +216,14 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Download it on SpigotMC:");
-					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-9-1-15-2.80686/");
+					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-1.80686/");
 				}
 				return;
 			}
 			MessageUtils.updateIsHere();
 			Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
 			Bukkit.getConsoleSender().sendMessage("[KOTL] Download it SpigotMC:");
-			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-9-1-15-2.80686/");
+			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-1.80686/");
 		});
 	}
 	

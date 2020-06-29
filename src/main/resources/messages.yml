@@ -49,6 +49,22 @@ In-Game:
 Bossbar:
   Game-Info: "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
   
+# In-game scoreboard messages.
+# Please do not use more than 48 chars here! COLOR CODES INCLUDED.
+Scoreboard:
+  Title: "&e&lKOTL"
+  Content:
+    # For scoreboard placeholders check our wiki
+    Playing:
+      - ""
+      - "Arena: &a%arena%"
+      - ""
+      - "Players: &a%players%"
+      - ""
+      - "King: &a%king%"
+      - ""
+      - "Score: &a%score%"
+  
 Validator:
   Invalid-Arena-Configuration: "[KOTL] Arena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[KOTL] Arena %arena% instance successfully started!"

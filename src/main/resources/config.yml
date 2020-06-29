@@ -7,6 +7,9 @@
 # Enable bossbar support?
 Bossbar-Enabled: true
 
+# Enable scoreboard support?
+Scoreboard-Enabled: true
+
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is NO migrator between
 # flat file and MySQL for player stats.

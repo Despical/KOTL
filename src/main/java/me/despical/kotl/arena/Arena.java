@@ -20,6 +20,7 @@ import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.managers.ScoreboardManager;
 
 /**
  * @author Despical
@@ -35,11 +36,9 @@ public class Arena {
 	private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 	
 	private Player king;
-	
 	private Hologram hologram;
-	
 	private BossBar gameBar;
-
+	private ScoreboardManager scoreboardManager;
 	private boolean ready = true;
 	
 	public Arena(String id) {
@@ -50,6 +49,7 @@ public class Arena {
 			}
 			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
+		scoreboardManager = new ScoreboardManager(this);
 	}
 	
 	public boolean isReady() {
@@ -169,10 +169,22 @@ public class Arena {
 		return hologram;
 	}
 	
+	/**
+	 * Get arena's scoreboard manager
+	 * 
+	 * @param scoreboard manager of arena
+	 */
+	public ScoreboardManager getScoreboardManager() {
+		return scoreboardManager;
+	}
+	
 	void addPlayer(Player player) {
 		players.add(player);
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
+		}
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+			scoreboardManager.createScoreboard(plugin.getUserManager().getUser(player));
 		}
 		player.getInventory().clear();
 	}
@@ -186,11 +198,13 @@ public class Arena {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+			scoreboardManager.removeScoreboard(plugin.getUserManager().getUser(player));
+		}
 	}
 	
 	public void teleportAllToEndLocation() {
 		Location location = getEndLocation();
-
 		if (location == null) {
 			System.out.print("End location for arena " + getId() + " isn't intialized!");
 			return;

@@ -17,10 +17,10 @@ import me.despical.kotl.arena.Arena;
  */
 public class ChatManager {
 
-	public String prefix;
+	private String prefix;
 	
-	public Main plugin;
-	public FileConfiguration config;
+	private Main plugin;
+	private FileConfiguration config;
 	
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
@@ -48,7 +48,7 @@ public class ChatManager {
 		return ChatColor.translateAlternateColorCodes('&', returnString);
 	}
 
-	public String formatMessage(Arena arena, String message, Player player) {
+	private String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = colorRawMessage(formatPlaceholders(returnString, arena));
@@ -58,7 +58,7 @@ public class ChatManager {
 		return returnString;
 	}
 
-	public String formatPlaceholders(String message, Arena arena) {
+	private String formatPlaceholders(String message, Arena arena) {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%arena%", arena.getId());
 		returnString = StringUtils.replace(returnString, "%players%", Integer.toString(arena.getPlayers().size()));
