@@ -3,6 +3,7 @@ package me.despical.kotl.arena;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.handler.ChatManager.ActionType;
+import me.despical.kotl.handler.rewards.Reward;
 
 /**
  * @author Despical
@@ -34,6 +36,7 @@ public class ArenaEvents implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
+//	to do new arena manager, api impl. and broadcasting join msg
 	@EventHandler
 	public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
@@ -48,7 +51,7 @@ public class ArenaEvents implements Listener {
 				plugin.getChatManager().broadcastAction(arena, player, ActionType.JOIN);
 			}
 		} 
-		if(ArenaRegistry.isInArena(player) && arena == null) {
+		if (ArenaRegistry.isInArena(player) && arena == null) {
 			ArenaRegistry.getArena(player).doBarAction(Arena.BarAction.REMOVE, player);
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
 				plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ActionType.LEAVE);
@@ -69,10 +72,38 @@ public class ArenaEvents implements Listener {
 				if (arena.getPlayers().size() == 1 && arena.getKing() == player) return;
 				arena.setKing(player);
 				plugin.getChatManager().broadcastAction(arena, player, ActionType.NEW_KING);
+				plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORE, 1);
+				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 				for (Player p : arena.getPlayers()) {
 					plugin.getUserManager().getUser(p).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+					plugin.getRewardsFactory().performReward(p, Reward.RewardType.LOSE);
+					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+						plugin.getUserManager().getDatabase().saveStatistic(plugin.getUserManager().getUser(p), stat);
+					}
 				}
-				plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORE, 1);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DEATHBLOCKS_ENABLED)) {
+			return;
+		}
+		if (!ArenaRegistry.isInArena(player)) {
+			return;
+		}
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
+				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
+					ArenaRegistry.getArena(player).doBarAction(Arena.BarAction.REMOVE, player);
+					plugin.getChatManager().broadcastMessage(ArenaRegistry.getArena(player), plugin.getChatManager().colorMessage("In-Game.Clicked-Death-Block").replace("%player%", player.getName()));
+					plugin.getRewardsFactory().performReward(player, Reward.RewardType.LOSE);
+					player.teleport(ArenaRegistry.getArena(player).getEndLocation());
+					ArenaRegistry.getArena(player).removePlayer(player);
+					return;
+				}
 			}
 		}
 	}

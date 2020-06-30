@@ -43,6 +43,7 @@ In-Game:
   Only-Command-Ingame-Is-Leave: "&cYou have to leave the game first to perform commands."
   New-King: "&7%king% &bis the new king!"
   Last-King-Hologram: "&bLast king: &e%king%"
+  Clicked-Death-Block: "&7%player% &bclicked a death block and died!"
 
 # Has usage only when bossbar is enabled in config.yml
 # Also not compatible with the versions before 1.9 for a short time

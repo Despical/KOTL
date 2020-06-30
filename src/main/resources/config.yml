@@ -32,9 +32,20 @@ Whitelisted-Commands:
   - me
   - help
 
+# Enable in game rewards? See rewards.yml for more...
+Rewards-Enabled: false
+
 # Should we block every not King of the Ladder associated commands in game?
 Block-Commands-In-Game: true
 
+Death-Blocks:
+  # When players click these blocks should we remove them from the game?
+  Enabled: true
+  # Blocks which shouldn't you click in game, remove all of them to disable
+  Blacklisted-Blocks:
+    - BEDROCK
+    - GLASS
+  
 # When player enters the game area should we notify players?
 # You can edit the formatting in messages.yml
 Join-Notify: true

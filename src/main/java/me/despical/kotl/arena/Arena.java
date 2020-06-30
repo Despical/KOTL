@@ -43,13 +43,14 @@ public class Arena {
 	
 	public Arena(String id) {
 		this.id = id;
+		scoreboardManager = new ScoreboardManager(this);
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			if (plugin.isBefore1_9_R1()) { /** Not implemented yet*/
 				return;
 			}
 			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
-		scoreboardManager = new ScoreboardManager(this);
+		
 	}
 	
 	public boolean isReady() {

@@ -30,6 +30,7 @@ import me.despical.kotl.events.JoinEvent;
 import me.despical.kotl.events.QuitEvent;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.PlaceholderManager;
+import me.despical.kotl.handler.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
@@ -56,6 +57,7 @@ public class Main extends JavaPlugin {
 	private CommandHandler commandHandler;
 	private CuboidSelector cuboidSelector;
 	private ChatManager chatManager;
+	private RewardsFactory rewardsFactory;
 	
 	@Override
 	public void onEnable() {
@@ -164,6 +166,7 @@ public class Main extends JavaPlugin {
 		commandHandler = new CommandHandler(this);
 		chatManager = new ChatManager(this);
 		cuboidSelector = new CuboidSelector(this);
+		rewardsFactory = new RewardsFactory(this);
 		ArenaRegistry.registerArenas();
 		new ChatEvents(this);
 		new Events(this);
@@ -228,7 +231,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void setupFiles() {
-		for (String fileName : Arrays.asList("arenas", "stats", "mysql")) {
+		for (String fileName : Arrays.asList("arenas", "stats", "mysql", "rewards")) {
 			File file = new File(getDataFolder() + File.separator + fileName + ".yml");
 			if (!file.exists()) {
 				saveResource(fileName + ".yml", false);
@@ -262,6 +265,10 @@ public class Main extends JavaPlugin {
 	
 	public ChatManager getChatManager() {
 		return chatManager;
+	}
+	
+	public RewardsFactory getRewardsFactory() {
+		return rewardsFactory;
 	}
 	
 	public UserManager getUserManager() {

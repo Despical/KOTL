@@ -65,6 +65,12 @@ public class ChatManager {
 		returnString = StringUtils.replace(returnString, "%king%", arena.getKing() == null ? "Nobody" : arena.getKing().getName());
 		return returnString;
 	}
+	
+	public void broadcastMessage(Arena a, String msg) {
+		for (Player p : a.getPlayers()) {
+			p.sendMessage(prefix + msg);
+		}
+	}
 
 	public void broadcastAction(Arena a, Player p, ActionType action) {
 		String message;

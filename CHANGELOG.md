@@ -1,3 +1,10 @@
+### 1.0.4 Release (30.06.2020)
+* Fixed scoreboard in 1.8.9 and older versions.
+* Fixed a message bug with top 10 players command.
+* Added rewards system.
+* Added death blocks.
+* Improved saving statistics.
+
 ### 1.0.3 Release (29.06.2020)
 * Added scoreboard to in-game.
 * Added new option to config.yml

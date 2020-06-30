@@ -35,11 +35,15 @@ public class LeaderBoardCommand extends SubCommand {
 
 	@Override
 	public int getMinimumArguments() {
-		return 1;
+		return 0;
 	}
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
+		if (args.length == 0) {
+			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Statistics.Type-Name"));
+			return;
+		}
 		try {
 			StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[0].toUpperCase());
 			printLeaderboard(sender, statisticType);
@@ -69,7 +73,7 @@ public class LeaderBoardCommand extends SubCommand {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
 							continue;
 							}
-						} catch  (SQLException ignored) {
+						} catch (SQLException ignored) {
 					}
 				}
 				sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));
