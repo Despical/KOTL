@@ -1,4 +1,6 @@
-/.settings/
+.settings/
+.classpath
+.project
 /.idea/
 /out/
 /generated/
