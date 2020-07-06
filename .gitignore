@@ -1,10 +1,4 @@
-.settings/
+.settings
+target
 .classpath
 .project
-/.idea/
-/out/
-/generated/
-/lib/
-*.iml
-/minecraft/
-/target/
