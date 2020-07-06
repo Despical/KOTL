@@ -1,3 +1,8 @@
+### 1.0.5 Release (06.07.2020)
+* Huge performance update.
+
+**Also note that no game behavior has changed.**
+
 ### 1.0.4 Release (30.06.2020)
 * Fixed scoreboard in 1.8.9 and older versions.
 * Fixed a message bug with top 10 players command.
@@ -20,5 +25,5 @@
 ### 1.0.1 Release (26.06.2020)
 * Fixed broken messages in arena editor.
 * Fixed broken permissions.
-* Added wiki page, check it [here].
+* Added wiki page, check it [here](https://github.com/Despical/KOTL/wiki).
 * Update checker activated.

@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -106,11 +106,6 @@
 			<artifactId>Commons-Box</artifactId>
 			<version>1.0.9</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.8</version>
 		</dependency>
 	</dependencies>
 

@@ -1,6 +1,6 @@
 package me.despical.kotl.handler.rewards;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 
 /**
