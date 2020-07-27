@@ -39,7 +39,7 @@ public class StatsCommand extends SubCommand {
 			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Player-Not-Found"));
 			return;
 		}
-		User user = this.getPlugin().getUserManager().getUser(player);
+		User user = getPlugin().getUserManager().getUser(player);
 		if (player.equals(sender)) {
 			sender.sendMessage(getPlugin().getChatManager().colorMessage("Commands.Stats-Command.Header", player));
 		} else {

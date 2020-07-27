@@ -16,8 +16,7 @@ public class Debugger {
 	private static boolean deep = false;
 	private static Logger logger = Logger.getLogger("");
 
-	private Debugger() {
-	}
+	private Debugger() {}
 
 	public static void setEnabled(boolean enabled) {
 		Debugger.enabled = enabled;

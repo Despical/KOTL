@@ -17,7 +17,7 @@
 #    - chance(50):eco give %player% 10                # Console has 10% chance to give player 10$
 #
 #    Just add example reward:
-#    - script:player.sendMessage("oh, hi %PLAYER%");      # It will send "oh, hi <player name>" to player! 100% plain java!
+#    - script:player.sendMessage("oh, hi %player%");      # It will send "oh, hi <player name>" to player! 100% plain java!
 #    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
@@ -29,11 +29,11 @@
 
 # Rewards must be enabled via config.yml first!
 rewards:
-  # Commands executed when player wins the game (after becoming king)
+  # Commands executed when player became king
   win:
     - eco give %player% 2
     - say I won the game!
-  # Commands executed when player loses the game
+  # Commands executed when player couldn't be king
   lose:
     - chance(10):eco give %player% 8
     - say I lost the game!

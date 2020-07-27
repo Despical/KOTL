@@ -36,7 +36,6 @@ public class ArenaEvents implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-//	to do new arena manager, api impl. and broadcasting join msg
 	@EventHandler
 	public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
 		Player player = event.getPlayer();

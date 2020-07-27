@@ -40,7 +40,7 @@ public class MiscComponents implements SetupComponent {
 		Arena arena = setupInventory.getArena();
 		Main plugin = setupInventory.getPlugin();
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseItem())
-			.name(plugin.getChatManager().colorRawMessage("&eSet King Hologram"))
+			.name(plugin.getChatManager().colorRawMessage("&e&lSet King Hologram"))
 			.lore(ChatColor.GRAY + "Click to set king's hologram location")
 			.lore(ChatColor.GRAY + "on the place where you are standing.")
 			.lore(ChatColor.DARK_GRAY + "(where the last king displays)")

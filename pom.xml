@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -146,10 +146,6 @@
 						</goals>
 						<configuration>
 							<relocations>
-								<relocation>
-									<pattern>com.zaxxer.hikari</pattern>
-									<shadedPattern>me.despical.kotl.database.hikari</shadedPattern>
-								</relocation>
 								<relocation>
 									<pattern>org.bstats</pattern>
 									<shadedPattern>me.despical.kotl.utils</shadedPattern>

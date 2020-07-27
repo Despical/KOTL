@@ -281,8 +281,8 @@ public class Main extends JavaPlugin {
 
 			for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 				if (userManager.getDatabase() instanceof MysqlManager) {
-					((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-					Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+					((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+					Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + ((MysqlManager) userManager.getDatabase()).getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 					continue;
 				}
 				userManager.getDatabase().saveStatistic(user, stat);

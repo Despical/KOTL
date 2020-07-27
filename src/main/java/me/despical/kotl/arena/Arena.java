@@ -45,7 +45,7 @@ public class Arena {
 		this.id = id;
 		scoreboardManager = new ScoreboardManager(this);
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-			if (plugin.isBefore1_9_R1()) { /** Not implemented yet*/
+			if (plugin.isBefore1_9_R1()) {
 				return;
 			}
 			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);

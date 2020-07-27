@@ -37,6 +37,5 @@ public class MessageUtils {
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + " | |_| | | |_) | | (_| | | (_| | | |_  |  __/");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "  \\___/  | .__/   \\__,_|  \\__,_|  \\__|  \\___|");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "         |_|                                 ");
-
 	}
 }

@@ -52,17 +52,17 @@ public class DeleteCommand extends SubCommand {
 		}
 		if (!confirmations.contains(sender)) {
 			confirmations.add(sender);
-			Bukkit.getScheduler().runTaskLater(this.getPlugin(), () -> confirmations.remove(sender), 20 * 10);
+			Bukkit.getScheduler().runTaskLater(getPlugin(), () -> confirmations.remove(sender), 20 * 10);
 			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Are-You-Sure"));
 			return;
 		}
 		confirmations.remove(sender);
-		FileConfiguration config = ConfigUtils.getConfig(this.getPlugin(), "arenas");
+		FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
 		if (arena.getHologram() != null) arena.getHologram().delete();
 		if (arena.getPlayers().size() > 0) {
 			for (Player player : arena.getPlayers()) {
-				if (this.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-					InventorySerializer.loadInventory(this.getPlugin(), player);
+				if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+					InventorySerializer.loadInventory(getPlugin(), player);
 				}
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
@@ -77,7 +77,7 @@ public class DeleteCommand extends SubCommand {
 		}
 		ArenaRegistry.unregisterArena(arena);
 		config.set("instances." + args[0], null);
-		ConfigUtils.saveConfig(this.getPlugin(), config, "arenas");
+		ConfigUtils.saveConfig(getPlugin(), config, "arenas");
 		sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Removed-Game-Instance"));
 	}
 

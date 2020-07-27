@@ -39,7 +39,7 @@ public class Events implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
 		if (arena == null) {
@@ -62,12 +62,10 @@ public class Events implements Listener {
 				return;
 			}
 		}
-		if (event.getPlayer().isOp() || event.getPlayer().hasPermission("kotl.admin")
-			|| event.getPlayer().hasPermission("kotl.command.override")) {
+		if (event.getPlayer().isOp() || event.getPlayer().hasPermission("kotl.admin") || event.getPlayer().hasPermission("kotl.command.override")) {
 			return;
 		}
-		if (event.getMessage().startsWith("/kotl") || event.getMessage().startsWith("/kingoftheladder")
-			|| event.getMessage().contains("top") || event.getMessage().contains("stats")) {
+		if (event.getMessage().startsWith("/kotl") || event.getMessage().startsWith("/kingoftheladder") || event.getMessage().contains("top") || event.getMessage().contains("stats")) {
 			return;
 		}
 		event.setCancelled(true);
@@ -92,19 +90,18 @@ public class Events implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameInteract(PlayerInteractEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
 		if (arena == null || event.getClickedBlock() == null) {
 			return;
 		}
-		if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial()
-			|| event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
+		if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
 			event.setCancelled(true);
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
 		if (arena == null) {

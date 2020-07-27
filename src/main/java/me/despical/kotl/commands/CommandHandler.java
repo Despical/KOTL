@@ -98,7 +98,7 @@ public class CommandHandler implements CommandExecutor {
 						}
 					} else {
 						if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-						sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
+							sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
 						}
 					}
 				return true;

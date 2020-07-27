@@ -26,10 +26,10 @@ public class ExceptionLogHandler extends Handler {
 	}
 
 	@Override
-	public void close() throws SecurityException { }
+	public void close() throws SecurityException {}
 
 	@Override
-	public void flush() { }
+	public void flush() {}
 
 	@Override
 	public void publish(LogRecord record) {
@@ -37,7 +37,6 @@ public class ExceptionLogHandler extends Handler {
 		if (!(throwable instanceof Exception) || !throwable.getClass().getSimpleName().contains("Exception")) {
 			return;
 		}
-
 		if (throwable.getStackTrace().length <= 0) {
 			return;
 		}

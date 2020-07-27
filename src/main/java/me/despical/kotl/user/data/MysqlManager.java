@@ -7,7 +7,9 @@ import java.sql.Statement;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 
+import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -31,7 +33,7 @@ public class MysqlManager implements UserDatabase {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try (Connection connection = database.getConnection()) {
 				Statement statement = connection.createStatement();
-				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `playerstats` (\n"
+				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + getTableName() + "` (\n"
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
 					+ "  `name` varchar(32) NOT NULL,\n"
 					+ "  `score` int(11) NOT NULL DEFAULT '0',\n"
@@ -49,8 +51,8 @@ public class MysqlManager implements UserDatabase {
 	@Override
 	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
-			Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+			database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+			Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 		});
 	}
 
@@ -60,7 +62,7 @@ public class MysqlManager implements UserDatabase {
 			String uuid = user.getPlayer().getUniqueId().toString();
 			try (Connection connection = database.getConnection()) {
 				Statement statement = connection.createStatement();
-				ResultSet rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "';");
+				ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() +" WHERE UUID='" + uuid + "';");
 				if (rs.next()) {
 					Debugger.debug(Level.INFO, "MySQL Stats | Player {0} already exist. Getting Stats...", user.getPlayer().getName());
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -71,7 +73,7 @@ public class MysqlManager implements UserDatabase {
 					}
 				} else {
 					Debugger.debug(Level.INFO, "MySQL Stats | Player {0} does not exist. Creating new one...", user.getPlayer().getName());
-					statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
+					statement.executeUpdate("INSERT INTO " + getTableName() + " (UUID,name) VALUES ('" + uuid + "','" + user.getPlayer().getName() + "');");
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						user.setStat(stat, 0);
 					}
@@ -80,6 +82,11 @@ public class MysqlManager implements UserDatabase {
 				e.printStackTrace();
 			}
 		});
+	}
+	
+	public String getTableName() {
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
+		return config.getString("table", "playerstats");
 	}
 
 	public MysqlDatabase getDatabase() {

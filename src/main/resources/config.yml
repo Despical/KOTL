@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version ${project.version})      | #
+# |     King of the Ladder by Despical (Version 1.0.6)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -24,7 +24,7 @@ InventoryManager: true
 # You can edit the formatting in messages.yml
 ChatFormat-Enabled: true
 
-# Should players get no fall damage?
+# Should players get fall damage?
 Disable-Fall-Damage: true
 
 # Commands which can be used in game, remove all of them to disable

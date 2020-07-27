@@ -22,6 +22,7 @@ import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.utils.MessageUtils;
 
 /**
@@ -47,7 +48,7 @@ public class StatsStorage {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				Statement statement = connection.createStatement();
-				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM playerstats ORDER BY " + stat.getName());
+				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
 				Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
 				while (set.next()) {
 					column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));

@@ -1,3 +1,9 @@
+### 1.0.6 Release (27.06.2020)
+* Fixed some statistic case sensitive names.
+* Added new Mysql options.
+* Improved arena editor.
+* Some performance improvements.
+
 ### 1.0.5 Release (06.07.2020)
 * Huge performance update.
 

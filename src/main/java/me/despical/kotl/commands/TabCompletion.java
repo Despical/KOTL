@@ -25,7 +25,7 @@ public class TabCompletion implements TabCompleter {
 	
 	public TabCompletion(CommandHandler commandHandler) {
 		for (SubCommand command : commandHandler.getSubCommands()) {
-			this.commands.add(command.getName().toLowerCase());
+			this.commands.add(command.getName().toLowerCase(java.util.Locale.ENGLISH));
 		}
 	}
 
@@ -50,7 +50,7 @@ public class TabCompletion implements TabCompleter {
 			if (args[0].equalsIgnoreCase("top")) {
 				List<String> possibilities = new ArrayList<>();
 				for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
-					possibilities.add(statistic.name().toLowerCase());
+					possibilities.add(statistic.name().toLowerCase(java.util.Locale.ENGLISH));
 				}
 				return possibilities;
 			}
