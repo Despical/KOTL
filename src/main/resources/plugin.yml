@@ -10,7 +10,7 @@ commands:
   KingOfTheLadder:
     description: King of the Ladder commands
     aliases: [kotl, kingotladder]
-    
+
 permissions:
   kotl.admin.*:
     default: op

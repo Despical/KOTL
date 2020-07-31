@@ -1,5 +1,14 @@
 package me.despical.kotl.commands.game;
 
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.commands.SubCommand;
+import me.despical.kotl.commands.exception.CommandException;
+import me.despical.kotl.user.data.MysqlManager;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,16 +16,6 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.commands.exception.CommandException;
-import me.despical.kotl.user.data.MysqlManager;
 
 /**
  * @author Despical
@@ -73,8 +72,8 @@ public class LeaderBoardCommand extends SubCommand {
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
 							continue;
-							}
-						} catch (SQLException ignored) {
+						}
+					} catch (SQLException ignored) {
 					}
 				}
 				sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));

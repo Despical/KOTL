@@ -1,18 +1,9 @@
 package me.despical.kotl.handler.setup.components;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
@@ -21,11 +12,18 @@ import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handler.setup.SetupInventory;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Despical
  * <p>
- *  Created at 22.06.2020
+ * Created at 22.06.2020
  */
 public class ArenaRegisterComponents implements SetupComponent {
 
@@ -64,7 +62,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 				e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
-			String[] locations = new String[] {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
+			String[] locations = new String[]{"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
 			for (String s : locations) {
 				if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s).equals(
 					LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
@@ -77,7 +75,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".endLocation")));
 			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".plateLocation")));
-			
+
 			Hologram hologram = HologramsAPI.createHologram(plugin, LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".hologramLocation")));
 			hologram.setAllowPlaceholders(true);
 			hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? "Nobody" : arena.getKing().getName()));

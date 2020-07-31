@@ -1,13 +1,5 @@
 package me.despical.kotl.arena.managers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
@@ -19,6 +11,13 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScoreboardManager {
 
@@ -84,7 +83,7 @@ public class ScoreboardManager {
 	private List<Entry> formatScoreboard(User user) {
 		EntryBuilder builder = new EntryBuilder();
 		List<String> lines = config.getStringList("Scoreboard.Content.Playing");
-		
+
 		for (String line : lines) {
 			builder.next(formatScoreboardLine(line, user));
 		}

@@ -1,20 +1,7 @@
 package me.despical.kotl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-
-import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
@@ -34,11 +21,18 @@ import me.despical.kotl.handler.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
-import me.despical.kotl.utils.CuboidSelector;
-import me.despical.kotl.utils.Debugger;
-import me.despical.kotl.utils.ExceptionLogHandler;
-import me.despical.kotl.utils.MessageUtils;
-import me.despical.kotl.utils.UpdateChecker;
+import me.despical.kotl.utils.*;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -58,7 +52,7 @@ public class Main extends JavaPlugin {
 	private CuboidSelector cuboidSelector;
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
-	
+
 	@Override
 	public void onEnable() {
 		if (!validateIfPluginShouldStart()) {
@@ -80,7 +74,7 @@ public class Main extends JavaPlugin {
 			}
 		}
 		long start = System.currentTimeMillis();
-		
+
 		configPreferences = new ConfigPreferences(this);
 		setupFiles();
 		initializeClasses();
@@ -88,17 +82,17 @@ public class Main extends JavaPlugin {
 
 		Debugger.debug(Level.INFO, "Plugin loaded! Hooking into soft-dependencies in a while!");
 		Bukkit.getScheduler().runTaskLater(this, () -> hookManager = new HookManager(), 20L * 5);
-		
+
 		Debugger.debug(Level.INFO, "Initialization finished took {0} ms", System.currentTimeMillis() - start);
 	}
-	
+
 	private boolean validateIfPluginShouldStart() {
 		version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 		if (!(version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3")
-			|| version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_9_R2") 
+			|| version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_9_R2")
 			|| version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
-			|| version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1") 
-			|| version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") 
+			|| version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1")
+			|| version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1")
 			|| version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1"))) {
 			MessageUtils.thisVersionIsNotSupported();
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by King of the Ladder!");
@@ -119,7 +113,7 @@ public class Main extends JavaPlugin {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onDisable() {
 		if (forceDisable) {
@@ -127,7 +121,7 @@ public class Main extends JavaPlugin {
 		}
 		Debugger.debug(Level.INFO, "System disable initialized");
 		long start = System.currentTimeMillis();
-		
+
 		Bukkit.getLogger().removeHandler(exceptionLogHandler);
 		saveAllUserStatistics();
 		if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
@@ -154,7 +148,7 @@ public class Main extends JavaPlugin {
 		}
 		Debugger.debug(Level.INFO, "System disable finished took {0} ms", System.currentTimeMillis() - start);
 	}
-	
+
 	private void initializeClasses() {
 		ScoreboardLib.setPluginInstance(this);
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -174,7 +168,7 @@ public class Main extends JavaPlugin {
 		new JoinEvent(this);
 		new QuitEvent(this);
 	}
-	
+
 	private void registerSoftDependenciesAndServices() {
 		Debugger.debug(Level.INFO, "Hooking into soft dependencies");
 		long start = System.currentTimeMillis();
@@ -186,7 +180,7 @@ public class Main extends JavaPlugin {
 		}
 		Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0} ms", System.currentTimeMillis() - start);
 	}
-	
+
 	private void startPluginMetrics() {
 		Metrics metrics = new Metrics(this);
 		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
@@ -206,7 +200,7 @@ public class Main extends JavaPlugin {
 			}
 		}));
 	}
-	
+
 	private void checkUpdate() {
 		if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 			return;
@@ -229,7 +223,7 @@ public class Main extends JavaPlugin {
 			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-1.80686/");
 		});
 	}
-	
+
 	private void setupFiles() {
 		for (String fileName : Arrays.asList("arenas", "stats", "mysql", "rewards")) {
 			File file = new File(getDataFolder() + File.separator + fileName + ".yml");
@@ -238,43 +232,43 @@ public class Main extends JavaPlugin {
 			}
 		}
 	}
-	
+
 	public boolean isBefore1_9_R1() {
 		return version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3");
 	}
-	
+
 	public HookManager getHookManager() {
 		return hookManager;
 	}
-	
+
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
 	}
-	
+
 	public MysqlDatabase getMysqlDatabase() {
 		return database;
 	}
-	
+
 	public CommandHandler getCommandHandler() {
 		return commandHandler;
 	}
-	
+
 	public CuboidSelector getCuboidSelector() {
 		return cuboidSelector;
 	}
-	
+
 	public ChatManager getChatManager() {
 		return chatManager;
 	}
-	
+
 	public RewardsFactory getRewardsFactory() {
 		return rewardsFactory;
 	}
-	
+
 	public UserManager getUserManager() {
 		return userManager;
 	}
-	
+
 	private void saveAllUserStatistics() {
 		for (Player player : getServer().getOnlinePlayers()) {
 			User user = userManager.getUser(player);

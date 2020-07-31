@@ -1,3 +1,8 @@
+### 1.0.7 (31.07.2020)
+* Fixed scoreboard wasn't be removed after deleting arena.
+* Fixed PAPI variable for king name.
+* Kotlin compatibility.
+
 ### 1.0.6 Release (27.06.2020)
 * Fixed some statistic case sensitive names.
 * Added new Mysql options.

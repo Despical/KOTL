@@ -1,5 +1,13 @@
 package me.despical.kotl.arena;
 
+import me.despical.commonsbox.compat.XMaterial;
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handler.rewards.Reward;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -13,24 +21,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.serializer.LocationSerializer;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.handler.ChatManager.ActionType;
-import me.despical.kotl.handler.rewards.Reward;
-
 /**
  * @author Despical
  * <p>
  * Created at 22.06.2020
  */
 public class ArenaEvents implements Listener {
-	
+
 	private Main plugin;
-	
+
 	public ArenaEvents(Main plugin) {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -47,18 +46,18 @@ public class ArenaEvents implements Listener {
 			player.setHealth(20d);
 			arena.doBarAction(Arena.BarAction.ADD, player);
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
-				plugin.getChatManager().broadcastAction(arena, player, ActionType.JOIN);
+				plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.JOIN);
 			}
-		} 
+		}
 		if (ArenaRegistry.isInArena(player) && arena == null) {
 			ArenaRegistry.getArena(player).doBarAction(Arena.BarAction.REMOVE, player);
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
-				plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ActionType.LEAVE);
+				plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ChatManager.ActionType.LEAVE);
 			}
 			ArenaRegistry.getArena(player).removePlayer(player);
 		}
 	}
-	
+
 	@EventHandler
 	public void onInteractWithPlate(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -70,7 +69,7 @@ public class ArenaEvents implements Listener {
 			if (event.getClickedBlock().getType() == XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
 				if (arena.getPlayers().size() == 1 && arena.getKing() == player) return;
 				arena.setKing(player);
-				plugin.getChatManager().broadcastAction(arena, player, ActionType.NEW_KING);
+				plugin.getChatManager().broadcastAction(arena, player, ChatManager.ActionType.NEW_KING);
 				plugin.getUserManager().getUser(player).addStat(StatsStorage.StatisticType.SCORE, 1);
 				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 				for (Player p : arena.getPlayers()) {
@@ -83,7 +82,7 @@ public class ArenaEvents implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -106,7 +105,7 @@ public class ArenaEvents implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
 		if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) {
@@ -119,7 +118,7 @@ public class ArenaEvents implements Listener {
 			event.setDamage(0d);
 		}
 	}
-	
+
 	private Arena isInArea(Location origin) {
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		Location first, second;
@@ -129,7 +128,7 @@ public class ArenaEvents implements Listener {
 			}
 			first = LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".areaMin"));
 			second = LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".areaMax"));
-		
+
 			if (new IntRange(first.getX(), second.getX()).containsDouble(origin.getX())
 				&& new IntRange(first.getY(), second.getY()).containsDouble(origin.getY())
 				&& new IntRange(first.getZ(), second.getZ()).containsDouble(origin.getZ())) {

@@ -1,10 +1,11 @@
 package me.despical.kotl.events;
 
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
-import org.bukkit.entity.Player;
+import me.despical.commonsbox.compat.XMaterial;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,17 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.event.player.*;
 
 /**
  * @author Despical
@@ -71,7 +62,7 @@ public class Events implements Listener {
 		event.setCancelled(true);
 		event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onFallDamage(EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof Player)) {
@@ -117,7 +108,7 @@ public class Events implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		if (!ArenaRegistry.isInArena(event.getPlayer())) {
@@ -125,7 +116,7 @@ public class Events implements Listener {
 		}
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBuild(BlockPlaceEvent event) {
 		if (!ArenaRegistry.isInArena(event.getPlayer())) {
@@ -133,10 +124,10 @@ public class Events implements Listener {
 		}
 		event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if(ArenaRegistry.isInArena((Player) event.getPlayer())) {
+		if (ArenaRegistry.isInArena((Player) event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}

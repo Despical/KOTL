@@ -1,11 +1,5 @@
 package me.despical.kotl.commands.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.commands.exception.CommandException;
 import net.md_5.bungee.api.ChatColor;
@@ -14,6 +8,11 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Despical
@@ -21,7 +20,7 @@ import net.md_5.bungee.api.chat.TextComponent;
  * Created at 22.06.2020
  */
 public class HelpCommand extends SubCommand {
-	
+
 	public HelpCommand(String name) {
 		super("help");
 		setPermission("kotl.admin");
@@ -52,7 +51,7 @@ public class HelpCommand extends SubCommand {
 					for (String tutLine : subCommand.getTutorial()) {
 						help.add(ChatColor.AQUA + tutLine);
 					}
-					
+
 					((Player) sender).spigot().sendMessage(new ComponentBuilder(usage)
 						.color(ChatColor.AQUA)
 						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
@@ -67,7 +66,7 @@ public class HelpCommand extends SubCommand {
 			sendHoverTip((Player) sender);
 		}
 	}
-	
+
 	public static void sendHoverTip(Player player) {
 		player.sendMessage("");
 		player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)

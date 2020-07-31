@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.0.6)      | #
+# |     King of the Ladder by Despical (Version 1.0.7)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -45,7 +45,7 @@ Death-Blocks:
   Blacklisted-Blocks:
     - BEDROCK
     - GLASS
-  
+
 # When player enters the game area should we notify players?
 # You can edit the formatting in messages.yml
 Join-Notify: true
@@ -60,5 +60,5 @@ Update-Notifier:
   # Should we inform you when beta version is out?
   # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
-  
+
 # No way! You've reached the end! But... where's the dragon!?

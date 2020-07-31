@@ -1,14 +1,7 @@
 package me.despical.kotl.handler.setup.components;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import com.github.stefvanschie.inventoryframework.GuiItem;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
@@ -16,6 +9,11 @@ import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 /**
  * @author Despical
@@ -44,7 +42,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore(ChatColor.DARK_GRAY + "(location where players will be")
 			.lore(ChatColor.DARK_GRAY + "teleported after the reloading)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool("instances." + arena.getId() + ".endLocation"))
+				.isOptionDoneBool("instances." + arena.getId() + ".endLocation"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
 			config.set("instances." + arena.getId() + ".endLocation", LocationSerializer.locationToString(player.getLocation()));
@@ -52,7 +50,7 @@ public class SpawnComponents implements SetupComponent {
 			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 0, 0);
-		
+
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE.parseMaterial())
 			.name(plugin.getChatManager().colorRawMessage("&e&lSet Plate Location"))
 			.lore(ChatColor.GRAY + "Click to set plate location on")
@@ -75,7 +73,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore(ChatColor.GRAY + "with the cuboid selector.")
 			.lore(ChatColor.DARK_GRAY + "(area where game will be playing)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool("instances." + arena.getId() + ".areaMax"))
+				.isOptionDoneBool("instances." + arena.getId() + ".areaMax"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
 			if (plugin.getCuboidSelector().getSelection(player) == null) {

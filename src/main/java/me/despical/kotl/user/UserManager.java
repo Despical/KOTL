@@ -1,12 +1,5 @@
 package me.despical.kotl.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -14,6 +7,12 @@ import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.UserDatabase;
 import me.despical.kotl.utils.Debugger;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -56,7 +55,7 @@ public class UserManager {
 	}
 
 	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-		if (!stat.isPersistent()) {
+		if (stat.isPersistent()) {
 			return;
 		}
 		database.saveStatistic(user, stat);

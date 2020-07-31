@@ -1,12 +1,11 @@
 package me.despical.kotl;
 
+import me.despical.kotl.utils.Debugger;
+import org.bukkit.Bukkit;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-
-import me.despical.kotl.utils.Debugger;
 
 /**
  * @author Despical
@@ -43,7 +42,7 @@ public class HookManager {
 	public boolean isFeatureEnabled(HookFeature feature) {
 		return hooks.get(feature);
 	}
-	
+
 	public enum HookFeature {
 		HOLOGRAPHIC_DISPLAYS(Hook.HOLOGRAPHIC_DISPLAYS);
 

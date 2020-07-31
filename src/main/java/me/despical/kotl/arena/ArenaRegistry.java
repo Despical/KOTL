@@ -1,23 +1,21 @@
 package me.despical.kotl.arena;
 
-import java.util.List;
-import java.util.logging.Level;
-
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.google.common.collect.Lists;
+import me.despical.commonsbox.compat.XMaterial;
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.kotl.Main;
+import me.despical.kotl.utils.Debugger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.google.common.collect.Lists;
-
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.serializer.LocationSerializer;
-import me.despical.kotl.Main;
-import me.despical.kotl.utils.Debugger;
+import java.util.List;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -96,7 +94,7 @@ public class ArenaRegistry {
 		Debugger.debug(Level.INFO, "Initial arenas registration");
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
-		
+
 		if (arenas.size() > 0) arenas.clear();
 		if (!config.contains("instances")) {
 			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
@@ -121,7 +119,7 @@ public class ArenaRegistry {
 			hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? "Nobody" : arena.getKing().getName()));
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());
-			
+
 			if (LocationSerializer.locationFromString(config.getString(s + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
 				Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
 				config.set(s + "plateLocation", LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()));
