@@ -19,7 +19,7 @@ Issues are usually used to report bugs and request improvements or new features.
 
 The users should **not** use issue tracker **unless** they think that might be
 a bug. Correct places for getting help and some useful tips are our [Discord 
-server](https://discord.com/invite/Vhyy4HA) ([see README).
+server](https://discord.com/invite/Vhyy4HA) ([see README](https://github.com/Despical/KOTL/blob/master/.github/README.md)).
 
 Don't be scared to report real bugs, though. We won't be angry if we receive
 invalid reports; it is just that you're unlikely to get help with those here.
@@ -52,12 +52,12 @@ You can find issues tagged with "help wanted" on tracker to see if there is
 something for you. If you want to take over one of these, just leave a comment
 so other contributors don't accidentally pick same issue to work on. You can also
 offer your help to any other issue, but for "help wanted" tasks, help is really
-*needed*.
+**needed**.
 
 ### Before Programming...
 If you did not pick an existing issue to work on, you should perhaps ask if your
 change is wanted. This can be done by opening an issue or contacting developer
-directly via Discord.
+directly via [Discord](https://discord.com/invite/Vhyy4HA).
 
 Then, a few words of warning: KOTL codebase will not be pleasant, easy or
 that sane to work around with. You will need some Java skills to create anything
