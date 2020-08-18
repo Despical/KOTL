@@ -1,18 +1,20 @@
 package me.despical.kotl.handler.setup;
 
+import java.util.Random;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.github.stefvanschie.inventoryframework.Gui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
 import me.despical.kotl.handler.setup.components.MiscComponents;
 import me.despical.kotl.handler.setup.components.SpawnComponents;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Random;
 
 /**
  * @author Despical
@@ -48,11 +50,11 @@ public class SetupInventory {
 		SpawnComponents spawnComponents = new SpawnComponents();
 		spawnComponents.prepare(this);
 		spawnComponents.injectComponents(pane);
-
+		
 		MiscComponents miscComponents = new MiscComponents();
 		miscComponents.prepare(this);
 		miscComponents.injectComponents(pane);
-
+		
 		ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
 		arenaRegistryComponents.prepare(this);
 		arenaRegistryComponents.injectComponents(pane);
@@ -61,16 +63,16 @@ public class SetupInventory {
 	private void sendProTip(Player p) {
 		int rand = random.nextInt(7 + 1);
 		switch (rand) {
-			case 0:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
-				break;
-			case 1:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
-				break;
-			case 2:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
-			default:
-				break;
+		case 0:
+			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
+			break;
+		case 1:
+			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
+			break;
+		case 2:
+			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
+		default:
+			break;
 		}
 	}
 

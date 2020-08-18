@@ -16,8 +16,7 @@ public class Debugger {
 	private static boolean deep = false;
 	private static Logger logger = Logger.getLogger("");
 
-	private Debugger() {
-	}
+	private Debugger() {}
 
 	public static void setEnabled(boolean enabled) {
 		Debugger.enabled = enabled;
@@ -36,7 +35,7 @@ public class Debugger {
 	 * won't be posted if debugger is enabled, warnings and errors will be.
 	 *
 	 * @param level level of debugged message
-	 * @param msg   debugged message
+	 * @param msg debugged message
 	 */
 	public static void debug(Level level, String msg) {
 		if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
@@ -51,7 +50,7 @@ public class Debugger {
 	 * warnings and errors will be.
 	 *
 	 * @param level level of debugged message
-	 * @param msg   debugged message
+	 * @param msg debugged message
 	 */
 	public static void debug(Level level, String msg, Object... params) {
 		if (!enabled && (level != Level.WARNING || level != Level.FINE)) {

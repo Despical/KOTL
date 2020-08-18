@@ -1,15 +1,16 @@
 package me.despical.kotl.commands.admin.arena;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.commands.exception.CommandException;
 import me.despical.kotl.handler.setup.SetupInventory;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Despical
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class EditCommand extends SubCommand {
 
-	public EditCommand(String name) {
+	public EditCommand() {
 		super("edit");
 		setPermission("kotl.admin.edit");
 	}
@@ -37,7 +38,7 @@ public class EditCommand extends SubCommand {
 	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
 		Player player = (Player) sender;
 		Arena arena = ArenaRegistry.getArena(args[0]);
-
+		
 		if (arena == null) {
 			player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
 			return;

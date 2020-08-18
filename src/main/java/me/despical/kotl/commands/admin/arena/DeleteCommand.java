@@ -1,5 +1,16 @@
 package me.despical.kotl.commands.admin.arena;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
@@ -7,16 +18,6 @@ import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.commands.exception.CommandException;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Despical
@@ -26,8 +27,8 @@ import java.util.Set;
 public class DeleteCommand extends SubCommand {
 
 	private Set<CommandSender> confirmations = new HashSet<>();
-
-	public DeleteCommand(String name) {
+	
+	public DeleteCommand() {
 		super("delete");
 		setPermission("kotl.admin.delete");
 	}
@@ -59,6 +60,7 @@ public class DeleteCommand extends SubCommand {
 		FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
 		if (arena.getHologram() != null) arena.getHologram().delete();
 		if (arena.getPlayers().size() > 0) {
+			arena.getScoreboardManager().stopAllScoreboards();
 			for (Player player : arena.getPlayers()) {
 				if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(getPlugin(), player);
@@ -66,7 +68,6 @@ public class DeleteCommand extends SubCommand {
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
-				arena.getScoreboardManager().removeScoreboard(getPlugin().getUserManager().getUser(player));
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				for (PotionEffect effect : player.getActivePotionEffects()) {
 					player.removePotionEffect(effect.getType());

@@ -1,11 +1,12 @@
 package me.despical.kotl;
 
-import me.despical.kotl.utils.Debugger;
-import org.bukkit.Bukkit;
-
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+
+import me.despical.kotl.utils.Debugger;
 
 /**
  * @author Despical
@@ -26,8 +27,7 @@ public class HookManager {
 			for (Hook requiredHook : feature.getRequiredHooks()) {
 				if (!Bukkit.getPluginManager().isPluginEnabled(requiredHook.getPluginName())) {
 					hooks.put(feature, false);
-					Debugger.debug(Level.INFO, "Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!",
-						feature.name(), requiredHook.getPluginName());
+					Debugger.debug(Level.INFO, "Feature {0} won't be enabled because {1} is not installed! Please install it in order to enable this feature in-game!", feature.name(), requiredHook.getPluginName());
 					hooked = false;
 					break;
 				}
@@ -42,7 +42,7 @@ public class HookManager {
 	public boolean isFeatureEnabled(HookFeature feature) {
 		return hooks.get(feature);
 	}
-
+	
 	public enum HookFeature {
 		HOLOGRAPHIC_DISPLAYS(Hook.HOLOGRAPHIC_DISPLAYS);
 

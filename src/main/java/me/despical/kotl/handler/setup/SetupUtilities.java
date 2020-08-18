@@ -1,11 +1,12 @@
 package me.despical.kotl.handler.setup;
 
-import me.despical.commonsbox.serializer.LocationSerializer;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
 
 /**
  * @author Despical
@@ -16,7 +17,7 @@ public class SetupUtilities {
 
 	private Main plugin = JavaPlugin.getPlugin(Main.class);
 	private FileConfiguration config;
-
+	
 	SetupUtilities(FileConfiguration config, Arena arena) {
 		this.config = config;
 	}

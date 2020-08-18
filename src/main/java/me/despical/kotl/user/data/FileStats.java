@@ -1,10 +1,11 @@
 package me.despical.kotl.user.data;
 
+import org.bukkit.configuration.file.FileConfiguration;
+
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
-import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Despical

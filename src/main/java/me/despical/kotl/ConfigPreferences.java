@@ -36,7 +36,7 @@ public class ConfigPreferences {
 
 	public enum Option {
 		CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true), DATABASE_ENABLED("DatabaseActivated", false),
-		INVENTORY_MANAGER_ENABLED("InventoryManager", true), DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true),
+		INVENTORY_MANAGER_ENABLED("InventoryManager", true), DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true), 
 		JOIN_NOTIFY("Join-Notify", true), LEAVE_NOTIFY("Leave-Notify", true), BOSSBAR_ENABLED("Bossbar-Enabled", true),
 		SCOREBOARD_ENABLED("Scoreboard-Enabled", false), DEATHBLOCKS_ENABLED("Death-Blocks.Enabled", true);
 

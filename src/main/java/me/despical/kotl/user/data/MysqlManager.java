@@ -1,5 +1,14 @@
 package me.despical.kotl.user.data;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
 import me.despical.kotl.Main;
@@ -7,14 +16,6 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import me.despical.kotl.utils.Debugger;
 import me.despical.kotl.utils.MessageUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -23,8 +24,8 @@ import java.util.logging.Level;
  */
 public class MysqlManager implements UserDatabase {
 
-	private final Main plugin;
-	private final MysqlDatabase database;
+	private Main plugin;
+	private MysqlDatabase database;
 
 	public MysqlManager(Main plugin) {
 		this.plugin = plugin;
@@ -50,7 +51,7 @@ public class MysqlManager implements UserDatabase {
 	@Override
 	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+			database.executeUpdate("UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 			Debugger.debug(Level.INFO, "Executed MySQL: " + "UPDATE " + getTableName() + " SET " + stat.getName() + "=" + user.getStat(stat) + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
 		});
 	}
@@ -61,11 +62,11 @@ public class MysqlManager implements UserDatabase {
 			String uuid = user.getPlayer().getUniqueId().toString();
 			try (Connection connection = database.getConnection()) {
 				Statement statement = connection.createStatement();
-				ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() + " WHERE UUID='" + uuid + "';");
+				ResultSet rs = statement.executeQuery("SELECT * from " + getTableName() +" WHERE UUID='" + uuid + "';");
 				if (rs.next()) {
 					Debugger.debug(Level.INFO, "MySQL Stats | Player {0} already exist. Getting Stats...", user.getPlayer().getName());
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-						if (stat.isPersistent())
+						if (!stat.isPersistent())
 							continue;
 						int val = rs.getInt(stat.getName());
 						user.setStat(stat, val);
@@ -82,7 +83,7 @@ public class MysqlManager implements UserDatabase {
 			}
 		});
 	}
-
+	
 	public String getTableName() {
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
 		return config.getString("table", "playerstats");

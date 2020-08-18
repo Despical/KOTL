@@ -1,13 +1,14 @@
 package me.despical.kotl.events;
 
-import me.despical.commonsbox.serializer.InventorySerializer;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.utils.UpdateChecker;
 
 /**
  * @author Despical
@@ -22,7 +23,7 @@ public class JoinEvent implements Listener {
 		this.plugin = plugin;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-
+	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(event.getPlayer()));
@@ -30,7 +31,7 @@ public class JoinEvent implements Listener {
 			InventorySerializer.loadInventory(plugin, event.getPlayer());
 		}
 	}
-
+	
 	@EventHandler
 	public void onJoinCheckVersion(final PlayerJoinEvent event) {
 		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true)

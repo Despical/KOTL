@@ -1,11 +1,16 @@
 package me.despical.kotl.api;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.sorter.SortUtils;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.user.data.MysqlManager;
-import me.despical.kotl.utils.MessageUtils;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,12 +18,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.*;
-import java.util.logging.Level;
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.sorter.SortUtils;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.utils.MessageUtils;
 
 /**
  * @author Despical
@@ -28,7 +33,7 @@ import java.util.logging.Level;
  */
 public class StatsStorage {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	/**
 	 * Get all UUID's sorted ascending by Statistic Type
@@ -71,7 +76,7 @@ public class StatsStorage {
 	/**
 	 * Get user statistic based on StatisticType
 	 *
-	 * @param player        Online player to get data from
+	 * @param player Online player to get data from
 	 * @param statisticType Statistic type to get (kills, deaths etc.)
 	 * @return int of statistic
 	 * @see StatisticType
@@ -86,8 +91,8 @@ public class StatsStorage {
 	public enum StatisticType {
 		TOURS_PLAYED("toursplayed", true), SCORE("score", true);
 
-		private final String name;
-		private final boolean persistent;
+		private String name;
+		private boolean persistent;
 
 		StatisticType(String name, boolean persistent) {
 			this.name = name;
@@ -99,7 +104,7 @@ public class StatsStorage {
 		}
 
 		public boolean isPersistent() {
-			return !persistent;
+			return persistent;
 		}
 	}
 }

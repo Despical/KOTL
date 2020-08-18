@@ -24,5 +24,4 @@ public interface UserDatabase {
 	 * @param user user to load statistic for
 	 */
 	void loadStatistics(User user);
-
 }

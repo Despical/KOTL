@@ -1,4 +1,9 @@
-### 1.0.7 (31.07.2020)
+### 1.0.8 Release (27.06.2020)
+* Added new message options.
+* Removed Kotlin compability.
+* Some performance improvements.
+
+### 1.0.7 Release (31.07.2020)
 * Fixed scoreboard wasn't be removed after deleting arena.
 * Fixed PAPI variable for king name.
 * Kotlin compatibility.

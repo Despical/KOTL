@@ -1,17 +1,18 @@
 package me.despical.kotl.commands;
 
-import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.arena.ArenaRegistry;
 
 /**
  * @author Despical
@@ -20,9 +21,8 @@ import java.util.List;
  */
 public class TabCompletion implements TabCompleter {
 
-	public List<String> commands = new ArrayList<>();
-	;
-
+	public List<String> commands = new ArrayList<>();;
+	
 	public TabCompletion(CommandHandler commandHandler) {
 		for (SubCommand command : commandHandler.getSubCommands()) {
 			this.commands.add(command.getName().toLowerCase(java.util.Locale.ENGLISH));
@@ -41,7 +41,7 @@ public class TabCompletion implements TabCompleter {
 		}
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(args[0], commands, completions);
-		}
+		} 
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") ||
 				args[0].equalsIgnoreCase("reload")) {

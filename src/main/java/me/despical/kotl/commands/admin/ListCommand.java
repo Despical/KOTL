@@ -1,14 +1,15 @@
 package me.despical.kotl.commands.admin;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bukkit.command.CommandSender;
+
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.commands.exception.CommandException;
-import org.bukkit.command.CommandSender;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class ListCommand extends SubCommand {
 
-	public ListCommand(String name) {
+	public ListCommand() {
 		super("list");
 		setPermission("kotl.admin.list");
 	}

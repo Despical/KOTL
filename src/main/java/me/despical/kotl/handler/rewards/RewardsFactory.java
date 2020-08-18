@@ -1,22 +1,23 @@
 package me.despical.kotl.handler.rewards;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.engine.ScriptEngine;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.utils.Debugger;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.engine.ScriptEngine;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.arena.ArenaRegistry;
+import me.despical.kotl.utils.Debugger;
 
 /**
  * @author Despical
@@ -62,17 +63,17 @@ public class RewardsFactory {
 				command = StringUtils.replace(command, "%player%", player.getName());
 				command = formatCommandPlaceholders(command, arena);
 				switch (reward.getExecutor()) {
-					case CONSOLE:
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-						break;
-					case PLAYER:
-						player.performCommand(command);
-						break;
-					case SCRIPT:
-						engine.execute(command);
-						break;
-					default:
-						break;
+				case CONSOLE:
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+					break;
+				case PLAYER:
+					player.performCommand(command);
+					break;
+				case SCRIPT:
+					engine.execute(command);
+					break;
+				default:
+					break;
 				}
 			}
 		}

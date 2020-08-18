@@ -1,13 +1,14 @@
 package me.despical.kotl.utils;
 
-import me.despical.kotl.Main;
-import org.bukkit.Bukkit;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import org.bukkit.Bukkit;
+
+import me.despical.kotl.Main;
 
 /**
  * @author Despical
@@ -18,19 +19,17 @@ public class ExceptionLogHandler extends Handler {
 
 	private List<String> blacklistedClasses = Arrays.asList("me.despical.kotl.user.data.MysqlManager", "me.despical.kotl.utils.commonsbox.database.MysqlDatabase");
 	private Main plugin;
-
+	
 	public ExceptionLogHandler(Main plugin) {
 		this.plugin = plugin;
 		Bukkit.getLogger().addHandler(this);
 	}
 
 	@Override
-	public void close() throws SecurityException {
-	}
+	public void close() throws SecurityException {}
 
 	@Override
-	public void flush() {
-	}
+	public void flush() {}
 
 	@Override
 	public void publish(LogRecord record) {
@@ -53,7 +52,7 @@ public class ExceptionLogHandler extends Handler {
 			return;
 		}
 		record.setThrown(null);
-
+	
 		Exception exception = (Exception) throwable.getCause() != null ? (Exception) throwable.getCause() : (Exception) throwable;
 		StringBuilder stacktrace = new StringBuilder(exception.getClass().getSimpleName());
 		if (exception.getMessage() != null) {

@@ -1,11 +1,10 @@
 package me.despical.kotl.events;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.user.User;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,10 +13,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.regex.Pattern;
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.arena.ArenaRegistry;
+import me.despical.kotl.user.User;
 
 /**
  * @author Despical
@@ -27,7 +28,7 @@ import java.util.regex.Pattern;
 public class ChatEvents implements Listener {
 
 	private Main plugin;
-	private String[] regexChars = new String[]{"$", "\\"};
+	private String[] regexChars = new String[] { "$", "\\" };
 
 	public ChatEvents(Main plugin) {
 		this.plugin = plugin;
