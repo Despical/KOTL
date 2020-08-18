@@ -1,4 +1,4 @@
-### 1.0.8 Release (27.06.2020)
+### 1.0.8 Release (18.08.2020)
 * Added new message options.
 * Removed Kotlin compability.
 * Some performance improvements.
