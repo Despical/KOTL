@@ -50,7 +50,6 @@ public class Arena {
 			}
 			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
-		
 	}
 	
 	public boolean isReady() {
@@ -187,14 +186,14 @@ public class Arena {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.createScoreboard(plugin.getUserManager().getUser(player));
 		}
-		player.getInventory().clear();
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 	}
 	
 	void removePlayer(Player player) {
 		if (player == null) {
 			return;
 		}
-		player.getInventory().clear();
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 		players.remove(player);
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);

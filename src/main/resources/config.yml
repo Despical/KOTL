@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.0.8)      | #
+# |     King of the Ladder by Despical (Version 1.0.9)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -19,6 +19,9 @@ DatabaseActivated: false
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more...
 InventoryManager: true
+
+# Should we clear player's inventory on joining and leaving the game area.
+Clear-Inventory: true
 
 # Should in-game chat format be enabled?
 # You can edit the formatting in messages.yml

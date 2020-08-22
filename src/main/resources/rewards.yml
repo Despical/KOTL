@@ -21,7 +21,7 @@
 #    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
-#         ^ Also giving players item is not RECOMMENDED because they're removing after leaving.
+#         ^ Also if you want to giving players item disable Clear-Inventory option in config.yml 
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)

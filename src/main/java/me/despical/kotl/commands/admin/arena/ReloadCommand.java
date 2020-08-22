@@ -55,7 +55,7 @@ public class ReloadCommand extends SubCommand {
 		Debugger.debug(Level.INFO, "Initialized plugin reload by {0}", sender.getName());
 		long start = System.currentTimeMillis();
 		
-		this.getPlugin().reloadConfig();
+		getPlugin().reloadConfig();
 		getPlugin().getChatManager().reloadConfig();
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			Debugger.debug(Level.INFO, "[Reloader] Stopping arena called {0}", arena.getId());

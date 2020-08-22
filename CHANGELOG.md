@@ -1,3 +1,6 @@
+### 1.0.9 (22.08.2020)
+* Added new option to disable inventory cleaning.
+
 ### 1.0.8 Release (18.08.2020)
 * Added new message options.
 * Removed Kotlin compability.
