@@ -44,10 +44,10 @@ public class JoinEvent implements Listener {
 			}
 			if (result.getNewestVersion().contains("b")) {
 				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download"));
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-1.80686"));
+				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-2.80686"));
 			} else {
 				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-1.80686"));
+				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-2.80686"));
 			}
 		}), 25);
 	}

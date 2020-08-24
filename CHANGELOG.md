@@ -1,9 +1,12 @@
+### 1.1.0 (24.08.2020)
+* Added Minecraft 1.16.2 compatibility.
+
 ### 1.0.9 (22.08.2020)
 * Added new option to disable inventory cleaning.
 
 ### 1.0.8 Release (18.08.2020)
 * Added new message options.
-* Removed Kotlin compability.
+* Removed Kotlin compatibility.
 * Some performance improvements.
 
 ### 1.0.7 Release (31.07.2020)
