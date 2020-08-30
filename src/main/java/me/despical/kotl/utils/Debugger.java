@@ -50,6 +50,7 @@ public class Debugger {
 	 * warnings and errors will be.
 	 *
 	 * @param level level of debugged message
+	 * @param params any params to debug
 	 * @param msg debugged message
 	 */
 	public static void debug(Level level, String msg, Object... params) {
@@ -63,7 +64,9 @@ public class Debugger {
 	 * Prints performance debug message with selected log level and replaces
 	 * parameters.
 	 *
+	 * @param monitorName name of the monitor
 	 * @param msg debugged message
+	 * @param params any params to debug
 	 */
 	public static void performance(String monitorName, String msg, Object... params) {
 		if (!deep) {

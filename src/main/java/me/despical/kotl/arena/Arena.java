@@ -172,7 +172,7 @@ public class Arena {
 	/**
 	 * Get arena's scoreboard manager
 	 * 
-	 * @param scoreboard manager of arena
+	 * @return scoreboard manager of arena
 	 */
 	public ScoreboardManager getScoreboardManager() {
 		return scoreboardManager;
