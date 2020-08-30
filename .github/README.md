@@ -4,7 +4,7 @@ King of the Ladder is a Minecraft minigame designed for small and big servers. T
 Don't let other players to climb top of the ladders, punch them to out of the game to win! Who will be the winner? Have fun using it! Leave a good rating if you really like it.
 
 ## Want to contribute in this project?
-[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/Vhyy4HA)        [**❤ Make Donation**](https://www.patreon.com/despical)
+[**💣 Issues Reporting (Discord)**](https://discordapp.com/invite/Vhyy4HA)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[**❤ Make Donation**](https://www.patreon.com/despical)
 
 ## Open Source Libraries
 | Library                                                     | Author                                          | License                                                                    |
