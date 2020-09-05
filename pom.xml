@@ -57,7 +57,7 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>com.destroystokyo.paper</groupId>
@@ -84,9 +84,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.github.stefvanschie.inventoryframework</groupId>
-			<artifactId>IF</artifactId>
-			<version>0.5.19</version>
+			<groupId>com.github.Despical</groupId>
+			<artifactId>InventoryFramework</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

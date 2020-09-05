@@ -1,3 +1,6 @@
+### 1.1.1 Release (05.09.2020)
+* Fixed GUI issues.
+
 ### 1.1.1 Pre-Release (30.08.2020)
 * Generated JavaDocs.
 

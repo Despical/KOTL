@@ -6,8 +6,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.despical.inventoryframework.GuiItem;
+import com.github.despical.inventoryframework.pane.StaticPane;
 
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;

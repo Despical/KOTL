@@ -3,10 +3,9 @@ package me.despical.kotl.handler.setup.components;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import com.github.stefvanschie.inventoryframework.GuiItem;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import com.github.despical.inventoryframework.GuiItem;
+import com.github.despical.inventoryframework.pane.StaticPane;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
@@ -71,19 +70,5 @@ public class MiscComponents implements SetupComponent {
 			e.getWhoClicked().closeInventory();
 			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out our wiki: https://github.com/Despical/KOTL/wiki"));
 		}), 7, 0);
-		
-		if (plugin.isBefore1_9_R1()) {
-			ItemStack warningItem = new ItemBuilder(XMaterial.BARRIER.parseItem())
-				.name(plugin.getChatManager().colorRawMessage("&c&lWarning!"))
-				.lore(ChatColor.GRAY + "Your server version is outdated, some features")
-				.lore(ChatColor.GRAY + "of the plugin may not be work properly. Also")
-				.lore(ChatColor.GRAY + "if you find any bug please use issue tracker")
-				.lore(ChatColor.GRAY + "on Github or contact us by our Discord server.")
-				.build();
-			
-			pane.addItem(new GuiItem(warningItem), 4, 0);
-			pane.addItem(new GuiItem(warningItem), 5, 0);
-			pane.addItem(new GuiItem(warningItem), 6, 0);
-		}
 	}
 }
