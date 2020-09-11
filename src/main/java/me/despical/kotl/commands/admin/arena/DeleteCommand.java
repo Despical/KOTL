@@ -66,7 +66,7 @@ public class DeleteCommand extends SubCommand {
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
-				if (!plugin.isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+				if (!getPlugin().isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				for (PotionEffect effect : player.getActivePotionEffects()) {
 					player.removePotionEffect(effect.getType());
