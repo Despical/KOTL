@@ -150,7 +150,7 @@ public class Main extends JavaPlugin {
 				player.teleport(arena.getEndLocation());
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(getUserManager().getUser(player));
-				if (isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+				if (!isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 			}
 			arena.getPlayers().clear();
 		}

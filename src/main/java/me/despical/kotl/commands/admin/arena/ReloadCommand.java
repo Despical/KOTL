@@ -69,7 +69,7 @@ public class ReloadCommand extends SubCommand {
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
-				if (getPlugin().isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+				if (!getPlugin().isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(getPlugin().getUserManager().getUser(player));
 				for (PotionEffect effect : player.getActivePotionEffects()) {
