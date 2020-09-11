@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -149,6 +150,7 @@ public class Main extends JavaPlugin {
 				player.teleport(arena.getEndLocation());
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(getUserManager().getUser(player));
+				player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 			}
 			arena.getPlayers().clear();
 		}

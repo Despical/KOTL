@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -68,6 +69,7 @@ public class ReloadCommand extends SubCommand {
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
+				player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(getPlugin().getUserManager().getUser(player));
 				for (PotionEffect effect : player.getActivePotionEffects()) {
