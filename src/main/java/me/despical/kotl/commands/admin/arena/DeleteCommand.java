@@ -3,6 +3,7 @@ package me.despical.kotl.commands.admin.arena;
 import java.util.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -65,6 +66,7 @@ public class DeleteCommand extends SubCommand {
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
+				if (!plugin.isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				for (PotionEffect effect : player.getActivePotionEffects()) {
 					player.removePotionEffect(effect.getType());
