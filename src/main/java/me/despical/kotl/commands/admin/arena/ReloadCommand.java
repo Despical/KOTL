@@ -26,7 +26,7 @@ import me.despical.kotl.utils.Debugger;
  */
 public class ReloadCommand extends SubCommand {
 
-	private Set<CommandSender> confirmations = new HashSet<>();
+	private final Set<CommandSender> confirmations = new HashSet<>();
 	
 	public ReloadCommand() {
 		super("reload");

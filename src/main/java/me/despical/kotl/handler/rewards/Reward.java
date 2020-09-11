@@ -10,10 +10,10 @@ import org.bukkit.Bukkit;
  */
 public class Reward {
 
-	private RewardType type;
-	private RewardExecutor executor;
+	private final RewardType type;
+	private final RewardExecutor executor;
 	private String executableCode;
-	private double chance;
+	private final double chance;
 
 	public Reward(RewardType type, String rawCode) {
 		this.type = type;
@@ -64,7 +64,7 @@ public class Reward {
 	public enum RewardType {
 		WIN("win"), LOSE("lose");
 
-		private String path;
+		private final String path;
 
 		RewardType(String path) {
 			this.path = path;

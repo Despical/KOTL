@@ -26,23 +26,14 @@ import me.despical.kotl.utils.Debugger;
  */
 public class RewardsFactory {
 
-	private Set<Reward> rewards = new HashSet<>();
-	private FileConfiguration config;
-	private boolean enabled;
+	private final Set<Reward> rewards = new HashSet<>();
+	private final FileConfiguration config;
+	private final boolean enabled;
 
 	public RewardsFactory(Main plugin) {
 		enabled = plugin.getConfig().getBoolean("Rewards-Enabled");
 		config = ConfigUtils.getConfig(plugin, "rewards");
 		registerRewards();
-	}
-
-	public void performReward(Arena arena, Reward.RewardType type) {
-		if (!enabled) {
-			return;
-		}
-		for (Player p : arena.getPlayers()) {
-			performReward(p, type);
-		}
 	}
 
 	public void performReward(Player player, Reward.RewardType type) {

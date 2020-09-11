@@ -1,9 +1,6 @@
 package me.despical.kotl.commands.admin.arena;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -26,7 +23,7 @@ import me.despical.kotl.commands.exception.CommandException;
  */
 public class DeleteCommand extends SubCommand {
 
-	private Set<CommandSender> confirmations = new HashSet<>();
+	private final Set<CommandSender> confirmations = new HashSet<>();
 	
 	public DeleteCommand() {
 		super("delete");
@@ -84,7 +81,7 @@ public class DeleteCommand extends SubCommand {
 
 	@Override
 	public List<String> getTutorial() {
-		return Arrays.asList("Deletes arena with the current configuration");
+		return Collections.singletonList("Deletes arena with the current configuration");
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 	
-	private Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 	
 	@Override
 	public boolean persist() {
@@ -36,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	}
 
 	public String getVersion() {
-		return "1.0.0";
+		return "1.1.2";
 	}
 
 	public String onPlaceholderRequest(Player player, String id) {

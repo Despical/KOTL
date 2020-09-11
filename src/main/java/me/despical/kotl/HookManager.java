@@ -15,7 +15,7 @@ import me.despical.kotl.utils.Debugger;
  */
 public class HookManager {
 
-	private Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
+	private final Map<HookFeature, Boolean> hooks = new EnumMap<>(HookFeature.class);
 
 	public HookManager() {
 		enableHooks();
@@ -46,7 +46,7 @@ public class HookManager {
 	public enum HookFeature {
 		HOLOGRAPHIC_DISPLAYS(Hook.HOLOGRAPHIC_DISPLAYS);
 
-		private Hook[] requiredHooks;
+		private final Hook[] requiredHooks;
 
 		HookFeature(Hook... requiredHooks) {
 			this.requiredHooks = requiredHooks;
@@ -60,7 +60,7 @@ public class HookManager {
 	public enum Hook {
 		HOLOGRAPHIC_DISPLAYS("HolographicDisplays");
 
-		private String pluginName;
+		private final String pluginName;
 
 		Hook(String pluginName) {
 			this.pluginName = pluginName;

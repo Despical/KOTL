@@ -1,3 +1,13 @@
+### 1.1.2 Release (11.09.2020)
+* Added option to changing hit cooldown delay.
+* Added option clearing effects on joining arena.
+* Added Minecraft 1.16.3 compatibility.
+* Added more in-game tips.
+* Improved arena creation messages.
+* Some performance improvements and bug fixes.
+* Updated dependencies to latest versions.
+* Removed unused functions and imports.
+
 ### 1.1.1 Release (05.09.2020)
 * Fixed GUI issues.
 

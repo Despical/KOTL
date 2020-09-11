@@ -6,7 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
 
 /**
  * @author Despical
@@ -15,10 +14,10 @@ import me.despical.kotl.arena.Arena;
  */
 public class SetupUtilities {
 
-	private Main plugin = JavaPlugin.getPlugin(Main.class);
-	private FileConfiguration config;
+	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final FileConfiguration config;
 	
-	SetupUtilities(FileConfiguration config, Arena arena) {
+	SetupUtilities(FileConfiguration config) {
 		this.config = config;
 	}
 

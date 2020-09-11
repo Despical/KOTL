@@ -2,9 +2,7 @@ package me.despical.kotl.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -33,16 +31,13 @@ import me.despical.kotl.commands.game.StatsCommand;
  */
 public class CommandHandler implements CommandExecutor {
 
-	private List<SubCommand> subCommands;
-	private Map<Class<? extends SubCommand>, SubCommand> subCommandsByClass;
-	private Main plugin;
-	private TabCompletion tabCompletion;
-	
+	private final List<SubCommand> subCommands;
+	private final Main plugin;
+
 	public CommandHandler(Main plugin) {
 		this.plugin = plugin;
 		subCommands = new ArrayList<>();
-		subCommandsByClass = new HashMap<>();
-		
+
 		registerSubCommand(new CreateCommand());
 		registerSubCommand(new EditCommand());
 		registerSubCommand(new ListCommand());
@@ -52,24 +47,18 @@ public class CommandHandler implements CommandExecutor {
 		registerSubCommand(new StatsCommand());
 		registerSubCommand(new LeaderBoardCommand());
 
-		tabCompletion = new TabCompletion(this);
 		plugin.getCommand("kotl").setExecutor(this);
-		plugin.getCommand("kotl").setTabCompleter(tabCompletion);
+		plugin.getCommand("kotl").setTabCompleter(new TabCompletion(this));
 	}
 	
 	public void registerSubCommand(SubCommand subCommand) {
 		subCommands.add(subCommand);
-		subCommandsByClass.put(subCommand.getClass(), subCommand);
 	}
 	
 	public List<SubCommand> getSubCommands() {
 		return new ArrayList<>(subCommands);
 	}
-	
-	public SubCommand getSubCommand(Class<? extends SubCommand> subCommandClass) {
-		return subCommandsByClass.get(subCommandClass);
-	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 0) {

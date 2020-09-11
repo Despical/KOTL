@@ -23,18 +23,19 @@ import me.despical.kotl.handler.setup.components.SpawnComponents;
  */
 public class SetupInventory {
 
-	private static Random random = new Random();
-	private static Main plugin = JavaPlugin.getPlugin(Main.class);
-	private FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-	private Arena arena;
-	private Player player;
+	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
+	private static final Random random = new Random();
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+	private final Arena arena;
+	private final Player player;
 	private Gui gui;
-	private SetupUtilities setupUtilities;
+	private final SetupUtilities setupUtilities;
 
 	public SetupInventory(Arena arena, Player player) {
 		this.arena = arena;
 		this.player = player;
-		this.setupUtilities = new SetupUtilities(config, arena);
+		this.setupUtilities = new SetupUtilities(config);
 		prepareGui();
 	}
 
@@ -61,18 +62,22 @@ public class SetupInventory {
 	}
 
 	private void sendProTip(Player p) {
-		int rand = random.nextInt(7 + 1);
+		int rand = random.nextInt(8 + 1);
 		switch (rand) {
-		case 0:
-			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
-			break;
-		case 1:
-			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
-			break;
-		case 2:
-			p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
-		default:
-			break;
+			case 0:
+				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
+				break;
+			case 1:
+				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
+				break;
+			case 2:
+				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
+				break;
+			case 3:
+				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO));
+				break;
+			default:
+				break;
 		}
 	}
 

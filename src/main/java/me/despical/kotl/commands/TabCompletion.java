@@ -21,8 +21,8 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class TabCompletion implements TabCompleter {
 
-	public List<String> commands = new ArrayList<>();;
-	
+	public List<String> commands = new ArrayList<>();
+
 	public TabCompletion(CommandHandler commandHandler) {
 		for (SubCommand command : commandHandler.getSubCommands()) {
 			this.commands.add(command.getName().toLowerCase(java.util.Locale.ENGLISH));

@@ -1,7 +1,6 @@
 package me.despical.kotl;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -75,7 +74,7 @@ public class Main extends JavaPlugin {
 		if (getConfig().getBoolean("Developer-Mode", false)) {
 			Debugger.deepDebug(true);
 			Debugger.debug(Level.INFO, "Deep debug enabled");
-			for (String listenable : new ArrayList<>(getConfig().getStringList("Listanable-Performances"))) {
+			for (String listenable : getConfig().getStringList("Listanable-Performances")) {
 				Debugger.monitorPerformance(listenable);
 			}
 		}
@@ -220,7 +219,7 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Download it on SpigotMC:");
-					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-2.80686/");
+					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-3.80686/");
 				}
 				return;
 			}

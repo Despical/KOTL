@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.1.1)      | #
+# |     King of the Ladder by Despical (Version 1.1.2)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -23,12 +23,18 @@ InventoryManager: true
 # Should we clear player's inventory on joining and leaving the game area.
 Clear-Inventory: true
 
+# Should we clear player's active potion effects when player join the arena.
+Clear-Effects: true
+
 # Should in-game chat format be enabled?
 # You can edit the formatting in messages.yml
 ChatFormat-Enabled: true
 
 # Should players get fall damage?
 Disable-Fall-Damage: true
+
+# The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
+Hit-Cooldown-Delay: 16
 
 # Commands which can be used in game, remove all of them to disable
 Whitelisted-Commands:

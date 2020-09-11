@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -104,7 +104,7 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons-Box</artifactId>
-			<version>1.0.9</version>
+			<version>1.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

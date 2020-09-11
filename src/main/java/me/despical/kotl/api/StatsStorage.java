@@ -33,7 +33,7 @@ import me.despical.kotl.utils.MessageUtils;
  */
 public class StatsStorage {
 
-	private static Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	/**
 	 * Get all UUID's sorted ascending by Statistic Type
@@ -91,8 +91,8 @@ public class StatsStorage {
 	public enum StatisticType {
 		TOURS_PLAYED("toursplayed", true), SCORE("score", true);
 
-		private String name;
-		private boolean persistent;
+		private final String name;
+		private final boolean persistent;
 
 		StatisticType(String name, boolean persistent) {
 			this.name = name;

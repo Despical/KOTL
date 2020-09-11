@@ -17,9 +17,9 @@ import me.despical.kotl.arena.Arena;
  */
 public class ChatManager {
 
-	private String prefix;
+	private final String prefix;
 	
-	private Main plugin;
+	private final Main plugin;
 	private FileConfiguration config;
 	
 	public ChatManager(Main plugin) {

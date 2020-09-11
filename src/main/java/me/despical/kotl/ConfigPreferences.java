@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-	private Main plugin;
-	private Map<Option, Boolean> options = new HashMap<>();
+	private final Main plugin;
+	private final Map<Option, Boolean> options = new HashMap<>();
 
 	public ConfigPreferences(Main plugin) {
 		this.plugin = plugin;
@@ -35,14 +35,14 @@ public class ConfigPreferences {
 	}
 
 	public enum Option {
-		CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true), DATABASE_ENABLED("DatabaseActivated", false),
-		INVENTORY_MANAGER_ENABLED("InventoryManager", true), DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true), 
-		JOIN_NOTIFY("Join-Notify", true), LEAVE_NOTIFY("Leave-Notify", true), BOSSBAR_ENABLED("Bossbar-Enabled", true),
-		SCOREBOARD_ENABLED("Scoreboard-Enabled", false), DEATHBLOCKS_ENABLED("Death-Blocks.Enabled", true),
-		CLEAR_INVENTORY("Clear-Inventory", true);
+		BOSSBAR_ENABLED("Bossbar-Enabled", true), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
+		CLEAR_EFFECTS("Clear-Effects", true), CLEAR_INVENTORY("Clear-Inventory", true),
+		DATABASE_ENABLED("DatabaseActivated", false), DEATHBLOCKS_ENABLED("Death-Blocks.Enabled", true), DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true),
+		INVENTORY_MANAGER_ENABLED("InventoryManager", true), JOIN_NOTIFY("Join-Notify", true),
+		LEAVE_NOTIFY("Leave-Notify", true), SCOREBOARD_ENABLED("Scoreboard-Enabled", false);
 
-		private String path;
-		private boolean def;
+		private final String path;
+		private final boolean def;
 
 		Option(String path, boolean def) {
 			this.path = path;

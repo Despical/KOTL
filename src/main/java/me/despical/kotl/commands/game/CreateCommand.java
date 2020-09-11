@@ -1,20 +1,21 @@
 package me.despical.kotl.commands.game;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.commands.exception.CommandException;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+
+import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
 
 /**
  * @author Despical
@@ -55,8 +56,10 @@ public class CreateCommand extends SubCommand {
         player.sendMessage(ChatColor.YELLOW + "      Instance " + args[0] + " created!");
         player.sendMessage("");
         player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/kotl " + "edit " + args[0] + ChatColor.GREEN + "!");
+		player.sendMessage("");
+		player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
+		player.sendMessage(ChatColor.GRAY + TUTORIAL_VIDEO);
         player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
-		return;
 	}
 	
 	private void setupDefaultConfiguration(String id) {
@@ -81,7 +84,7 @@ public class CreateCommand extends SubCommand {
 
 	@Override
 	public List<String> getTutorial() {
-		return Arrays.asList("Creates a new arena with default configuration");
+		return Collections.singletonList("Creates a new arena with default configuration");
 	}
 
 	@Override

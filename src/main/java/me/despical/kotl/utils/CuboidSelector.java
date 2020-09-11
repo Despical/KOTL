@@ -22,8 +22,8 @@ import me.despical.kotl.Main;
  */
 public class CuboidSelector implements Listener {
 
-	private Main plugin;
-	private Map<Player, Selection> selections = new HashMap<>();
+	private final Main plugin;
+	private final Map<Player, Selection> selections = new HashMap<>();
 
 	public CuboidSelector(Main plugin) {
 		this.plugin = plugin;
@@ -74,10 +74,10 @@ public class CuboidSelector implements Listener {
 		}
 	}
 
-	public class Selection {
+	public static class Selection {
 
-		private Location firstPos;
-		private Location secondPos;
+		private final Location firstPos;
+		private final Location secondPos;
 
 		public Selection(Location firstPos, Location secondPos) {
 			this.firstPos = firstPos;

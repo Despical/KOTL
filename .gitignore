@@ -3,3 +3,8 @@ target
 .classpath
 .project
 /bin/
+/.idea/
+/out/
+/generated/
+*.iml
+/target/
