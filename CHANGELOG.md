@@ -1,3 +1,6 @@
+### 1.1.3b Beta Release (14.09.2020)
+* Fixed Mysql stats table is not creating.
+
 ### 1.1.2 Release (11.09.2020)
 * Added option to changing hit cooldown delay.
 * Added option clearing effects on joining arena.

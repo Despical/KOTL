@@ -37,7 +37,7 @@ public class MysqlManager implements UserDatabase {
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
 					+ "  `name` varchar(32) NOT NULL,\n"
 					+ "  `score` int(11) NOT NULL DEFAULT '0',\n"
-					+ "  `toursplayed` int(11) NOT NULL DEFAULT '0',\n"
+					+ "  `toursplayed` int(11) NOT NULL DEFAULT '0'\n"
 					+ ");");
 			} catch (SQLException e) {
 				e.printStackTrace();

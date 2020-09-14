@@ -49,7 +49,7 @@ public class StatsStorage {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				Statement statement = connection.createStatement();
 				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
-				Map<java.util.UUID, java.lang.Integer> column = new LinkedHashMap<>();
+				Map<java.util.UUID, Integer> column = new LinkedHashMap<>();
 				while (set.next()) {
 					column.put(java.util.UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
 				}

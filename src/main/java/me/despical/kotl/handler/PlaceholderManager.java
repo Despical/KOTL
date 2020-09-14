@@ -36,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	}
 
 	public String getVersion() {
-		return "1.1.2";
+		return "1.1.3b";
 	}
 
 	public String onPlaceholderRequest(Player player, String id) {
