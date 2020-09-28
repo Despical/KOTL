@@ -32,6 +32,7 @@ public class HookManager {
 					break;
 				}
 			}
+
 			if (hooked) {
 				hooks.put(feature, true);
 				Debugger.debug(Level.INFO, "Feature {0} enabled!", feature.name());

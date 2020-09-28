@@ -48,10 +48,11 @@ public class CuboidSelector implements Listener {
 
 	@EventHandler
 	public void onWandUse(PlayerInteractEvent e) {
-		if (!ItemUtils.isItemStackNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lArea selector"))) {
+		if (!ItemUtils.isNamed(e.getItem()) || !e.getItem().getItemMeta().getDisplayName().equals(plugin.getChatManager().colorRawMessage("&6&lArea selector"))) {
 			return;
 		}
 		e.setCancelled(true);
+
 		switch (e.getAction()) {
 		case LEFT_CLICK_BLOCK:
 			selections.put(e.getPlayer(), new Selection(e.getClickedBlock().getLocation(), null));

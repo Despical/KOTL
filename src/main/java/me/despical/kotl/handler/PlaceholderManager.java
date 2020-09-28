@@ -36,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	}
 
 	public String getVersion() {
-		return "1.1.3b";
+		return "1.1.3";
 	}
 
 	public String onPlaceholderRequest(Player player, String id) {
@@ -44,12 +44,12 @@ public class PlaceholderManager extends PlaceholderExpansion {
 			return null;
 		}
 		switch (id.toLowerCase()) {
-		case "score":
-			return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));
-		case "tours_played":
-			return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED));
-		default:
-			return handleArenaPlaceholderRequest(id);
+			case "score":
+				return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));
+			case "tours_played":
+				return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED));
+			default:
+				return handleArenaPlaceholderRequest(id);
 		}
 	}
 
@@ -57,18 +57,21 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		if (!id.contains(":")) {
 			return null;
 		}
+
 		String[] data = id.split(":");
 		Arena arena = ArenaRegistry.getArena(data[0]);
+
 		if (arena == null) {
 			return null;
 		}
+
 		switch (data[1].toLowerCase()) {
-		case "players":
-			return String.valueOf(arena.getPlayers().size());
-		case "king":
-			return arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : "Nobody";
-		default:
-			return null;
+			case "players":
+				return String.valueOf(arena.getPlayers().size());
+			case "king":
+				return arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName();
+			default:
+				return null;
 		}
 	}
 }

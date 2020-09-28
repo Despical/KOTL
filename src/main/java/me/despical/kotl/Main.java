@@ -64,21 +64,13 @@ public class Main extends JavaPlugin {
 		if (!validateIfPluginShouldStart()) {
 			return;
 		}
+
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		saveDefaultConfig();
-		if (getDescription().getVersion().contains("d")) {
-			Debugger.setEnabled(true);
-		} else {
-			Debugger.setEnabled(getConfig().getBoolean("Debug-Messages", false));
-		}
+
+		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages", false));
 		Debugger.debug(Level.INFO, "Initialization start");
-		if (getConfig().getBoolean("Developer-Mode", false)) {
-			Debugger.deepDebug(true);
-			Debugger.debug(Level.INFO, "Deep debug enabled");
-			for (String listenable : getConfig().getStringList("Listanable-Performances")) {
-				Debugger.monitorPerformance(listenable);
-			}
-		}
+
 		long start = System.currentTimeMillis();
 		
 		configPreferences = new ConfigPreferences(this);

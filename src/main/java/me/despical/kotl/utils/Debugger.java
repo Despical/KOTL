@@ -1,6 +1,5 @@
 package me.despical.kotl.utils;
 
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,23 +10,13 @@ import java.util.logging.Logger;
  */
 public class Debugger {
 
-	private static final HashSet<String> listenedPerformance = new HashSet<>();
 	private static boolean enabled = false;
-	private static boolean deep = false;
 	private static final Logger logger = Logger.getLogger("");
 
 	private Debugger() {}
 
 	public static void setEnabled(boolean enabled) {
 		Debugger.enabled = enabled;
-	}
-
-	public static void deepDebug(boolean deep) {
-		Debugger.deep = deep;
-	}
-
-	public static void monitorPerformance(String task) {
-		listenedPerformance.add(task);
 	}
 
 	/**
@@ -41,6 +30,7 @@ public class Debugger {
 		if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
 			return;
 		}
+
 		logger.log(level, "[KOTLDBG] " + msg);
 	}
 
@@ -57,24 +47,7 @@ public class Debugger {
 		if (!enabled && (level != Level.WARNING || level != Level.FINE)) {
 			return;
 		}
-		logger.log(level, "[KOTLDBG] " + msg, params);
-	}
 
-	/**
-	 * Prints performance debug message with selected log level and replaces
-	 * parameters.
-	 *
-	 * @param monitorName name of the monitor
-	 * @param msg debugged message
-	 * @param params any params to debug
-	 */
-	public static void performance(String monitorName, String msg, Object... params) {
-		if (!deep) {
-			return;
-		}
-		if (!listenedPerformance.contains(monitorName)) {
-			return;
-		}
-		logger.log(Level.INFO, "[KOTLDBG] " + msg, params);
+		logger.log(level, "[KOTLDBG] " + msg, params);
 	}
 }

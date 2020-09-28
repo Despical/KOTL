@@ -43,11 +43,13 @@ public class User {
 		} else if (stats.get(stat) == null) {
 			return 0;
 		}
+
 		return stats.get(stat);
 	}
 
 	public void setStat(StatsStorage.StatisticType stat, int i) {
 		stats.put(stat, i);
+
 		Bukkit.getScheduler().runTask(plugin, () -> {
 			KOTLPlayerStatisticChangeEvent playerStatisticChangeEvent = new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, i);
 			Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
@@ -56,6 +58,7 @@ public class User {
 
 	public void addStat(StatsStorage.StatisticType stat, int i) {
 		stats.put(stat, getStat(stat) + i);
+
 		Bukkit.getScheduler().runTask(plugin, () -> {
 			KOTLPlayerStatisticChangeEvent playerStatisticChangeEvent = new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
 			Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
