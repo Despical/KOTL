@@ -1,8 +1,7 @@
 package me.despical.kotl.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,44 +23,48 @@ public class TabCompletion implements TabCompleter {
 	public List<String> commands = new ArrayList<>();
 
 	public TabCompletion(CommandHandler commandHandler) {
-		for (SubCommand command : commandHandler.getSubCommands()) {
-			this.commands.add(command.getName().toLowerCase(java.util.Locale.ENGLISH));
-		}
+		commandHandler.getSubCommands().forEach(command -> commands.add(command.getName().toLowerCase(Locale.ENGLISH)));
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> completions = new ArrayList<>();
+
 		if (!(sender instanceof Player)) {
 			return Collections.emptyList();
 		}
+
 		Player player = (Player) sender;
+
 		if (!(player.hasPermission("kotl.admin"))) {
 			return Collections.emptyList();
 		}
+
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(args[0], commands, completions);
-		} 
+		}
+
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") ||
 				args[0].equalsIgnoreCase("reload")) {
 				return Collections.emptyList();
 			}
+
 			if (args[0].equalsIgnoreCase("top")) {
-				List<String> possibilities = new ArrayList<>();
-				for (StatsStorage.StatisticType statistic : StatsStorage.StatisticType.values()) {
-					possibilities.add(statistic.name().toLowerCase(java.util.Locale.ENGLISH));
-				}
-				return possibilities;
+				return Arrays.stream(StatsStorage.StatisticType.values()).map(statistic -> statistic.name().toLowerCase(Locale.ENGLISH)).collect(Collectors.toList());
 			}
+
 			List<String> arenas = new ArrayList<>();
+
 			for (Arena arena : ArenaRegistry.getArenas()) {
 				arenas.add(arena.getId());
 			}
+
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 			Collections.sort(arenas);
 			return arenas;
 		}
+
 		Collections.sort(completions);
 		return completions;
 	}

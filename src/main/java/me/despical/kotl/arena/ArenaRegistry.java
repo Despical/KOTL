@@ -1,8 +1,10 @@
 package me.despical.kotl.arena;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
+import me.despical.kotl.HookManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-import com.google.common.collect.Lists;
 
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
@@ -26,8 +27,8 @@ import me.despical.kotl.utils.Debugger;
  */
 public class ArenaRegistry {
 
-	private static Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static List<Arena> arenas = Lists.<Arena>newArrayList();
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final List<Arena> arenas = new ArrayList<>();
 
 	/**
 	 * Checks if player is in any arena
@@ -41,6 +42,7 @@ public class ArenaRegistry {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -55,6 +57,7 @@ public class ArenaRegistry {
 		if (p == null || !p.isOnline()) {
 			return null;
 		}
+
 		for (Arena arena : arenas) {
 			for (Player player : arena.getPlayers()) {
 				if (player.getUniqueId().equals(p.getUniqueId())) {
@@ -62,6 +65,7 @@ public class ArenaRegistry {
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -72,14 +76,13 @@ public class ArenaRegistry {
 	 * @return Arena or null if not found
 	 */
 	public static Arena getArena(String id) {
-		Arena arena = null;
 		for (Arena loopArena : arenas) {
 			if (loopArena.getId().equalsIgnoreCase(id)) {
-				arena = loopArena;
-				break;
+				return loopArena;
 			}
 		}
-		return arena;
+
+		return null;
 	}
 
 	public static void registerArena(Arena arena) {
@@ -98,30 +101,38 @@ public class ArenaRegistry {
 		long start = System.currentTimeMillis();
 		
 		if (arenas.size() > 0) arenas.clear();
+
 		if (!config.contains("instances")) {
 			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
 			return;
 		}
+
 		ConfigurationSection section = config.getConfigurationSection("instances");
+
 		if (section == null) {
 			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
 			return;
 		}
+
 		for (String id : section.getKeys(false)) {
 			Arena arena;
 			String s = "instances." + id + ".";
 			if (s.contains("default")) {
 				continue;
 			}
+
 			arena = new Arena(id);
 			arena.setEndLocation(LocationSerializer.locationFromString(config.getString(s + "endLocation", "world, -224.000, 4.000, -583.000, 0.000, 0.000")));
 			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString(s + "plateLocation", "world, -224.000, 4.000, -583.000, 0.000, 0.000")));
-			Hologram hologram = HologramsAPI.createHologram(plugin, LocationSerializer.locationFromString(config.getString(s + "hologramLocation")));
-			hologram.setAllowPlaceholders(true);
-			hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
-			arena.setHologram(hologram);
-			arena.setHologramLocation(hologram.getLocation());
-			
+
+			if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
+				Hologram hologram = HologramsAPI.createHologram(plugin, LocationSerializer.locationFromString(config.getString(s + "hologramLocation")));
+				hologram.setAllowPlaceholders(true);
+				hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+				arena.setHologram(hologram);
+				arena.setHologramLocation(hologram.getLocation());
+			}
+
 			if (LocationSerializer.locationFromString(config.getString(s + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
 				Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
 				config.set(s + "plateLocation", LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()));
@@ -131,6 +142,7 @@ public class ArenaRegistry {
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
+
 			if (!config.getBoolean(s + "isdone", false)) {
 				Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				config.set(s + "isdone", false);
@@ -139,10 +151,12 @@ public class ArenaRegistry {
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
+
 			ArenaRegistry.registerArena(arena);
 			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
+
 		Debugger.debug(Level.INFO, "Arenas registration completed, took {0} ms", System.currentTimeMillis() - start);
 	}
 

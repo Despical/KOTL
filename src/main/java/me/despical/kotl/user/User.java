@@ -20,7 +20,7 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class User {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
 

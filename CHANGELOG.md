@@ -1,9 +1,15 @@
+### 1.1.3 Release (29.09.2020)
+* So many improvements for new versions of Java.
+* Now HolographicDisplays is a soft-dependency.
+
+**Also note that this update includes 1.1.3 beta release changes.**
+
 ### 1.1.3b Beta Release (14.09.2020)
 * Fixed Mysql stats table is not creating.
 
 ### 1.1.2 Release (11.09.2020)
-* Added option to changing hit cooldown delay.
-* Added option clearing effects on joining arena.
+* Added option to change delay between hits.
+* Added option clear effects on joining arena.
 * Added Minecraft 1.16.3 compatibility.
 * Added more in-game tips.
 * Improved arena creation messages.

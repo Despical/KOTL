@@ -33,14 +33,12 @@ public class UserManager {
 			database = new FileStats(plugin);
 			Debugger.debug(Level.INFO, "File Stats enabled");
 		}
+
 		loadStatsForPlayersOnline();
 	}
 
 	private void loadStatsForPlayersOnline() {
-		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			User user = getUser(player);
-			loadStatistics(user);
-		}
+		Bukkit.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
 	}
 
 	public User getUser(Player player) {
@@ -49,6 +47,7 @@ public class UserManager {
 				return user;
 			}
 		}
+
 		Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
 		User user = new User(player);
 		users.add(user);
@@ -59,6 +58,7 @@ public class UserManager {
 		if (!stat.isPersistent()) {
 			return;
 		}
+
 		database.saveStatistic(user, stat);
 	}
 

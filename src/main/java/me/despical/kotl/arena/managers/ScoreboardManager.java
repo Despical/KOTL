@@ -22,11 +22,10 @@ import me.despical.kotl.user.User;
 
 public class ScoreboardManager {
 
-	private static Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static String boardTitle = plugin.getChatManager().colorMessage("Scoreboard.Title");
-	private static FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
-	private List<Scoreboard> scoreboards = new ArrayList<>();
-	private Arena arena;
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
+	private final List<Scoreboard> scoreboards = new ArrayList<>();
+	private final Arena arena;
 
 	public ScoreboardManager(Arena arena) {
 		this.arena = arena;
@@ -43,7 +42,7 @@ public class ScoreboardManager {
 
 			@Override
 			public String getTitle(Player player) {
-				return boardTitle;
+				return plugin.getChatManager().colorMessage("Scoreboard.Title");
 			}
 
 			@Override
@@ -51,6 +50,7 @@ public class ScoreboardManager {
 				return formatScoreboard(user);
 			}
 		});
+
 		scoreboard.activate();
 		scoreboards.add(scoreboard);
 	}
@@ -75,19 +75,19 @@ public class ScoreboardManager {
 	 * Forces all scoreboards to deactivate.
 	 */
 	public void stopAllScoreboards() {
-		for (Scoreboard board : scoreboards) {
-			board.deactivate();
-		}
+		scoreboards.forEach(Scoreboard::deactivate);
+
 		scoreboards.clear();
 	}
 
 	private List<Entry> formatScoreboard(User user) {
 		EntryBuilder builder = new EntryBuilder();
 		List<String> lines = config.getStringList("Scoreboard.Content.Playing");
-		
+
 		for (String line : lines) {
 			builder.next(formatScoreboardLine(line, user));
 		}
+
 		return builder.build();
 	}
 
@@ -103,6 +103,7 @@ public class ScoreboardManager {
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			formattedLine = PlaceholderAPI.setPlaceholders(user.getPlayer(), formattedLine);
 		}
+
 		return formattedLine;
 	}
 }

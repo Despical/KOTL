@@ -1,5 +1,6 @@
 package me.despical.kotl.handler;
 
+import me.despical.kotl.HookManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +18,7 @@ import me.despical.kotl.arena.Arena;
  */
 public class ChatManager {
 
-	private final String prefix;
+	private String prefix;
 	
 	private final Main plugin;
 	private FileConfiguration config;
@@ -42,9 +43,11 @@ public class ChatManager {
 	
 	public String colorMessage(String message, Player player) {
 		String returnString = config.getString(message);
+
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
+
 		return ChatColor.translateAlternateColorCodes('&', returnString);
 	}
 
@@ -52,9 +55,11 @@ public class ChatManager {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
+
 		return returnString;
 	}
 
@@ -67,35 +72,36 @@ public class ChatManager {
 	}
 	
 	public void broadcastMessage(Arena a, String msg) {
-		for (Player p : a.getPlayers()) {
-			p.sendMessage(prefix + msg);
-		}
+		a.getPlayers().forEach(p -> p.sendMessage(prefix + msg));
 	}
 
 	public void broadcastAction(Arena a, Player p, ActionType action) {
 		String message;
+
 		switch (action) {
-		case JOIN:
-			message = formatMessage(a, colorMessage("In-Game.Join"), p);
-			break;
-		case LEAVE:
-			message = formatMessage(a, colorMessage("In-Game.Leave"), p);
-			break;
-		case NEW_KING:
-			message = formatMessage(a, colorMessage("In-Game.New-King"), p);
-			a.getHologram().getLine(0).removeLine();
-			a.getHologram().insertTextLine(0, formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
-			break;
-		default:
-			return;
+			case JOIN:
+				message = formatMessage(a, colorMessage("In-Game.Join"), p);
+				break;
+			case LEAVE:
+				message = formatMessage(a, colorMessage("In-Game.Leave"), p);
+				break;
+			case NEW_KING:
+				message = formatMessage(a, colorMessage("In-Game.New-King"), p);
+				if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
+					a.getHologram().getLine(0).removeLine();
+					a.getHologram().insertTextLine(0, formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
+				}
+				break;
+			default:
+				return;
 		}
-		for (Player player : a.getPlayers()) {
-			player.sendMessage(prefix + message);
-		}
+
+		broadcastMessage(a, prefix + message);
 	}
 	
 	public void reloadConfig() {
 		config = ConfigUtils.getConfig(plugin, "messages");
+		prefix = colorRawMessage(config.getString("In-Game.Plugin-Prefix"));
 	}
 
 	public enum ActionType {

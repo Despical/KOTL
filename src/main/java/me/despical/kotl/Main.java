@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import me.despical.commonsbox.compat.VersionResolver;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,7 +49,6 @@ import me.despical.kotl.utils.UpdateChecker;
 public class Main extends JavaPlugin {
 
 	private ExceptionLogHandler exceptionLogHandler;
-	private String version;
 	private boolean forceDisable = false;
 	private HookManager hookManager;
 	private ConfigPreferences configPreferences;
@@ -85,14 +85,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-		if (!(version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3")
-			|| version.equalsIgnoreCase("v1_9_R1") || version.equalsIgnoreCase("v1_9_R2") 
-			|| version.equalsIgnoreCase("v1_10_R1") || version.equalsIgnoreCase("v1_11_R1")
-			|| version.equalsIgnoreCase("v1_12_R1") || version.equalsIgnoreCase("v1_13_R1") 
-			|| version.equalsIgnoreCase("v1_13_R2") || version.equalsIgnoreCase("v1_14_R1") 
-			|| version.equalsIgnoreCase("v1_15_R1") || version.equalsIgnoreCase("v1_16_R1")
-			|| version.equalsIgnoreCase("v1_16_R2"))) {
+		if (VersionResolver.isBefore(VersionResolver.ServerVersion.v1_8_R2)) {
 			MessageUtils.thisVersionIsNotSupported();
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Your server version is not supported by King of the Ladder!");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Sadly, we must shut off. Maybe you consider changing your server version?");
@@ -110,6 +103,7 @@ public class Main extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		}
+
 		return true;
 	}
 	
@@ -118,19 +112,23 @@ public class Main extends JavaPlugin {
 		if (forceDisable) {
 			return;
 		}
+
 		Debugger.debug(Level.INFO, "System disable initialized");
 		long start = System.currentTimeMillis();
 		
 		Bukkit.getLogger().removeHandler(exceptionLogHandler);
 		saveAllUserStatistics();
+
 		if (hookManager != null && hookManager.isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
 			for (Hologram hologram : HologramsAPI.getHolograms(this)) {
 				hologram.delete();
 			}
 		}
+
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			getMysqlDatabase().shutdownConnPool();
 		}
+
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			for (Player player : arena.getPlayers()) {
 				if (getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -151,10 +149,12 @@ public class Main extends JavaPlugin {
 	
 	private void initializeClasses() {
 		ScoreboardLib.setPluginInstance(this);
+
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
 			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
 		}
+
 		userManager = new UserManager(this);
 		registerSoftDependenciesAndServices();
 		commandHandler = new CommandHandler(this);
@@ -174,15 +174,22 @@ public class Main extends JavaPlugin {
 		long start = System.currentTimeMillis();
 
 		startPluginMetrics();
+
 		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			Debugger.debug(Level.INFO, "Hooking into PlaceholderAPI");
 			new PlaceholderManager().register();
 		}
+
 		Debugger.debug(Level.INFO, "Hooked into soft dependencies took {0} ms", System.currentTimeMillis() - start);
 	}
 	
 	private void startPluginMetrics() {
 		Metrics metrics = new Metrics(this);
+
+		if (!metrics.isEnabled()) {
+			return;
+		}
+
 		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
 		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
 			if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
@@ -205,22 +212,26 @@ public class Main extends JavaPlugin {
 		if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 			return;
 		}
+
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
 			}
+
 			if (result.getNewestVersion().contains("b")) {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Bukkit.getConsoleSender().sendMessage("[KOTL] Download it on SpigotMC:");
 					Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-3.80686/");
 				}
+
 				return;
 			}
+
 			MessageUtils.updateIsHere();
 			Bukkit.getConsoleSender().sendMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
 			Bukkit.getConsoleSender().sendMessage("[KOTL] Download it SpigotMC:");
-			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-2.80686/");
+			Bukkit.getConsoleSender().sendMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-3-1-16-3.80686/");
 		});
 	}
 	
@@ -234,7 +245,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	public boolean isBefore1_9_R1() {
-		return version.equalsIgnoreCase("v1_8_R2") || version.equalsIgnoreCase("v1_8_R3");
+		return VersionResolver.isBefore(VersionResolver.ServerVersion.v1_9_R1);
 	}
 	
 	public HookManager getHookManager() {
