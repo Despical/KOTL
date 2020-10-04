@@ -73,3 +73,6 @@ Validator:
   Invalid-Arena-Configuration: "[KOTL] Arena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[KOTL] Arena %arena% instance successfully started!"
   No-Instances-Created: "[KOTL] There are no arena instances created in configuration!"
+
+# Don't edit it. But who's stopping you? It's your server!
+File-Version: 0

@@ -1,20 +1,18 @@
-package me.despical.kotl.handler.setup;
+package me.despical.kotl.handlers.setup;
 
-import java.util.Random;
-
+import com.github.despical.inventoryframework.Gui;
+import com.github.despical.inventoryframework.pane.StaticPane;
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.handlers.setup.components.ArenaRegisterComponents;
+import me.despical.kotl.handlers.setup.components.MiscComponents;
+import me.despical.kotl.handlers.setup.components.SpawnComponents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.despical.inventoryframework.Gui;
-import com.github.despical.inventoryframework.pane.StaticPane;
-
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
-import me.despical.kotl.handler.setup.components.MiscComponents;
-import me.despical.kotl.handler.setup.components.SpawnComponents;
+import java.util.Random;
 
 /**
  * @author Despical
@@ -24,8 +22,9 @@ import me.despical.kotl.handler.setup.components.SpawnComponents;
 public class SetupInventory {
 
 	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
-	private static final Random random = new Random();
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
+	private final Random random = new Random();
+	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 	private final Arena arena;
 	private final Player player;
@@ -36,14 +35,17 @@ public class SetupInventory {
 		this.arena = arena;
 		this.player = player;
 		this.setupUtilities = new SetupUtilities(config);
+
 		prepareGui();
 	}
 
 	private void prepareGui() {
 		this.gui = new Gui(plugin, 1, "King of the Ladder Arena Setup");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+
 		StaticPane pane = new StaticPane(9, 1);
 		this.gui.addPane(pane);
+
 		prepareComponents(pane);
 	}
 
@@ -63,6 +65,7 @@ public class SetupInventory {
 
 	private void sendProTip(Player p) {
 		int rand = random.nextInt(8 + 1);
+
 		switch (rand) {
 			case 0:
 				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
@@ -100,10 +103,6 @@ public class SetupInventory {
 
 	public Player getPlayer() {
 		return player;
-	}
-
-	public Gui getGui() {
-		return gui;
 	}
 
 	public SetupUtilities getSetupUtilities() {

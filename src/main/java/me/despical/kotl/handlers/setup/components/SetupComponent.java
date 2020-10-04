@@ -1,8 +1,8 @@
-package me.despical.kotl.handler.setup.components;
+package me.despical.kotl.handlers.setup.components;
 
 import com.github.despical.inventoryframework.pane.StaticPane;
 
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.setup.SetupInventory;
 
 /**
  * @author Despical

@@ -3,7 +3,6 @@ package me.despical.kotl.commands.admin;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.commands.exception.CommandException;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;
@@ -19,6 +18,7 @@ public class ListCommand extends SubCommand {
 
 	public ListCommand() {
 		super("list");
+
 		setPermission("kotl.admin.list");
 	}
 
@@ -33,8 +33,8 @@ public class ListCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
-		if (ArenaRegistry.getArenas().size() == 0) {
+	public void execute(CommandSender sender, String label, String[] args) {
+		if (ArenaRegistry.getArenas().isEmpty()) {
 			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.List-Command.No-Arenas-Created"));
 			return;
 		}

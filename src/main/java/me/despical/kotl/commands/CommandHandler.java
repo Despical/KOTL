@@ -63,9 +63,11 @@ public class CommandHandler implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 0) {
 			sender.sendMessage(ChatColor.DARK_AQUA + "This server is running " + ChatColor.AQUA + "King of the Ladder " + ChatColor.DARK_AQUA + "v" + this.plugin.getDescription().getVersion() + " by " + ChatColor.AQUA + "Despical");
+
 			if (sender.hasPermission("kotl.admin")) {
 				sender.sendMessage(ChatColor.DARK_AQUA + "Commands: " + ChatColor.AQUA + "/" + label + " help");
 			}
+
 			return true;
 		}
 		
@@ -75,10 +77,12 @@ public class CommandHandler implements CommandExecutor {
 						sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
 						return true;
 					}
+
 					if (subCommand.getSenderType() == SenderType.PLAYER && !(sender instanceof Player)) {
 						sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Only-By-Player"));
 						return false;
 					}
+
 					if (args.length - 1 >= subCommand.getMinimumArguments()) {
 						try {
 							subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length));
@@ -93,11 +97,14 @@ public class CommandHandler implements CommandExecutor {
 				return true;
 			}
 		}
+
 		List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
-        if (!matches.isEmpty()) {
+
+		if (!matches.isEmpty()) {
           sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
           return true;
         }
+
         return true;
 	}
 }

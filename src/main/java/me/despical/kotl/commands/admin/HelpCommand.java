@@ -1,19 +1,17 @@
 package me.despical.kotl.commands.admin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.commands.exception.CommandException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Despical
@@ -24,6 +22,7 @@ public class HelpCommand extends SubCommand {
 	
 	public HelpCommand() {
 		super("help");
+
 		setPermission("kotl.admin");
 	}
 
@@ -38,10 +37,11 @@ public class HelpCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
+	public void execute(CommandSender sender, String label, String[] args) {
 		sender.sendMessage("");
 		sender.sendMessage(getPlugin().getChatManager().colorRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		sender.sendMessage("");
+
 		for (SubCommand subCommand : this.getPlugin().getCommandHandler().getSubCommands()) {
 			if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
 				String usage = "/" + label + " " + subCommand.getName() + (subCommand.getPossibleArguments().length() > 0 ? " " + subCommand.getPossibleArguments() : "");
@@ -49,9 +49,7 @@ public class HelpCommand extends SubCommand {
 				if (sender instanceof Player) {
 					List<String> help = new ArrayList<>();
 					help.add(ChatColor.DARK_AQUA + usage);
-					for (String tutLine : subCommand.getTutorial()) {
-						help.add(ChatColor.AQUA + tutLine);
-					}
+					subCommand.getTutorial().stream().map(tutLine -> ChatColor.AQUA + tutLine).forEach(help::add);
 					
 					((Player) sender).spigot().sendMessage(new ComponentBuilder(usage)
 						.color(ChatColor.AQUA)
@@ -63,6 +61,7 @@ public class HelpCommand extends SubCommand {
 				}
 			}
 		}
+
 		if (sender instanceof Player) {
 			sendHoverTip((Player) sender);
 		}

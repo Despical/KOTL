@@ -1,12 +1,5 @@
 package me.despical.kotl.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -14,6 +7,11 @@ import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.UserDatabase;
 import me.despical.kotl.utils.Debugger;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Despical
@@ -28,10 +26,12 @@ public class UserManager {
 	public UserManager(Main plugin) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			database = new MysqlManager(plugin);
-			Debugger.debug(Level.INFO, "MySQL Stats enabled");
+
+			Debugger.debug("MySQL Stats enabled");
 		} else {
 			database = new FileStats(plugin);
-			Debugger.debug(Level.INFO, "File Stats enabled");
+
+			Debugger.debug("File Stats enabled");
 		}
 
 		loadStatsForPlayersOnline();
@@ -48,7 +48,8 @@ public class UserManager {
 			}
 		}
 
-		Debugger.debug(Level.INFO, "Registering new user {0} ({1})", player.getUniqueId(), player.getName());
+		Debugger.debug("Registering new user {0} ({1})", player.getUniqueId(), player.getName());
+
 		User user = new User(player);
 		users.add(user);
 		return user;

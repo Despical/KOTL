@@ -6,9 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.despical.kotl.Main;
-import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.handler.ChatManager.ActionType;
+import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.user.User;
 
 /**
@@ -18,24 +17,25 @@ import me.despical.kotl.user.User;
  */
 public class QuitEvent implements Listener {
 
-	private Main plugin;
+	private final Main plugin;
 
 	public QuitEvent(Main plugin) {
 		this.plugin = plugin;
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+
 		if (ArenaRegistry.isInArena(player)) {
 			plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ActionType.LEAVE);
+
 			ArenaRegistry.getArena(player).getPlayers().remove(player);
 		}
-		final User user = plugin.getUserManager().getUser(player);
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-			plugin.getUserManager().saveStatistic(user, stat);
-		}
+
+		User user = plugin.getUserManager().getUser(player);
 		plugin.getUserManager().removeUser(user);
 	}
 }

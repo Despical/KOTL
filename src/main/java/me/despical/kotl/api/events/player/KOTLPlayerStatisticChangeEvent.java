@@ -16,22 +16,20 @@ import me.despical.kotl.arena.Arena;
  */
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
-	private static final HandlerList HANDLERS = new HandlerList();
-	private Player player;
-	private StatsStorage.StatisticType statisticType;
-	private int number;
+	private final HandlerList HANDLERS = new HandlerList();
+	private final Player player;
+	private final StatsStorage.StatisticType statisticType;
+	private final int number;
 
 	public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
 		super(eventArena);
+
 		this.player = player;
 		this.statisticType = statisticType;
 		this.number = number;
 	}
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
-
+	@Override
 	public HandlerList getHandlers() {
 		return HANDLERS;
 	}

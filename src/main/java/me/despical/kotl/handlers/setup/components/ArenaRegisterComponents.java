@@ -1,19 +1,7 @@
-package me.despical.kotl.handler.setup.components;
-
-import me.despical.kotl.HookManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
+package me.despical.kotl.handlers.setup.components;
 
 import com.github.despical.inventoryframework.GuiItem;
 import com.github.despical.inventoryframework.pane.StaticPane;
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
@@ -21,7 +9,15 @@ import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.hologram.Hologram;
+import me.despical.kotl.handlers.setup.SetupInventory;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Despical
@@ -43,7 +39,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 		Main plugin = setupInventory.getPlugin();
 		ItemStack registeredItem;
 
-		if (!config.getBoolean("instances." + setupInventory.getArena().getId() + ".isdone", false)) {
+		if (!setupInventory.getArena().isReady()) {
 			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
 				.name(plugin.getChatManager().colorRawMessage("&e&lRegister Arena - Finish Setup"))
 				.lore(ChatColor.GRAY + "Click this when you're done with configuration.")
@@ -69,7 +65,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 				return;
 			}
 
-			String[] locations = new String[] {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
+			String[] locations = {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
 
 			for (String s : locations) {
 				if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s).equals(
@@ -79,22 +75,16 @@ public class ArenaRegisterComponents implements SetupComponent {
 				}
 			}
 
-			if (setupInventory.getArena().getHologram() != null) setupInventory.getArena().getHologram().delete();
-
+			arena.getHologram().delete();
 			arena = new Arena(setupInventory.getArena().getId());
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".endLocation")));
 			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".plateLocation")));
 
-			if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
-				Hologram hologram = HologramsAPI.createHologram(plugin, LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".hologramLocation")));
-				hologram.setAllowPlaceholders(true);
-				hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+			Hologram hologram = new Hologram(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".hologramLocation")), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
 
-
-				arena.setHologram(hologram);
-				arena.setHologramLocation(hologram.getLocation());
-			}
+			arena.setHologram(hologram);
+			arena.setHologramLocation(hologram.getLocation());
 
 			ArenaRegistry.unregisterArena(setupInventory.getArena());
 

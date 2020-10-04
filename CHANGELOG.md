@@ -1,6 +1,22 @@
-### 1.1.3 Release (29.09.2020)
+### 1.1.3 Release (29.09.2020 - 04.10.2020)
+* Added custom armor stand holograms.
+* Added missing 1.14, 1.15 and 1.16 items.
+* Added 1.8 compatibility.
+* Added support for 1.16 hex colors.
+* Added separate chat.
+* Now HolographicDisplays is not a dependency.
+* Fixed sending prefix twice.
+* Removed unnecessary command exceptions.
+* Changed MySQL updates to do only one instead of more than nearly 15.
+* Changed a package name - (Developer Alert)
+   * me.despical.kotl.handler -> me.despical.kotl.handlers
+* Reworked on update checker.
+* Reworked on debugger.
+* Reworked on message utils.
+* Reworked on tab completion.
+* Reworked on stats saving.
 * So many improvements for new versions of Java.
-* Now HolographicDisplays is a soft-dependency.
+* Made code more readable.
 
 **Also note that this update includes 1.1.3 beta release changes.**
 

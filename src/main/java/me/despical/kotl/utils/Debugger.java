@@ -1,5 +1,10 @@
 package me.despical.kotl.utils;
 
+import me.despical.commonsbox.compat.VersionResolver;
+import me.despical.commonsbox.string.StringMatcher;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +16,7 @@ import java.util.logging.Logger;
 public class Debugger {
 
 	private static boolean enabled = false;
-	private static final Logger logger = Logger.getLogger("");
+	private static final Logger logger = Logger.getLogger("KOTL");
 
 	private Debugger() {}
 
@@ -19,12 +24,20 @@ public class Debugger {
 		Debugger.enabled = enabled;
 	}
 
+	public static void sendConsoleMessage(String message) {
+		if (message.contains("#") && VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+			message = StringMatcher.matchColorRegex(message);
+		}
+
+		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+	}
+
 	/**
 	 * Prints debug message with selected log level. Messages of level INFO or TASK
 	 * won't be posted if debugger is enabled, warnings and errors will be.
 	 *
 	 * @param level level of debugged message
-	 * @param msg debugged message
+	 * @param msg message to debug
 	 */
 	public static void debug(Level level, String msg) {
 		if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
@@ -35,13 +48,33 @@ public class Debugger {
 	}
 
 	/**
+	 * Prints debug message with selected INFO log level.
+	 *
+	 * @param msg debugged message
+	 * @param params to debug
+	 */
+	public static void debug(String msg, Object... params) {
+		debug(Level.INFO, "[KOTLDBG] " + msg, params);
+	}
+
+	/**
+	 * Prints debug message with selected log level. Messages of level INFO or TASK
+	 * won't be posted if debugger is enabled, warnings and errors will be.
+	 *
+	 * @param msg debugged message
+	 */
+	public static void debug(String msg) {
+		debug(Level.INFO, msg);
+	}
+
+	/**
 	 * Prints debug message with selected log level and replaces parameters.
 	 * Messages of level INFO or TASK won't be posted if debugger is enabled,
 	 * warnings and errors will be.
 	 *
 	 * @param level level of debugged message
-	 * @param params any params to debug
 	 * @param msg debugged message
+	 * @param params any params to debug
 	 */
 	public static void debug(Level level, String msg, Object... params) {
 		if (!enabled && (level != Level.WARNING || level != Level.FINE)) {

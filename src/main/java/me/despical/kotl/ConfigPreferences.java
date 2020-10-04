@@ -1,5 +1,6 @@
 package me.despical.kotl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class ConfigPreferences {
 
 	public ConfigPreferences(Main plugin) {
 		this.plugin = plugin;
+
 		loadOptions();
 	}
 
@@ -29,9 +31,7 @@ public class ConfigPreferences {
 	}
 
 	private void loadOptions() {
-		for (Option option : Option.values()) {
-			options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
-		}
+		Arrays.stream(Option.values()).forEach(option -> options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault())));
 	}
 
 	public enum Option {
@@ -39,7 +39,8 @@ public class ConfigPreferences {
 		CLEAR_EFFECTS("Clear-Effects", true), CLEAR_INVENTORY("Clear-Inventory", true),
 		DATABASE_ENABLED("DatabaseActivated", false), DEATHBLOCKS_ENABLED("Death-Blocks.Enabled", true),
 		DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true), INVENTORY_MANAGER_ENABLED("InventoryManager", true),
-		JOIN_NOTIFY("Join-Notify", true), LEAVE_NOTIFY("Leave-Notify", true), SCOREBOARD_ENABLED("Scoreboard-Enabled", false);
+		JOIN_NOTIFY("Join-Notify", true), LEAVE_NOTIFY("Leave-Notify", true), SCOREBOARD_ENABLED("Scoreboard-Enabled", false),
+		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false);
 
 		private final String path;
 		private final boolean def;

@@ -1,4 +1,4 @@
-package me.despical.kotl.handler.setup.components;
+package me.despical.kotl.handlers.setup.components;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,7 +15,7 @@ import me.despical.commonsbox.item.ItemBuilder;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.setup.SetupInventory;
 
 /**
  * @author Despical
@@ -37,6 +37,7 @@ public class SpawnComponents implements SetupComponent {
 		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
 		Main plugin = setupInventory.getPlugin();
+
 		pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
 			.name(plugin.getChatManager().colorRawMessage("&e&lSet Ending Location"))
 			.lore(ChatColor.GRAY + "Click to set ending location on")
@@ -46,11 +47,12 @@ public class SpawnComponents implements SetupComponent {
 			.lore("", setupInventory.getSetupUtilities()
 			.isOptionDoneBool("instances." + arena.getId() + ".endLocation"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-			config.set("instances." + arena.getId() + ".endLocation", LocationSerializer.locationToString(player.getLocation()));
-			arena.setEndLocation(player.getLocation());
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+				e.getWhoClicked().closeInventory();
+				config.set("instances." + arena.getId() + ".endLocation", LocationSerializer.locationToString(player.getLocation()));
+				arena.setEndLocation(player.getLocation());
+				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
+
+				ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 0, 0);
 		
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE.parseMaterial())
@@ -61,12 +63,13 @@ public class SpawnComponents implements SetupComponent {
 			.lore(ChatColor.DARK_GRAY + "reach)")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".plateLocation"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-			player.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
-			config.set("instances." + arena.getId() + ".plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
-			arena.setPlateLocation(player.getLocation());
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+				e.getWhoClicked().closeInventory();
+				player.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
+				config.set("instances." + arena.getId() + ".plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
+				arena.setPlateLocation(player.getLocation());
+				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
+
+				ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 1, 0);
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
@@ -77,20 +80,24 @@ public class SpawnComponents implements SetupComponent {
 			.lore("", setupInventory.getSetupUtilities()
 			.isOptionDoneBool("instances." + arena.getId() + ".areaMax"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-			if (plugin.getCuboidSelector().getSelection(player) == null) {
-				plugin.getCuboidSelector().giveSelectorWand(player);
-				return;
-			}
-			if (plugin.getCuboidSelector().getSelection(player).getSecondPos() == null) {
-				player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
-				return;
-			}
-			config.set("instances." + arena.getId() + ".areaMin", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getFirstPos()));
-			config.set("instances." + arena.getId() + ".areaMax", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getSecondPos()));
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
-			plugin.getCuboidSelector().removeSelection(player);
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+				e.getWhoClicked().closeInventory();
+
+				if (plugin.getCuboidSelector().getSelection(player) == null) {
+					plugin.getCuboidSelector().giveSelectorWand(player);
+					return;
+				}
+
+				if (plugin.getCuboidSelector().getSelection(player).getSecondPos() == null) {
+					player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
+					return;
+				}
+
+				config.set("instances." + arena.getId() + ".areaMin", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getFirstPos()));
+				config.set("instances." + arena.getId() + ".areaMax", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getSecondPos()));
+				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
+				plugin.getCuboidSelector().removeSelection(player);
+
+				ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 2, 0);
 	}
 }

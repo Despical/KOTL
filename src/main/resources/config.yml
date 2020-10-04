@@ -30,6 +30,10 @@ Clear-Effects: true
 # You can edit the formatting in messages.yml
 ChatFormat-Enabled: true
 
+# Should we disable all chat related stuff?
+# It will disable the separated chat.
+Disable-Separate-Chat: false
+
 # Should players get fall damage?
 Disable-Fall-Damage: true
 
@@ -69,5 +73,8 @@ Update-Notifier:
   # Should we inform you when beta version is out?
   # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
-  
+
+# Don't edit it. But who's stopping you? It's your server!
+File-Version: 0
+
 # No way! You've reached the end! But... where's the dragon!?

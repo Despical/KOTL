@@ -1,6 +1,7 @@
-package me.despical.kotl.handler;
+package me.despical.kotl.handlers;
 
-import me.despical.kotl.HookManager;
+import me.despical.commonsbox.compat.VersionResolver;
+import me.despical.commonsbox.string.StringMatcher;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,13 +33,20 @@ public class ChatManager {
 	public String getPrefix() {
 		return prefix;
 	}
-	
+
 	public String colorRawMessage(String message) {
+		if (message == null) {
+			return "";
+		}
+
+		if (message.contains("#") && VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+			message = StringMatcher.matchColorRegex(message);
+		}
+
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
-
 	public String colorMessage(String message) {
-		return ChatColor.translateAlternateColorCodes('&', config.getString(message));
+		return colorRawMessage(config.getString(message));
 	}
 	
 	public String colorMessage(String message, Player player) {
@@ -48,7 +56,7 @@ public class ChatManager {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
-		return ChatColor.translateAlternateColorCodes('&', returnString);
+		return colorRawMessage(returnString);
 	}
 
 	private String formatMessage(Arena arena, String message, Player player) {
@@ -65,6 +73,7 @@ public class ChatManager {
 
 	private String formatPlaceholders(String message, Arena arena) {
 		String returnString = message;
+
 		returnString = StringUtils.replace(returnString, "%arena%", arena.getId());
 		returnString = StringUtils.replace(returnString, "%players%", Integer.toString(arena.getPlayers().size()));
 		returnString = StringUtils.replace(returnString, "%king%", arena.getKing() == null ? colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName());
@@ -87,16 +96,15 @@ public class ChatManager {
 				break;
 			case NEW_KING:
 				message = formatMessage(a, colorMessage("In-Game.New-King"), p);
-				if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
-					a.getHologram().getLine(0).removeLine();
-					a.getHologram().insertTextLine(0, formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
-				}
+
+				a.getHologram().deleteLines();
+				a.getHologram().appendLine(formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
 				break;
 			default:
 				return;
 		}
 
-		broadcastMessage(a, prefix + message);
+		broadcastMessage(a, message);
 	}
 	
 	public void reloadConfig() {

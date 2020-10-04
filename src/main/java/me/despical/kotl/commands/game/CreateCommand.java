@@ -5,7 +5,6 @@ import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.commands.exception.CommandException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 
-import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
+import static me.despical.kotl.handlers.setup.SetupInventory.TUTORIAL_VIDEO;
 
 /**
  * @author Despical
@@ -24,14 +23,17 @@ import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
  */
 public class CreateCommand extends SubCommand {
 
+	private final FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
+
 	public CreateCommand() {
 		super("create");
+
 		setPermission("kotl.admin.create");
 	}
 
 	@Override
 	public String getPossibleArguments() {
-		return "<arenaName>";
+		return "<ID>";
 	}
 
 	@Override
@@ -40,9 +42,8 @@ public class CreateCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
+	public void execute(CommandSender sender, String label, String[] args) {
 		Player player = (Player) sender;
-		FileConfiguration config = ConfigUtils.getConfig(this.getPlugin(), "arenas");
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
 		if(arena != null || config.contains("instances." + args[0])) {
@@ -52,6 +53,7 @@ public class CreateCommand extends SubCommand {
 		}
 		
 		setupDefaultConfiguration(args[0]);
+
 		player.sendMessage(ChatColor.BOLD + "------------------------------------------");
         player.sendMessage(ChatColor.YELLOW + "      Instance " + args[0] + " created!");
         player.sendMessage("");
@@ -64,7 +66,7 @@ public class CreateCommand extends SubCommand {
 	
 	private void setupDefaultConfiguration(String id) {
 		String path = "instances." + id + ".";
-		FileConfiguration config = ConfigUtils.getConfig(this.getPlugin(), "arenas");
+
 		config.set(path + "endlocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
 		config.set(path + "areaMin", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
 		config.set(path + "areaMax", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
@@ -72,6 +74,7 @@ public class CreateCommand extends SubCommand {
 		config.set(path + "hologramLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
 		config.set(path + "plateLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
 		ConfigUtils.saveConfig(this.getPlugin(), config, "arenas");
+
 		Arena arena = new Arena(id);
 		
 		arena.setEndLocation(LocationSerializer.locationFromString(config.getString(path + "endLocation")));

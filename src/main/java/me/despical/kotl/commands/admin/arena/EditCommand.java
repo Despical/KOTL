@@ -1,16 +1,14 @@
 package me.despical.kotl.commands.admin.arena;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.commands.exception.CommandException;
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.setup.SetupInventory;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Despical
@@ -21,6 +19,7 @@ public class EditCommand extends SubCommand {
 
 	public EditCommand() {
 		super("edit");
+
 		setPermission("kotl.admin.edit");
 	}
 
@@ -35,7 +34,7 @@ public class EditCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) throws CommandException {
+	public void execute(CommandSender sender, String label, String[] args) {
 		Player player = (Player) sender;
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
@@ -43,12 +42,13 @@ public class EditCommand extends SubCommand {
 			player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
 			return;
 		}
+
 		new SetupInventory(arena, player).openInventory();
 	}
 
 	@Override
 	public List<String> getTutorial() {
-		return Arrays.asList("Opens the arena editor");
+		return Collections.singletonList("Opens the arena editor");
 	}
 
 	@Override

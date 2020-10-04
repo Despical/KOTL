@@ -1,24 +1,19 @@
 package me.despical.kotl.arena;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
-import me.despical.kotl.HookManager;
+import me.despical.commonsbox.compat.XMaterial;
+import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.kotl.Main;
+import me.despical.kotl.handlers.hologram.Hologram;
+import me.despical.kotl.utils.Debugger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
-
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.serializer.LocationSerializer;
-import me.despical.kotl.Main;
-import me.despical.kotl.utils.Debugger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Despical
@@ -86,37 +81,38 @@ public class ArenaRegistry {
 	}
 
 	public static void registerArena(Arena arena) {
-		Debugger.debug(Level.INFO, "Registering new game instance {0}", arena.getId());
+		Debugger.debug("Registering new game instance {0}", arena.getId());
 		arenas.add(arena);
 	}
 
 	public static void unregisterArena(Arena arena) {
-		Debugger.debug(Level.INFO, "Unregistering game instance {0}", arena.getId());
+		Debugger.debug("Unregistering game instance {0}", arena.getId());
 		arenas.remove(arena);
 	}
 
 	public static void registerArenas() {
-		Debugger.debug(Level.INFO, "Initial arenas registration");
+		Debugger.debug("Initial arenas registration");
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
 		
 		if (arenas.size() > 0) arenas.clear();
 
 		if (!config.contains("instances")) {
-			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
+			Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
 			return;
 		}
 
 		ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
+			Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
 			return;
 		}
 
 		for (String id : section.getKeys(false)) {
 			Arena arena;
 			String s = "instances." + id + ".";
+
 			if (s.contains("default")) {
 				continue;
 			}
@@ -125,39 +121,39 @@ public class ArenaRegistry {
 			arena.setEndLocation(LocationSerializer.locationFromString(config.getString(s + "endLocation", "world, -224.000, 4.000, -583.000, 0.000, 0.000")));
 			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString(s + "plateLocation", "world, -224.000, 4.000, -583.000, 0.000, 0.000")));
 
-			if (plugin.getHookManager().isFeatureEnabled(HookManager.HookFeature.HOLOGRAPHIC_DISPLAYS)) {
-				Hologram hologram = HologramsAPI.createHologram(plugin, LocationSerializer.locationFromString(config.getString(s + "hologramLocation")));
-				hologram.setAllowPlaceholders(true);
-				hologram.appendTextLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
-				arena.setHologram(hologram);
-				arena.setHologramLocation(hologram.getLocation());
-			}
+			Hologram hologram = new Hologram(LocationSerializer.locationFromString(config.getString(s + "hologramLocation")));
+			hologram.appendLine(plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+
+			arena.setHologram(hologram);
+			arena.setHologramLocation(hologram.getLocation());
 
 			if (LocationSerializer.locationFromString(config.getString(s + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
-				Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
+				Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
 				config.set(s + "plateLocation", LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()));
 				config.set(s + "isdone", false);
 				arena.setReady(false);
+
 				ArenaRegistry.registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
 
 			if (!config.getBoolean(s + "isdone", false)) {
-				Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				config.set(s + "isdone", false);
 				arena.setReady(false);
+
 				ArenaRegistry.registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
 
 			ArenaRegistry.registerArena(arena);
-			Bukkit.getConsoleSender().sendMessage(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
+			Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.Instance-Started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
 
-		Debugger.debug(Level.INFO, "Arenas registration completed, took {0} ms", System.currentTimeMillis() - start);
+		Debugger.debug("Arenas registration completed, took {0} ms", System.currentTimeMillis() - start);
 	}
 
 	public static List<Arena> getArenas() {

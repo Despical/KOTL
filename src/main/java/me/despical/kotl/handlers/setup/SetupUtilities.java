@@ -1,4 +1,4 @@
-package me.despical.kotl.handler.setup;
+package me.despical.kotl.handlers.setup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,8 +27,10 @@ public class SetupUtilities {
 				LocationSerializer.locationFromString(config.getString(path)))) {
 				return plugin.getChatManager().colorRawMessage("&c&l✘ Not Completed");
 			}
+
 			return plugin.getChatManager().colorRawMessage("&a&l✔ Completed");
 		}
+
 		return plugin.getChatManager().colorRawMessage("&c&l✘ Not Completed");
 	}
 }

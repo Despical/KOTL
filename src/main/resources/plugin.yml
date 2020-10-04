@@ -3,7 +3,7 @@ main: me.despical.kotl.Main
 author: Despical
 version: ${project.version}
 api-version: 1.13
-softdepend: [HolographicDisplays, PlaceholderAPI]
+softdepend: [PlaceholderAPI]
 
 commands:
   KingOfTheLadder:

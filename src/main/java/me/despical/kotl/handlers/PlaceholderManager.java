@@ -1,4 +1,4 @@
-package me.despical.kotl.handler;
+package me.despical.kotl.handlers;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,10 +27,6 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		return "kotl";
 	}
 
-	public String getPlugin() {
-		return null;
-	}
-
 	public String getAuthor() {
 		return "Despical";
 	}
@@ -43,6 +39,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		if (player == null) {
 			return null;
 		}
+
 		switch (id.toLowerCase()) {
 			case "score":
 				return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));

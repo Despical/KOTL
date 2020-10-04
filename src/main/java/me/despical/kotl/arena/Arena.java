@@ -1,12 +1,10 @@
 package me.despical.kotl.arena;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
+import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.managers.ScoreboardManager;
+import me.despical.kotl.handlers.hologram.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -15,14 +13,12 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-
-import me.despical.commonsbox.serializer.InventorySerializer;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.managers.ScoreboardManager;
-import org.bukkit.potion.PotionEffect;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -31,25 +27,28 @@ import org.bukkit.potion.PotionEffect;
  */
 public class Arena {
 	
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final String id;
 	
-	private Set<Player> players = new HashSet<>();
-	private Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+	private final Set<Player> players = new HashSet<>();
+	private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
 	
 	private Player king;
 	private Hologram hologram;
 	private BossBar gameBar;
-	private ScoreboardManager scoreboardManager;
+	private final ScoreboardManager scoreboardManager;
 	private boolean ready = true;
-	
+
 	public Arena(String id) {
 		this.id = id;
+
 		scoreboardManager = new ScoreboardManager(this);
+
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			if (plugin.isBefore1_9_R1()) {
 				return;
 			}
+
 			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
 	}
@@ -57,7 +56,7 @@ public class Arena {
 	public boolean isReady() {
 		return ready;
 	}
-	
+
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
@@ -155,16 +154,16 @@ public class Arena {
 	
 	/**
 	 * Set hologram of last king.
-	 * 
+	 *
 	 * @param hologram last king's hologram
 	 */
 	public void setHologram(Hologram hologram) {
 		this.hologram = hologram;
 	}
-	
+
 	/**
 	 * Get last king's hologram.
-	 * 
+	 *
 	 * @return last king's hologram
 	 */
 	public Hologram getHologram() {
@@ -192,10 +191,11 @@ public class Arena {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.createScoreboard(plugin.getUserManager().getUser(player));
 		}
+
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) player.getInventory().clear();
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
-			for (PotionEffect effect : player.getActivePotionEffects()) player.removePotionEffect(effect.getType());
+			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 	}
 	
@@ -203,6 +203,7 @@ public class Arena {
 		if (player == null) {
 			return;
 		}
+
 		players.remove(player);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY))
@@ -220,13 +221,13 @@ public class Arena {
 	
 	public void teleportAllToEndLocation() {
 		Location location = getEndLocation();
+
 		if (location == null) {
 			System.out.print("End location for arena " + getId() + " isn't intialized!");
 			return;
 		}
-		for (Player player : getPlayers()) {
-			player.teleport(location);
-		}
+
+		getPlayers().forEach(player -> player.teleport(location));
 	}
 	
 	/**
@@ -239,18 +240,20 @@ public class Arena {
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			return;
 		}
+
 		if (plugin.isBefore1_9_R1()) {
 			return;
 		}
+
 		switch (action) {
-		case ADD:
-			gameBar.addPlayer(p);
-			break;
-		case REMOVE:
-			gameBar.removePlayer(p);
-			break;
-		default:
-			break;
+			case ADD:
+				gameBar.addPlayer(p);
+				break;
+			case REMOVE:
+				gameBar.removePlayer(p);
+				break;
+			default:
+				break;
 		}
 	}
 

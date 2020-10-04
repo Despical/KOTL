@@ -1,17 +1,15 @@
 package me.despical.kotl.commands;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
-
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -20,25 +18,16 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class TabCompletion implements TabCompleter {
 
-	public List<String> commands = new ArrayList<>();
+	public final CommandHandler commandHandler;
 
 	public TabCompletion(CommandHandler commandHandler) {
-		commandHandler.getSubCommands().forEach(command -> commands.add(command.getName().toLowerCase(Locale.ENGLISH)));
+		this.commandHandler = commandHandler;
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> completions = new ArrayList<>();
-
-		if (!(sender instanceof Player)) {
-			return Collections.emptyList();
-		}
-
-		Player player = (Player) sender;
-
-		if (!(player.hasPermission("kotl.admin"))) {
-			return Collections.emptyList();
-		}
+		List<String> commands = commandHandler.getSubCommands().stream().map(command -> command.getName().toLowerCase()).collect(Collectors.toList());
 
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(args[0], commands, completions);
@@ -47,18 +36,14 @@ public class TabCompletion implements TabCompleter {
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("list") ||
 				args[0].equalsIgnoreCase("reload")) {
-				return Collections.emptyList();
+				return null;
 			}
 
 			if (args[0].equalsIgnoreCase("top")) {
 				return Arrays.stream(StatsStorage.StatisticType.values()).map(statistic -> statistic.name().toLowerCase(Locale.ENGLISH)).collect(Collectors.toList());
 			}
 
-			List<String> arenas = new ArrayList<>();
-
-			for (Arena arena : ArenaRegistry.getArenas()) {
-				arenas.add(arena.getId());
-			}
+			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 			Collections.sort(arenas);

@@ -32,42 +32,51 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class Events implements Listener {
 
-	private Main plugin;
+	private final Main plugin;
 
 	public Events(Main plugin) {
 		this.plugin = plugin;
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+
 		if (arena == null) {
 			return;
 		}
+
 		event.setCancelled(true);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+
 		if (arena == null) {
 			return;
 		}
+
 		if (!plugin.getConfig().getBoolean("Block-Commands-In-Game", true)) {
 			return;
 		}
+
 		for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
 			if (event.getMessage().contains(msg)) {
 				return;
 			}
 		}
+
 		if (event.getPlayer().isOp() || event.getPlayer().hasPermission("kotl.admin") || event.getPlayer().hasPermission("kotl.command.override")) {
 			return;
 		}
+
 		if (event.getMessage().startsWith("/kotl") || event.getMessage().startsWith("/kingoftheladder") || event.getMessage().contains("top") || event.getMessage().contains("stats")) {
 			return;
 		}
+
 		event.setCancelled(true);
 		event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
 	}
@@ -77,15 +86,19 @@ public class Events implements Listener {
 		if (!(e.getEntity() instanceof Player)) {
 			return;
 		}
+
 		Player victim = (Player) e.getEntity();
 		Arena arena = ArenaRegistry.getArena(victim);
+
 		if (arena == null) {
 			return;
 		}
+
 		if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
 			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
 				return;
 			}
+
 			e.setCancelled(true);
 		}
 	}
@@ -93,9 +106,11 @@ public class Events implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameInteract(PlayerInteractEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+
 		if (arena == null || event.getClickedBlock() == null) {
 			return;
 		}
+
 		if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
 			event.setCancelled(true);
 		}
@@ -104,9 +119,11 @@ public class Events implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
 		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+
 		if (arena == null) {
 			return;
 		}
+
 		event.setCancelled(true);
 	}
 
@@ -123,6 +140,7 @@ public class Events implements Listener {
 		if (!ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
+
 		event.setCancelled(true);
 	}
 	
@@ -131,6 +149,7 @@ public class Events implements Listener {
 		if (!ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
+
 		event.setCancelled(true);
 	}
 	
@@ -149,10 +168,13 @@ public class Events implements Listener {
 				event.setCancelled(true);
 				return;
 			}
+
 			if (!(event.getRemover() instanceof Arrow)) {
 				return;
 			}
+
 			Arrow arrow = (Arrow) event.getRemover();
+
 			if (arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
 				event.setCancelled(true);
 			}

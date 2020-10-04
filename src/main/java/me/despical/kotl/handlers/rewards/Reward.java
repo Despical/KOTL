@@ -1,4 +1,4 @@
-package me.despical.kotl.handler.rewards;
+package me.despical.kotl.handlers.rewards;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -18,6 +18,7 @@ public class Reward {
 	public Reward(RewardType type, String rawCode) {
 		this.type = type;
 		String processedCode = rawCode;
+
 		if (rawCode.contains("p:")) {
 			this.executor = RewardExecutor.PLAYER;
 			processedCode = StringUtils.replace(processedCode, "p:", "");
@@ -27,21 +28,26 @@ public class Reward {
 		} else {
 			this.executor = RewardExecutor.CONSOLE;
 		}
+
 		if (processedCode.contains("chance(")) {
 			int loc = processedCode.indexOf(")");
+
 			if (loc == -1) {
 				Bukkit.getLogger().warning("rewards.yml configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
 				this.chance = 0.0;
 				return;
 			}
+
 			String chanceStr = processedCode;
 			chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
 			double chance = Double.parseDouble(chanceStr);
+
 			processedCode = StringUtils.replace(processedCode, "chance(" + chanceStr + "):", "");
 			this.chance = chance;
 		} else {
 			this.chance = 100.0;
 		}
+
 		this.executableCode = processedCode;
 	}
 
