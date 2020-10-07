@@ -1,3 +1,21 @@
+/*
+ * KOTL - Don't let others to climb top of the ladders!
+ * Copyright (C) 2020 Despical
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package me.despical.kotl.handlers.setup;
 
 import com.github.despical.inventoryframework.Gui;
@@ -5,6 +23,7 @@ import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
+import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.setup.components.ArenaRegisterComponents;
 import me.despical.kotl.handlers.setup.components.MiscComponents;
 import me.despical.kotl.handlers.setup.components.SpawnComponents;
@@ -64,20 +83,24 @@ public class SetupInventory {
 	}
 
 	private void sendProTip(Player p) {
-		int rand = random.nextInt(8 + 1);
+		ChatManager chatManager = plugin.getChatManager();
+		int rand = random.nextInt(16 + 1);
 
 		switch (rand) {
 			case 0:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
+				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
 				break;
 			case 1:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
+				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
 				break;
 			case 2:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
+				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
 				break;
 			case 3:
-				p.sendMessage(plugin.getChatManager().colorRawMessage("&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO));
+				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO));
+				break;
+			case 4:
+				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/"));
 				break;
 			default:
 				break;

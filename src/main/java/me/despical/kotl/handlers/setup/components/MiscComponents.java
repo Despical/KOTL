@@ -1,3 +1,21 @@
+/*
+ * KOTL - Don't let others to climb top of the ladders!
+ * Copyright (C) 2020 Despical
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package me.despical.kotl.handlers.setup.components;
 
 import com.github.despical.inventoryframework.GuiItem;
@@ -10,7 +28,6 @@ import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.hologram.Hologram;
 import me.despical.kotl.handlers.setup.SetupInventory;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -36,10 +53,10 @@ public class MiscComponents implements SetupComponent {
 		Main plugin = setupInventory.getPlugin();
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseItem())
-			.name(plugin.getChatManager().colorRawMessage("&e&lSet King Hologram"))
-			.lore(ChatColor.GRAY + "Click to set king's hologram location")
-			.lore(ChatColor.GRAY + "on the place where you are standing.")
-			.lore(ChatColor.DARK_GRAY + "(where the last king displays)")
+			.name("&e&lSet King Hologram")
+			.lore("&7Click to set king's hologram location")
+			.lore("&7on the place where you are standing.")
+			.lore("&8(where the last king displays)")
 			.lore("", setupInventory.getSetupUtilities()
 			.isOptionDoneBool("instances." + arena.getId() + ".hologramLocation"))
 			.build(), e -> {
@@ -61,8 +78,8 @@ public class MiscComponents implements SetupComponent {
 		
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
 			.name(plugin.getChatManager().colorRawMessage("&e&lView Wiki Page"))
-			.lore(ChatColor.GRAY + "Having problems with setup or wanna know")
-			.lore(ChatColor.GRAY + "some useful tips? Click to get wiki link!")
+			.lore("&7Having problems with setup or wanna know")
+			.lore("&7some useful tips? Click to get wiki link!")
 			.build(), e -> {
 				e.getWhoClicked().closeInventory();
 

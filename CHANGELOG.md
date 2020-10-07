@@ -1,3 +1,9 @@
+### 1.1.4 Release (07.10.2020)
+* Added license header.
+* Added more in-game tips.
+* Fixed bStats metrics.
+* Improved GUI performances.
+
 ### 1.1.3 Release (29.09.2020 - 04.10.2020)
 * Added custom armor stand holograms.
 * Added missing 1.14, 1.15 and 1.16 items.

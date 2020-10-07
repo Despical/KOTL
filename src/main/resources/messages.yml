@@ -1,9 +1,9 @@
-#    You can translate KOTL messages here.
+#        You can translate KOTL messages here.
 #             Color codes (&) supported.
 #
 #              Use \n to make new line
 #        Some messages like kit and kit items
-#        descriptions dont't support new lines
+#        descriptions don't support new lines
 # they are wrapped every 40 characters automatically
 #
 #     Some messages support their own placeholders

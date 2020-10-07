@@ -1,3 +1,21 @@
+/*
+ * KOTL - Don't let others to climb top of the ladders!
+ * Copyright (C) 2020 Despical
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package me.despical.kotl.api.events.player;
 
 import org.bukkit.entity.Player;
@@ -8,11 +26,14 @@ import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
 
 /**
+ *
+ * Called when player receive new statistic.
+ *
  * @author Despical
  * @see StatsStorage.StatisticType
  * @since 1.0.0
  * <p>
- * Called when player receive new statistic.
+ * Created at 20.06.2020
  */
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
@@ -23,7 +44,6 @@ public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
 	public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
 		super(eventArena);
-
 		this.player = player;
 		this.statisticType = statisticType;
 		this.number = number;

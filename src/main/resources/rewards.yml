@@ -17,7 +17,7 @@
 #    - chance(50):eco give %player% 10            # Console has50% chance to give player 10$
 #
 #    Just add example reward:
-#    - script:player.sendMessage("oh, hi %player%");      # It will send "oh, hi <player name>" to player! 100% plain java!
+#    - script:player.sendMessage("oh, hi %player%");      # It will send "oh, hi <player name>" to player! 100% plain Java!
 #    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server
 #    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
@@ -25,7 +25,7 @@
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
-#   arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/1.1.3/javadoc/me/despical/kotl/arena/Arena.html)
+#   arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/1.1.4/javadoc/me/despical/kotl/arena/Arena.html)
 #            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 
 # Rewards must be enabled via config.yml first!
