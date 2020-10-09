@@ -144,7 +144,7 @@ public class Main extends JavaPlugin {
 				if (!isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
 			}
 
-			arena.getHologram().delete();
+			if (arena.getHologram() != null) arena.getHologram().delete();
 			arena.getPlayers().clear();
 		}
 

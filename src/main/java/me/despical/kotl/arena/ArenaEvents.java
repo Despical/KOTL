@@ -98,7 +98,7 @@ public class ArenaEvents implements Listener {
 
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
-				if (arena.getPlayers().size() == 1 && arena.getKing() == player) return;
+//				if (arena.getPlayers().size() == 1 && arena.getKing() == player) return;
 				arena.setKing(player);
 
 				plugin.getChatManager().broadcastAction(arena, player, ActionType.NEW_KING);

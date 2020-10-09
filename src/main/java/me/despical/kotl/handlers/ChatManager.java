@@ -115,7 +115,6 @@ public class ChatManager {
 			case NEW_KING:
 				message = formatMessage(a, colorMessage("In-Game.New-King"), p);
 
-				a.getHologram().deleteLines();
 				a.getHologram().appendLine(formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
 				break;
 			default:

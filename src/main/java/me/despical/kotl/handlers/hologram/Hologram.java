@@ -19,17 +19,15 @@
 package me.despical.kotl.handlers.hologram;
 
 import me.despical.kotl.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -39,12 +37,10 @@ import java.util.List;
  */
 public class Hologram {
 
-	private Item entityItem;
-	private ItemStack item;
 	private List<String> lines = new ArrayList<>();
 	private Location location;
 
-	private final List<ArmorStand> armorStands = new ArrayList<>();
+	private final List<ArmorStand> armorStands = new LinkedList<>();
 	private final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public Hologram(Location location) {
@@ -53,14 +49,7 @@ public class Hologram {
 
 	public Hologram(Location location, @NotNull String... lines) {
 		this.location = location;
-		this.lines = Arrays.asList(lines);
-
-		append();
-	}
-
-	public Hologram(Location location, @NotNull List<String> lines) {
-		this.location = location;
-		this.lines = lines;
+		this.lines = new ArrayList<>(Arrays.asList(lines));
 
 		append();
 	}
@@ -71,14 +60,6 @@ public class Hologram {
 
 	public void setLocation(Location location) {
 		this.location = location;
-	}
-
-	public ItemStack getItem() {
-		return item;
-	}
-
-	public Item getEntityItem() {
-		return entityItem;
 	}
 
 	@NotNull
@@ -99,6 +80,7 @@ public class Hologram {
 	}
 
 	public Hologram appendLines(@NotNull List<String> lines) {
+		this.lines.clear();
 		this.lines = lines;
 
 		append();
@@ -106,29 +88,11 @@ public class Hologram {
 	}
 
 	public Hologram appendLine(@NotNull String line) {
+		this.lines.clear();
 		this.lines.add(line);
 
 		append();
 		return this;
-	}
-
-	public Hologram appendItem(@NotNull ItemStack item) {
-		this.item = item;
-
-		append();
-		return this;
-	}
-
-	public void deleteLines() {
-		double distanceAbove = -0.27, y = location.getY();
-
-		for (int i = 0; i <= lines.size() - 1; i++) {
-			y += distanceAbove;
-
-			ArmorStand holo = getEntityArmorStand(location, y);
-			holo.setCustomNameVisible(false);
-			lines.clear();
-		}
 	}
 
 	public void delete() {
@@ -139,9 +103,6 @@ public class Hologram {
 			plugin.getHologramManager().remove(armor);
 		}
 
-		if (entityItem != null)
-			entityItem.remove();
-
 		armorStands.clear();
 	}
 
@@ -149,35 +110,18 @@ public class Hologram {
 		return armorStands.isEmpty();
 	}
 
-	private void append() {
-		deleteLines();
+	public void append() {
+		delete();
 
-		double distanceAbove = -0.27, y = location.getY(), lastY = y;
+		double y = location.getY();
 
 		for (int i = 0; i <= lines.size() - 1; i++) {
-			y += distanceAbove;
-
 			ArmorStand holo = getEntityArmorStand(location, y);
 			holo.setCustomName(lines.get(i));
 			armorStands.add(holo);
 
 			plugin.getHologramManager().add(holo);
 
-			lastY = y;
-		}
-
-		if (item != null && item.getType() != org.bukkit.Material.AIR) {
-			Location l = location.clone().add(0, lastY, 0);
-
-			entityItem = location.getWorld().dropItem(l, item);
-
-			if (Bukkit.getServer().getVersion().contains("Paper"))
-				entityItem.setCanMobPickup(false);
-
-			entityItem.setCustomNameVisible(false);
-			entityItem.setGravity(true);
-			entityItem.setInvulnerable(true);
-			entityItem.teleport(l);
 		}
 	}
 

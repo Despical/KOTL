@@ -79,7 +79,7 @@ public class DeleteCommand extends SubCommand {
 		confirmations.remove(sender);
 		FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
 
-		arena.getHologram().delete();
+		if (arena.getHologram() != null) arena.getHologram().delete();
 
 		if (arena.getPlayers().size() > 0) {
 			arena.getScoreboardManager().stopAllScoreboards();

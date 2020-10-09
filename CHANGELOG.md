@@ -1,7 +1,12 @@
 ### 1.1.4 Release (07.10.2020)
 * Added license header.
 * Added more in-game tips.
+* Fixed custom armor stand holograms.
+* Fixed getting unsupported exception.
+* Fixed debugger sends prefix twice.
+* Fixed item lores for Minecraft 1.13 and higher versions.
 * Fixed bStats metrics.
+* Made callback safe hologram deletion.
 * Improved GUI performances.
 
 ### 1.1.3 Release (29.09.2020 - 04.10.2020)

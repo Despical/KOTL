@@ -80,7 +80,7 @@ public class ReloadCommand extends SubCommand {
 			Debugger.debug("[Reloader] Stopping arena called {0}", arena.getId());
 			long stop = System.currentTimeMillis();
 
-			arena.getHologram().delete();
+			if (arena.getHologram() != null) arena.getHologram().delete();
 
 			for (Player player : arena.getPlayers()) {
 				if (this.getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

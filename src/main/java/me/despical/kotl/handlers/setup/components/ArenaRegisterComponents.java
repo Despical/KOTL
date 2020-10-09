@@ -92,7 +92,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 				}
 			}
 
-			arena.getHologram().delete();
+			if (arena.getHologram() != null) arena.getHologram().delete();
 			arena = new Arena(setupInventory.getArena().getId());
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".endLocation")));
