@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (VersionResolver.isAllSupported()) {
+		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_8_R1)) {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
