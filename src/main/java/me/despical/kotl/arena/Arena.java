@@ -18,6 +18,7 @@
 
 package me.despical.kotl.arena;
 
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
@@ -25,7 +26,6 @@ import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.hologram.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -200,8 +200,7 @@ public class Arena {
 	void addPlayer(Player player) {
 		players.add(player);
 
-		if (!plugin.isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).
-			setBaseValue(plugin.getConfig().getDouble("Hit-Cooldown-Delay", player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getBaseValue()));
+		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
@@ -211,8 +210,9 @@ public class Arena {
 			scoreboardManager.createScoreboard(plugin.getUserManager().getUser(player));
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY))
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
+		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
@@ -226,17 +226,19 @@ public class Arena {
 
 		players.remove(player);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY))
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
+		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED))
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
+		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED))
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(plugin.getUserManager().getUser(player));
+		}
 
-		if (!plugin.isBefore1_9_R1())
-			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+		AttributeUtils.resetAttackCooldown(player);
 	}
 	
 	public void teleportAllToEndLocation() {

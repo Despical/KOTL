@@ -121,7 +121,6 @@ public class Hologram {
 			armorStands.add(holo);
 
 			plugin.getHologramManager().add(holo);
-
 		}
 	}
 

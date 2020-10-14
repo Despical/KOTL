@@ -18,10 +18,12 @@
 
 package me.despical.kotl.events;
 
-import org.bukkit.entity.Arrow;
+import me.despical.commonsbox.compat.XMaterial;
+import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.arena.ArenaRegistry;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ItemFrame;
-import org.bukkit.entity.Painting;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -30,18 +32,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.event.player.*;
 
 /**
  * @author Despical
@@ -60,9 +51,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
-
-		if (arena == null) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 
@@ -71,9 +60,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
-
-		if (arena == null) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 
@@ -123,9 +110,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameInteract(PlayerInteractEvent event) {
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
-
-		if (arena == null || event.getClickedBlock() == null) {
+		if (ArenaRegistry.isInArena(event.getPlayer()) || event.getClickedBlock() == null) {
 			return;
 		}
 
@@ -136,9 +121,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
-
-		if (arena == null) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 
@@ -176,26 +159,6 @@ public class Events implements Listener {
 		if(ArenaRegistry.isInArena((Player) event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onHangingBreakEvent(HangingBreakByEntityEvent event) {
-		if (event.getEntity() instanceof ItemFrame || event.getEntity() instanceof Painting) {
-			if (event.getRemover() instanceof Player && ArenaRegistry.isInArena((Player) event.getRemover())) {
-				event.setCancelled(true);
-				return;
-			}
-
-			if (!(event.getRemover() instanceof Arrow)) {
-				return;
-			}
-
-			Arrow arrow = (Arrow) event.getRemover();
-
-			if (arrow.getShooter() instanceof Player && ArenaRegistry.isInArena((Player) arrow.getShooter())) {
-				event.setCancelled(true);
-			}
 		}
 	}
 }

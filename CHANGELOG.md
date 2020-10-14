@@ -1,3 +1,9 @@
+### 1.1.5 Release (14.10.2020)
+* Fixed a bug about being king more than once.
+* Replaced some attribute methods with API methods.
+* Optimized sub command fields and commands.
+* Performance optimizations and improvements.
+
 ### 1.1.4 Release (07.10.2020)
 * Added license header.
 * Added more in-game tips.

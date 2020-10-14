@@ -18,13 +18,12 @@
 
 package me.despical.kotl.commands;
 
-import java.util.List;
-
+import me.despical.kotl.Main;
+import me.despical.kotl.commands.exception.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.despical.kotl.Main;
-import me.despical.kotl.commands.exception.CommandException;
+import java.util.List;
 
 /**
  * @author Despical
@@ -33,7 +32,7 @@ import me.despical.kotl.commands.exception.CommandException;
  */
 public abstract class SubCommand {
 	
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	protected final Main plugin = JavaPlugin.getPlugin(Main.class);
 	private final String name;
 	private String permission;
 	private final String[] aliases;
@@ -55,12 +54,8 @@ public abstract class SubCommand {
 		this.permission = permission;
 	}
 	
-	public Main getPlugin() {
-		return plugin;
-	}
-		
 	public final boolean hasPermission(CommandSender sender) {
-			if (permission == null) return true;
+		if (permission == null) return true;
 		return sender.hasPermission(permission);
 	}
 	
@@ -68,7 +63,7 @@ public abstract class SubCommand {
 
 	public abstract int getMinimumArguments();
 
-	public abstract void execute(CommandSender sender, String label, String[] args) throws CommandException;
+	public abstract void execute(CommandSender sender, String[] args) throws CommandException;
 	
 	public abstract List<String> getTutorial();
 	

@@ -41,7 +41,7 @@ import static me.despical.kotl.handlers.setup.SetupInventory.TUTORIAL_VIDEO;
  */
 public class CreateCommand extends SubCommand {
 
-	private final FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
+	private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 	public CreateCommand() {
 		super("create");
@@ -60,13 +60,13 @@ public class CreateCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
 		if(arena != null || config.contains("instances." + args[0])) {
-			player.sendMessage(getPlugin().getChatManager().getPrefix() + ChatColor.RED + "Arena with that ID already contains!");
-			player.sendMessage(getPlugin().getChatManager().getPrefix() + ChatColor.RED + "To check existing arenas use: /kotl list");
+			player.sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "Arena with that ID already contains!");
+			player.sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "To check existing arenas use: /kotl list");
 			return;
 		}
 		
@@ -91,7 +91,7 @@ public class CreateCommand extends SubCommand {
 		config.set(path + "isdone", false);
 		config.set(path + "hologramLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
 		config.set(path + "plateLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		ConfigUtils.saveConfig(this.getPlugin(), config, "arenas");
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		Arena arena = new Arena(id);
 		

@@ -90,28 +90,29 @@ public class CommandHandler implements CommandExecutor {
 		}
 		
 		for (SubCommand subCommand : subCommands) {
-				if (subCommand.isValidTrigger(args[0])) {
-					if (!subCommand.hasPermission(sender)) {
-						sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
-						return true;
-					}
+			if (subCommand.isValidTrigger(args[0])) {
+				if (!subCommand.hasPermission(sender)) {
+					sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
+					return true;
+				}
 
-					if (subCommand.getSenderType() == SenderType.PLAYER && !(sender instanceof Player)) {
-						sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Only-By-Player"));
-						return false;
-					}
+				if (subCommand.getSenderType() == SenderType.PLAYER && !(sender instanceof Player)) {
+					sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Only-By-Player"));
+					return false;
+				}
 
-					if (args.length - 1 >= subCommand.getMinimumArguments()) {
-						try {
-							subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length));
-						} catch (CommandException e) {
-							sender.sendMessage(ChatColor.RED + e.getMessage());
-						}
-					} else {
-						if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-							sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
-						}
+				if (args.length - 1 >= subCommand.getMinimumArguments()) {
+					try {
+						subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
+					} catch (CommandException e) {
+						sender.sendMessage(ChatColor.RED + e.getMessage());
 					}
+				} else {
+					if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
+						sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
+					}
+				}
+
 				return true;
 			}
 		}

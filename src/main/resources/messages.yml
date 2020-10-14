@@ -9,7 +9,7 @@
 #     Some messages support their own placeholders
 #  
 
-# King of the Ladder Commands
+# King of the Ladder Commands Messages
 Commands:
   Did-You-Mean: "&cDid you mean &7/%command%&c?"
   Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"

@@ -21,7 +21,6 @@ package me.despical.kotl.utils;
 import me.despical.kotl.Main;
 import org.bukkit.Bukkit;
 
-import java.util.Arrays;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -37,6 +36,7 @@ public class ExceptionLogHandler extends Handler {
 
 	public ExceptionLogHandler(Main plugin) {
 		this.plugin = plugin;
+
 		Bukkit.getLogger().addHandler(this);
 	}
 
@@ -91,12 +91,12 @@ public class ExceptionLogHandler extends Handler {
 		plugin.getLogger().log(Level.WARNING, stacktrace.toString());
 		plugin.getLogger().log(Level.WARNING, "[Reporter service] <<------------------------------[END]------------------------------>>");
 
-		record.setMessage("[KOTL] We have found a bug in the code. Contact us at our official discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
+		record.setMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
 	}
 
 	private boolean containsBlacklistedClass(Throwable throwable) {
 		for (StackTraceElement element : throwable.getStackTrace()) {
-			for (String blacklist : Arrays.asList("me.despical.kotl.user.data.MysqlManager", "me.despical.kotl.utils.commonsbox.database.MysqlDatabase")) {
+			for (String blacklist : new String[] {"me.despical.kotl.user.data.MysqlManager", "me.despical.kotl.utils.commonsbox.database.MysqlDatabase"}) {
 				if (element.getClassName().contains(blacklist)) {
 					return true;
 				}

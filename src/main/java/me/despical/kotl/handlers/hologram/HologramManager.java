@@ -35,6 +35,7 @@ public class HologramManager {
 	public HologramManager() {
 		this.holograms = new ArrayList<>();
 	}
+
 	public List<ArmorStand> getHolograms() {
 		return holograms;
 	}

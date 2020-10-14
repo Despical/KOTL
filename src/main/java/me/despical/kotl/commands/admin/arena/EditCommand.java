@@ -52,12 +52,12 @@ public class EditCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
 		if (arena == null) {
-			player.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
 			return;
 		}
 
@@ -66,7 +66,7 @@ public class EditCommand extends SubCommand {
 
 	@Override
 	public List<String> getTutorial() {
-		return Collections.singletonList("Opens the arena editor");
+		return Collections.singletonList("Open the arena editor");
 	}
 
 	@Override

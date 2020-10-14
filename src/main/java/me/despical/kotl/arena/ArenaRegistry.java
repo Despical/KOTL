@@ -113,7 +113,7 @@ public class ArenaRegistry {
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
 		
-		if (arenas.size() > 0) arenas.clear();
+		if (!arenas.isEmpty()) arenas.clear();
 
 		if (!config.contains("instances")) {
 			Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));

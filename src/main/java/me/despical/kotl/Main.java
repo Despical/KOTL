@@ -21,6 +21,7 @@ package me.despical.kotl;
 import me.despical.commonsbox.compat.VersionResolver;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.database.MysqlDatabase;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.api.StatsStorage;
@@ -42,7 +43,6 @@ import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.utils.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -91,7 +91,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_8_R1)) {
+		if (VersionResolver.isAllSupported()) {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
@@ -141,7 +141,8 @@ public class Main extends JavaPlugin {
 				player.teleport(arena.getEndLocation());
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(getUserManager().getUser(player));
-				if (!isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
+
+				AttributeUtils.resetAttackCooldown(player);
 			}
 
 			if (arena.getHologram() != null) arena.getHologram().delete();
@@ -160,7 +161,7 @@ public class Main extends JavaPlugin {
 		}
 
 		userManager = new UserManager(this);
-		registerSoftDependenciesAndServices();
+		registerSoftDependencies();
 		commandHandler = new CommandHandler(this);
 		chatManager = new ChatManager(this);
 		cuboidSelector = new CuboidSelector(this);
@@ -176,7 +177,7 @@ public class Main extends JavaPlugin {
 		new QuitEvent(this);
 	}
 	
-	private void registerSoftDependenciesAndServices() {
+	private void registerSoftDependencies() {
 		Debugger.debug("Hooking into soft dependencies");
 		long start = System.currentTimeMillis();
 

@@ -19,13 +19,13 @@
 package me.despical.kotl.commands.admin.arena;
 
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -61,23 +61,23 @@ public class DeleteCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		Arena arena = ArenaRegistry.getArena(args[0]);
 
 		if (arena == null) {
-			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
 			return;
 		}
 
 		if (!confirmations.contains(sender)) {
 			confirmations.add(sender);
-			Bukkit.getScheduler().runTaskLater(getPlugin(), () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Are-You-Sure"));
+			Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Are-You-Sure"));
 			return;
 		}
 
 		confirmations.remove(sender);
-		FileConfiguration config = ConfigUtils.getConfig(getPlugin(), "arenas");
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 		if (arena.getHologram() != null) arena.getHologram().delete();
 
@@ -85,16 +85,15 @@ public class DeleteCommand extends SubCommand {
 			arena.getScoreboardManager().stopAllScoreboards();
 
 			for (Player player : arena.getPlayers()) {
-				if (getPlugin().getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-					InventorySerializer.loadInventory(getPlugin(), player);
+				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+					InventorySerializer.loadInventory(plugin, player);
 				}
 
 				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
 				player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-				if (!getPlugin().isBefore1_9_R1()) player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
-
+				AttributeUtils.resetAttackCooldown(player);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 			}
 
@@ -104,9 +103,9 @@ public class DeleteCommand extends SubCommand {
 
 		ArenaRegistry.unregisterArena(arena);
 		config.set("instances." + args[0], null);
-		ConfigUtils.saveConfig(getPlugin(), config, "arenas");
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.Removed-Game-Instance"));
+		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Removed-Game-Instance"));
 	}
 
 	@Override

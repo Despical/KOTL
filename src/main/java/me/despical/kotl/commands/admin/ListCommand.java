@@ -51,14 +51,14 @@ public class ListCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String label, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (ArenaRegistry.getArenas().isEmpty()) {
-			sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.List-Command.No-Arenas-Created"));
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.List-Command.No-Arenas-Created"));
 			return;
 		}
 
 		List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-		sender.sendMessage(getPlugin().getChatManager().getPrefix() + getPlugin().getChatManager().colorMessage("Commands.List-Command.Format").replace("%list%",
+		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.List-Command.Format").replace("%list%",
 			arenas.toString().substring(1, arenas.toString().length() - 1)));
 	}
 

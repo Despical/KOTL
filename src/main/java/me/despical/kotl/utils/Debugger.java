@@ -72,7 +72,7 @@ public class Debugger {
 	 * @param params to debug
 	 */
 	public static void debug(String msg, Object... params) {
-		debug(Level.INFO, "[KOTLDBG] " + msg, params);
+		debug(Level.INFO, msg, params);
 	}
 
 	/**
