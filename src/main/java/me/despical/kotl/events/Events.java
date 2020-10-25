@@ -60,7 +60,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (!ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 

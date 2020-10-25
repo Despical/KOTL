@@ -1,3 +1,7 @@
+### 1.1.6 Beta Release (25.10.2020)
+* Fixed anyone can't execute commands.
+* Added .editorconfig file for developers.
+
 ### 1.1.5 Release (14.10.2020)
 * Fixed a bug about being king more than once.
 * Replaced some attribute methods with API methods.
