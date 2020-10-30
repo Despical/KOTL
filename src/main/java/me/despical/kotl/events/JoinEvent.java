@@ -63,7 +63,7 @@ public class JoinEvent implements Listener {
 			}
 
 			if (result.getNewestVersion().contains("b")) {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download"));
+				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
 			} else {
 				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
 			}

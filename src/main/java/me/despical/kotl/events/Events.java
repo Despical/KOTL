@@ -51,7 +51,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (!ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 
@@ -93,9 +93,8 @@ public class Events implements Listener {
 		}
 
 		Player victim = (Player) e.getEntity();
-		Arena arena = ArenaRegistry.getArena(victim);
 
-		if (arena == null) {
+		if (!ArenaRegistry.isInArena(victim)) {
 			return;
 		}
 
@@ -110,7 +109,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameInteract(PlayerInteractEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer()) || event.getClickedBlock() == null) {
+		if (!ArenaRegistry.isInArena(event.getPlayer()) || event.getClickedBlock() == null) {
 			return;
 		}
 
@@ -121,7 +120,7 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (!ArenaRegistry.isInArena(event.getPlayer())) {
 			return;
 		}
 
@@ -156,7 +155,7 @@ public class Events implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if(ArenaRegistry.isInArena((Player) event.getPlayer())) {
+		if(ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}
