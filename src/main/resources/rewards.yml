@@ -25,7 +25,7 @@
 #
 #                               All script provided objects:
 #            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
-#   arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/1.1.6b/javadoc/me/despical/kotl/arena/Arena.html)
+#   arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/me/despical/kotl/arena/Arena.html)
 #            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 
 # Rewards must be enabled via config.yml first!

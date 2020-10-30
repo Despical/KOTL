@@ -236,6 +236,7 @@ public class Arena {
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(plugin.getUserManager().getUser(player));
+			plugin.getUserManager().getUser(player).removeScoreboard();
 		}
 
 		AttributeUtils.resetAttackCooldown(player);
@@ -245,7 +246,7 @@ public class Arena {
 		Location location = getEndLocation();
 
 		if (location == null) {
-			System.out.print("End location for arena " + getId() + " isn't intialized!");
+			System.out.print("End location for arena " + getId() + " isn't initialized!");
 			return;
 		}
 

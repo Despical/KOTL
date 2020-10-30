@@ -30,6 +30,7 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  * @author Despical
@@ -39,6 +40,7 @@ import me.despical.kotl.arena.ArenaRegistry;
 public class User {
 
 	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
 
@@ -82,5 +84,9 @@ public class User {
 			KOTLPlayerStatisticChangeEvent playerStatisticChangeEvent = new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
 			Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
 		});
+	}
+
+	public void removeScoreboard() {
+		player.setScoreboard(scoreboardManager.getNewScoreboard());
 	}
 }
