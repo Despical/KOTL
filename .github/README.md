@@ -32,7 +32,7 @@ Then add the dependency
         <dependency>
             <groupId>com.github.Despical</groupId>
             <artifactId>KOTL</artifactId>
-            <version>1.1.6b</version>
+            <version>1.1.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

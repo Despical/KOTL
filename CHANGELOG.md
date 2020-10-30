@@ -1,3 +1,9 @@
+### 1.1.6 Release (25.10.2020 - 30.10.2020)
+* Fixed scoreboard issues.
+* Fixed event issues.
+
+**Also note that this update includes 1.1.6 beta release changes.**
+
 ### 1.1.6 Beta Release (25.10.2020)
 * Fixed anyone can't execute commands.
 * Added .editorconfig file for developers.
