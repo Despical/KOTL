@@ -162,11 +162,11 @@ public class Main extends JavaPlugin {
 			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
 		}
 
+		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
 		registerSoftDependencies();
 		commandHandler = new CommandHandler(this);
-		chatManager = new ChatManager(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
 		hologramManager = new HologramManager();

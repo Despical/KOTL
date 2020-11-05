@@ -4,6 +4,14 @@
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+# If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
+# Select locale of King of the Ladder, default it's English.
+# Available locales:
+#    default - English language
+#    de - Deutsche sprache
+#    tr - Türkçe dili
+locale: default
+
 # Enable bossbar support?
 Bossbar-Enabled: true
 
