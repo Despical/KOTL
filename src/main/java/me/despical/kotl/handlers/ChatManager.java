@@ -30,6 +30,8 @@ import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 
+import java.util.List;
+
 /**
  * @author Despical
  * <p>
@@ -63,6 +65,7 @@ public class ChatManager {
 
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+
 	public String colorMessage(String message) {
 		return colorRawMessage(config.getString(message));
 	}
@@ -96,6 +99,10 @@ public class ChatManager {
 		returnString = StringUtils.replace(returnString, "%players%", Integer.toString(arena.getPlayers().size()));
 		returnString = StringUtils.replace(returnString, "%king%", arena.getKing() == null ? colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName());
 		return returnString;
+	}
+
+	public List<String> getStringList(String path) {
+		return config.getStringList(path);
 	}
 	
 	public void broadcastMessage(Arena a, String msg) {

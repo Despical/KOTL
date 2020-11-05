@@ -1,3 +1,10 @@
+### 1.1.7 Beta Release (05.11.2020)
+* Added Minecraft 1.16.4 compatibility.
+* Added new language system.
+* Fixed a MySQL syntax.
+* Fixed a bug about restoring inventories.
+* Now ``Clear-Inventory`` option is false by default.
+
 ### 1.1.6 Release (25.10.2020 - 30.10.2020)
 * Fixed scoreboard issues.
 * Fixed event issues.

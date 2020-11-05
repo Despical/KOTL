@@ -57,6 +57,7 @@ public class JoinEvent implements Listener {
 		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("kotl.updatenotify")) {
 			return;
 		}
+
 		Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
@@ -68,7 +69,7 @@ public class JoinEvent implements Listener {
 				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
 			}
 
-			event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-1-16-3.80686"));
+			event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686"));
 		}), 25);
 	}
 }

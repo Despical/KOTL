@@ -19,7 +19,6 @@
 package me.despical.kotl.arena.managers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.scoreboard.ScoreboardLib;
 import me.despical.commonsbox.scoreboard.common.EntryBuilder;
 import me.despical.commonsbox.scoreboard.type.Entry;
@@ -30,7 +29,6 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,7 +38,6 @@ import java.util.List;
 public class ScoreboardManager {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static final FileConfiguration config = ConfigUtils.getConfig(plugin, "messages");
 	private final List<Scoreboard> scoreboards = new ArrayList<>();
 	private final Arena arena;
 
@@ -98,7 +95,7 @@ public class ScoreboardManager {
 
 	private List<Entry> formatScoreboard(User user) {
 		EntryBuilder builder = new EntryBuilder();
-		List<String> lines = config.getStringList("Scoreboard.Content.Playing");
+		List<String> lines = plugin.getChatManager().getStringList("Scoreboard.Content.Playing");
 
 		lines.stream().map(line -> formatScoreboardLine(line, user)).forEach(builder::next);
 		return builder.build();
@@ -106,6 +103,7 @@ public class ScoreboardManager {
 
 	private String formatScoreboardLine(String line, User user) {
 		String formattedLine = line;
+
 		formattedLine = StringUtils.replace(formattedLine, "%arena%", arena.getId());
 		formattedLine = StringUtils.replace(formattedLine, "%players%", String.valueOf(arena.getPlayers().size()));
 		formattedLine = StringUtils.replace(formattedLine, "%king%", arena.getKing() != null ? arena.getKing().getName() : "Nobody");

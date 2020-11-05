@@ -85,9 +85,10 @@ public class ReloadCommand extends SubCommand {
 			for (Player player : arena.getPlayers()) {
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);
+				} else {
+					player.getInventory().clear();
 				}
 
-				player.getInventory().clear();
 				player.getInventory().setArmorContents(null);
 				player.setWalkSpeed(0.2f);
 				player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));

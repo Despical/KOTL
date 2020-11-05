@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.1.6)      | #
+# |   King of the Ladder by Despical (Version 1.1.7-beta)   | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -21,7 +21,8 @@ DatabaseActivated: false
 InventoryManager: true
 
 # Should we clear player's inventory on joining and leaving the game area.
-Clear-Inventory: true
+# Also disable InventoryManager option before enabling this option.
+Clear-Inventory: false
 
 # Should we clear player's active potion effects when player join the arena.
 Clear-Effects: true

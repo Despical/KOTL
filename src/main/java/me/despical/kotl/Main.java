@@ -222,7 +222,7 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Debugger.sendConsoleMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-3.80686/");
+					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686/");
 				}
 
 				return;
@@ -231,7 +231,7 @@ public class Main extends JavaPlugin {
 			MessageUtils.updateIsHere();
 			Debugger.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
 			Debugger.sendConsoleMessage("[KOTL] Download it SpigotMC:");
-			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-3.80686/");
+			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686/");
 		});
 	}
 	
@@ -291,10 +291,10 @@ public class Main extends JavaPlugin {
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(stat.getName()).append("=").append(user.getStat(stat));
+						update.append(stat.getName()).append("'='").append(user.getStat(stat));
 					}
 
-					update.append(", ").append(stat.getName()).append("=").append(user.getStat(stat));
+					update.append(", ").append(stat.getName()).append("'='").append(user.getStat(stat));
 				}
 
 				String finalUpdate = update.toString();
