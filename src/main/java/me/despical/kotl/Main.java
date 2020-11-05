@@ -36,6 +36,7 @@ import me.despical.kotl.events.QuitEvent;
 import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.PlaceholderManager;
 import me.despical.kotl.handlers.hologram.HologramManager;
+import me.despical.kotl.handlers.language.LanguageManager;
 import me.despical.kotl.handlers.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
@@ -66,6 +67,7 @@ public class Main extends JavaPlugin {
 	private CuboidSelector cuboidSelector;
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
+	private LanguageManager languageManager;
 	private HologramManager hologramManager;
 
 	@Override
@@ -160,6 +162,7 @@ public class Main extends JavaPlugin {
 			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
 		}
 
+		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
 		registerSoftDependencies();
 		commandHandler = new CommandHandler(this);
@@ -275,6 +278,10 @@ public class Main extends JavaPlugin {
 
 	public HologramManager getHologramManager() {
 		return hologramManager;
+	}
+
+	public LanguageManager getLanguageManager() {
+		return languageManager;
 	}
 
 	public UserManager getUserManager() {
