@@ -19,6 +19,7 @@
 package me.despical.kotl.commands.game;
 
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.miscellaneous.MiscUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
@@ -72,14 +73,14 @@ public class CreateCommand extends SubCommand {
 		
 		setupDefaultConfiguration(args[0]);
 
-		player.sendMessage(ChatColor.BOLD + "------------------------------------------");
-        player.sendMessage(ChatColor.YELLOW + "      Instance " + args[0] + " created!");
+		player.sendMessage(ChatColor.BOLD + "--------------------------------------------");
+        MiscUtils.sendCenteredMessage(player, ChatColor.YELLOW + "Instance " + args[0] + " created!");
         player.sendMessage("");
-        player.sendMessage(ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/kotl " + "edit " + args[0] + ChatColor.GREEN + "!");
+		MiscUtils.sendCenteredMessage(player, ChatColor.GREEN + "Edit this arena via " + ChatColor.GOLD + "/kotl " + "edit " + args[0] + ChatColor.GREEN + "!");
 		player.sendMessage("");
-		player.sendMessage(ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
-		player.sendMessage(ChatColor.GRAY + TUTORIAL_VIDEO);
-        player.sendMessage(ChatColor.BOLD + "------------------------------------------- ");
+		MiscUtils.sendCenteredMessage(player, ChatColor.GOLD + "Don't know where to start? Check out tutorial video:");
+		MiscUtils.sendCenteredMessage(player, ChatColor.GRAY + TUTORIAL_VIDEO);
+        player.sendMessage(ChatColor.BOLD + "--------------------------------------------");
 	}
 	
 	private void setupDefaultConfiguration(String id) {

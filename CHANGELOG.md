@@ -10,6 +10,7 @@
 * Fixed a bug about restoring inventories.
 * Moved script engine to switch case.
 * Now ``Clear-Inventory`` option is false by default.
+* Now sending arena creation message centered.
 * Performance improvements.
 
 ### 1.1.6 Release (25.10.2020 - 30.10.2020)
