@@ -1,9 +1,16 @@
-### 1.1.7 Beta Release (05.11.2020)
+### 1.1.7 Release (05.11.2020)
 * Added Minecraft 1.16.4 compatibility.
 * Added new language system.
+* Added contributors section to pom.xml
+* Added new bStats chart to get which locale is in use.
+* Fixed license header.
+* Fixed scoreboard not removing when player leave the game.
+* Fixed a bug related to armors when restoring inventories.
 * Fixed a MySQL syntax.
 * Fixed a bug about restoring inventories.
+* Moved script engine to switch case.
 * Now ``Clear-Inventory`` option is false by default.
+* Performance improvements.
 
 ### 1.1.6 Release (25.10.2020 - 30.10.2020)
 * Fixed scoreboard issues.

@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl.commands.game;
@@ -84,13 +84,14 @@ public class CreateCommand extends SubCommand {
 	
 	private void setupDefaultConfiguration(String id) {
 		String path = "instances." + id + ".";
+		String loc = LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
 
-		config.set(path + "endlocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		config.set(path + "areaMin", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		config.set(path + "areaMax", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
+		config.set(path + "endlocation", loc);
+		config.set(path + "areaMin", loc);
+		config.set(path + "areaMax", loc);
 		config.set(path + "isdone", false);
-		config.set(path + "hologramLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
-		config.set(path + "plateLocation", LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation()));
+		config.set(path + "hologramLocation", loc);
+		config.set(path + "plateLocation", loc);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		Arena arena = new Arena(id);

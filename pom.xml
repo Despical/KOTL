@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.1.7-beta</version>
+	<version>1.1.7</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -26,6 +26,16 @@
 			</roles>
 		</developer>
 	</developers>
+
+	<contributors>
+		<contributor>
+			<name>Dreandor</name>
+			<url>https://www.spigotmc.org/members/643921/</url>
+			<roles>
+				<role>translator</role>
+			</roles>
+		</contributor>
+	</contributors>
 
 	<repositories>
 		<repository>

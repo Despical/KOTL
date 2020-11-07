@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl;
@@ -100,8 +100,7 @@ public class Main extends JavaPlugin {
 			forceDisable = true;
 			getServer().getPluginManager().disablePlugin(this);
 			return false;
-		}
-		try {
+		} try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
 			MessageUtils.thisVersionIsNotSupported();
@@ -202,6 +201,7 @@ public class Main extends JavaPlugin {
 		}
 
 		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
+		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().getPrefix()));
 		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
 			if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 				return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";

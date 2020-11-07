@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl.handlers.setup.components;
@@ -51,6 +51,7 @@ public class MiscComponents implements SetupComponent {
 		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
 		Main plugin = setupInventory.getPlugin();
+		String s = "instances." + arena.getId() + ".";
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseItem())
 			.name("&e&lSet King Hologram")
@@ -58,7 +59,7 @@ public class MiscComponents implements SetupComponent {
 			.lore("&7on the place where you are standing.")
 			.lore("&8(where the last king displays)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool("instances." + arena.getId() + ".hologramLocation"))
+			.isOptionDoneBool(s + "hologramLocation"))
 			.build(), e -> {
 				e.getWhoClicked().closeInventory();
 
@@ -66,7 +67,7 @@ public class MiscComponents implements SetupComponent {
 					arena.getHologram().delete();
 				}
 
-				config.set("instances." + arena.getId() + ".hologramLocation", LocationSerializer.locationToString(player.getLocation()));
+				config.set(s + "hologramLocation", LocationSerializer.locationToString(player.getLocation()));
 				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
 
 				Hologram hologram = new Hologram(player.getLocation(), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));

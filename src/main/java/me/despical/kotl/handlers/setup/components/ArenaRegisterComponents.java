@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl.handlers.setup.components;
@@ -74,20 +74,20 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 		pane.addItem(new GuiItem(registeredItem, e -> {
 			Arena arena = setupInventory.getArena();
+			String s = "instances." + arena.getId() + ".";
 
 			e.getWhoClicked().closeInventory();
 
-			if (config.getBoolean("instances." + arena.getId() + ".isdone", false)) {
+			if (config.getBoolean(s + "isdone", false)) {
 				e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
 
 			String[] locations = {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
 
-			for (String s : locations) {
-				if (!config.isSet("instances." + arena.getId() + "." + s) || config.getString("instances." + arena.getId() + "." + s).equals(
-					LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-					e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + s + " (cannot be world spawn location)"));
+			for (String loc : locations) {
+				if (!config.isSet(s + loc) || config.getString(s + loc).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
+					e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;
 				}
 			}
@@ -95,10 +95,10 @@ public class ArenaRegisterComponents implements SetupComponent {
 			if (arena.getHologram() != null) arena.getHologram().delete();
 			arena = new Arena(setupInventory.getArena().getId());
 			arena.setReady(true);
-			arena.setEndLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".endLocation")));
-			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".plateLocation")));
+			arena.setEndLocation(LocationSerializer.locationFromString(config.getString(s + "endLocation")));
+			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString(s + "plateLocation")));
 
-			Hologram hologram = new Hologram(LocationSerializer.locationFromString(config.getString("instances." + arena.getId() + ".hologramLocation")), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+			Hologram hologram = new Hologram(LocationSerializer.locationFromString(config.getString(s + "hologramLocation")), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
 
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());

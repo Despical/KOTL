@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
+ *  
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl.handlers.setup.components;
@@ -27,6 +27,7 @@ import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.setup.SetupInventory;
+import me.despical.kotl.utils.CuboidSelector;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,6 +53,7 @@ public class SpawnComponents implements SetupComponent {
 		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
 		Main plugin = setupInventory.getPlugin();
+		String s = "instances." + arena.getId() + ".";
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
@@ -60,10 +62,10 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool("instances." + arena.getId() + ".endLocation"))
+			.isOptionDoneBool(s + "endLocation"))
 			.build(), e -> {
 				e.getWhoClicked().closeInventory();
-				config.set("instances." + arena.getId() + ".endLocation", LocationSerializer.locationToString(player.getLocation()));
+				config.set(s + "endLocation", LocationSerializer.locationToString(player.getLocation()));
 				arena.setEndLocation(player.getLocation());
 				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
 
@@ -76,11 +78,11 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will try to")
 			.lore("&8reach)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool("instances." + arena.getId() + ".plateLocation"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(s + "plateLocation"))
 			.build(), e -> {
 				e.getWhoClicked().closeInventory();
 				player.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
-				config.set("instances." + arena.getId() + ".plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
+				config.set(s + "plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
 				arena.setPlateLocation(player.getLocation());
 				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
 
@@ -93,22 +95,24 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7with the cuboid selector.")
 			.lore("&8(area where game will be playing)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool("instances." + arena.getId() + ".areaMax"))
+			.isOptionDoneBool(s + "areaMax"))
 			.build(), e -> {
 				e.getWhoClicked().closeInventory();
 
-				if (plugin.getCuboidSelector().getSelection(player) == null) {
+			CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+
+				if (selection == null) {
 					plugin.getCuboidSelector().giveSelectorWand(player);
 					return;
 				}
 
-				if (plugin.getCuboidSelector().getSelection(player).getSecondPos() == null) {
+				if (selection.getSecondPos() == null) {
 					player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
 					return;
 				}
 
-				config.set("instances." + arena.getId() + ".areaMin", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getFirstPos()));
-				config.set("instances." + arena.getId() + ".areaMax", LocationSerializer.locationToString(plugin.getCuboidSelector().getSelection(player).getSecondPos()));
+				config.set(s + "areaMin", LocationSerializer.locationToString(selection.getFirstPos()));
+				config.set(s + "areaMax", LocationSerializer.locationToString(selection.getSecondPos()));
 				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
 				plugin.getCuboidSelector().removeSelection(player);
 

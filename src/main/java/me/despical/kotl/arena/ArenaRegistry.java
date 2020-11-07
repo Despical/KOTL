@@ -1,19 +1,19 @@
 /*
- * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2020 Despical
+ *  KOTL - Don't let others to climb top of the ladders!
+ *  Copyright (C) 2020 Despical and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package me.despical.kotl.arena;
@@ -47,7 +47,7 @@ public class ArenaRegistry {
 	 * Checks if player is in any arena
 	 *
 	 * @param player player to check
-	 * @return [b]true[/b] when player is in arena, [b]false[/b] if otherwise
+	 * @return true when player is in arena, false if otherwise
 	 */
 	public static boolean isInArena(Player player) {
 		for (Arena arena : arenas) {
@@ -113,7 +113,7 @@ public class ArenaRegistry {
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
 		
-		if (!arenas.isEmpty()) arenas.clear();
+		arenas.clear();
 
 		if (!config.contains("instances")) {
 			Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.No-Instances-Created"));
