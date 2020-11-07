@@ -1,4 +1,4 @@
-### 1.1.7 Release (05.11.2020)
+### 1.1.7 Release (05.11.2020 - 07.11.2020)
 * Added Minecraft 1.16.4 compatibility.
 * Added new language system.
 * Added contributors section to pom.xml
