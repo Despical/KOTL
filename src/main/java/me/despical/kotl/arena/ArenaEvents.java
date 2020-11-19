@@ -20,6 +20,7 @@ package me.despical.kotl.arena;
 
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
@@ -64,7 +65,7 @@ public class ArenaEvents implements Listener {
 
 			player.setGameMode(GameMode.SURVIVAL);
 			player.setFoodLevel(20);
-			player.setHealth(20d);
+			AttributeUtils.healPlayer(player);
 
 			arena.doBarAction(Arena.BarAction.ADD, player);
 

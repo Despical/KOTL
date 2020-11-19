@@ -50,11 +50,9 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onDrop(PlayerDropItemEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
 		}
-
-		event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -119,11 +117,9 @@ public class Events implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
 		}
-
-		event.setCancelled(true);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -136,20 +132,16 @@ public class Events implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreakEvent(BlockBreakEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
 		}
-
-		event.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBuild(BlockPlaceEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
-			return;
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
 		}
-
-		event.setCancelled(true);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH)

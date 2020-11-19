@@ -16,7 +16,7 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.commands.game;
+package me.despical.kotl.commands.admin.arena;
 
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.miscellaneous.MiscUtils;

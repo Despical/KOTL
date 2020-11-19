@@ -156,7 +156,7 @@ public class ArenaRegistry {
 				continue;
 			}
 
-			if (!config.getBoolean(s + "isdone", false)) {
+			if (!config.getBoolean(s + "isdone")) {
 				Debugger.sendConsoleMessage(plugin.getChatManager().colorMessage("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				config.set(s + "isdone", false);
 				arena.setReady(false);

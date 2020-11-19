@@ -39,7 +39,7 @@ import me.despical.kotl.commands.admin.arena.DeleteCommand;
 import me.despical.kotl.commands.admin.arena.EditCommand;
 import me.despical.kotl.commands.admin.arena.ReloadCommand;
 import me.despical.kotl.commands.exception.CommandException;
-import me.despical.kotl.commands.game.CreateCommand;
+import me.despical.kotl.commands.admin.arena.CreateCommand;
 import me.despical.kotl.commands.game.LeaderBoardCommand;
 import me.despical.kotl.commands.game.StatsCommand;
 

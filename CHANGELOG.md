@@ -1,3 +1,14 @@
+### 1.1.8 Release (19.11.2020)
+* Added online player completion to tab complete for stats command.
+* Fixed restoring potion effects while ``InventoryManager`` option is enabled.
+* Fixed some JavaDoc issues.
+* Fixed possible NPE.
+* Removed default false values for config options.
+* Replaced some attribute methods with API methods.
+* Changed package of a class - (Developer Alert)
+  * me.despical.kotl.commands.admin.arena.CreateCommand
+* General code optimization.
+
 ### 1.1.7 Release (05.11.2020 - 07.11.2020)
 * Added Minecraft 1.16.4 compatibility.
 * Added new language system.

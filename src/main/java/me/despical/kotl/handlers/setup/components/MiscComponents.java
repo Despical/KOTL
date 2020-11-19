@@ -18,12 +18,12 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import com.github.despical.inventoryframework.GuiItem;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
 import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.inventoryframework.GuiItem;
+import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.hologram.Hologram;
@@ -58,23 +58,20 @@ public class MiscComponents implements SetupComponent {
 			.lore("&7Click to set king's hologram location")
 			.lore("&7on the place where you are standing.")
 			.lore("&8(where the last king displays)")
-			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool(s + "hologramLocation"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(s + "hologramLocation"))
 			.build(), e -> {
-				e.getWhoClicked().closeInventory();
+			e.getWhoClicked().closeInventory();
 
-				if(arena.getHologram() != null) {
-					arena.getHologram().delete();
-				}
+			if(arena.getHologram() != null) arena.getHologram().delete();
 
-				config.set(s + "hologramLocation", LocationSerializer.locationToString(player.getLocation()));
-				player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
+			config.set(s + "hologramLocation", LocationSerializer.locationToString(player.getLocation()));
+			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
 
-				Hologram hologram = new Hologram(player.getLocation(), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+			Hologram hologram = new Hologram(player.getLocation(), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
 
-				arena.setHologram(hologram);
-				arena.setHologramLocation(hologram.getLocation());
-				ConfigUtils.saveConfig(plugin, config, "arenas");
+			arena.setHologram(hologram);
+			arena.setHologramLocation(hologram.getLocation());
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 3, 0);		
 		
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
@@ -82,9 +79,9 @@ public class MiscComponents implements SetupComponent {
 			.lore("&7Having problems with setup or wanna know")
 			.lore("&7some useful tips? Click to get wiki link!")
 			.build(), e -> {
-				e.getWhoClicked().closeInventory();
+			e.getWhoClicked().closeInventory();
 
-				player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out our wiki: https://github.com/Despical/KOTL/wiki"));
+			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out our wiki: https://github.com/Despical/KOTL/wiki"));
 		}), 7, 0);
 	}
 }

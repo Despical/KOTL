@@ -18,9 +18,9 @@
 
 package me.despical.kotl.handlers.setup;
 
-import com.github.despical.inventoryframework.Gui;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.inventoryframework.Gui;
+import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager;

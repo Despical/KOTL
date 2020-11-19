@@ -18,12 +18,12 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import com.github.despical.inventoryframework.GuiItem;
-import com.github.despical.inventoryframework.pane.StaticPane;
 import me.despical.commonsbox.compat.XMaterial;
 import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.commonsbox.item.ItemBuilder;
 import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.inventoryframework.GuiItem;
+import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
@@ -78,7 +78,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 			e.getWhoClicked().closeInventory();
 
-			if (config.getBoolean(s + "isdone", false)) {
+			if (config.getBoolean(s + "isdone")) {
 				e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
@@ -107,7 +107,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 			e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
 
-			config.set("instances." + arena.getId() + ".isdone", true);
+			config.set(s + "isdone", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 			ArenaRegistry.registerArena(arena);
 		}), 8, 0);

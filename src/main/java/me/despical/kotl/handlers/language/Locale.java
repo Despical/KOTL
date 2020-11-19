@@ -76,7 +76,7 @@ public class Locale {
 	}
 
 	/**
-	 * Valid aliases of locale ex. for German - deutsch, de, german; Turkish - tr polish etc.
+	 * Valid aliases of locale ex. for German - deutsch, de, german; Turkish - tr etc.
 	 *
 	 * @return aliases for locale
 	 */
