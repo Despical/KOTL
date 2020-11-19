@@ -20,9 +20,11 @@ package me.despical.kotl.commands;
 
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.util.*;
@@ -58,6 +60,10 @@ public class TabCompletion implements TabCompleter {
 
 			if (args[0].equalsIgnoreCase("top")) {
 				return Arrays.asList("tours_played", "score");
+			}
+
+			if (args[0].equalsIgnoreCase("stats")) {
+				return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
 			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
