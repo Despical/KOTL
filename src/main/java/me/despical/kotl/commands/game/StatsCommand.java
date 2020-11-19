@@ -50,19 +50,18 @@ public class StatsCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
 		Player player = args.length  == 1 ? Bukkit.getPlayerExact(args[0]) : (Player) sender;
-		ChatManager chatManager = plugin.getChatManager();
 
 		if (player == null) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Player-Not-Found"));
+			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Player-Not-Found"));
 			return;
 		}
 
 		User user = plugin.getUserManager().getUser(player);
 
 		if (player.equals(sender)) {
-			sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Stats-Command.Header", player));
+			sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header", player));
 		} else {
 			sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));
 		}

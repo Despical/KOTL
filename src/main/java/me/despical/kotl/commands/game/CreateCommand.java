@@ -24,6 +24,7 @@ import me.despical.commonsbox.serializer.LocationSerializer;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -61,13 +62,12 @@ public class CreateCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
 		Player player = (Player) sender;
-		Arena arena = ArenaRegistry.getArena(args[0]);
 		
-		if(arena != null || config.contains("instances." + args[0])) {
-			player.sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "Arena with that ID already contains!");
-			player.sendMessage(plugin.getChatManager().getPrefix() + ChatColor.RED + "To check existing arenas use: /kotl list");
+		if(ArenaRegistry.getArena(args[0]) != null || config.contains("instances." + args[0])) {
+			player.sendMessage(chatManager.getPrefix() + ChatColor.RED + "Arena with that ID already contains!");
+			player.sendMessage(chatManager.getPrefix() + ChatColor.RED + "To check existing arenas use: /kotl list");
 			return;
 		}
 		

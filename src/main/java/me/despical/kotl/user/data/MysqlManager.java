@@ -26,7 +26,6 @@ import me.despical.kotl.user.User;
 import me.despical.kotl.utils.Debugger;
 import me.despical.kotl.utils.MessageUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -125,8 +124,7 @@ public class MysqlManager implements UserDatabase {
 	}
 	
 	public String getTableName() {
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "mysql");
-		return config.getString("table", "playerstats");
+		return ConfigUtils.getConfig(plugin, "mysql").getString("table", "playerstats");
 	}
 
 	public MysqlDatabase getDatabase() {

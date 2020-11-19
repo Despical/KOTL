@@ -24,6 +24,7 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
+import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.utils.Debugger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -60,11 +61,11 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
 		if(!(confirmations.contains(sender))) {
 			confirmations.add(sender);
 			Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Are-You-Sure"));
+			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Are-You-Sure"));
 			return;
 		}
 
@@ -74,7 +75,7 @@ public class ReloadCommand extends SubCommand {
 		long start = System.currentTimeMillis();
 		
 		plugin.reloadConfig();
-		plugin.getChatManager().reloadConfig();
+		chatManager.reloadConfig();
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			Debugger.debug("[Reloader] Stopping arena called {0}", arena.getId());
@@ -84,13 +85,13 @@ public class ReloadCommand extends SubCommand {
 
 			for (Player player : arena.getPlayers()) {
 				player.setWalkSpeed(0.2f);
-				player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);
 				} else {
 					player.getInventory().clear();
 					player.getInventory().setArmorContents(null);
+					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 				}
 
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
@@ -106,14 +107,14 @@ public class ReloadCommand extends SubCommand {
 		}
 
 		ArenaRegistry.registerArenas();
-		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Success-Reload"));
+		sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Success-Reload"));
 
 		Debugger.debug("[Reloader] Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}
 
 	@Override
 	public List<String> getTutorial() {
-		return Arrays.asList("Reload all game arenas and their configuration" , "All of the arenas will be stoped!");
+		return Arrays.asList("Reloads all game arenas and their configuration" , "All of the arenas will be stopped!");
 	}
 
 	@Override

@@ -21,6 +21,7 @@ package me.despical.kotl.commands.game;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.commands.SubCommand;
+import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.user.data.MysqlManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -56,9 +57,9 @@ public class LeaderBoardCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
 		if (args.length == 0) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Statistics.Type-Name"));
+			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Type-Name"));
 			return;
 		}
 
@@ -66,7 +67,7 @@ public class LeaderBoardCommand extends SubCommand {
 			StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[0].toUpperCase(java.util.Locale.ENGLISH));
 			printLeaderboard(sender, statisticType);
 		} catch (IllegalArgumentException exception) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
+			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Statistics.Invalid-Name"));
 		}
 	}
 
