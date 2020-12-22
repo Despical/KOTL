@@ -53,7 +53,7 @@ public class SpawnComponents implements SetupComponent {
 		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
 		Main plugin = setupInventory.getPlugin();
-		String s = "instances." + arena.getId() + ".";
+		String path = "instances." + arena.getId() + ".";
 
 		pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
@@ -62,10 +62,10 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
 			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool(s + "endLocation"))
+			.isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
-			config.set(s + "endLocation", LocationSerializer.locationToString(player.getLocation()));
+			config.set(path + "endLocation", LocationSerializer.locationToString(player.getLocation()));
 			arena.setEndLocation(player.getLocation());
 			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
 
@@ -78,11 +78,11 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will try to")
 			.lore("&8reach)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(s + "plateLocation"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "plateLocation"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
 			player.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
-			config.set(s + "plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
+			config.set(path + "plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
 			arena.setPlateLocation(player.getLocation());
 			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
 
@@ -94,7 +94,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7Click to set arena's region")
 			.lore("&7with the cuboid selector.")
 			.lore("&8(area where game will be playing)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(s + "areaMax"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "areaMax"))
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
 
@@ -110,8 +110,8 @@ public class SpawnComponents implements SetupComponent {
 				return;
 			}
 
-			config.set(s + "areaMin", LocationSerializer.locationToString(selection.getFirstPos()));
-			config.set(s + "areaMax", LocationSerializer.locationToString(selection.getSecondPos()));
+			config.set(path + "areaMin", LocationSerializer.locationToString(selection.getFirstPos()));
+			config.set(path + "areaMax", LocationSerializer.locationToString(selection.getSecondPos()));
 			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
 			plugin.getCuboidSelector().removeSelection(player);
 

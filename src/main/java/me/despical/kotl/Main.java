@@ -73,13 +73,15 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if (!validateIfPluginShouldStart()) {
+			forceDisable = true;
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		saveDefaultConfig();
 
-		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages", false));
+		Debugger.setEnabled(getDescription().getVersion().contains("d") || getConfig().getBoolean("Debug-Messages"));
 		Debugger.debug("Initialization start");
 
 		long start = System.currentTimeMillis();
@@ -97,8 +99,6 @@ public class Main extends JavaPlugin {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
-			forceDisable = true;
-			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		} try {
 			Class.forName("org.spigotmc.SpigotConfig");
@@ -106,8 +106,6 @@ public class Main extends JavaPlugin {
 			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
-			forceDisable = true;
-			getServer().getPluginManager().disablePlugin(this);
 			return false;
 		}
 
@@ -147,7 +145,6 @@ public class Main extends JavaPlugin {
 			}
 
 			if (arena.getHologram() != null) arena.getHologram().delete();
-			arena.getPlayers().clear();
 		}
 
 		Debugger.debug("System disable finished took {0} ms", System.currentTimeMillis() - start);

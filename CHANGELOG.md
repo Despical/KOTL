@@ -1,3 +1,8 @@
+### 1.1.9 Release (22.12.2020)
+* Fixed scoreboard issues.
+* Tab complete improvement.
+* Some additional optimizations.
+
 ### 1.1.8 Release (19.11.2020)
 * Added online player completion to tab complete for stats command.
 * Fixed restoring potion effects while ``InventoryManager`` option is enabled.

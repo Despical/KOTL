@@ -25,8 +25,6 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 
-import java.util.Arrays;
-
 /**
  * @author Despical
  * <p>
@@ -61,6 +59,8 @@ public class FileStats implements UserDatabase {
 
 	@Override
 	public void loadStatistics(User user) {
-		Arrays.stream(StatsStorage.StatisticType.values()).forEach(stat -> user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0)));
+		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+			user.setStat(stat, config.getInt(user.getPlayer().getUniqueId().toString() + "." + stat.getName(), 0));
+		}
 	}
 }

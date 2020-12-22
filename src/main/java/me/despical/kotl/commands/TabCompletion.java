@@ -53,8 +53,7 @@ public class TabCompletion implements TabCompleter {
 		}
 
 		if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("help") ||
-				args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("reload")) {
+			if (Arrays.asList("create", "help", "list", "reload", "randomjoin", "stop").stream().anyMatch(args[0]::equalsIgnoreCase)) {
 				return null;
 			}
 
