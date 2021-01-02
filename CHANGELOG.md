@@ -1,3 +1,10 @@
+### 1.2.0 Release (02.01.2021)
+* Fixed plugin is not enabling on 1.1.9 version.
+* Fixed default null king entry on scoreboard.
+* Changed PAPI's plugin version with Bukkit's.
+* Changed some debugger keys.
+* Updated license header.
+
 ### 1.1.9 Release (22.12.2020)
 * Fixed scoreboard issues.
 * Tab complete improvement.
