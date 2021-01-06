@@ -1,4 +1,4 @@
-### 1.2.0 Release (02.01.2021)
+### 1.2.0 Release (02.01.2021 - 06.01.2021)
 * Added multi-world support.
 * Fixed winner also gets the losing reward.
 * Fixed default null king entry on scoreboard.
