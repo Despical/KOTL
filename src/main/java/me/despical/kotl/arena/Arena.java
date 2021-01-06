@@ -18,6 +18,7 @@
 
 package me.despical.kotl.arena;
 
+import me.despical.commonsbox.compat.VersionResolver;
 import me.despical.commonsbox.miscellaneous.AttributeUtils;
 import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
@@ -63,7 +64,7 @@ public class Arena {
 		scoreboardManager = new ScoreboardManager(this);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
-			if (plugin.isBefore1_9_R1()) {
+			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 				return;
 			}
 
@@ -246,7 +247,7 @@ public class Arena {
 		Location location = getEndLocation();
 
 		if (location == null) {
-			System.out.print("End location for arena " + getId() + " isn't initialized!");
+			System.out.print("End location for arena " + id + " isn't initialized!");
 			return;
 		}
 
@@ -260,11 +261,11 @@ public class Arena {
 	 * @param p player
 	 */
 	public void doBarAction(BarAction action, Player p) {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 			return;
 		}
 
-		if (plugin.isBefore1_9_R1()) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			return;
 		}
 

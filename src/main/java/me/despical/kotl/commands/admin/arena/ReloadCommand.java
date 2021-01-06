@@ -24,7 +24,6 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.utils.Debugger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -61,11 +60,11 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
+	public void execute(CommandSender sender , String[] args) {
 		if(!(confirmations.contains(sender))) {
 			confirmations.add(sender);
 			Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Are-You-Sure"));
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Are-You-Sure"));
 			return;
 		}
 
@@ -75,7 +74,7 @@ public class ReloadCommand extends SubCommand {
 		long start = System.currentTimeMillis();
 		
 		plugin.reloadConfig();
-		chatManager.reloadConfig();
+		plugin.getChatManager().reloadConfig();
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
 			Debugger.debug("[Reloader] Stopping arena called {0}", arena.getId());
@@ -107,7 +106,7 @@ public class ReloadCommand extends SubCommand {
 		}
 
 		ArenaRegistry.registerArenas();
-		sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Success-Reload"));
+		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Success-Reload"));
 
 		Debugger.debug("[Reloader] Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}

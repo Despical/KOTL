@@ -117,7 +117,10 @@ public class RewardsFactory {
 			}
 		}
 
-		registeredRewards.keySet().forEach(rewardType -> Debugger.debug("[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name()));
+		for (Reward.RewardType rewardType : registeredRewards.keySet()) {
+			Debugger.debug("[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
+		}
+
 		Debugger.debug("[RewardsFactory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
 	}
 }

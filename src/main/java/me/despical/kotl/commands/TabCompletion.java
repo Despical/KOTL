@@ -29,6 +29,7 @@ import org.bukkit.util.StringUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -53,7 +54,7 @@ public class TabCompletion implements TabCompleter {
 		}
 
 		if (args.length == 2) {
-			if (Arrays.asList("create", "help", "list", "reload", "randomjoin", "stop").stream().anyMatch(args[0]::equalsIgnoreCase)) {
+			if (Stream.of("create", "help", "list", "reload", "randomjoin", "stop").anyMatch(args[0]::equalsIgnoreCase)) {
 				return null;
 			}
 

@@ -19,7 +19,6 @@
 package me.despical.kotl.commands.admin;
 
 import me.despical.kotl.commands.SubCommand;
-import me.despical.kotl.handlers.ChatManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -56,9 +55,9 @@ public class HelpCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		sender.sendMessage("");
-		sender.sendMessage(chatManager.colorRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
+		sender.sendMessage(plugin.getChatManager().colorRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		sender.sendMessage("");
 
 		for (SubCommand subCommand : plugin.getCommandHandler().getSubCommands()) {

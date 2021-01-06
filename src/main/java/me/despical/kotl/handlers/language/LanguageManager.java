@@ -66,6 +66,12 @@ public class LanguageManager {
 	}
 
 	private void setupLocale() {
+		if (plugin.getConfig().getBoolean("Developer-Mode")) {
+			Debugger.sendConsoleMessage("&c[KOTL] Locales aren't supported in beta versions because they're lacking latest translations! Using default one...");
+			pluginLocale = LocaleRegistry.getByName("English");
+			return;
+		}
+
 		String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
 
 		for (Locale locale : LocaleRegistry.getRegisteredLocales()) {

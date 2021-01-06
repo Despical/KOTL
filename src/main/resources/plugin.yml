@@ -3,7 +3,7 @@ main: me.despical.kotl.Main
 author: Despical
 version: ${project.version}
 api-version: 1.13
-softdepend: [PlaceholderAPI]
+softdepend: [Multiverse-Core, PlaceholderAPI]
 
 commands:
   KingOfTheLadder:
@@ -14,7 +14,6 @@ permissions:
   kotl.admin.*:
     default: op
     children:
-      kotl.command.override: true
       kotl.admin: true
       kotl.admin.edit: true
       kotl.admin.create: true

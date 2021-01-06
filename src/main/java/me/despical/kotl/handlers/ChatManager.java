@@ -106,7 +106,9 @@ public class ChatManager {
 	}
 	
 	public void broadcastMessage(Arena a, String msg) {
-		a.getPlayers().forEach(p -> p.sendMessage(prefix + msg));
+		for (Player p : a.getPlayers()) {
+			p.sendMessage(prefix + msg);
+		}
 	}
 
 	public void broadcastAction(Arena a, Player p, ActionType action) {

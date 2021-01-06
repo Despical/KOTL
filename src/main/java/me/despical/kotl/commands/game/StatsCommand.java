@@ -50,7 +50,8 @@ public class StatsCommand extends SubCommand {
 	}
 
 	@Override
-	public void execute(CommandSender sender, ChatManager chatManager, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
+		ChatManager chatManager = plugin.getChatManager();
 		Player player = args.length  == 1 ? Bukkit.getPlayerExact(args[0]) : (Player) sender;
 
 		if (player == null) {

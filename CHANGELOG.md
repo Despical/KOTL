@@ -1,8 +1,15 @@
 ### 1.2.0 Release (02.01.2021)
-* Fixed plugin is not enabling on 1.1.9 version.
+* Added multi-world support.
+* Fixed winner also gets the losing reward.
 * Fixed default null king entry on scoreboard.
+* Removed `kotl.command.override` permission (still be able to use `kotl.admin` instead).
+* Removed ChatManager argument from sub-commands.,
+* Removed `Main#isBefore1_9_R1` method.
+* Changed filled-map item in setup gui to tutorial video from wiki link.
 * Changed PAPI's plugin version with Bukkit's.
 * Changed some debugger keys.
+* Now list command replaces values faster.
+* Disabled locales in debug mode.
 * Updated license header.
 
 ### 1.1.9 Release (22.12.2020)

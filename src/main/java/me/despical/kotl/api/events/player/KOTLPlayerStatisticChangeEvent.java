@@ -37,7 +37,7 @@ import me.despical.kotl.arena.Arena;
  */
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
-	private final HandlerList HANDLERS = new HandlerList();
+	private final HandlerList handlers = new HandlerList();
 	private final Player player;
 	private final StatsStorage.StatisticType statisticType;
 	private final int number;
@@ -51,7 +51,7 @@ public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
 	@Override
 	public HandlerList getHandlers() {
-		return HANDLERS;
+		return handlers;
 	}
 
 	public Player getPlayer() {

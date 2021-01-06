@@ -66,7 +66,7 @@ public class CommandHandler implements CommandExecutor {
 		registerSubCommand(new StatsCommand());
 		registerSubCommand(new LeaderBoardCommand());
 
-		Optional.ofNullable(plugin.getCommand("kingoftheladder")).ifPresent(kotl -> {
+		Optional.ofNullable(plugin.getCommand("kotl")).ifPresent(kotl -> {
 			kotl.setExecutor(this);
 			kotl.setTabCompleter(new TabCompletion(this));
 		});
@@ -106,7 +106,7 @@ public class CommandHandler implements CommandExecutor {
 
 				if (args.length - 1 >= subCommand.getMinimumArguments()) {
 					try {
-						subCommand.execute(sender, plugin.getChatManager(), Arrays.copyOfRange(args, 1, args.length));
+						subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
 					} catch (CommandException e) {
 						sender.sendMessage(ChatColor.RED + e.getMessage());
 					}

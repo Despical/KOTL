@@ -107,6 +107,10 @@ public class ArenaEvents implements Listener {
 				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 
 				for (Player p : arena.getPlayers()) {
+					if (p.equals(player)) {
+						continue;
+					}
+
 					plugin.getUserManager().getUser(p).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 					plugin.getRewardsFactory().performReward(p, Reward.RewardType.LOSE);
 				}

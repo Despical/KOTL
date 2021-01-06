@@ -135,6 +135,7 @@ public class Main extends JavaPlugin {
 				} else {
 					player.getInventory().clear();
 					player.getInventory().setArmorContents(null);
+					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 				}
 
 				player.teleport(arena.getEndLocation());
@@ -161,12 +162,12 @@ public class Main extends JavaPlugin {
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
-		registerSoftDependencies();
 		commandHandler = new CommandHandler(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
 		hologramManager = new HologramManager();
 
+		registerSoftDependencies();
 		ArenaRegistry.registerArenas();
 
 		new ChatEvents(this);
@@ -243,10 +244,6 @@ public class Main extends JavaPlugin {
 				saveResource(fileName + ".yml", false);
 			}
 		}
-	}
-
-	public boolean isBefore1_9_R1() {
-		return VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1);
 	}
 
 	public ConfigPreferences getConfigPreferences() {

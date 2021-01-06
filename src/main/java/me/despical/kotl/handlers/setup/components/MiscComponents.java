@@ -75,13 +75,13 @@ public class MiscComponents implements SetupComponent {
 		}), 3, 0);		
 		
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
-			.name(plugin.getChatManager().colorRawMessage("&e&lView Wiki Page"))
+			.name(plugin.getChatManager().colorRawMessage("&e&lView Setup Video"))
 			.lore("&7Having problems with setup or wanna know")
-			.lore("&7some useful tips? Click to get wiki link!")
+			.lore("&7some useful tips? Click to get video link!")
 			.build(), e -> {
 			e.getWhoClicked().closeInventory();
 
-			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out our wiki: https://github.com/Despical/KOTL/wiki"));
+			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out this video: &7" + SetupInventory.TUTORIAL_VIDEO));
 		}), 7, 0);
 	}
 }

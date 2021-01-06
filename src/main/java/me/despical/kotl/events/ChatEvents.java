@@ -80,7 +80,10 @@ public class ChatEvents implements Listener {
 			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
 				event.setCancelled(true);
 
-				arena.getPlayers().forEach(player -> player.sendMessage(message));
+
+				for (Player player : arena.getPlayers()) {
+					player.sendMessage(message);
+				}
 
 				Bukkit.getConsoleSender().sendMessage(message);
 			} else {

@@ -126,7 +126,7 @@ public class Hologram {
 
 	/**
 	 * @param y the y axis of the hologram
-	 * @return {@link ArmorStand}
+	 * @return  {@link ArmorStand}
 	 */
 	private ArmorStand getEntityArmorStand(Location loc, double y) {
 		loc.setY(y);
