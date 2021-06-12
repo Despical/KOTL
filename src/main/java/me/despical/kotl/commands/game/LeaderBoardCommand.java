@@ -84,7 +84,6 @@ public class LeaderBoardCommand extends SubCommand {
 				sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
 			} catch (NullPointerException ex) {
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-					sender.sendMessage("has");
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
 						ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");

@@ -84,8 +84,4 @@ public class User {
 
 		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat))));
 	}
-
-	public void removeScoreboard(Arena arena) {
-		arena.getScoreboardManager().removeScoreboard(player);
-	}
 }
