@@ -93,7 +93,7 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		Debugger.debug("Initialization finished took {0} ms", System.currentTimeMillis() - start);
+		Debugger.debug("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
 	private boolean validateIfPluginShouldStart() {
@@ -101,7 +101,14 @@ public class Main extends JavaPlugin {
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
-		} try {
+		}
+
+		if (System.getProperty("java.specification.version").equals("1.8")) {
+			Debugger.sendConsoleMessage("&cThis plugin won't support Java 8 in future updates.");
+			Debugger.sendConsoleMessage("&cSo, maybe consider to update your version, right?");
+		}
+
+		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
 			Debugger.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
