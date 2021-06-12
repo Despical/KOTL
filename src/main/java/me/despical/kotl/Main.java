@@ -145,7 +145,7 @@ public class Main extends JavaPlugin {
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 				}
 
-				player.teleport(arena.getEndLocation());
+				arena.teleportToEndLocation(player);
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
 				arena.getScoreboardManager().removeScoreboard(player);
 
