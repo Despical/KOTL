@@ -18,7 +18,7 @@
 
 package me.despical.kotl.handlers.setup;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
+import me.despical.commons.compat.XMaterial;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
@@ -27,11 +27,10 @@ import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.setup.components.ArenaRegisterComponents;
 import me.despical.kotl.handlers.setup.components.MiscComponents;
 import me.despical.kotl.handlers.setup.components.SpawnComponents;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Despical
@@ -40,29 +39,29 @@ import java.util.Random;
  */
 public class SetupInventory {
 
-	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
-
-	private final Random random = new Random();
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+	private Gui gui;
+	private final Main plugin;
 	private final Arena arena;
 	private final Player player;
-	private Gui gui;
 	private final SetupUtilities setupUtilities;
+
+	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
 
 	public SetupInventory(Arena arena, Player player) {
 		this.arena = arena;
 		this.player = player;
-		this.setupUtilities = new SetupUtilities(config);
+		this.plugin = JavaPlugin.getPlugin(Main.class);
+		this.setupUtilities = new SetupUtilities(plugin);
 
 		prepareGui();
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 1, "King of the Ladder Arena Setup");
+		this.gui = new Gui(plugin, 3, "King of the Ladder Arena Setup");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
-		StaticPane pane = new StaticPane(9, 1);
+		StaticPane pane = new StaticPane(9, 3);
+		pane.fillBorder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
 		this.gui.addPane(pane);
 
 		prepareComponents(pane);
@@ -70,41 +69,40 @@ public class SetupInventory {
 
 	private void prepareComponents(StaticPane pane) {
 		SpawnComponents spawnComponents = new SpawnComponents();
-		spawnComponents.prepare(this);
-		spawnComponents.injectComponents(pane);
+		spawnComponents.injectComponents(this, pane);
 		
 		MiscComponents miscComponents = new MiscComponents();
-		miscComponents.prepare(this);
-		miscComponents.injectComponents(pane);
+		miscComponents.injectComponents(this, pane);
 		
 		ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
-		arenaRegistryComponents.prepare(this);
-		arenaRegistryComponents.injectComponents(pane);
+		arenaRegistryComponents.injectComponents(this, pane);
 	}
 
-	private void sendProTip(Player p) {
+	private void sendProTip(Player player) {
 		ChatManager chatManager = plugin.getChatManager();
-		int rand = random.nextInt(16 + 1);
+		String tip = "";
 
-		switch (rand) {
+		switch (ThreadLocalRandom.current().nextInt(16)) {
 			case 0:
-				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL"));
+				tip = "&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
 				break;
 			case 1:
-				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA"));
+				tip = "&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA";
 				break;
 			case 2:
-				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki"));
+				tip = "&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
 				break;
 			case 3:
-				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO));
+				tip = "&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO;
 				break;
 			case 4:
-				p.sendMessage(chatManager.colorRawMessage("&e&lTIP: &7Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/"));
+				tip = "&e&lTIP: &7Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
 				break;
 			default:
 				break;
 		}
+
+		player.sendMessage(chatManager.coloredRawMessage(tip));
 	}
 
 	public void openInventory() {
@@ -114,10 +112,6 @@ public class SetupInventory {
 
 	public Main getPlugin() {
 		return plugin;
-	}
-
-	public FileConfiguration getConfig() {
-		return config;
 	}
 
 	public Arena getArena() {

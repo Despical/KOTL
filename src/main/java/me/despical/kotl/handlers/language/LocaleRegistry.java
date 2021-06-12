@@ -18,12 +18,10 @@
 
 package me.despical.kotl.handlers.language;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Registry class for holding locales
- *
  * @author Despical
  * @since 1.0.7-beta
  * <p>
@@ -31,45 +29,25 @@ import java.util.List;
  */
 public class LocaleRegistry {
 
-	private static final List<Locale> registeredLocales = new ArrayList<>();
+	private static final Set<Locale> registeredLocales = new HashSet<>();
 
-	/**
-	 * Register new locale into registry
-	 *
-	 * @param locale locale to register
-	 * @throws IllegalArgumentException if same locale is registered twice
-	 */
 	public static void registerLocale(Locale locale) {
-		if (registeredLocales.contains(locale)) {
-			throw new IllegalArgumentException("Cannot register same locale twice!");
-		}
+		registeredLocales.removeIf(l -> l.prefix.equals(locale.prefix));
 
 		registeredLocales.add(locale);
 	}
 
-	/**
-	 * Get all registered locales
-	 *
-	 * @return all registered locales
-	 */
-	public static List<Locale> getRegisteredLocales() {
+	public static Set<Locale> getRegisteredLocales() {
 		return registeredLocales;
 	}
 
-	/**
-	 * Get locale by its name
-	 *
-	 * @param name name to search
-	 * @return locale by name or locale "Undefined" when not found (null is not returned)
-	 * @since 1.0.7-beta
-	 */
 	public static Locale getByName(String name) {
 		for (Locale locale : registeredLocales) {
-			if (locale.getName().equals(name)) {
+			if (locale.name.equals(name)) {
 				return locale;
 			}
 		}
 
-		return new Locale("Undefined", "Undefined", "", "System", new ArrayList<>());
+		return new Locale("Unknown", "Undefined", "");
 	}
 }

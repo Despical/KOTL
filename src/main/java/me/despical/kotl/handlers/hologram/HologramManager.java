@@ -20,8 +20,8 @@ package me.despical.kotl.handlers.hologram;
 
 import org.bukkit.entity.ArmorStand;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -30,13 +30,13 @@ import java.util.List;
  */
 public class HologramManager {
 
-	private final List<ArmorStand> holograms;
+	private final Set<ArmorStand> holograms;
 
 	public HologramManager() {
-		this.holograms = new ArrayList<>();
+		this.holograms = new HashSet<>();
 	}
 
-	public List<ArmorStand> getHolograms() {
+	public Set<ArmorStand> getHolograms() {
 		return holograms;
 	}
 

@@ -23,12 +23,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -37,62 +34,23 @@ import java.util.List;
  */
 public class Hologram {
 
-	private List<String> lines = new ArrayList<>();
-	private Location location;
+	private final Location location;
+	private final Set<String> lines;
+	private final Set<ArmorStand> armorStands;
 
-	private final List<ArmorStand> armorStands = new LinkedList<>();
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final Main plugin;
 
-	public Hologram(Location location) {
+	public Hologram(Location location, String... lines) {
 		this.location = location;
-	}
-
-	public Hologram(Location location, @NotNull String... lines) {
-		this.location = location;
-		this.lines = new ArrayList<>(Arrays.asList(lines));
+		this.lines = me.despical.commons.util.Collections.setOf(lines);
+		this.armorStands = new HashSet<>();
+		this.plugin = JavaPlugin.getPlugin(Main.class);
 
 		append();
 	}
 
 	public Location getLocation() {
 		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	@NotNull
-	public List<String> getLines() {
-		return lines;
-	}
-
-	@NotNull
-	public List<ArmorStand> getArmorStands() {
-		return armorStands;
-	}
-
-	public Hologram appendLines(@NotNull String... lines) {
-		this.lines = Arrays.asList(lines);
-
-		append();
-		return this;
-	}
-
-	public Hologram appendLines(@NotNull List<String> lines) {
-		this.lines.clear();
-		this.lines = lines;
-
-		append();
-		return this;
-	}
-
-	public Hologram appendLine(@NotNull String line) {
-		this.lines.clear();
-		this.lines.add(line);
-
-		append();
-		return this;
 	}
 
 	public void delete() {
@@ -106,28 +64,27 @@ public class Hologram {
 		armorStands.clear();
 	}
 
-	public boolean isDeleted() {
-		return armorStands.isEmpty();
-	}
-
 	public void append() {
 		delete();
 
 		double y = location.getY();
 
-		for (int i = 0; i <= lines.size() - 1; i++) {
+		for (String line : lines) {
 			ArmorStand holo = getEntityArmorStand(location, y);
-			holo.setCustomName(lines.get(i));
+			holo.setCustomName(line);
 			armorStands.add(holo);
 
 			plugin.getHologramManager().add(holo);
 		}
 	}
 
-	/**
-	 * @param y the y axis of the hologram
-	 * @return  {@link ArmorStand}
-	 */
+	public void appendLine(String line) {
+		this.lines.clear();
+		this.lines.add(line);
+
+		append();
+	}
+
 	private ArmorStand getEntityArmorStand(Location loc, double y) {
 		loc.setY(y);
 

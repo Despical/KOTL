@@ -18,8 +18,13 @@
 
 package me.despical.kotl.handlers.setup.components;
 
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.kotl.Main;
+import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.setup.SetupInventory;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Despical
@@ -28,7 +33,9 @@ import me.despical.kotl.handlers.setup.SetupInventory;
  */
 public interface SetupComponent {
 
-	void prepare(SetupInventory setupInventory);
+	Main plugin = JavaPlugin.getPlugin(Main.class);
+	ChatManager chatManager = plugin.getChatManager();
+	FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
-	void injectComponents(StaticPane pane);
+	void injectComponents(SetupInventory setupInventory, StaticPane pane);
 }

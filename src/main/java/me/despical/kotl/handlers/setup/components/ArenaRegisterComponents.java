@@ -18,23 +18,20 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.item.ItemBuilder;
-import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handlers.hologram.Hologram;
 import me.despical.kotl.handlers.setup.SetupInventory;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Despical
@@ -43,73 +40,64 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ArenaRegisterComponents implements SetupComponent {
 
-	private SetupInventory setupInventory;
-
 	@Override
-	public void prepare(SetupInventory setupInventory) {
-		this.setupInventory = setupInventory;
-	}
-
-	@Override
-	public void injectComponents(StaticPane pane) {
-		FileConfiguration config = setupInventory.getConfig();
-		Main plugin = setupInventory.getPlugin();
-		ItemStack registeredItem;
+	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
+		Player player = setupInventory.getPlayer();
+		ItemBuilder registeredItem;
 
 		if (!setupInventory.getArena().isReady()) {
-			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET.parseItem())
+			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
 				.name("&e&lRegister Arena - Finish Setup")
 				.lore("&7Click this when you're done with configuration.")
-				.lore("&7It will validate and register arena.")
-				.build();
+				.lore("&7It will validate and register arena.");
 		} else {
 			registeredItem = new ItemBuilder(Material.BARRIER)
 				.name("&a&lArena Registered - Congratulations")
 				.lore("&7This arena is already registered!")
 				.lore("&7Good job, you went through whole setup!")
 				.enchantment(Enchantment.ARROW_DAMAGE)
-				.flag(ItemFlag.HIDE_ENCHANTS)
-				.build();
+				.flag(ItemFlag.HIDE_ENCHANTS);
 		}
 
-		pane.addItem(new GuiItem(registeredItem, e -> {
+		pane.addItem(new GuiItem(registeredItem.build(), e -> {
 			Arena arena = setupInventory.getArena();
-			String s = "instances." + arena.getId() + ".";
+			String path = "instances." + arena.getId() + ".";
 
-			e.getWhoClicked().closeInventory();
+			player.closeInventory();
 
-			if (config.getBoolean(s + "isdone")) {
-				e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
+			if (config.getBoolean(path + "isdone")) {
+				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
 
 			String[] locations = {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
 
 			for (String loc : locations) {
-				if (!config.isSet(s + loc) || config.getString(s + loc).equals(LocationSerializer.locationToString(Bukkit.getWorlds().get(0).getSpawnLocation()))) {
-					e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
+				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
+					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: " + loc + " (cannot be world spawn location)"));
 					return;
 				}
 			}
 
-			if (arena.getHologram() != null) arena.getHologram().delete();
-			arena = new Arena(setupInventory.getArena().getId());
+			arena.deleteHologram();
+			arena = new Arena(arena.getId());
 			arena.setReady(true);
-			arena.setEndLocation(LocationSerializer.locationFromString(config.getString(s + "endLocation")));
-			arena.setPlateLocation(LocationSerializer.locationFromString(config.getString(s + "plateLocation")));
+			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 
-			Hologram hologram = new Hologram(LocationSerializer.locationFromString(config.getString(s + "hologramLocation")), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
+			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());
 
 			ArenaRegistry.unregisterArena(setupInventory.getArena());
 
-			e.getWhoClicked().sendMessage(plugin.getChatManager().colorRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
+			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
 
-			config.set(s + "isdone", true);
+			config.set(path + "isdone", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");
+
 			ArenaRegistry.registerArena(arena);
-		}), 8, 0);
+		}), 7, 1);
 	}
 }

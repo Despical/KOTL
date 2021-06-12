@@ -23,7 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import org.apache.commons.lang.math.NumberUtils;
+import me.despical.commons.number.NumberUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public final class UpdateChecker {
         }
 
         for (int i = 0; i < Math.min(firstSplit.length, secondSplit.length); i++) {
-            int currentValue = NumberUtils.toInt(firstSplit[i]), newestValue = NumberUtils.toInt(secondSplit[i]);
+            int currentValue = NumberUtils.getInt(firstSplit[i]), newestValue = NumberUtils.getInt(secondSplit[i]);
 
             if (newestValue > currentValue) {
                 return second;
@@ -69,13 +69,14 @@ public final class UpdateChecker {
             }
         }
 
-        return (secondSplit.length > firstSplit.length) ? second : first;
+        return secondSplit.length > firstSplit.length ? second : first;
     };
+
     private static UpdateChecker instance;
     private final JavaPlugin plugin;
     private final int pluginID;
     private final VersionScheme versionScheme;
-    private UpdateResult lastResult = null;
+    private UpdateResult lastResult;
 
     private UpdateChecker(JavaPlugin plugin, int pluginID, VersionScheme versionScheme) {
         this.plugin = plugin;
@@ -85,12 +86,9 @@ public final class UpdateChecker {
 
     private static String[] splitVersionInfo(String version) {
         Matcher matcher = DECIMAL_SCHEME_PATTERN.matcher(version);
-        if (!matcher.find()) {
-            return null;
-        }
 
-        return matcher.group().split("\\.");
-    }
+		return !matcher.find() ? null : matcher.group().split("\\.");
+	}
 
     /**
      * Initialize this update checker with the specified values and return its instance. If an instance
@@ -109,7 +107,7 @@ public final class UpdateChecker {
         Preconditions.checkArgument(pluginID > 0, "Plugin ID must be greater than 0");
         Preconditions.checkArgument(versionScheme != null, "null version schemes are unsupported");
 
-        return (instance == null) ? instance = new UpdateChecker(plugin, pluginID, versionScheme) : instance;
+        return instance == null ? instance = new UpdateChecker(plugin, pluginID, versionScheme) : instance;
     }
 
     /**
@@ -156,7 +154,8 @@ public final class UpdateChecker {
      */
     public CompletableFuture<UpdateResult> requestUpdateCheck() {
         return CompletableFuture.supplyAsync(() -> {
-            int responseCode = -1;
+            int responseCode;
+
             try {
                 URL url = new URL(String.format(UPDATE_URL, pluginID));
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -166,6 +165,7 @@ public final class UpdateChecker {
                 responseCode = connection.getResponseCode();
 
                 JsonElement element = new JsonParser().parse(reader);
+
                 if (!element.isJsonArray()) {
                     return new UpdateResult(UpdateReason.INVALID_JSON);
                 }

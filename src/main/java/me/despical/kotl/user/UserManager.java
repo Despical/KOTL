@@ -20,16 +20,14 @@ package me.despical.kotl.user;
 
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.UserDatabase;
 import me.despical.kotl.utils.Debugger;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -38,53 +36,36 @@ import java.util.List;
  */
 public class UserManager {
 
+	private final Set<User> users;
 	private final UserDatabase database;
-	private final List<User> users = new ArrayList<>();
 
 	public UserManager(Main plugin) {
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			database = new MysqlManager(plugin);
-			Debugger.debug("MySQL Stats enabled");
-		} else {
-			database = new FileStats(plugin);
-			Debugger.debug("File Stats enabled");
-		}
+		this.users = new HashSet<>();
+		this.database = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager() : new FileStats();
 
-		loadStatsForPlayersOnline();
-	}
-
-	private void loadStatsForPlayersOnline() {
-		Bukkit.getServer().getOnlinePlayers().stream().map(this::getUser).forEach(this::loadStatistics);
+		plugin.getServer().getOnlinePlayers().forEach(this::loadStatistics);
 	}
 
 	public User getUser(Player player) {
 		for (User user : users) {
-			if (user.getPlayer().equals(player)) {
+			if (user.getUniqueId().equals(player.getUniqueId())) {
 				return user;
 			}
 		}
 
 		Debugger.debug("Registering new user {0} ({1})", player.getUniqueId(), player.getName());
 
-		User user = new User(player);
+		User user = new User(player.getUniqueId());
 		users.add(user);
 		return user;
 	}
 
-	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-		if (!stat.isPersistent()) {
-			return;
-		}
-
-		database.saveStatistic(user, stat);
+	public void loadStatistics(Player player) {
+		database.loadStatistics(getUser(player));
 	}
 
-	public void loadStatistics(User user) {
-		database.loadStatistics(user);
-	}
-
-	public void removeUser(User user) {
-		users.remove(user);
+	public void removeUser(Player player) {
+		users.remove(getUser(player));
 	}
 
 	public UserDatabase getDatabase() {

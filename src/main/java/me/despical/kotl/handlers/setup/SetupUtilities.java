@@ -18,10 +18,10 @@
 
 package me.despical.kotl.handlers.setup;
 
-import org.bukkit.Bukkit;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.serializer.LocationSerializer;
+import me.despical.kotl.Main;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import me.despical.commonsbox.serializer.LocationSerializer;
 
 /**
  * @author Despical
@@ -32,19 +32,11 @@ public class SetupUtilities {
 
 	private final FileConfiguration config;
 	
-	SetupUtilities(FileConfiguration config) {
-		this.config = config;
+	SetupUtilities(Main plugin) {
+		this.config = ConfigUtils.getConfig(plugin, "arenas");
 	}
 
 	public String isOptionDoneBool(String path) {
-		if (config.isSet(path)) {
-			if (Bukkit.getServer().getWorlds().get(0).getSpawnLocation().equals(LocationSerializer.locationFromString(config.getString(path)))) {
-				return "&c&l✘ Not Completed";
-			}
-
-			return "&a&l✔ Completed";
-		}
-
-		return "&c&l✘ Not Completed";
+		return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
 	}
 }

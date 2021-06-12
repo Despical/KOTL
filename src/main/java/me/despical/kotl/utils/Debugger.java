@@ -18,10 +18,8 @@
 
 package me.despical.kotl.utils;
 
-import me.despical.commonsbox.compat.VersionResolver;
-import me.despical.commonsbox.string.StringMatcher;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
+import me.despical.commons.util.Strings;
+import me.despical.kotl.Main;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,30 +31,26 @@ import java.util.logging.Logger;
  */
 public class Debugger {
 
-	private static boolean enabled = false;
+	private static Main plugin;
+	private static boolean enabled;
 	private static final Logger logger = Logger.getLogger("KOTL");
 
-	private Debugger() {}
+	private Debugger() {
+	}
 
-	public static void setEnabled(boolean enabled) {
-		Debugger.enabled = enabled;
+	public static void setEnabled(Main plugin) {
+		Debugger.plugin = plugin;
+		Debugger.enabled = plugin.getDescription().getVersion().contains("debug") || plugin.getConfig().getBoolean("Debug-Messages");
+	}
+
+	public static boolean isEnabled() {
+		return enabled;
 	}
 
 	public static void sendConsoleMessage(String message) {
-		if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1) && message.contains("#")) {
-			message = StringMatcher.matchColorRegex(message);
-		}
-
-		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+		plugin.getServer().getConsoleSender().sendMessage(Strings.format(message));
 	}
 
-	/**
-	 * Prints debug message with selected log level. Messages of level INFO or TASK
-	 * won't be posted if debugger is enabled, warnings and errors will be.
-	 *
-	 * @param level level of debugged message
-	 * @param msg message to debug
-	 */
 	public static void debug(Level level, String msg) {
 		if (!enabled && (level != Level.WARNING || level != Level.SEVERE)) {
 			return;
@@ -65,35 +59,14 @@ public class Debugger {
 		logger.log(level, "[KOTLDBG] " + msg);
 	}
 
-	/**
-	 * Prints debug message with selected INFO log level.
-	 *
-	 * @param msg debugged message
-	 * @param params to debug
-	 */
-	public static void debug(String msg, Object... params) {
-		debug(Level.INFO, msg, params);
-	}
-
-	/**
-	 * Prints debug message with selected log level. Messages of level INFO or TASK
-	 * won't be posted if debugger is enabled, warnings and errors will be.
-	 *
-	 * @param msg debugged message
-	 */
 	public static void debug(String msg) {
 		debug(Level.INFO, msg);
 	}
 
-	/**
-	 * Prints debug message with selected log level and replaces parameters.
-	 * Messages of level INFO or TASK won't be posted if debugger is enabled,
-	 * warnings and errors will be.
-	 *
-	 * @param level level of debugged message
-	 * @param msg debugged message
-	 * @param params any params to debug
-	 */
+	public static void debug(String msg, Object... params) {
+		debug(Level.INFO, msg, params);
+	}
+
 	public static void debug(Level level, String msg, Object... params) {
 		if (!enabled && (level != Level.WARNING || level != Level.FINE)) {
 			return;

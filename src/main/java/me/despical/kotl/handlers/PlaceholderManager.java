@@ -19,7 +19,6 @@
 package me.despical.kotl.handlers;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.kotl.Main;
@@ -34,7 +33,13 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class PlaceholderManager extends PlaceholderExpansion {
 	
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private final Main plugin;
+
+	public PlaceholderManager(Main plugin) {
+		this.plugin = plugin;
+
+		register();
+	}
 	
 	@Override
 	public boolean persist() {
@@ -60,19 +65,15 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
 		switch (id.toLowerCase()) {
 			case "score":
-				return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));
+				return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));
 			case "tours_played":
-				return String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED));
+				return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED));
 			default:
 				return handleArenaPlaceholderRequest(id);
 		}
 	}
 
 	private String handleArenaPlaceholderRequest(String id) {
-		if (!id.contains(":")) {
-			return null;
-		}
-
 		String[] data = id.split(":");
 		Arena arena = ArenaRegistry.getArena(data[0]);
 
@@ -82,9 +83,9 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
 		switch (data[1].toLowerCase()) {
 			case "players":
-				return String.valueOf(arena.getPlayers().size());
+				return Integer.toString(arena.getPlayers().size());
 			case "king":
-				return arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName();
+				return arena.getKingName();
 			default:
 				return null;
 		}

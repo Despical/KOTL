@@ -18,15 +18,13 @@
 
 package me.despical.kotl.handlers;
 
-import me.despical.commonsbox.compat.VersionResolver;
-import me.despical.commonsbox.string.StringMatcher;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.util.Strings;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.despical.commonsbox.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 
@@ -47,49 +45,50 @@ public class ChatManager {
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = colorRawMessage(config.getString("In-Game.Plugin-Prefix"));
+		this.prefix = message("In-Game.Plugin-Prefix");
 	}
 	
 	public String getPrefix() {
 		return prefix;
 	}
 
-	public String colorRawMessage(String message) {
-		if (message == null) {
-			return "";
-		}
-
-		if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1) && message.contains("#")) {
-			message = StringMatcher.matchColorRegex(message);
-		}
-
-		return ChatColor.translateAlternateColorCodes('&', message);
+	public String coloredRawMessage(String message) {
+		return Strings.format(message);
 	}
 
-	public String colorMessage(String message) {
-		return colorRawMessage(config.getString(message));
+	public String prefixedRawMessage(String message) {
+		return prefix + coloredRawMessage(message);
+	}
+
+	public String message(String path) {
+		return coloredRawMessage(config.getString(path));
+	}
+
+	public String prefixedMessage(String path) {
+		return prefix + message(path);
 	}
 	
-	public String colorMessage(String message, Player player) {
-		String returnString = config.getString(message);
+	public String message(String path, Player player) {
+		String returnString = config.getString(path);
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
-		return colorRawMessage(returnString);
+		return coloredRawMessage(returnString);
 	}
 
 	private String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
+
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
-		returnString = colorRawMessage(formatPlaceholders(returnString, arena));
+		returnString = formatPlaceholders(returnString, arena);
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
-		return returnString;
+		return coloredRawMessage(returnString);
 	}
 
 	private String formatPlaceholders(String message, Arena arena) {
@@ -97,7 +96,7 @@ public class ChatManager {
 
 		returnString = StringUtils.replace(returnString, "%arena%", arena.getId());
 		returnString = StringUtils.replace(returnString, "%players%", Integer.toString(arena.getPlayers().size()));
-		returnString = StringUtils.replace(returnString, "%king%", arena.getKing() == null ? colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName());
+		returnString = StringUtils.replace(returnString, "%king%", arena.getKingName());
 		return returnString;
 	}
 
@@ -105,37 +104,31 @@ public class ChatManager {
 		return config.getStringList(path);
 	}
 	
-	public void broadcastMessage(Arena a, String msg) {
-		for (Player p : a.getPlayers()) {
-			p.sendMessage(prefix + msg);
-		}
-	}
-
-	public void broadcastAction(Arena a, Player p, ActionType action) {
-		String message;
+	public void broadcastAction(Arena arena, Player player, ActionType action) {
+		String path;
 
 		switch (action) {
 			case JOIN:
-				message = formatMessage(a, colorMessage("In-Game.Join"), p);
+				path = "In-Game.Join";
 				break;
 			case LEAVE:
-				message = formatMessage(a, colorMessage("In-Game.Leave"), p);
+				path = "In-Game.Leave";
 				break;
 			case NEW_KING:
-				message = formatMessage(a, colorMessage("In-Game.New-King"), p);
+				path = "In-Game.New-King";
 
-				a.getHologram().appendLine(formatMessage(a, colorMessage("In-Game.Last-King-Hologram"), p));
+				arena.getHologram().appendLine(formatMessage(arena, message("In-Game.Last-King-Hologram"), player));
 				break;
 			default:
 				return;
 		}
 
-		broadcastMessage(a, message);
+		arena.broadcastMessage(prefix + formatMessage(arena, message(path), player));
 	}
 	
 	public void reloadConfig() {
 		config = ConfigUtils.getConfig(plugin, "messages");
-		prefix = colorRawMessage(config.getString("In-Game.Plugin-Prefix"));
+		prefix = message("In-Game.Plugin-Prefix");
 	}
 
 	public enum ActionType {

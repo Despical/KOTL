@@ -18,8 +18,10 @@
 
 package me.despical.kotl.user.data;
 
+import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Despical
@@ -27,6 +29,8 @@ import me.despical.kotl.user.User;
  * Created at 20.06.2020
  */
 public interface UserDatabase {
+
+	Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	/**
 	 * Saves player statistic into yaml or MySQL storage based on user choice

@@ -26,18 +26,14 @@ import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
 
 /**
- *
- * Called when player receive new statistic.
- *
  * @author Despical
- * @see StatsStorage.StatisticType
  * @since 1.0.0
  * <p>
  * Created at 20.06.2020
  */
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
-	private final HandlerList handlers = new HandlerList();
+	private static final HandlerList handlers = new HandlerList();
 	private final Player player;
 	private final StatsStorage.StatisticType statisticType;
 	private final int number;
@@ -47,6 +43,10 @@ public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 		this.player = player;
 		this.statisticType = statisticType;
 		this.number = number;
+	}
+
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 
 	@Override

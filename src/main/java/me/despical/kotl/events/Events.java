@@ -18,14 +18,12 @@
 
 package me.despical.kotl.events;
 
-import me.despical.commonsbox.compat.XMaterial;
+import me.despical.commons.util.Collections;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.ArenaRegistry;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -48,16 +46,18 @@ public class Events implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onDrop(PlayerDropItemEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer())) {
+		Player player = event.getPlayer();
+
+		if (!ArenaRegistry.isInArena(player)) {
 			return;
 		}
 
@@ -65,25 +65,25 @@ public class Events implements Listener {
 			return;
 		}
 
-		for (String msg : plugin.getConfig().getStringList("Whitelisted-Commands")) {
-			if (event.getMessage().contains(msg)) {
-				return;
-			}
-		}
+		String message = event.getMessage();
 
-		if (event.getPlayer().isOp() || event.getPlayer().hasPermission("kotl.admin")) {
+		if (Collections.contains(message, plugin.getConfig().getStringList("Whitelisted-Commands"))) {
 			return;
 		}
 
-		if (event.getMessage().startsWith("/kotl") || event.getMessage().startsWith("/kingoftheladder") || event.getMessage().contains("top") || event.getMessage().contains("stats")) {
+		if (player.isOp() || player.hasPermission("kotl.admin")) {
+			return;
+		}
+
+		if (message.startsWith("/kotl") || message.startsWith("/kingoftheladder") || message.contains("top") || message.contains("stats")) {
 			return;
 		}
 
 		event.setCancelled(true);
-		event.getPlayer().sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+		player.sendMessage(plugin.getChatManager().prefixedMessage("In-Game.Only-Command-Ingame-Is-Leave"));
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onFallDamage(EntityDamageEvent e) {
 		if (!(e.getEntity() instanceof Player)) {
 			return;
@@ -104,47 +104,36 @@ public class Events implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onInGameInteract(PlayerInteractEvent event) {
-		if (!ArenaRegistry.isInArena(event.getPlayer()) || event.getClickedBlock() == null) {
-			return;
-		}
-
-		if (event.getClickedBlock().getType() == XMaterial.PAINTING.parseMaterial() || event.getClickedBlock().getType() == XMaterial.FLOWER_POT.parseMaterial()) {
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
-		if (event.getEntity().getType() == EntityType.PLAYER && ArenaRegistry.isInArena((Player) event.getEntity())) {
+		if (event.getEntity() instanceof Player && ArenaRegistry.isInArena((Player) event.getEntity())) {
 			event.setFoodLevel(20);
 			event.setCancelled(true);
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onBlockBreakEvent(BlockBreakEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onBuild(BlockPlaceEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
 		if(ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);

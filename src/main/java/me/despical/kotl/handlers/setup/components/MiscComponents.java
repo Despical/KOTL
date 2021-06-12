@@ -18,17 +18,16 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.item.ItemBuilder;
-import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.hologram.Hologram;
 import me.despical.kotl.handlers.setup.SetupInventory;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
@@ -38,50 +37,41 @@ import org.bukkit.entity.Player;
  */
 public class MiscComponents implements SetupComponent {
 
-	private SetupInventory setupInventory;
-
 	@Override
-	public void prepare(SetupInventory setupInventory) {
-		this.setupInventory = setupInventory;
-	}
-
-	@Override
-	public void injectComponents(StaticPane pane) {
+	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
 		Player player = setupInventory.getPlayer();
-		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
-		Main plugin = setupInventory.getPlugin();
-		String s = "instances." + arena.getId() + ".";
+		String path = "instances." + arena.getId() + ".";
 
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND.parseItem())
+		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND)
 			.name("&e&lSet King Hologram")
 			.lore("&7Click to set king's hologram location")
 			.lore("&7on the place where you are standing.")
 			.lore("&8(where the last king displays)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(s + "hologramLocation"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "hologramLocation"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
+			
+			player.closeInventory();
 
-			if(arena.getHologram() != null) arena.getHologram().delete();
+			Location location = player.getLocation();
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
 
-			config.set(s + "hologramLocation", LocationSerializer.locationToString(player.getLocation()));
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
-
-			Hologram hologram = new Hologram(player.getLocation(), plugin.getChatManager().colorMessage("In-Game.Last-King-Hologram").replace("%king%", arena.getKing() == null ? plugin.getChatManager().colorMessage("In-Game.There-Is-No-King") : arena.getKing().getName()));
-
+			Hologram hologram = new Hologram(location, chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
-			arena.setHologramLocation(hologram.getLocation());
+			arena.setHologramLocation(location);
+
+			config.set(path + "hologramLocation", LocationSerializer.toString(location));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}), 3, 0);		
+		}), 4, 1);
 		
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP.parseItem())
-			.name(plugin.getChatManager().colorRawMessage("&e&lView Setup Video"))
+		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP)
+			.name(chatManager.coloredRawMessage("&e&lView Setup Video"))
 			.lore("&7Having problems with setup or wanna know")
 			.lore("&7some useful tips? Click to get video link!")
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-
-			player.sendMessage(plugin.getChatManager().getPrefix()+ plugin.getChatManager().colorRawMessage("&aCheck out this video: &7" + SetupInventory.TUTORIAL_VIDEO));
-		}), 7, 0);
+			
+			player.closeInventory();
+			player.sendMessage(chatManager.prefixedRawMessage("&aCheck out this video: &7" + SetupInventory.TUTORIAL_VIDEO));
+		}), 6, 1);
 	}
 }

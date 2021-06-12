@@ -57,7 +57,7 @@ public class HelpCommand extends SubCommand {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		sender.sendMessage("");
-		sender.sendMessage(plugin.getChatManager().colorRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
+		sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		sender.sendMessage("");
 
 		for (SubCommand subCommand : plugin.getCommandHandler().getSubCommands()) {

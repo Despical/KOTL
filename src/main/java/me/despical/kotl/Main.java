@@ -18,12 +18,14 @@
 
 package me.despical.kotl;
 
-import me.despical.commonsbox.compat.VersionResolver;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.database.MysqlDatabase;
-import me.despical.commonsbox.miscellaneous.AttributeUtils;
-import me.despical.commonsbox.scoreboard.ScoreboardLib;
-import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.database.MysqlDatabase;
+import me.despical.commons.miscellaneous.AttributeUtils;
+import me.despical.commons.scoreboard.ScoreboardLib;
+import me.despical.commons.serializer.InventorySerializer;
+import me.despical.commons.exception.ExceptionLogHandler;
+import me.despical.commons.util.Collections;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;
@@ -43,13 +45,10 @@ import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.utils.*;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.Arrays;
 
 /**
  * @author Despical
@@ -79,10 +78,13 @@ public class Main extends JavaPlugin {
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
+		exceptionLogHandler.setMainPackage("me.despical.kotl");
+		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
+		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
 		saveDefaultConfig();
 
-		Debugger.setEnabled(getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug-Messages"));
-		Debugger.debug("Initialization start");
+		Debugger.setEnabled(this);
+		Debugger.debug("Initialization started!");
 
 		long start = System.currentTimeMillis();
 		
@@ -96,14 +98,12 @@ public class Main extends JavaPlugin {
 	
 	private boolean validateIfPluginShouldStart() {
 		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_8_R1)) {
-			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
 		} try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			MessageUtils.thisVersionIsNotSupported();
 			Debugger.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
 			return false;
@@ -121,7 +121,7 @@ public class Main extends JavaPlugin {
 		Debugger.debug("System disable initialized");
 		long start = System.currentTimeMillis();
 		
-		Bukkit.getLogger().removeHandler(exceptionLogHandler);
+		getServer().getLogger().removeHandler(exceptionLogHandler);
 		saveAllUserStatistics();
 
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
@@ -140,12 +140,12 @@ public class Main extends JavaPlugin {
 
 				player.teleport(arena.getEndLocation());
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
-				arena.getScoreboardManager().removeScoreboard(getUserManager().getUser(player));
+				arena.getScoreboardManager().removeScoreboard(player);
 
 				AttributeUtils.resetAttackCooldown(player);
 			}
 
-			if (arena.getHologram() != null) arena.getHologram().delete();
+			arena.deleteHologram();
 		}
 
 		Debugger.debug("System disable finished took {0} ms", System.currentTimeMillis() - start);
@@ -155,8 +155,7 @@ public class Main extends JavaPlugin {
 		ScoreboardLib.setPluginInstance(this);
 
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			FileConfiguration config = ConfigUtils.getConfig(this, "mysql");
-			database = new MysqlDatabase(config.getString("user"), config.getString("password"), config.getString("address"));
+			database = new MysqlDatabase(ConfigUtils.getConfig(this, "mysql"));
 		}
 
 		chatManager = new ChatManager(this);
@@ -179,16 +178,15 @@ public class Main extends JavaPlugin {
 	
 	private void registerSoftDependencies() {
 		Debugger.debug("Hooking into soft dependencies");
-		long start = System.currentTimeMillis();
 
 		startPluginMetrics();
 
-		if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			Debugger.debug("Hooking into PlaceholderAPI");
-			new PlaceholderManager().register();
+		if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+			Debugger.debug("Hooking into PlaceholderAPI.");
+			new PlaceholderManager(this);
 		}
 
-		Debugger.debug("Hooked into soft dependencies took {0} ms", System.currentTimeMillis() - start);
+		Debugger.debug("Hooked into soft dependencies.");
 	}
 	
 	private void startPluginMetrics() {
@@ -199,7 +197,7 @@ public class Main extends JavaPlugin {
 		}
 
 		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
-		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().getPrefix()));
+		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix));
 		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
 			if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
 				return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
@@ -223,27 +221,20 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Debugger.sendConsoleMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686/");
+					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686/");
 				}
 
 				return;
 			}
 
-			MessageUtils.updateIsHere();
 			Debugger.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
 			Debugger.sendConsoleMessage("[KOTL] Download it SpigotMC:");
-			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686/");
+			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686/");
 		});
 	}
 	
 	private void setupFiles() {
-		for (String fileName : Arrays.asList("arenas", "stats", "mysql", "rewards")) {
-			File file = new File(getDataFolder() + File.separator + fileName + ".yml");
-
-			if (!file.exists()) {
-				saveResource(fileName + ".yml", false);
-			}
-		}
+		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	public ConfigPreferences getConfigPreferences() {
@@ -274,10 +265,6 @@ public class Main extends JavaPlugin {
 		return hologramManager;
 	}
 
-	public LanguageManager getLanguageManager() {
-		return languageManager;
-	}
-
 	public UserManager getUserManager() {
 		return userManager;
 	}
@@ -303,7 +290,9 @@ public class Main extends JavaPlugin {
 				continue;
 			}
 
-			Arrays.stream(StatsStorage.StatisticType.values()).forEach(stat -> userManager.getDatabase().saveStatistic(user, stat));
+			for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+				userManager.getDatabase().saveStatistic(user, stat);
+			}
 		}
 	}
 }

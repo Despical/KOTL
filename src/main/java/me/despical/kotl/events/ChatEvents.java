@@ -23,9 +23,7 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.user.User;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +40,6 @@ import java.util.regex.Pattern;
 public class ChatEvents implements Listener {
 
 	private final Main plugin;
-	private final String[] regexChars = {"$", "\\"};
 
 	public ChatEvents(Main plugin) {
 		this.plugin = plugin;
@@ -51,58 +48,45 @@ public class ChatEvents implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onChatIngame(AsyncPlayerChatEvent event) {
-		Arena arena = ArenaRegistry.getArena(event.getPlayer());
+	public void onChatInGame(AsyncPlayerChatEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = ArenaRegistry.getArena(player);
 
 		if (arena == null) {
 			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
-				for (Arena loopArena : ArenaRegistry.getArenas()) {
-					for (Player player : loopArena.getPlayers()) {
-						event.getRecipients().remove(player);
-					}
-				}
+				ArenaRegistry.getArenas().forEach(loopArena -> loopArena.getPlayers().forEach(p -> event.getRecipients().remove(p)));
 			}
 
 			return;
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-			String eventMessage = event.getMessage();
-
-			for (String regexChar : regexChars) {
-				if (eventMessage.contains(regexChar)) {
-					eventMessage = eventMessage.replaceAll(Pattern.quote(regexChar), "");
-				}
-			}
-
-			String message = formatChatPlaceholders(plugin.getChatManager().colorMessage("In-Game.Game-Chat-Format"), plugin.getUserManager().getUser(event.getPlayer()), eventMessage);
+			String message = formatChatPlaceholders(plugin.getChatManager().message("In-Game.Game-Chat-Format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
 
 			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
 				event.setCancelled(true);
 
-
-				for (Player player : arena.getPlayers()) {
-					player.sendMessage(message);
+				for (Player p : arena.getPlayers()) {
+					p.sendMessage(message);
 				}
 
-				Bukkit.getConsoleSender().sendMessage(message);
+				plugin.getServer().getConsoleSender().sendMessage(message);
 			} else {
 				event.setMessage(message);
 			}
 		}
 	}
 
-	private String formatChatPlaceholders(String message, User user, String saidMessage) {
+	private String formatChatPlaceholders(String message, Player player, String saidMessage) {
 		String formatted = message;
 
-		formatted = plugin.getChatManager().colorRawMessage(formatted);
-		formatted = StringUtils.replace(formatted, "%player%", user.getPlayer().getName());
+		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			formatted = PlaceholderAPI.setPlaceholders(user.getPlayer(), formatted);
+			formatted = PlaceholderAPI.setPlaceholders(player, formatted);
 		}
 
-		return formatted;
+		return plugin.getChatManager().coloredRawMessage(formatted);
 	}
 }

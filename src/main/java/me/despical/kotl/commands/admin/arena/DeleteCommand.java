@@ -18,14 +18,13 @@
 
 package me.despical.kotl.commands.admin.arena;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.miscellaneous.AttributeUtils;
-import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.miscellaneous.AttributeUtils;
+import me.despical.commons.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -65,14 +64,14 @@ public class DeleteCommand extends SubCommand {
 		Arena arena = ArenaRegistry.getArena(args[0]);
 
 		if (arena == null) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().message("Commands.No-Arena-Like-That"));
 			return;
 		}
 
 		if (!confirmations.contains(sender)) {
 			confirmations.add(sender);
-			Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Are-You-Sure"));
+			plugin.getServer().getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
+			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().message("Commands.Are-You-Sure"));
 			return;
 		}
 
@@ -107,7 +106,7 @@ public class DeleteCommand extends SubCommand {
 		config.set("instances." + args[0], null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Removed-Game-Instance"));
+		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().message("Commands.Removed-Game-Instance"));
 	}
 
 	@Override

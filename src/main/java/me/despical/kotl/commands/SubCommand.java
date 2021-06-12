@@ -19,7 +19,6 @@
 package me.despical.kotl.commands;
 
 import me.despical.kotl.Main;
-import me.despical.kotl.commands.exception.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,7 +62,7 @@ public abstract class SubCommand {
 
 	public abstract int getMinimumArguments();
 
-	public abstract void execute(CommandSender sender, String[] args) throws CommandException;
+	public abstract void execute(CommandSender sender, String[] args);
 	
 	public abstract List<String> getTutorial();
 	

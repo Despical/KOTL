@@ -18,18 +18,15 @@
 
 package me.despical.kotl.api;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.sorter.SortUtils;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.utils.Debugger;
-import me.despical.kotl.utils.MessageUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,27 +39,17 @@ import java.util.logging.Level;
  * @author Despical
  * @since 1.0.0
  * <p>
- * Class for accessing users statistics.
  */
 public class StatsStorage {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	/**
-	 * Get all UUID's sorted ascending by Statistic Type
-	 *
-	 * @param stat Statistic type to get (kills, deaths etc.)
-	 * @return Map of UUID keys and Integer values sorted in ascending order of
-	 * requested statistic type
-	 */
-	@NotNull
-	@Contract("null -> fail")
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				Statement statement = connection.createStatement();
 				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
-				Map<UUID, Integer> column = new LinkedHashMap<>();
+				Map<UUID, Integer> column = new HashMap<>();
 
 				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
@@ -70,48 +57,36 @@ public class StatsStorage {
 
 				return column;
 			} catch (SQLException e) {
-				plugin.getLogger().log(Level.WARNING, "SQL Exception occurred! " + e.getSQLState() + " (" + e.getErrorCode() + ")");
-				MessageUtils.errorOccurred();
+				Debugger.debug(Level.WARNING, "SQL Exception occurred! " + e.getSQLState() + " (" + e.getErrorCode() + ")");
 				Debugger.sendConsoleMessage("&cCannot get contents from MySQL database!");
 				Debugger.sendConsoleMessage("&cCheck configuration of mysql.yml file or disable mysql option in config.yml");
-				return Collections.emptyMap();
+				return null;
 			}
 		}
 
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		Map<UUID, Integer> stats = new TreeMap<>();
+		Map<UUID, Integer> stats = new HashMap<>();
 
 		for (String string : config.getKeys(false)) {
-			if (string.equals("data-version")) {
-				continue;
-			}
-
 			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
 		}
 
 		return SortUtils.sortByValue(stats);
 	}
 
-	/**
-	 * Get user statistic based on StatisticType
-	 *
-	 * @param player Online player to get data from
-	 * @param statisticType Statistic type to get (kills, deaths etc.)
-	 * @return int of statistic
-	 * @see StatisticType
-	 */
 	public static int getUserStats(Player player, StatisticType statisticType) {
 		return plugin.getUserManager().getUser(player).getStat(statisticType);
 	}
 
-	/**
-	 * Available statistics to get.
-	 */
 	public enum StatisticType {
-		TOURS_PLAYED("toursplayed", true), SCORE("score", true);
+		TOURS_PLAYED("toursplayed"), SCORE("score");
 
 		private final String name;
 		private final boolean persistent;
+
+		StatisticType(String name) {
+			this(name, true);
+		}
 
 		StatisticType(String name, boolean persistent) {
 			this.name = name;

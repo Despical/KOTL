@@ -1,19 +1,19 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.2.0)      | #
+# |     King of the Ladder by Despical (Version 1.2.1)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
 # Select locale of King of the Ladder, default it's English.
 # Available locales:
-#    default - English language
-#    de - Deutsche sprache
-#    tr - Türkçe dili
+#    default - English
+#    de - Deutsche
+#    tr - Türkçe
 locale: default
 
-# Enable bossbar support?
-Bossbar-Enabled: true
+# Enable boss bar support?
+Boss-Bar-Enabled: true
 
 # Enable scoreboard support?
 Scoreboard-Enabled: true
@@ -21,23 +21,23 @@ Scoreboard-Enabled: true
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is NO migrator between
 # flat file and MySQL for player stats.
-DatabaseActivated: false
+Database-Activated: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, and more...
-InventoryManager: true
+# Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
+Inventory-Manager: true
 
 # Should we clear player's inventory on joining and leaving the game area.
 # Also disable InventoryManager option before enabling this option.
-Clear-Inventory: false
+Clear-Inventory: true
 
 # Should we clear player's active potion effects when player join the arena.
 Clear-Effects: true
 
-# Should in-game chat format be enabled?
+# Should in game chat format be enabled?
 # You can edit the formatting in messages.yml
-ChatFormat-Enabled: true
+Chat-Format-Enabled: true
 
 # Should we disable all chat related stuff?
 # It will disable the separated chat.
@@ -54,7 +54,7 @@ Whitelisted-Commands:
   - me
   - help
 
-# Enable in game rewards? See rewards.yml for more...
+# Enable in game rewards? See rewards.yml for more.
 Rewards-Enabled: false
 
 # Should we block every not King of the Ladder associated commands in game?
@@ -63,17 +63,15 @@ Block-Commands-In-Game: true
 Death-Blocks:
   # When players click these blocks should we remove them from the game?
   Enabled: true
-  # Blocks which shouldn't you click in game, remove all of them to disable
+  # Blocks which shouldn't you click in game, remove all of them to disable.
   Blacklisted-Blocks:
     - BEDROCK
     - GLASS
   
 # When player enters the game area should we notify players?
-# You can edit the formatting in messages.yml
 Join-Notify: true
 
 # When player leaves the game area should we notify players?
-# You can edit the formatting in messages.yml
 Leave-Notify: true
 
 Update-Notifier:
@@ -82,8 +80,5 @@ Update-Notifier:
   # Should we inform you when beta version is out?
   # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
   Notify-Beta-Versions: true
-
-# Don't edit it. But who's stopping you? It's your server!
-File-Version: 0
 
 # No way! You've reached the end! But... where's the dragon!?

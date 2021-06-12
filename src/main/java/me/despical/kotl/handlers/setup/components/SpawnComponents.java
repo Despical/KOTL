@@ -18,19 +18,17 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import me.despical.commonsbox.compat.XMaterial;
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.item.ItemBuilder;
-import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import me.despical.kotl.utils.CuboidSelector;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -40,39 +38,33 @@ import org.bukkit.entity.Player;
  */
 public class SpawnComponents implements SetupComponent {
 
-	private SetupInventory setupInventory;
-
 	@Override
-	public void prepare(SetupInventory setupInventory) {
-		this.setupInventory = setupInventory;
-	}
-
-	@Override
-	public void injectComponents(StaticPane pane) {
+	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
 		Player player = setupInventory.getPlayer();
-		FileConfiguration config = setupInventory.getConfig();
 		Arena arena = setupInventory.getArena();
-		Main plugin = setupInventory.getPlugin();
 		String path = "instances." + arena.getId() + ".";
 
-		pane.addItem(new GuiItem(new ItemBuilder(Material.REDSTONE_BLOCK)
+		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
-			.lore("", setupInventory.getSetupUtilities()
-			.isOptionDoneBool(path + "endLocation"))
+			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-			config.set(path + "endLocation", LocationSerializer.locationToString(player.getLocation()));
-			arena.setEndLocation(player.getLocation());
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
 
+			player.closeInventory();
+
+			Location location = player.getLocation();
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
+
+			arena.setEndLocation(location);
+
+			config.set(path + "endLocation", LocationSerializer.toString(location));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}), 0, 0);
+		}), 1, 1);
 		
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE.parseMaterial())
+		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE)
 			.name("&e&lSet Plate Location")
 			.lore("&7Click to set plate location on")
 			.lore("&7the place where you are standing.")
@@ -80,14 +72,18 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&8reach)")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "plateLocation"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
-			player.getLocation().getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
-			config.set(path + "plateLocation", LocationSerializer.locationToString(player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation()));
-			arena.setPlateLocation(player.getLocation());
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
 
+			player.closeInventory();
+
+			Location location = player.getLocation();
+			location.getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
+
+			arena.setPlateLocation(location);
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
+
+			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}), 1, 0);
+		}), 2, 1);
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
 			.name("&e&lSet Arena Region")
@@ -96,7 +92,8 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&8(area where game will be playing)")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "areaMax"))
 			.build(), e -> {
-			e.getWhoClicked().closeInventory();
+
+			player.closeInventory();
 
 			CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
 
@@ -106,16 +103,16 @@ public class SpawnComponents implements SetupComponent {
 			}
 
 			if (selection.getSecondPos() == null) {
-				player.sendMessage(plugin.getChatManager().colorRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
+				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
 				return;
 			}
 
-			config.set(path + "areaMin", LocationSerializer.locationToString(selection.getFirstPos()));
-			config.set(path + "areaMax", LocationSerializer.locationToString(selection.getSecondPos()));
-			player.sendMessage(plugin.getChatManager().colorRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
+			config.set(path + "areaMin", LocationSerializer.toString(selection.getFirstPos()));
+			config.set(path + "areaMax", LocationSerializer.toString(selection.getSecondPos()));
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
 			plugin.getCuboidSelector().removeSelection(player);
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}), 2, 0);
+		}), 3, 1);
 	}
 }

@@ -18,20 +18,18 @@
 
 package me.despical.kotl.handlers.rewards;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.engine.ScriptEngine;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.engine.ScriptEngine;
+import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.utils.Debugger;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -42,19 +40,18 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RewardsFactory {
 
-	private final Set<Reward> rewards = new HashSet<>();
-	private final FileConfiguration config;
-	private final boolean enabled;
+	private final Main plugin;
+	private final Set<Reward> rewards;
 
 	public RewardsFactory(Main plugin) {
-		enabled = plugin.getConfig().getBoolean("Rewards-Enabled");
-		config = ConfigUtils.getConfig(plugin, "rewards");
+		this.plugin = plugin;
+		this.rewards = new HashSet<>();
 
 		registerRewards();
 	}
 
 	public void performReward(Player player, Reward.RewardType type) {
-		if (!enabled) {
+		if (rewards.isEmpty()) {
 			return;
 		}
 
@@ -62,17 +59,16 @@ public class RewardsFactory {
 
 		for (Reward reward : rewards) {
 			if (reward.getType() == type) {
-				if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
+				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
 					continue;
 				}
 
 				String command = reward.getExecutableCode();
-				command = StringUtils.replace(command, "%player%", player.getName());
-				command = formatCommandPlaceholders(command, arena);
+				command = formatCommandPlaceholders(command, arena, player);
 
 				switch (reward.getExecutor()) {
 					case CONSOLE:
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
 						break;
 					case PLAYER:
 						player.performCommand(command);
@@ -81,7 +77,7 @@ public class RewardsFactory {
 						ScriptEngine engine = new ScriptEngine();
 
 						engine.setValue("player", player);
-						engine.setValue("server", Bukkit.getServer());
+						engine.setValue("server", plugin.getServer());
 						engine.setValue("arena", arena);
 						engine.execute(command);
 						break;
@@ -92,35 +88,31 @@ public class RewardsFactory {
 		}
 	}
 
-	private String formatCommandPlaceholders(String command, Arena arena) {
+	private String formatCommandPlaceholders(String command, Arena arena, Player player) {
 		String formatted = command;
 
 		formatted = StringUtils.replace(formatted, "%arena%", arena.getId());
-		formatted = StringUtils.replace(formatted, "%players%", String.valueOf(arena.getPlayers().size()));
+		formatted = StringUtils.replace(formatted, "%player%", player.getName());
+		formatted = StringUtils.replace(formatted, "%players%", Integer.toString(arena.getPlayers().size()));
 		return formatted;
 	}
 
 	private void registerRewards() {
-		if (!enabled) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) {
 			return;
 		}
 
-		Debugger.debug("[RewardsFactory] Starting rewards registration");
+		Debugger.debug("[Rewards Factory] Starting rewards registration");
 
 		long start = System.currentTimeMillis();
-		Map<Reward.RewardType, Integer> registeredRewards = new HashMap<>();
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
 		for (Reward.RewardType rewardType : Reward.RewardType.values()) {
-			for (String reward : config.getStringList("rewards." + rewardType.getPath())) {
+			for (String reward : config.getStringList(rewardType.getPath())) {
 				rewards.add(new Reward(rewardType, reward));
-				registeredRewards.put(rewardType, registeredRewards.getOrDefault(rewardType, 0) + 1);
 			}
 		}
 
-		for (Reward.RewardType rewardType : registeredRewards.keySet()) {
-			Debugger.debug("[RewardsFactory] Registered {0} {1} rewards!", registeredRewards.get(rewardType), rewardType.name());
-		}
-
-		Debugger.debug("[RewardsFactory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
+		Debugger.debug("[Rewards Factory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
 	}
 }

@@ -18,12 +18,12 @@
 
 package me.despical.kotl.events;
 
-import org.bukkit.Bukkit;
+import me.despical.commons.serializer.InventorySerializer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import me.despical.commonsbox.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.utils.UpdateChecker;
@@ -45,31 +45,35 @@ public class JoinEvent implements Listener {
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		plugin.getUserManager().loadStatistics(plugin.getUserManager().getUser(event.getPlayer()));
+		Player player = event.getPlayer();
+
+		plugin.getUserManager().loadStatistics(player);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-			InventorySerializer.loadInventory(plugin, event.getPlayer());
+			InventorySerializer.loadInventory(plugin, player);
 		}
 	}
 	
 	@EventHandler
-	public void onJoinCheckVersion(final PlayerJoinEvent event) {
-		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !event.getPlayer().hasPermission("kotl.updatenotify")) {
+	public void onJoinCheckVersion(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+
+		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !player.hasPermission("kotl.updatenotify")) {
 			return;
 		}
 
-		Bukkit.getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (!result.requiresUpdate()) {
 				return;
 			}
 
 			if (result.getNewestVersion().contains("b")) {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
 			} else {
-				event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
 			}
 
-			event.getPlayer().sendMessage(plugin.getChatManager().colorRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-1-16-4.80686"));
+			player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686"));
 		}), 25);
 	}
 }

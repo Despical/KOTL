@@ -57,7 +57,7 @@ public class EditCommand extends SubCommand {
 		Arena arena = ArenaRegistry.getArena(args[0]);
 		
 		if (arena == null) {
-			player.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Arena-Like-That"));
+			player.sendMessage(plugin.getChatManager().prefixedMessage("Commands.No-Arena-Like-That"));
 			return;
 		}
 

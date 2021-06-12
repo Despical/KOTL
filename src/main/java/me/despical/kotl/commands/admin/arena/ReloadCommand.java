@@ -18,14 +18,13 @@
 
 package me.despical.kotl.commands.admin.arena;
 
-import me.despical.commonsbox.miscellaneous.AttributeUtils;
-import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.commons.miscellaneous.AttributeUtils;
+import me.despical.commons.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.utils.Debugger;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -63,8 +62,8 @@ public class ReloadCommand extends SubCommand {
 	public void execute(CommandSender sender , String[] args) {
 		if(!(confirmations.contains(sender))) {
 			confirmations.add(sender);
-			Bukkit.getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Are-You-Sure"));
+			plugin.getServer().getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 20 * 10);
+			sender.sendMessage(plugin.getChatManager().prefixedMessage("Commands.Are-You-Sure"));
 			return;
 		}
 
@@ -94,9 +93,8 @@ public class ReloadCommand extends SubCommand {
 				}
 
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
+				arena.getScoreboardManager().removeScoreboard(player);
 				AttributeUtils.resetAttackCooldown(player);
-				arena.getScoreboardManager().removeScoreboard(plugin.getUserManager().getUser(player));
-				plugin.getUserManager().getUser(player).removeScoreboard();
 			}
 
 			arena.teleportAllToEndLocation();
@@ -106,7 +104,7 @@ public class ReloadCommand extends SubCommand {
 		}
 
 		ArenaRegistry.registerArenas();
-		sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Success-Reload"));
+		sender.sendMessage(plugin.getChatManager().prefixedMessage("Commands.Success-Reload"));
 
 		Debugger.debug("[Reloader] Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}

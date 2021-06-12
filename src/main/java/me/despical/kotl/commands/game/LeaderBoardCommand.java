@@ -23,15 +23,14 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.commands.SubCommand;
 import me.despical.kotl.user.data.MysqlManager;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -58,36 +57,34 @@ public class LeaderBoardCommand extends SubCommand {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length == 0) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Statistics.Type-Name"));
+			sender.sendMessage(plugin.getChatManager().prefixedMessage("Commands.Statistics.Type-Name"));
 			return;
 		}
 
 		try {
-			StatsStorage.StatisticType statisticType = StatsStorage.StatisticType.valueOf(args[0].toUpperCase(java.util.Locale.ENGLISH));
-			printLeaderboard(sender, statisticType);
+			printLeaderboard(sender, StatsStorage.StatisticType.valueOf(args[0].toUpperCase(java.util.Locale.ENGLISH)));
 		} catch (IllegalArgumentException exception) {
-			sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Statistics.Invalid-Name"));
+			sender.sendMessage(plugin.getChatManager().prefixedMessage("Commands.Statistics.Invalid-Name"));
 		}
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-		LinkedHashMap<UUID, Integer> stats = (LinkedHashMap<UUID, Integer>) StatsStorage.getStats(statisticType);
-		sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Statistics.Header"));
+		Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
+		sender.sendMessage(plugin.getChatManager().message("Commands.Statistics.Header"));
 
 		String statistic = StringUtils.capitalize(statisticType.toString().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
+		Object[] array = stats.keySet().toArray();
+		UUID current = (UUID) array[array.length == 0 ? 0 : array.length - 1];
+
 		for (int i = 0; i < 10; i++) {
 			try {
-				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-
-				sender.sendMessage(formatMessage(statistic, Bukkit.getOfflinePlayer(current).getName(), i + 1, stats.get(current)));
-				stats.remove(current);
+				sender.sendMessage(formatMessage(statistic, plugin.getServer().getOfflinePlayer(current).getName(), i + 1, stats.remove(current)));
 			} catch (IndexOutOfBoundsException ex) {
 				sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
 			} catch (NullPointerException ex) {
-				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
-
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+					sender.sendMessage("has");
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
 						ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
@@ -99,17 +96,17 @@ public class LeaderBoardCommand extends SubCommand {
 					} catch (SQLException ignored) {}
 				}
 
-				sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, stats.get(current)));
+				sender.sendMessage(formatMessage(statistic, "Unknown Player", i + 1, 0));
 			}
 		}
 	}
 
 	private String formatMessage(String statisticName, String playerName, int position, int value) {
-		String message = plugin.getChatManager().colorMessage("Commands.Statistics.Format");
+		String message = plugin.getChatManager().message("Commands.Statistics.Format");
 
-		message = StringUtils.replace(message, "%position%", String.valueOf(position));
+		message = StringUtils.replace(message, "%position%", Integer.toString(position));
 		message = StringUtils.replace(message, "%name%", playerName);
-		message = StringUtils.replace(message, "%value%", String.valueOf(value));
+		message = StringUtils.replace(message, "%value%", Integer.toString(value));
 		message = StringUtils.replace(message, "%statistic%", statisticName);
 		return message;
 	}

@@ -18,13 +18,12 @@
 
 package me.despical.kotl.commands.admin.arena;
 
-import me.despical.commonsbox.configuration.ConfigUtils;
-import me.despical.commonsbox.miscellaneous.MiscUtils;
-import me.despical.commonsbox.serializer.LocationSerializer;
+import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.miscellaneous.MiscUtils;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.commands.SubCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -83,8 +82,7 @@ public class CreateCommand extends SubCommand {
 	}
 	
 	private void setupDefaultConfiguration(String id) {
-		String path = "instances." + id + ".";
-		String loc = LocationSerializer.locationToString(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+		String path = "instances." + id + ".", loc = LocationSerializer.SERIALIZED_LOCATION;
 
 		config.set(path + "endlocation", loc);
 		config.set(path + "areaMin", loc);
@@ -96,9 +94,9 @@ public class CreateCommand extends SubCommand {
 
 		Arena arena = new Arena(id);
 		
-		arena.setEndLocation(LocationSerializer.locationFromString(config.getString(path + "endLocation")));
-		arena.setPlateLocation(LocationSerializer.locationFromString(config.getString(path + "plateLocation")));
-		arena.setHologramLocation(LocationSerializer.locationFromString(config.getString(path + "hologramLocation")));
+		arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+		arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+		arena.setHologramLocation(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
 		arena.setReady(false);
 		
 		ArenaRegistry.registerArena(arena);

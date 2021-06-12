@@ -52,24 +52,24 @@ public class StatsCommand extends SubCommand {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		ChatManager chatManager = plugin.getChatManager();
-		Player player = args.length  == 1 ? Bukkit.getPlayerExact(args[0]) : (Player) sender;
+		Player player = args.length == 1 ? Bukkit.getPlayerExact(args[0]) : (Player) sender;
 
 		if (player == null) {
-			sender.sendMessage(chatManager.getPrefix() + chatManager.colorMessage("Commands.Player-Not-Found"));
+			sender.sendMessage(chatManager.getPrefix() + chatManager.message("Commands.Player-Not-Found"));
 			return;
 		}
 
 		User user = plugin.getUserManager().getUser(player);
 
 		if (player.equals(sender)) {
-			sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header", player));
+			sender.sendMessage(chatManager.message("Commands.Stats-Command.Header", player));
 		} else {
-			sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));
+			sender.sendMessage(chatManager.message("Commands.Stats-Command.Header-Other", player).replace("%player%", player.getName()));
 		}
 
-		sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Tours-Played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-		sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Score", player) + user.getStat(StatsStorage.StatisticType.SCORE));
-		sender.sendMessage(chatManager.colorMessage("Commands.Stats-Command.Footer", player));
+		sender.sendMessage(chatManager.message("Commands.Stats-Command.Tours-Played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+		sender.sendMessage(chatManager.message("Commands.Stats-Command.Score", player) + user.getStat(StatsStorage.StatisticType.SCORE));
+		sender.sendMessage(chatManager.message("Commands.Stats-Command.Footer", player));
  	}
 
 	@Override

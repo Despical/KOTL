@@ -18,19 +18,17 @@
 
 package me.despical.kotl.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.bukkit.ChatColor;
+import me.despical.commons.string.StringMatcher;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.despical.commonsbox.string.StringMatcher;
 import me.despical.kotl.Main;
 import me.despical.kotl.commands.SubCommand.SenderType;
 import me.despical.kotl.commands.admin.HelpCommand;
@@ -38,10 +36,10 @@ import me.despical.kotl.commands.admin.ListCommand;
 import me.despical.kotl.commands.admin.arena.DeleteCommand;
 import me.despical.kotl.commands.admin.arena.EditCommand;
 import me.despical.kotl.commands.admin.arena.ReloadCommand;
-import me.despical.kotl.commands.exception.CommandException;
 import me.despical.kotl.commands.admin.arena.CreateCommand;
 import me.despical.kotl.commands.game.LeaderBoardCommand;
 import me.despical.kotl.commands.game.StatsCommand;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -50,12 +48,12 @@ import me.despical.kotl.commands.game.StatsCommand;
  */
 public class CommandHandler implements CommandExecutor {
 
-	private final List<SubCommand> subCommands;
 	private final Main plugin;
+	private final Set<SubCommand> subCommands;
 
 	public CommandHandler(Main plugin) {
 		this.plugin = plugin;
-		subCommands = new ArrayList<>();
+		this.subCommands = new HashSet<>();
 
 		registerSubCommand(new CreateCommand());
 		registerSubCommand(new EditCommand());
@@ -76,17 +74,19 @@ public class CommandHandler implements CommandExecutor {
 		subCommands.add(subCommand);
 	}
 	
-	public List<SubCommand> getSubCommands() {
-		return new ArrayList<>(subCommands);
+	public Set<SubCommand> getSubCommands() {
+		return new HashSet<>(subCommands);
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+		ChatManager chatManager = plugin.getChatManager();
+
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.DARK_AQUA + "This server is running " + ChatColor.AQUA + "King of the Ladder " + ChatColor.DARK_AQUA + "v" + plugin.getDescription().getVersion() + " by " + ChatColor.AQUA + "Despical");
+			sender.sendMessage(chatManager.coloredRawMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
 
 			if (sender.hasPermission("kotl.admin")) {
-				sender.sendMessage(ChatColor.DARK_AQUA + "Commands: " + ChatColor.AQUA + "/" + label + " help");
+				sender.sendMessage(chatManager.coloredRawMessage("&3Commands: &b" + label + " help"));
 			}
 
 			return true;
@@ -95,24 +95,24 @@ public class CommandHandler implements CommandExecutor {
 		for (SubCommand subCommand : subCommands) {
 			if (subCommand.isValidTrigger(args[0])) {
 				if (!subCommand.hasPermission(sender)) {
-					sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.No-Permission"));
+					sender.sendMessage(chatManager.prefixedMessage("Commands.No-Permission"));
 					return true;
 				}
 
 				if (subCommand.getSenderType() == SenderType.PLAYER && !(sender instanceof Player)) {
-					sender.sendMessage(plugin.getChatManager().colorMessage("Commands.Only-By-Player"));
+					sender.sendMessage(chatManager.prefixedMessage("Commands.Only-By-Player"));
 					return false;
 				}
 
 				if (args.length - 1 >= subCommand.getMinimumArguments()) {
 					try {
 						subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));
-					} catch (CommandException e) {
-						sender.sendMessage(ChatColor.RED + e.getMessage());
+					} catch (Exception e) {
+						sender.sendMessage(chatManager.coloredRawMessage("&c" + e.getMessage()));
 					}
 				} else {
 					if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
-						sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : ""));
+						sender.sendMessage(chatManager.coloredRawMessage("&cUsage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : "")));
 					}
 				}
 
@@ -123,7 +123,7 @@ public class CommandHandler implements CommandExecutor {
 		List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
 
 		if (!matches.isEmpty()) {
-          sender.sendMessage(plugin.getChatManager().getPrefix() + plugin.getChatManager().colorMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+          sender.sendMessage(chatManager.prefixedMessage("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
           return true;
         }
 

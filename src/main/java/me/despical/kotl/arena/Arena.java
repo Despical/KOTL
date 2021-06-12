@@ -18,20 +18,21 @@
 
 package me.despical.kotl.arena;
 
-import me.despical.commonsbox.compat.VersionResolver;
-import me.despical.commonsbox.miscellaneous.AttributeUtils;
-import me.despical.commonsbox.serializer.InventorySerializer;
+import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.miscellaneous.AttributeUtils;
+import me.despical.commons.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.hologram.Hologram;
-import org.bukkit.Bukkit;
+import me.despical.kotl.utils.Debugger;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -61,14 +62,14 @@ public class Arena {
 	public Arena(String id) {
 		this.id = id;
 
-		scoreboardManager = new ScoreboardManager(this);
+		scoreboardManager = new ScoreboardManager(this, plugin);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 				return;
 			}
 
-			gameBar = Bukkit.createBossBar(plugin.getChatManager().colorMessage("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
+			gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
 	}
 	
@@ -96,17 +97,17 @@ public class Arena {
 	 * @return set of players in arena
 	 */
 	public Set<Player> getPlayers() {
-		return players;
+		return new HashSet<>(players);
 	}
 	
-	 /**
-	   * Get end location of arena.
-	   *
-	   * @return end location of arena
-	   */
-	  public Location getEndLocation() {
-	    return gameLocations.get(GameLocation.END);
-	  }
+	/**
+	  * Get end location of arena.
+	  *
+	  * @return end location of arena
+	  */
+	 public Location getEndLocation() {
+	   return gameLocations.get(GameLocation.END);
+	 }
 
 	/**
 	 * Set end location of arena.
@@ -116,7 +117,7 @@ public class Arena {
 	public void setEndLocation(Location endLoc) {
 		gameLocations.put(GameLocation.END, endLoc);
 	}
-	
+
 	/**
 	 * Get last king hologram's location of arena.
 	 * 
@@ -163,12 +164,16 @@ public class Arena {
 	}
 	
 	/**
-	 * 
 	 * @return null if king is not online
 	 */
 	@Nullable
 	public Player getKing() {
 		return king;
+	}
+
+	@NotNull
+	public String getKingName() {
+		return king == null ? plugin.getChatManager().message("In-Game.There-Is-No-King") : king.getName();
 	}
 	
 	/**
@@ -177,6 +182,8 @@ public class Arena {
 	 * @param hologram last king's hologram
 	 */
 	public void setHologram(Hologram hologram) {
+		deleteHologram();
+
 		this.hologram = hologram;
 	}
 
@@ -197,18 +204,27 @@ public class Arena {
 	public ScoreboardManager getScoreboardManager() {
 		return scoreboardManager;
 	}
+
+	public void broadcastMessage(String message) {
+		for (Player player : players) player.sendMessage(message);
+	}
+
+	public void deleteHologram() {
+		if (hologram != null) hologram.delete();
+	}
 	
-	void addPlayer(Player player) {
+	public void addPlayer(Player player) {
 		players.add(player);
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
+		AttributeUtils.healPlayer(player);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
-			scoreboardManager.createScoreboard(plugin.getUserManager().getUser(player));
+			scoreboardManager.createScoreboard(player);
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
@@ -220,7 +236,7 @@ public class Arena {
 		}
 	}
 	
-	void removePlayer(Player player) {
+	public void removePlayer(Player player) {
 		if (player == null) {
 			return;
 		}
@@ -236,30 +252,27 @@ public class Arena {
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
-			scoreboardManager.removeScoreboard(plugin.getUserManager().getUser(player));
-			plugin.getUserManager().getUser(player).removeScoreboard();
+			scoreboardManager.removeScoreboard(player);
 		}
 
 		AttributeUtils.resetAttackCooldown(player);
 	}
-	
-	public void teleportAllToEndLocation() {
+
+	public void teleportToEndLocation(Player player) {
 		Location location = getEndLocation();
 
 		if (location == null) {
-			System.out.print("End location for arena " + id + " isn't initialized!");
+			Debugger.sendConsoleMessage("&cCouldn't teleport " + player.getName() + " to end location!");
 			return;
 		}
 
-		getPlayers().forEach(player -> player.teleport(location));
+		player.teleport(location);
 	}
 	
-	/**
-	 * Executes boss bar action for arena
-	 *
-	 * @param action add or remove a player from boss bar
-	 * @param p player
-	 */
+	public void teleportAllToEndLocation() {
+		players.forEach(this::teleportToEndLocation);
+	}
+	
 	public void doBarAction(BarAction action, Player p) {
 		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 			return;

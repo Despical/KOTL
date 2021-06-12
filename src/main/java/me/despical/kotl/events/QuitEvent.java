@@ -18,6 +18,7 @@
 
 package me.despical.kotl.events;
 
+import me.despical.kotl.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handlers.ChatManager.ActionType;
-import me.despical.kotl.user.User;
 
 /**
  * @author Despical
@@ -46,14 +46,14 @@ public class QuitEvent implements Listener {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
+		Arena arena = ArenaRegistry.getArena(player);
 
-		if (ArenaRegistry.isInArena(player)) {
-			plugin.getChatManager().broadcastAction(ArenaRegistry.getArena(player), player, ActionType.LEAVE);
+		if (arena != null) {
+			plugin.getChatManager().broadcastAction(arena, player, ActionType.LEAVE);
 
-			ArenaRegistry.getArena(player).getPlayers().remove(player);
+			arena.removePlayer(player);
 		}
 
-		User user = plugin.getUserManager().getUser(player);
-		plugin.getUserManager().removeUser(user);
+		plugin.getUserManager().removeUser(player);
 	}
 }

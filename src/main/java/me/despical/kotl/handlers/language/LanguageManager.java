@@ -18,14 +18,14 @@
 
 package me.despical.kotl.handlers.language;
 
-import me.despical.commonsbox.file.FileUtils;
+import me.despical.commons.file.FileUtils;
+import me.despical.commons.util.Collections;
 import me.despical.kotl.Main;
 import me.despical.kotl.utils.Debugger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 
 /**
  * @author Despical
@@ -46,28 +46,24 @@ public class LanguageManager {
 	}
 
 	private void init() {
-		if (pluginLocale.getAliases().contains(plugin.getChatManager().colorMessage("Language"))) {
-			return;
-		}
-
 		try {
-			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/" + pluginLocale.getPrefix() + ".yml"), new File(plugin.getDataFolder() + File.separator + "messages.yml"));
+			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/" + pluginLocale.prefix + ".yml"), new File(plugin.getDataFolder(), "messages.yml"));
 		} catch (IOException e) {
 			Debugger.sendConsoleMessage("&c[KOTL] Error while connecting to internet!");
 		}
 	}
 
 	private void registerLocales() {
-		Arrays.asList(
-			new Locale("English", "English", "en_GB", "Despical", Arrays.asList("default", "english", "en")),
-			new Locale("German", "Deutsch", "de_DE", "Dreandor", Arrays.asList("deutsch", "german", "de")),
-			new Locale("Turkish", "Türkçe", "tr_TR", "Despical", Arrays.asList("turkish", "türkçe", "turkce", "tr")))
+		Collections.listOf(
+			new Locale("English", "en_GB", "default", "english", "en"),
+			new Locale("German", "de_DE", "deutsch", "german", "de"),
+			new Locale("Turkish", "tr_TR", "turkish", "türkçe", "turkce", "tr"))
 			.forEach(LocaleRegistry::registerLocale);
 	}
 
 	private void setupLocale() {
-		if (plugin.getConfig().getBoolean("Developer-Mode")) {
-			Debugger.sendConsoleMessage("&c[KOTL] Locales aren't supported in beta versions because they're lacking latest translations! Using default one...");
+		if (Debugger.isEnabled()) {
+			Debugger.sendConsoleMessage("&c[KOTL] Debug mode doesn't support languages, using default one.");
 			pluginLocale = LocaleRegistry.getByName("English");
 			return;
 		}
@@ -75,12 +71,12 @@ public class LanguageManager {
 		String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
 
 		for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
-			if (locale.getPrefix().equalsIgnoreCase(localeName)) {
+			if (locale.prefix.equalsIgnoreCase(localeName)) {
 				pluginLocale = locale;
 				break;
 			}
 
-			for (String alias : locale.getAliases()) {
+			for (String alias : locale.aliases) {
 				if (alias.equals(localeName)) {
 					pluginLocale = locale;
 					break;
@@ -89,15 +85,12 @@ public class LanguageManager {
 		}
 
 		if (pluginLocale == null) {
-			Debugger.sendConsoleMessage("&c[KOTL] Plugin locale is invalid! Using default one...");
+			Debugger.sendConsoleMessage("&c[KOTL] Plugin locale is invalid! Using default one.");
 			pluginLocale = LocaleRegistry.getByName("English");
+			return;
 		}
 
-		Debugger.sendConsoleMessage("[KOTL] Loaded locale " + pluginLocale.getName() + " (" + pluginLocale.getOriginalName() + " ID: " + pluginLocale.getPrefix() + ") by " + pluginLocale.getAuthor());
-	}
-
-	public boolean isDefaultLanguageUsed() {
-		return pluginLocale.getName().equals("English");
+		Debugger.sendConsoleMessage("[KOTL] Loaded locale " + pluginLocale.name + " (ID: " + pluginLocale.prefix + ")");
 	}
 
 	public Locale getPluginLocale() {

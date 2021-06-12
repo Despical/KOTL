@@ -23,9 +23,6 @@ import org.bukkit.event.Event;
 import me.despical.kotl.arena.Arena;
 
 /**
- *
- * Represents King of the Ladder game related events.
- *
  * @author Despical
  * @since 1.0.0
  * <p> 
@@ -39,11 +36,6 @@ public abstract class KOTLEvent extends Event {
 		arena = eventArena;
 	}
 
-	/**
-	 * Returns event arena
-	 *
-	 * @return event arena
-	 */
 	public Arena getArena() {
 		return arena;
 	}

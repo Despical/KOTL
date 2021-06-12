@@ -37,12 +37,6 @@ public class ConfigPreferences {
 		loadOptions();
 	}
 
-	/**
-	 * Returns whether option value is true or false
-	 *
-	 * @param option option to get value from
-	 * @return true or false based on user configuration
-	 */
 	public boolean getOption(Option option) {
 		return options.get(option);
 	}
@@ -54,15 +48,19 @@ public class ConfigPreferences {
 	}
 
 	public enum Option {
-		BOSSBAR_ENABLED("Bossbar-Enabled", true), CHAT_FORMAT_ENABLED("ChatFormat-Enabled", true),
-		CLEAR_EFFECTS("Clear-Effects", true), CLEAR_INVENTORY("Clear-Inventory", false),
-		DATABASE_ENABLED("DatabaseActivated", false), DEATHBLOCKS_ENABLED("Death-Blocks.Enabled", true),
-		DISABLE_FALL_DAMAGE("Disable-Fall-Damage", true), INVENTORY_MANAGER_ENABLED("InventoryManager", true),
-		JOIN_NOTIFY("Join-Notify", true), LEAVE_NOTIFY("Leave-Notify", true), SCOREBOARD_ENABLED("Scoreboard-Enabled", false),
-		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false);
+		BOSSBAR_ENABLED("Boss-Bar-Enabled"), CHAT_FORMAT_ENABLED("Chat-Format-Enabled"),
+		CLEAR_EFFECTS("Clear-Effects"), CLEAR_INVENTORY("Clear-Inventory", false),
+		DATABASE_ENABLED("Database-Activated", false), DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"),
+		DISABLE_FALL_DAMAGE("Disable-Fall-Damage"), INVENTORY_MANAGER_ENABLED("Inventory-Manager"),
+		JOIN_NOTIFY("Join-Notify"), LEAVE_NOTIFY("Leave-Notify"), SCOREBOARD_ENABLED("Scoreboard-Enabled", false),
+		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), REWARDS_ENABLED("Rewards-Enabled", false);
 
 		private final String path;
 		private final boolean def;
+
+		Option(String path) {
+			this(path, true);
+		}
 
 		Option(String path, boolean def) {
 			this.path = path;
@@ -73,9 +71,6 @@ public class ConfigPreferences {
 			return path;
 		}
 
-		/**
-		 * @return default value of option if absent in config
-		 */
 		public boolean getDefault() {
 			return def;
 		}

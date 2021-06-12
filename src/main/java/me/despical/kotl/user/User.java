@@ -20,8 +20,8 @@ package me.despical.kotl.user;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,7 +30,6 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  * @author Despical
@@ -39,13 +38,16 @@ import org.bukkit.scoreboard.ScoreboardManager;
  */
 public class User {
 
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+	private final Main plugin;
+	private final UUID uuid;
 	private final Player player;
-	private final Map<StatsStorage.StatisticType, Integer> stats = new EnumMap<>(StatsStorage.StatisticType.class);
+	private final Map<StatsStorage.StatisticType, Integer> stats;
 
-	public User(Player player) {
-		this.player = player;
+	public User(UUID uuid) {
+		this.uuid = uuid;
+		this.plugin = JavaPlugin.getPlugin(Main.class);
+		this.player = plugin.getServer().getPlayer(uuid);
+		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
 	public Arena getArena() {
@@ -56,36 +58,34 @@ public class User {
 		return player;
 	}
 
-	public int getStat(StatsStorage.StatisticType stat) {
-		if (!stats.containsKey(stat)) {
-			stats.put(stat, 0);
-			return 0;
-		} else if (stats.get(stat) == null) {
+	public UUID getUniqueId() {
+		return uuid;
+	}
+
+	public int getStat(StatsStorage.StatisticType statisticType) {
+		Integer statistic = stats.get(statisticType);
+
+		if (statistic == null) {
+			stats.put(statisticType, 0);
 			return 0;
 		}
 
-		return stats.get(stat);
+		return statistic;
 	}
 
 	public void setStat(StatsStorage.StatisticType stat, int i) {
 		stats.put(stat, i);
 
-		Bukkit.getScheduler().runTask(plugin, () -> {
-			KOTLPlayerStatisticChangeEvent playerStatisticChangeEvent = new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, i);
-			Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
-		});
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, i)));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int i) {
 		stats.put(stat, getStat(stat) + i);
 
-		Bukkit.getScheduler().runTask(plugin, () -> {
-			KOTLPlayerStatisticChangeEvent playerStatisticChangeEvent = new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat));
-			Bukkit.getPluginManager().callEvent(playerStatisticChangeEvent);
-		});
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, getStat(stat))));
 	}
 
-	public void removeScoreboard() {
-		player.setScoreboard(scoreboardManager.getNewScoreboard());
+	public void removeScoreboard(Arena arena) {
+		arena.getScoreboardManager().removeScoreboard(player);
 	}
 }

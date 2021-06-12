@@ -2,12 +2,13 @@
 #            King of the Ladder Rewards Configuration
 #
 #                    Placeholders list:
+#
 #             %player% - Current player name
 #             %arena% - Arena Identifier
 #             %players% - Number of players in game
 #
-#        Commands are executed by default by CONSOLE, use "p:" to preform command by player
-#  You can use chance to execute command adding "chance(NUMBER):" (ex chance(10):) at the beginning of command
+#      Commands are executed by default by CONSOLE, use "p:" to preform command by player
+#  You can use chance to execute command adding "chance(NUMBER):" at the beginning of command
 #
 #  Commands examples:
 #    - p:say Hello everyone in %arena%!           # Player will say "Hello everyone in <arena name here>"
@@ -23,12 +24,12 @@
 #         ^ Gives player dirt item (you must always use direct package names for not provided objects)
 #         ^ Also if you want to giving players item disable Clear-Inventory option in config.yml 
 #
-#                               All script provided objects:
-#            player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
-#   arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/me/despical/kotl/arena/Arena.html)
-#            server - Bukkit server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
+#       All object documents that can be used in commands:
+#
+#       player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)
+#       arena - KOTL arena object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/me/despical/kotl/arena/Arena.html)
+#       server - Server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)
 
-# Rewards must be enabled via config.yml first!
 rewards:
   # Commands executed when player became king
   win:

@@ -18,8 +18,8 @@
 
 package me.despical.kotl.handlers.rewards;
 
+import me.despical.kotl.utils.Debugger;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 
 /**
  * @author Despical
@@ -28,9 +28,10 @@ import org.bukkit.Bukkit;
  */
 public class Reward {
 
+	private String executableCode;
+
 	private final RewardType type;
 	private final RewardExecutor executor;
-	private String executableCode;
 	private final double chance;
 
 	public Reward(RewardType type, String rawCode) {
@@ -51,17 +52,16 @@ public class Reward {
 			int loc = processedCode.indexOf(")");
 
 			if (loc == -1) {
-				Bukkit.getLogger().warning("rewards.yml configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
-				this.chance = 0.0;
+				Debugger.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
+				this.chance = 101d;
 				return;
 			}
 
 			String chanceStr = processedCode;
 			chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
-			double chance = Double.parseDouble(chanceStr);
 
 			processedCode = StringUtils.replace(processedCode, "chance(" + chanceStr + "):", "");
-			this.chance = chance;
+			this.chance = Double.parseDouble(chanceStr);
 		} else {
 			this.chance = 100.0;
 		}
@@ -95,7 +95,7 @@ public class Reward {
 		}
 
 		public String getPath() {
-			return path;
+			return "rewards." + path;
 		}
 	}
 
