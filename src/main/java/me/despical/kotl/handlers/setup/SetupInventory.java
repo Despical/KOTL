@@ -20,6 +20,7 @@ package me.despical.kotl.handlers.setup;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.inventoryframework.Gui;
+import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
@@ -61,7 +62,7 @@ public class SetupInventory {
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
 		StaticPane pane = new StaticPane(9, 3);
-		pane.fillBorder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem());
+		pane.fillProgressBorder(GuiItem.of(XMaterial.GREEN_STAINED_GLASS_PANE.parseItem()), GuiItem.of(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()), arena.isReady() ? 100 : 0);
 		this.gui.addPane(pane);
 
 		prepareComponents(pane);
