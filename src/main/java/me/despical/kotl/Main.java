@@ -57,8 +57,9 @@ import java.io.File;
  */
 public class Main extends JavaPlugin {
 
+	private boolean forceDisable;
+
 	private ExceptionLogHandler exceptionLogHandler;
-	private boolean forceDisable = false;
 	private ConfigPreferences configPreferences;
 	private MysqlDatabase database;
 	private UserManager userManager;
@@ -132,7 +133,7 @@ public class Main extends JavaPlugin {
 		saveAllUserStatistics();
 
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			getMysqlDatabase().shutdownConnPool();
+			database.shutdownConnPool();
 		}
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
@@ -143,6 +144,8 @@ public class Main extends JavaPlugin {
 					player.getInventory().clear();
 					player.getInventory().setArmorContents(null);
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+
+					AttributeUtils.healPlayer(player);
 				}
 
 				arena.teleportToEndLocation(player);
@@ -293,13 +296,12 @@ public class Main extends JavaPlugin {
 				}
 
 				String finalUpdate = update.toString();
-				((MysqlManager) userManager.getDatabase()).getDatabase().executeUpdate("UPDATE " + ((MysqlManager) getUserManager().getDatabase()).getTableName() + finalUpdate + " WHERE UUID='" + user.getPlayer().getUniqueId().toString() + "';");
+				MysqlManager database = ((MysqlManager) userManager.getDatabase());
+				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 
-			for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-				userManager.getDatabase().saveStatistic(user, stat);
-			}
+			userManager.getDatabase().saveAllStatistic(user);
 		}
 	}
 }
