@@ -26,6 +26,7 @@ import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.util.Collections;
+import me.despical.commons.util.JavaVersion;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;
@@ -104,7 +105,7 @@ public class Main extends JavaPlugin {
 			return false;
 		}
 
-		if (System.getProperty("java.specification.version").equals("1.8")) {
+		if (JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
 			Debugger.sendConsoleMessage("&cThis plugin won't support Java 8 in future updates.");
 			Debugger.sendConsoleMessage("&cSo, maybe consider to update your version, right?");
 		}
