@@ -46,6 +46,10 @@ public class ArenaRegistry {
 		return arenas.stream().anyMatch(arena -> arena.getPlayers().contains(player));
 	}
 
+	public static boolean isArena(String id) {
+		return arenas.stream().anyMatch(loopArena -> loopArena.getId().equalsIgnoreCase(id));
+	}
+
 	public static Arena getArena(Player p) {
 		return p == null || !p.isOnline() ? null : arenas.stream().filter(arena -> arena.getPlayers().stream().anyMatch(player -> player.getUniqueId().equals(p.getUniqueId()))).findFirst().orElse(null);
 	}

@@ -18,14 +18,15 @@
 
 package me.despical.kotl.commands;
 
+import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.CommandFramework;
+import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,17 +36,21 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 22.06.2020
  */
-public class TabCompletion implements TabCompleter {
+public class TabCompletion {
 
-	public final CommandHandler commandHandler;
+	public CommandFramework commandFramework;
 
-	public TabCompletion(CommandHandler commandHandler) {
-		this.commandHandler = commandHandler;
+	public TabCompletion(CommandFramework commandFramework) {
+		this.commandFramework = commandFramework;
+		this.commandFramework.registerCommands(this);
 	}
 
-	@Override
-	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-		List<String> completions = new ArrayList<>(), commands = commandHandler.getSubCommands().stream().map(command -> command.getName().toLowerCase()).collect(Collectors.toList());
+	@Completer(
+		name = "kotl"
+	)
+	public List<String> onTabComplete(CommandArguments arguments) {
+		List<String> completions = new ArrayList<>(), commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		String[] args = arguments.getArguments();
 
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(args[0], commands, completions);
@@ -58,6 +63,10 @@ public class TabCompletion implements TabCompleter {
 
 			if (args[0].equalsIgnoreCase("top")) {
 				return Collections.listOf("tours_played", "score");
+			}
+
+			if (args[0].equalsIgnoreCase("stats")) {
+				return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
 			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());

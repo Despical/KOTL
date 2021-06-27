@@ -18,6 +18,7 @@
 
 package me.despical.kotl;
 
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
@@ -31,7 +32,9 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.commands.CommandHandler;
+import me.despical.kotl.commands.TabCompletion;
+import me.despical.kotl.commands.admin.AdminCommands;
+import me.despical.kotl.commands.player.PlayerCommands;
 import me.despical.kotl.events.ChatEvents;
 import me.despical.kotl.events.Events;
 import me.despical.kotl.events.JoinEvent;
@@ -64,7 +67,7 @@ public class Main extends JavaPlugin {
 	private ConfigPreferences configPreferences;
 	private MysqlDatabase database;
 	private UserManager userManager;
-	private CommandHandler commandHandler;
+	private CommandFramework commandFramework;
 	private CuboidSelector cuboidSelector;
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
@@ -172,19 +175,24 @@ public class Main extends JavaPlugin {
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
-		commandHandler = new CommandHandler(this);
+		commandFramework = new CommandFramework(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
 		hologramManager = new HologramManager();
 
-		registerSoftDependencies();
 		ArenaRegistry.registerArenas();
+
+		new AdminCommands(this);
+		new PlayerCommands(this);
+		new TabCompletion(commandFramework);
 
 		new ChatEvents(this);
 		new Events(this);
 		new ArenaEvents(this);
 		new JoinEvent(this);
 		new QuitEvent(this);
+
+		registerSoftDependencies();
 	}
 	
 	private void registerSoftDependencies() {
@@ -255,11 +263,11 @@ public class Main extends JavaPlugin {
 	public MysqlDatabase getMysqlDatabase() {
 		return database;
 	}
-	
-	public CommandHandler getCommandHandler() {
-		return commandHandler;
+
+	public CommandFramework getCommandFramework() {
+		return commandFramework;
 	}
-	
+
 	public CuboidSelector getCuboidSelector() {
 		return cuboidSelector;
 	}

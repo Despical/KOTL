@@ -70,6 +70,7 @@ public class ChatManager {
 	
 	public String message(String path, Player player) {
 		String returnString = config.getString(path);
+		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
