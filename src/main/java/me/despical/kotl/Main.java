@@ -76,6 +76,8 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		Debugger.setEnabled(this);
+
 		if (!validateIfPluginShouldStart()) {
 			forceDisable = true;
 			getServer().getPluginManager().disablePlugin(this);
@@ -88,7 +90,6 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
 		saveDefaultConfig();
 
-		Debugger.setEnabled(this);
 		Debugger.debug("Initialization started!");
 
 		long start = System.currentTimeMillis();

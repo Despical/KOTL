@@ -287,7 +287,7 @@ public class AdminCommands {
 	}
 
 	@Command(
-		name = "list",
+		name = "kotl.list",
 		permission = "kotl.admin",
 		usage = "/kotl list",
 		desc = "Shows all of the existing arenas"

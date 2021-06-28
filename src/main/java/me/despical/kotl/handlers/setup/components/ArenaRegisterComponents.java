@@ -79,6 +79,8 @@ public class ArenaRegisterComponents implements SetupComponent {
 				}
 			}
 
+			ArenaRegistry.unregisterArena(arena);
+
 			arena.deleteHologram();
 			arena = new Arena(arena.getId());
 			arena.setReady(true);
@@ -89,8 +91,6 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());
-
-			ArenaRegistry.unregisterArena(setupInventory.getArena());
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
 

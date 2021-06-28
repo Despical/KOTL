@@ -50,11 +50,9 @@ import java.util.Set;
 public class ArenaEvents implements Listener {
 
 	private final Main plugin;
-	private final FileConfiguration config;
 
 	public ArenaEvents(Main plugin) {
 		this.plugin = plugin;
-		this.config = ConfigUtils.getConfig(plugin, "arenas");
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -142,7 +140,7 @@ public class ArenaEvents implements Listener {
 			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
 					arena.doBarAction(Arena.BarAction.REMOVE, player);
-					arena.broadcastMessage(plugin.getChatManager().message("In-Game.Clicked-Death-Block").replace("%player%", player.getName()));
+					arena.broadcastMessage(plugin.getChatManager().prefixedMessage("In-Game.Clicked-Death-Block").replace("%player%", player.getName()));
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 
@@ -159,8 +157,7 @@ public class ArenaEvents implements Listener {
 			return;
 		}
 
-		Player entity = (Player) event.getEntity();
-		Player damager = (Player) event.getDamager();
+		Player entity = (Player) event.getEntity(), damager = (Player) event.getDamager();
 
 		if (ArenaRegistry.isInArena(entity) && ArenaRegistry.isInArena(damager)) {
 			event.setCancelled(false);
@@ -169,6 +166,7 @@ public class ArenaEvents implements Listener {
 	}
 
 	private Arena isInArea(Location origin) {
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		Location first, second;
 
 		for (Arena arena : ArenaRegistry.getArenas()) {

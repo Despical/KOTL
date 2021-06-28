@@ -103,7 +103,9 @@ public class SetupInventory {
 				break;
 		}
 
-		player.sendMessage(chatManager.coloredRawMessage(tip));
+		if (!tip.isEmpty()) {
+			player.sendMessage(chatManager.coloredRawMessage(tip));
+		}
 	}
 
 	public void openInventory() {
