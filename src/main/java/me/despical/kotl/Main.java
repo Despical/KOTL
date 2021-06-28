@@ -241,7 +241,7 @@ public class Main extends JavaPlugin {
 				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
 					Debugger.sendConsoleMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
 					Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686/");
+					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 				}
 
 				return;
@@ -249,7 +249,7 @@ public class Main extends JavaPlugin {
 
 			Debugger.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
 			Debugger.sendConsoleMessage("[KOTL] Download it SpigotMC:");
-			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686/");
+			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 		});
 	}
 	

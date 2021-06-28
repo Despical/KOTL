@@ -73,7 +73,7 @@ public class JoinEvent implements Listener {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
 			}
 
-			player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-1-8-1-17.80686"));
+			player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));
 		}), 25);
 	}
 }
