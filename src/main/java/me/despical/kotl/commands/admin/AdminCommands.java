@@ -254,6 +254,7 @@ public class AdminCommands {
 		arguments.sendMessage(chatManager.coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		arguments.sendMessage("");
 
+		Player player = arguments.getSender();
 		boolean isPlayer = arguments.isSenderPlayer();
 
 		for (Command command : plugin.getCommandFramework().getCommands()) {
@@ -262,7 +263,7 @@ public class AdminCommands {
 			if (usage.isEmpty()) continue;
 
 			if (isPlayer) {
-				arguments.getSender().spigot().sendMessage(new ComponentBuilder(usage)
+				player.spigot().sendMessage(new ComponentBuilder(usage)
 					.color(ChatColor.AQUA)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
@@ -273,8 +274,8 @@ public class AdminCommands {
 		}
 
 		if (isPlayer) {
-			arguments.sendMessage("");
-			arguments.getSender().spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
+			player.sendMessage("");
+			player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
 				.append(" Try to ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
 				.append("hover").color(ChatColor.WHITE).underlined(true)
 				.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + "Hover on the commands to get info about them.")))
