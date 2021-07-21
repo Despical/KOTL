@@ -96,7 +96,7 @@ public class ScoreboardManager {
 		formattedLine = StringUtils.replace(formattedLine, "%players%", Integer.toString(arena.getPlayers().size()));
 		formattedLine = StringUtils.replace(formattedLine, "%king%", arena.getKingName());
 		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE)));
-		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", String.valueOf(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED)));
+		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED)));
 
 		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);

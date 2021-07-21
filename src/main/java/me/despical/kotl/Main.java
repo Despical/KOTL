@@ -78,8 +78,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		Debugger.setEnabled(this);
 
-		if (!validateIfPluginShouldStart()) {
-			forceDisable = true;
+		if ((forceDisable = !validateIfPluginShouldStart())) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}

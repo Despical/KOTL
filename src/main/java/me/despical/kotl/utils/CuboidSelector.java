@@ -41,10 +41,11 @@ import me.despical.kotl.Main;
 public class CuboidSelector implements Listener {
 
 	private final ChatManager chatManager;
-	private final Map<Player, Selection> selections = new HashMap<>();
+	private final Map<Player, Selection> selections;
 
 	public CuboidSelector(Main plugin) {
 		this.chatManager = plugin.getChatManager();
+		this.selections = new HashMap<>();
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -85,7 +86,7 @@ public class CuboidSelector implements Listener {
 					break;
 				}
 
-				selections.put(player, new Selection(selections.get(player).getFirstPos(), event.getClickedBlock().getLocation()));
+				selections.put(player, new Selection(selections.get(player).firstPos, event.getClickedBlock().getLocation()));
 
 				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
 				break;
@@ -100,19 +101,11 @@ public class CuboidSelector implements Listener {
 
 	public static class Selection {
 
-		private final Location firstPos, secondPos;
+		public final Location firstPos, secondPos;
 
 		public Selection(Location firstPos, Location secondPos) {
 			this.firstPos = firstPos;
 			this.secondPos = secondPos;
-		}
-
-		public Location getFirstPos() {
-			return firstPos;
-		}
-
-		public Location getSecondPos() {
-			return secondPos;
 		}
 	}
 }
