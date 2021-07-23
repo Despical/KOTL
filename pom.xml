@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -55,13 +55,13 @@
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
-			<artifactId>Commons</artifactId>
-			<version>1.3.6</version>
+			<artifactId>CommandFramework</artifactId>
+			<version>1.0.6-pre1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
-			<artifactId>CommandFramework</artifactId>
-			<version>1.0.5</version>
+			<artifactId>Commons</artifactId>
+			<version>1.3.7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
@@ -139,7 +139,7 @@
 							<relocations>
 								<relocation>
 									<pattern>org.bstats</pattern>
-									<shadedPattern>me.despical.kotl.utils</shadedPattern>
+									<shadedPattern>me.despical.kotl.util</shadedPattern>
 								</relocation>
 							</relocations>
 							<createDependencyReducedPom>false</createDependencyReducedPom>

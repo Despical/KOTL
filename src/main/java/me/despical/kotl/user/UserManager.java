@@ -23,7 +23,7 @@ import me.despical.kotl.Main;
 import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.UserDatabase;
-import me.despical.kotl.utils.Debugger;
+import me.despical.kotl.util.Debugger;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;

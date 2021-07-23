@@ -22,7 +22,7 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
-import me.despical.kotl.utils.Debugger;
+import me.despical.kotl.util.Debugger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

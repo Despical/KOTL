@@ -23,7 +23,7 @@ import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.MysqlManager;
-import me.despical.kotl.utils.Debugger;
+import me.despical.kotl.util.Debugger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
