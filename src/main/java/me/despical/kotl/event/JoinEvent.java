@@ -68,9 +68,9 @@ public class JoinEvent implements Listener {
 			}
 
 			if (result.getNewestVersion().contains("b")) {
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion() + " Download:"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion()));
 			} else {
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion() + " Download:"));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion()));
 			}
 
 			player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));

@@ -247,7 +247,7 @@ public class Main extends JavaPlugin {
 			}
 
 			Debugger.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
-			Debugger.sendConsoleMessage("[KOTL] Download it SpigotMC:");
+			Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
 			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 		});
 	}

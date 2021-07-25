@@ -18,7 +18,6 @@
 
 package me.despical.kotl.event;
 
-import me.despical.commons.util.Collections;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.ArenaRegistry;
@@ -67,7 +66,7 @@ public class Events implements Listener {
 
 		String message = event.getMessage();
 
-		if (Collections.contains(message, plugin.getConfig().getStringList("Whitelisted-Commands"))) {
+		if (plugin.getConfig().getStringList("Whitelisted-Commands").contains(message)) {
 			return;
 		}
 
