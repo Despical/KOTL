@@ -111,7 +111,7 @@ public class ArenaRegistry {
 				config.set(s + "isdone", false);
 				arena.setReady(false);
 
-				ArenaRegistry.registerArena(arena);
+				registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
@@ -121,12 +121,12 @@ public class ArenaRegistry {
 				config.set(s + "isdone", false);
 				arena.setReady(false);
 
-				ArenaRegistry.registerArena(arena);
+				registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
 
-			ArenaRegistry.registerArena(arena);
+			registerArena(arena);
 			Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.Instance-Started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}

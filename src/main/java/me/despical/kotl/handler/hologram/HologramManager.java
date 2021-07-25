@@ -37,7 +37,7 @@ public class HologramManager {
 	}
 
 	public Set<ArmorStand> getHolograms() {
-		return holograms;
+		return new HashSet<>(holograms);
 	}
 
 	public void add(ArmorStand hologram) {

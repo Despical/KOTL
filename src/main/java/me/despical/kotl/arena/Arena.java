@@ -47,29 +47,30 @@ import java.util.Set;
  */
 public class Arena {
 	
-	private final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
 	private final String id;
-	
+	private boolean ready = true;
+
 	private final Set<Player> players = new HashSet<>();
 	private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
-	
+
 	private Player king;
 	private Hologram hologram;
 	private BossBar gameBar;
+
 	private final ScoreboardManager scoreboardManager;
-	private boolean ready = true;
 
 	public Arena(String id) {
 		this.id = id;
-
-		scoreboardManager = new ScoreboardManager(this, plugin);
+		this.scoreboardManager = new ScoreboardManager(this, plugin);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
 			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 				return;
 			}
 
-			gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
+			this.gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
 		}
 	}
 	
@@ -288,8 +289,6 @@ public class Arena {
 				break;
 			case REMOVE:
 				gameBar.removePlayer(p);
-				break;
-			default:
 				break;
 		}
 	}

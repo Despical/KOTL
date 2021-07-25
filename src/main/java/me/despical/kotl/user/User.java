@@ -38,14 +38,14 @@ import me.despical.kotl.arena.ArenaRegistry;
  */
 public class User {
 
-	private final Main plugin;
+	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+
 	private final UUID uuid;
 	private final Player player;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	public User(UUID uuid) {
 		this.uuid = uuid;
-		this.plugin = JavaPlugin.getPlugin(Main.class);
 		this.player = plugin.getServer().getPlayer(uuid);
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
