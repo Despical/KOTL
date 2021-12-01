@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -47,15 +48,17 @@ public class UserManager {
 	}
 
 	public User getUser(Player player) {
+		UUID uuid = player.getUniqueId();
+
 		for (User user : users) {
-			if (user.getUniqueId().equals(player.getUniqueId())) {
+			if (user.getUniqueId().equals(uuid)) {
 				return user;
 			}
 		}
 
-		Debugger.debug("Registering new user {0} ({1})", player.getUniqueId(), player.getName());
+		Debugger.debug("Registering new user {0} ({1})", uuid, player.getName());
 
-		User user = new User(player.getUniqueId());
+		User user = new User(uuid);
 		users.add(user);
 		return user;
 	}

@@ -38,13 +38,12 @@ public class Hologram {
 	private final Set<String> lines;
 	private final Set<ArmorStand> armorStands;
 
-	private final Main plugin;
+	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public Hologram(Location location, String... lines) {
 		this.location = location;
 		this.lines = me.despical.commons.util.Collections.setOf(lines);
 		this.armorStands = new HashSet<>();
-		this.plugin = JavaPlugin.getPlugin(Main.class);
 
 		append();
 	}

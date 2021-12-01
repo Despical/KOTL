@@ -53,7 +53,7 @@ public class Reward {
 
 			if (loc == -1) {
 				Debugger.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
-				this.chance = 101d;
+				this.chance = 101;
 				return;
 			}
 
@@ -63,7 +63,7 @@ public class Reward {
 			processedCode = StringUtils.replace(processedCode, "chance(" + chanceStr + "):", "");
 			this.chance = Double.parseDouble(chanceStr);
 		} else {
-			this.chance = 100.0;
+			this.chance = 100;
 		}
 
 		this.executableCode = processedCode;

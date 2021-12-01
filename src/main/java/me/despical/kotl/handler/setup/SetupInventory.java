@@ -83,20 +83,17 @@ public class SetupInventory {
 		ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
-		switch (ThreadLocalRandom.current().nextInt(16)) {
+		switch (ThreadLocalRandom.current().nextInt(9)) {
 			case 0:
 				tip = "&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
 				break;
 			case 1:
-				tip = "&e&lTIP: &7Need help? Join our discord server: https://discordapp.com/invite/Vhyy4HA";
-				break;
-			case 2:
 				tip = "&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
 				break;
-			case 3:
+			case 2:
 				tip = "&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO;
 				break;
-			case 4:
+			case 3:
 				tip = "&e&lTIP: &7Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
 				break;
 			default:

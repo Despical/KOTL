@@ -87,6 +87,7 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler.setMainPackage("me.despical.kotl");
 		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
 		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
+
 		saveDefaultConfig();
 
 		Debugger.debug("Initialization started!");
@@ -102,7 +103,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_8_R1)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_17_R1)) {
 			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
