@@ -20,8 +20,8 @@ package me.despical.kotl.handler.language;
 
 import me.despical.commons.file.FileUtils;
 import me.despical.commons.util.Collections;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.Main;
-import me.despical.kotl.util.Debugger;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class LanguageManager {
 		try {
 			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/" + pluginLocale.prefix + ".yml"), new File(plugin.getDataFolder(), "messages.yml"));
 		} catch (IOException e) {
-			Debugger.sendConsoleMessage("&c[KOTL] Error while connecting to internet!");
+			LogUtils.sendConsoleMessage("&c[KOTL] Error while connecting to internet!");
 		}
 	}
 
@@ -62,12 +62,6 @@ public class LanguageManager {
 	}
 
 	private void setupLocale() {
-		if (Debugger.isEnabled()) {
-			Debugger.sendConsoleMessage("&c[KOTL] Debug mode doesn't support languages, using default one.");
-			pluginLocale = LocaleRegistry.getByName("English");
-			return;
-		}
-
 		String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
 
 		for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
@@ -85,12 +79,12 @@ public class LanguageManager {
 		}
 
 		if (pluginLocale == null) {
-			Debugger.sendConsoleMessage("&c[KOTL] Plugin locale is invalid! Using default one.");
+			LogUtils.sendConsoleMessage("&c[KOTL] Plugin locale is invalid! Using default one.");
 			pluginLocale = LocaleRegistry.getByName("English");
 			return;
 		}
 
-		Debugger.sendConsoleMessage("[KOTL] Loaded locale " + pluginLocale.name + " (ID: " + pluginLocale.prefix + ")");
+		LogUtils.sendConsoleMessage("[KOTL] Loaded locale " + pluginLocale.name + " (ID: " + pluginLocale.prefix + ")");
 	}
 
 	public Locale getPluginLocale() {

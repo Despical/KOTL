@@ -59,7 +59,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 				.flag(ItemFlag.HIDE_ENCHANTS);
 		}
 
-		pane.addItem(new GuiItem(registeredItem.build(), e -> {
+		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
 			Arena arena = setupInventory.getArena();
 			String path = "instances." + arena.getId() + ".";
 

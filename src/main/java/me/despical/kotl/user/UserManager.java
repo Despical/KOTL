@@ -18,12 +18,12 @@
 
 package me.despical.kotl.user;
 
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.UserDatabase;
-import me.despical.kotl.util.Debugger;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class UserManager {
 			}
 		}
 
-		Debugger.debug("Registering new user {0} ({1})", uuid, player.getName());
+		LogUtils.log("Registering new user {0} ({1})", uuid, player.getName());
 
 		User user = new User(uuid);
 		users.add(user);

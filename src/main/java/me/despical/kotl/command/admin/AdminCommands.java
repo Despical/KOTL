@@ -25,13 +25,13 @@ import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.setup.SetupInventory;
-import me.despical.kotl.util.Debugger;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -124,6 +124,7 @@ public class AdminCommands {
 		permission = "kotl.admin.delete",
 		usage = "/kotl delete <arena>",
 		desc = "Deletes arena with the current configuration",
+		cooldown = 5,
 		min = 1,
 		senderType = Command.SenderType.PLAYER
 	)
@@ -206,7 +207,7 @@ public class AdminCommands {
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		CommandSender sender = arguments.getSender();
-		Debugger.debug("Initialized plugin reload by {0}.", sender.getName());
+		LogUtils.log("Initialized plugin reload by {0}.", sender.getName());
 
 		long start = System.currentTimeMillis();
 
@@ -214,7 +215,7 @@ public class AdminCommands {
 		plugin.getChatManager().reloadConfig();
 
 		for (Arena arena : ArenaRegistry.getArenas()) {
-			Debugger.debug("[Reloader] Stopping arena called {0}.", arena.getId());
+			LogUtils.log("Stopping arena called {0}.", arena.getId());
 
 			arena.deleteHologram();
 
@@ -241,7 +242,7 @@ public class AdminCommands {
 		ArenaRegistry.registerArenas();
 		sender.sendMessage(chatManager.prefixedMessage("Commands.Success-Reload"));
 
-		Debugger.debug("[Reloader] Finished reloading took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}
 
 	@Command(

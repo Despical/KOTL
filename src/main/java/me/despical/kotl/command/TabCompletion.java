@@ -19,12 +19,11 @@
 package me.despical.kotl.command;
 
 import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.CommandFramework;
 import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
+import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
@@ -38,18 +37,18 @@ import java.util.stream.Collectors;
  */
 public class TabCompletion {
 
-	public CommandFramework commandFramework;
+	public Main plugin;
 
-	public TabCompletion(CommandFramework commandFramework) {
-		this.commandFramework = commandFramework;
-		this.commandFramework.registerCommands(this);
+	public TabCompletion(Main plugin) {
+		this.plugin = plugin;
+		this.plugin.getCommandFramework().registerCommands(this);
 	}
 
 	@Completer(
 		name = "kotl"
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
-		List<String> completions = new ArrayList<>(), commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
 		String[] args = arguments.getArguments();
 
 		if (args.length == 1) {
@@ -66,7 +65,7 @@ public class TabCompletion {
 			}
 
 			if (args[0].equalsIgnoreCase("stats")) {
-				return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
 			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());

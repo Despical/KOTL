@@ -21,11 +21,11 @@ package me.despical.kotl.arena;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handler.hologram.Hologram;
-import me.despical.kotl.util.Debugger;
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -65,7 +65,7 @@ public class Arena {
 		this.id = id;
 		this.scoreboardManager = new ScoreboardManager(this, plugin);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
 			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
 				return;
 			}
@@ -263,7 +263,7 @@ public class Arena {
 		Location location = getEndLocation();
 
 		if (location == null) {
-			Debugger.sendConsoleMessage("&cCouldn't teleport " + player.getName() + " to end location!");
+			LogUtils.sendConsoleMessage("&cCouldn't teleport " + player.getName() + " to end location!");
 			return;
 		}
 
@@ -279,7 +279,7 @@ public class Arena {
 			return;
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSSBAR_ENABLED)) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
 			return;
 		}
 

@@ -30,7 +30,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.regex.Pattern;
 
 /**
  * @author Despical
@@ -47,7 +46,7 @@ public class ChatEvents implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public void onChatInGame(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		Arena arena = ArenaRegistry.getArena(player);
@@ -79,11 +78,10 @@ public class ChatEvents implements Listener {
 
 	private String formatChatPlaceholders(String message, Player player, String saidMessage) {
 		String formatted = message;
-
 		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
 
-		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			formatted = PlaceholderAPI.setPlaceholders(player, formatted);
 		}
 

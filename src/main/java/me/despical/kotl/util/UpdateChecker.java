@@ -50,8 +50,7 @@ import java.util.regex.Pattern;
  */
 public final class UpdateChecker {
 
-    private static final String USER_AGENT = "CHOCO-update-checker";
-    private static final String UPDATE_URL = "https://api.spiget.org/v2/resources/%d/versions?size=1&sort=-releaseDate";
+    private static final String USER_AGENT = "CHOCO-update-checker", UPDATE_URL = "https://api.spiget.org/v2/resources/%d/versions?size=1&sort=-releaseDate";
     private static final Pattern DECIMAL_SCHEME_PATTERN = Pattern.compile("\\d+(?:\\.\\d+)*");
     public static final VersionScheme VERSION_SCHEME_DECIMAL = (first, second) -> {
         String[] firstSplit = splitVersionInfo(first), secondSplit = splitVersionInfo(second);

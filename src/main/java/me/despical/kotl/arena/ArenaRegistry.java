@@ -21,9 +21,9 @@ package me.despical.kotl.arena;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.handler.hologram.Hologram;
-import me.despical.kotl.util.Debugger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -59,31 +59,31 @@ public class ArenaRegistry {
 	}
 
 	public static void registerArena(Arena arena) {
-		Debugger.debug("Registering new game instance {0}", arena.getId());
+		LogUtils.log("Registering new game instance {0}", arena.getId());
 		arenas.add(arena);
 	}
 
 	public static void unregisterArena(Arena arena) {
-		Debugger.debug("Unregistering game instance {0}", arena.getId());
+		LogUtils.log("Unregistering game instance {0}", arena.getId());
 		arenas.remove(arena);
 	}
 
 	public static void registerArenas() {
-		Debugger.debug("Arena registration started.");
+		LogUtils.log("Arena registration started.");
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
 		
 		arenas.clear();
 
 		if (!config.contains("instances")) {
-			Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
 			return;
 		}
 
 		ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class ArenaRegistry {
 			arena.setHologramLocation(hologram.getLocation());
 
 			if (LocationSerializer.fromString(config.getString(s + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
-				Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
+				LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
 				config.set(s + "plateLocation", LocationSerializer.SERIALIZED_LOCATION);
 				config.set(s + "isdone", false);
 				arena.setReady(false);
@@ -117,7 +117,7 @@ public class ArenaRegistry {
 			}
 
 			if (!config.getBoolean(s + "isdone")) {
-				Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
 				config.set(s + "isdone", false);
 				arena.setReady(false);
 
@@ -127,11 +127,11 @@ public class ArenaRegistry {
 			}
 
 			registerArena(arena);
-			Debugger.sendConsoleMessage(plugin.getChatManager().message("Validator.Instance-Started").replace("%arena%", id));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Instance-Started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
 
-		Debugger.debug("Arenas registration completed, took {0} ms.", System.currentTimeMillis() - start);
+		LogUtils.log("Arenas registration completed, took {0} ms.", System.currentTimeMillis() - start);
 	}
 
 	public static Set<Arena> getArenas() {

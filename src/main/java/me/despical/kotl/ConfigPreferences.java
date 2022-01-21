@@ -29,10 +29,12 @@ import java.util.Map;
 public class ConfigPreferences {
 
 	private final Main plugin;
+	private final boolean papiEnabled;
 	private final Map<Option, Boolean> options = new HashMap<>();
 
 	public ConfigPreferences(Main plugin) {
 		this.plugin = plugin;
+		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 
 		loadOptions();
 	}
@@ -47,8 +49,12 @@ public class ConfigPreferences {
 		}
 	}
 
+	public boolean isPapiEnabled() {
+		return papiEnabled;
+	}
+
 	public enum Option {
-		BOSSBAR_ENABLED("Boss-Bar-Enabled"), CHAT_FORMAT_ENABLED("Chat-Format-Enabled"),
+		BOSS_BAR_ENABLED("Boss-Bar-Enabled"), CHAT_FORMAT_ENABLED("Chat-Format-Enabled"),
 		CLEAR_EFFECTS("Clear-Effects"), CLEAR_INVENTORY("Clear-Inventory", false),
 		DATABASE_ENABLED("Database-Activated", false), DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"),
 		DISABLE_FALL_DAMAGE("Disable-Fall-Damage"), INVENTORY_MANAGER_ENABLED("Inventory-Manager"),

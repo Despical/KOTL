@@ -98,7 +98,7 @@ public class ScoreboardManager {
 		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE)));
 		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED)));
 
-		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
 		}
 

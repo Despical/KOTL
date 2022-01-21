@@ -20,9 +20,9 @@ package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
-import me.despical.kotl.util.Debugger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -54,8 +54,8 @@ public class MysqlManager implements UserDatabase {
 					+ ");");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				Debugger.sendConsoleMessage("Cannot save contents to MySQL database!");
-				Debugger.sendConsoleMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
+				LogUtils.sendConsoleMessage("Cannot save contents to MySQL database!");
+				LogUtils.sendConsoleMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
 			}
 		});
 	}
@@ -65,7 +65,7 @@ public class MysqlManager implements UserDatabase {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			String query = "UPDATE " + tableName + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';";
 			database.executeUpdate(query);
-			Debugger.debug("Executed MySQL: " + query);
+			LogUtils.log("Executed MySQL: " + query);
 		});
 	}
 
@@ -96,7 +96,7 @@ public class MysqlManager implements UserDatabase {
 				ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (rs.next()) {
-					Debugger.debug("MySQL Stats | Player {0} already exist. Getting Stats...", name);
+					LogUtils.log("MySQL Stats | Player {0} already exist. Getting Stats...", name);
 
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
@@ -104,7 +104,7 @@ public class MysqlManager implements UserDatabase {
 						user.setStat(stat, rs.getInt(stat.getName()));
 					}
 				} else {
-					Debugger.debug("MySQL Stats | Player {0} does not exist. Creating new one...", name);
+					LogUtils.log("MySQL Stats | Player {0} does not exist. Creating new one...", name);
 					statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + name + "');");
 
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

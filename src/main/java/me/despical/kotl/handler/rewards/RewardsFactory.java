@@ -20,11 +20,11 @@ package me.despical.kotl.handler.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.util.Debugger;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -76,9 +76,9 @@ public class RewardsFactory {
 					case SCRIPT:
 						ScriptEngine engine = new ScriptEngine();
 
+						engine.setValue("arena", arena);
 						engine.setValue("player", player);
 						engine.setValue("server", plugin.getServer());
-						engine.setValue("arena", arena);
 						engine.execute(command);
 						break;
 					default:
@@ -102,7 +102,7 @@ public class RewardsFactory {
 			return;
 		}
 
-		Debugger.debug("[Rewards Factory] Starting rewards registration");
+		LogUtils.log("[Rewards Factory] Starting rewards registration");
 
 		long start = System.currentTimeMillis();
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
@@ -113,6 +113,6 @@ public class RewardsFactory {
 			}
 		}
 
-		Debugger.debug("[Rewards Factory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
 	}
 }

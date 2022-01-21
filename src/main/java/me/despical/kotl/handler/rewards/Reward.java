@@ -18,7 +18,7 @@
 
 package me.despical.kotl.handler.rewards;
 
-import me.despical.kotl.util.Debugger;
+import me.despical.commons.util.LogUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -52,7 +52,7 @@ public class Reward {
 			int loc = processedCode.indexOf(")");
 
 			if (loc == -1) {
-				Debugger.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
+				LogUtils.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);
 				this.chance = 101;
 				return;
 			}
@@ -86,16 +86,10 @@ public class Reward {
 	}
 
 	public enum RewardType {
-		WIN("win"), LOSE("lose");
-
-		private final String path;
-
-		RewardType(String path) {
-			this.path = path;
-		}
+		WIN, LOSE;
 
 		public String getPath() {
-			return "rewards." + path;
+			return "rewards." + name().toLowerCase();
 		}
 	}
 

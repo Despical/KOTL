@@ -23,7 +23,6 @@ import java.util.Set;
 
 /**
  * @author Despical
- * @since 1.0.7-beta
  * <p>
  * Created at 01.11.2020
  */

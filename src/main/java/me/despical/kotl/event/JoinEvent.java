@@ -52,28 +52,16 @@ public class JoinEvent implements Listener {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
-	}
-	
-	@EventHandler
-	public void onJoinCheckVersion(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
 
 		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !player.hasPermission("kotl.updatenotify")) {
 			return;
 		}
 
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (!result.requiresUpdate()) {
-				return;
-			}
-
-			if (result.getNewestVersion().contains("b")) {
-				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound a beta update: v" + result.getNewestVersion()));
-			} else {
+		UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
+			if (result.requiresUpdate()) {
 				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion()));
+				player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));
 			}
-
-			player.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));
-		}), 25);
+		});
 	}
 }

@@ -28,6 +28,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.JavaVersion;
+import me.despical.commons.util.LogUtils;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;
@@ -76,7 +77,10 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		Debugger.setEnabled(this);
+		if (getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug-Messages")) {
+			LogUtils.enableLogging();
+			LogUtils.setLoggerName("KOTL");
+		}
 
 		if ((forceDisable = !validateIfPluginShouldStart())) {
 			getServer().getPluginManager().disablePlugin(this);
@@ -86,11 +90,11 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		exceptionLogHandler.setMainPackage("me.despical.kotl");
 		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (Invite link: https://discordapp.com/invite/Vhyy4HA) with the following error given above!");
+		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Create an issue on our GitHub repo with the following error given above!");
 
 		saveDefaultConfig();
 
-		Debugger.debug("Initialization started!");
+		LogUtils.log("Initialization started!");
 
 		long start = System.currentTimeMillis();
 		
@@ -99,26 +103,26 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		Debugger.debug("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
+		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_17_R1)) {
-			Debugger.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
-			Debugger.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_18_R1)) {
+			LogUtils.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
+			LogUtils.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
 		}
 
 		if (JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
-			Debugger.sendConsoleMessage("&cThis plugin won't support Java 8 in future updates.");
-			Debugger.sendConsoleMessage("&cSo, maybe consider to update your version, right?");
+			LogUtils.sendConsoleMessage("&cThis plugin won't support Java 8 in future updates.");
+			LogUtils.sendConsoleMessage("&cSo, maybe consider to update your version, right?");
 		}
 
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			Debugger.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
-			Debugger.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
+			LogUtils.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
+			LogUtils.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
 			return false;
 		}
 
@@ -131,7 +135,7 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
-		Debugger.debug("System disable initialized");
+		LogUtils.log("System disable initialized");
 		long start = System.currentTimeMillis();
 		
 		getServer().getLogger().removeHandler(exceptionLogHandler);
@@ -163,7 +167,8 @@ public class Main extends JavaPlugin {
 			arena.deleteHologram();
 		}
 
-		Debugger.debug("System disable finished took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("System disable finished took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.disableLogging();
 	}
 	
 	private void initializeClasses() {
@@ -185,7 +190,7 @@ public class Main extends JavaPlugin {
 
 		new AdminCommands(this);
 		new PlayerCommands(this);
-		new TabCompletion(commandFramework);
+		new TabCompletion(this);
 
 		new ChatEvents(this);
 		new Events(this);
@@ -197,16 +202,16 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void registerSoftDependencies() {
-		Debugger.debug("Hooking into soft dependencies");
+		LogUtils.log("Hooking into soft dependencies");
 
 		startPluginMetrics();
 
-		if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-			Debugger.debug("Hooking into PlaceholderAPI.");
+		if (configPreferences.isPapiEnabled()) {
+			LogUtils.log("Hooking into PlaceholderAPI.");
 			new PlaceholderManager(this);
 		}
 
-		Debugger.debug("Hooked into soft dependencies.");
+		LogUtils.log("Hooked into soft dependencies.");
 	}
 	
 	private void startPluginMetrics() {
@@ -237,19 +242,9 @@ public class Main extends JavaPlugin {
 				return;
 			}
 
-			if (result.getNewestVersion().contains("b")) {
-				if (getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true)) {
-					Debugger.sendConsoleMessage("[KOTL] Found a new beta version available: v" + result.getNewestVersion());
-					Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-					Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
-				}
-
-				return;
-			}
-
-			Debugger.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
-			Debugger.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-			Debugger.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
+			LogUtils.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
+			LogUtils.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
+			LogUtils.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 		});
 	}
 	
@@ -298,11 +293,13 @@ public class Main extends JavaPlugin {
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
+					int val = user.getStat(stat);
+
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(stat.getName()).append("'='").append(user.getStat(stat));
+						update.append(stat.getName()).append("'='").append(val);
 					}
 
-					update.append(", ").append(stat.getName()).append("'='").append(user.getStat(stat));
+					update.append(", ").append(stat.getName()).append("'='").append(val);
 				}
 
 				String finalUpdate = update.toString();

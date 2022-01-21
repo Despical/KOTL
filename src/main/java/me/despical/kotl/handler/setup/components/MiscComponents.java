@@ -43,7 +43,7 @@ public class MiscComponents implements SetupComponent {
 		Arena arena = setupInventory.getArena();
 		String path = "instances." + arena.getId() + ".";
 
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.ARMOR_STAND)
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ARMOR_STAND)
 			.name("&e&lSet King Hologram")
 			.lore("&7Click to set king's hologram location")
 			.lore("&7on the place where you are standing.")
@@ -64,7 +64,7 @@ public class MiscComponents implements SetupComponent {
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 4, 1);
 		
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.FILLED_MAP)
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.FILLED_MAP)
 			.name(chatManager.coloredRawMessage("&e&lView Setup Video"))
 			.lore("&7Having problems with setup or wanna know")
 			.lore("&7some useful tips? Click to get video link!")

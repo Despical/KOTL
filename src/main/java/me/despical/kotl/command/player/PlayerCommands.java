@@ -71,7 +71,7 @@ public class PlayerCommands {
 	@Command(
 		name = "kotl"
 	)
-	public void kotlCommand(CommandArguments arguments) {
+	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
 			arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
 

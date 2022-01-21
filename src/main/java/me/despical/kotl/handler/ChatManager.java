@@ -38,18 +38,14 @@ import java.util.List;
 public class ChatManager {
 
 	private String prefix;
-	
-	private final Main plugin;
 	private FileConfiguration config;
-	
+
+	private final Main plugin;
+
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
 		this.prefix = message("In-Game.Plugin-Prefix");
-	}
-	
-	public String getPrefix() {
-		return prefix;
 	}
 
 	public String coloredRawMessage(String message) {
@@ -72,7 +68,7 @@ public class ChatManager {
 		String returnString = config.getString(path);
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 
-		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
@@ -85,7 +81,7 @@ public class ChatManager {
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = formatPlaceholders(returnString, arena);
 
-		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 

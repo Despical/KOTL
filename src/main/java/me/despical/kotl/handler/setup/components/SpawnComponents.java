@@ -64,7 +64,7 @@ public class SpawnComponents implements SetupComponent {
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 1, 1);
 		
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE)
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE)
 			.name("&e&lSet Plate Location")
 			.lore("&7Click to set plate location on")
 			.lore("&7the place where you are standing.")
@@ -85,7 +85,7 @@ public class SpawnComponents implements SetupComponent {
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 2, 1);
 
-		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
 			.name("&e&lSet Arena Region")
 			.lore("&7Click to set arena's region")
 			.lore("&7with the cuboid selector.")
