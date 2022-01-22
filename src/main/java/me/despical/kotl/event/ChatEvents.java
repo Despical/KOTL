@@ -84,7 +84,7 @@ public class ChatEvents implements Listener {
 		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
 
-		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			formatted = PlaceholderAPI.setPlaceholders(player, formatted);
 		}
 
