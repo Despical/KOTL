@@ -29,6 +29,7 @@ import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.JavaVersion;
 import me.despical.commons.util.LogUtils;
+import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;

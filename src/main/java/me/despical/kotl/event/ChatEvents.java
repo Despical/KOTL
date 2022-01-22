@@ -30,6 +30,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.regex.Pattern;
+
 
 /**
  * @author Despical
@@ -46,13 +48,14 @@ public class ChatEvents implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onChatInGame(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		Arena arena = ArenaRegistry.getArena(player);
+		boolean disabledSeparateChat = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT);
 
 		if (arena == null) {
-			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+			if (!disabledSeparateChat) {
 				ArenaRegistry.getArenas().forEach(loopArena -> loopArena.getPlayers().forEach(p -> event.getRecipients().remove(p)));
 			}
 
@@ -60,9 +63,9 @@ public class ChatEvents implements Listener {
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-			String message = formatChatPlaceholders(plugin.getChatManager().message("In-Game.Game-Chat-Format"), player, event.getMessage());
+			String message = formatChatPlaceholders(plugin.getChatManager().message("In-Game.Chat-Format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
 
-			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+			if (!disabledSeparateChat) {
 				event.setCancelled(true);
 
 				for (Player p : arena.getPlayers()) {
@@ -81,7 +84,7 @@ public class ChatEvents implements Listener {
 		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
 
-		if (plugin.getConfigPreferences().isPapiEnabled()) {
+		if (plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			formatted = PlaceholderAPI.setPlaceholders(player, formatted);
 		}
 

@@ -124,7 +124,6 @@ public class AdminCommands {
 		permission = "kotl.admin.delete",
 		usage = "/kotl delete <arena>",
 		desc = "Deletes arena with the current configuration",
-		cooldown = 5,
 		min = 1,
 		senderType = Command.SenderType.PLAYER
 	)

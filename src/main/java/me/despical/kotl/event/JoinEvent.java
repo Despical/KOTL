@@ -19,6 +19,7 @@
 package me.despical.kotl.event;
 
 import me.despical.commons.serializer.InventorySerializer;
+import me.despical.commons.util.UpdateChecker;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.util.UpdateChecker;
 
 /**
  * @author Despical
