@@ -60,7 +60,7 @@ public class ConfigPreferences {
 		DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"), DISABLE_FALL_DAMAGE("Disable-Fall-Damage"),
 		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), INVENTORY_MANAGER_ENABLED("Inventory-Manager"), JOIN_NOTIFY("Join-Notify"),
 		LEAVE_NOTIFY("Leave-Notify"), REWARDS_ENABLED("Rewards-Enabled", false),
-		SCOREBOARD_ENABLED("Scoreboard-Enabled", false), UPDATE_NOTIFIER_ENABLED("Update-Notifier.Enabled");
+		SCOREBOARD_ENABLED("Scoreboard-Enabled"), UPDATE_NOTIFIER_ENABLED("Update-Notifier.Enabled");
 
 		private final String path;
 		private final boolean def;

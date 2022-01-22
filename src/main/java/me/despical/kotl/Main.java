@@ -94,12 +94,12 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Create an issue on our GitHub repo with the following error given above!");
 
 		saveDefaultConfig();
+		configPreferences = new ConfigPreferences(this);
 
 		LogUtils.log("Initialization started!");
 
 		long start = System.currentTimeMillis();
-		
-		configPreferences = new ConfigPreferences(this);
+
 		setupFiles();
 		initializeClasses();
 		checkUpdate();

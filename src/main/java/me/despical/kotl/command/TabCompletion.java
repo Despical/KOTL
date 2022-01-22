@@ -49,22 +49,20 @@ public class TabCompletion {
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
 		List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-		String[] args = arguments.getArguments();
+		commands.remove("kotl");
+
+		String args[] = arguments.getArguments(), arg = args[0];
 
 		if (args.length == 1) {
-			StringUtil.copyPartialMatches(args[0], commands, completions);
+			StringUtil.copyPartialMatches(arg, commands, completions);
 		}
 
 		if (args.length == 2) {
-			if (Collections.contains(args[0], "create", "help", "list", "reload", "randomjoin", "stop")) {
-				return null;
-			}
-
-			if (args[0].equalsIgnoreCase("top")) {
+			if (arg.equalsIgnoreCase("top")) {
 				return Collections.listOf("tours_played", "score");
 			}
 
-			if (args[0].equalsIgnoreCase("stats")) {
+			if (arg.equalsIgnoreCase("stats")) {
 				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
