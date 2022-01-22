@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2021 Despical and contributors
+ * Copyright (C) 2022 Despical
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -135,7 +135,7 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
-		LogUtils.log("System disable initialized");
+		LogUtils.log("System disable initialized.");
 		long start = System.currentTimeMillis();
 		
 		getServer().getLogger().removeHandler(exceptionLogHandler);
@@ -167,7 +167,7 @@ public class Main extends JavaPlugin {
 			arena.deleteHologram();
 		}
 
-		LogUtils.log("System disable finished took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("System disable finished took {0} ms.", System.currentTimeMillis() - start);
 		LogUtils.disableLogging();
 	}
 	
@@ -202,7 +202,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void registerSoftDependencies() {
-		LogUtils.log("Hooking into soft dependencies");
+		LogUtils.log("Hooking into soft dependencies.");
 
 		startPluginMetrics();
 
@@ -221,30 +221,22 @@ public class Main extends JavaPlugin {
 			return;
 		}
 
-		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> String.valueOf(configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED))));
+		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix));
-		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> {
-			if (getConfig().getBoolean("Update-Notifier.Enabled", true)) {
-				return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Enabled with beta notifier" : "Enabled";
-			}
-
-			return getConfig().getBoolean("Update-Notifier.Notify-Beta-Versions", true) ? "Beta notifier only" : "Disabled";
-		}));
+		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 	
 	private void checkUpdate() {
-		if (!getConfig().getBoolean("Update-Notifier.Enabled", true)) {
+		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) {
 			return;
 		}
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (!result.requiresUpdate()) {
-				return;
+			if (result.requiresUpdate()) {
+				LogUtils.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
+				LogUtils.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
+				LogUtils.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 			}
-
-			LogUtils.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
-			LogUtils.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-			LogUtils.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
 		});
 	}
 	

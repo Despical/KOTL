@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 1.2.1)      | #
+# |     King of the Ladder by Despical (Version 2.0.0)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -77,8 +77,5 @@ Leave-Notify: true
 Update-Notifier:
   # Should we check for updates on plugin start/after admin join?
   Enabled: true
-  # Should we inform you when beta version is out?
-  # Also note that BETA IS NOT ALWAYS AS STABLE AS NORMAL RELEASE!
-  Notify-Beta-Versions: true
 
 # No way! You've reached the end! But... where's the dragon!?

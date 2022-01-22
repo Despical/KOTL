@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2021 Despical and contributors
+ * Copyright (C) 2022 Despical
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ public class JoinEvent implements Listener {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getConfig().getBoolean("Update-Notifier.Enabled", true) || !player.hasPermission("kotl.updatenotify")) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) || !player.hasPermission("kotl.updatenotify")) {
 			return;
 		}
 

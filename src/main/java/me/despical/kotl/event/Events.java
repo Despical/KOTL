@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2021 Despical and contributors
+ * Copyright (C) 2022 Despical
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ public class Events implements Listener {
 			return;
 		}
 
-		if (!plugin.getConfig().getBoolean("Block-Commands-In-Game")) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
 			return;
 		}
 
@@ -79,7 +79,7 @@ public class Events implements Listener {
 		}
 
 		event.setCancelled(true);
-		player.sendMessage(plugin.getChatManager().prefixedMessage("In-Game.Only-Command-Ingame-Is-Leave"));
+		player.sendMessage(plugin.getChatManager().prefixedMessage("In-Game.Only-Command-Is-Leave"));
 	}
 	
 	@EventHandler

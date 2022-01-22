@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2021 Despical and contributors
+ * Copyright (C) 2022 Despical
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,12 +54,13 @@ public class ConfigPreferences {
 	}
 
 	public enum Option {
-		BOSS_BAR_ENABLED("Boss-Bar-Enabled"), CHAT_FORMAT_ENABLED("Chat-Format-Enabled"),
-		CLEAR_EFFECTS("Clear-Effects"), CLEAR_INVENTORY("Clear-Inventory", false),
-		DATABASE_ENABLED("Database-Activated", false), DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"),
-		DISABLE_FALL_DAMAGE("Disable-Fall-Damage"), INVENTORY_MANAGER_ENABLED("Inventory-Manager"),
-		JOIN_NOTIFY("Join-Notify"), LEAVE_NOTIFY("Leave-Notify"), SCOREBOARD_ENABLED("Scoreboard-Enabled", false),
-		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), REWARDS_ENABLED("Rewards-Enabled", false);
+		BLOCK_COMMANDS("Block-Commands-In-Game", false), BOSS_BAR_ENABLED("Boss-Bar-Enabled"),
+		CHAT_FORMAT_ENABLED("Chat-Format-Enabled"), CLEAR_EFFECTS("Clear-Effects"),
+		CLEAR_INVENTORY("Clear-Inventory", false), DATABASE_ENABLED("Database-Activated", false),
+		DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"), DISABLE_FALL_DAMAGE("Disable-Fall-Damage"),
+		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), INVENTORY_MANAGER_ENABLED("Inventory-Manager"), JOIN_NOTIFY("Join-Notify"),
+		LEAVE_NOTIFY("Leave-Notify"), REWARDS_ENABLED("Rewards-Enabled", false),
+		SCOREBOARD_ENABLED("Scoreboard-Enabled", false), UPDATE_NOTIFIER_ENABLED("Update-Notifier.Enabled");
 
 		private final String path;
 		private final boolean def;
