@@ -65,19 +65,18 @@ public class ChatManager {
 	}
 	
 	public String message(String path, Player player) {
-		String returnString = config.getString(path);
+		String returnString = message(path);
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 
 		if (plugin.getConfigPreferences().isPapiEnabled()) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
-		return coloredRawMessage(returnString);
+		return returnString;
 	}
 
 	private String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
-
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = formatPlaceholders(returnString, arena);
 
