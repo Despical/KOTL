@@ -140,7 +140,7 @@ public class ArenaEvents implements Listener {
 			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
 					arena.doBarAction(Arena.BarAction.REMOVE, player);
-					arena.broadcastMessage(plugin.getChatManager().prefixedMessage("In-Game.Clicked-Death-Block").replace("%player%", player.getName()));
+					arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 

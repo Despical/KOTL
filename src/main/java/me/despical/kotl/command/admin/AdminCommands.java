@@ -80,7 +80,7 @@ public class AdminCommands {
 		Player player = arguments.getSender();
 		String arg = arguments.getArgument(0);
 
-		if (ArenaRegistry.isArena(arg) || config.contains("instances." + arg)) {
+		if (ArenaRegistry.isArena(arg)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /kotl list"));
 			return;
@@ -132,14 +132,14 @@ public class AdminCommands {
 		Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
 
 		if (arena == null) {
-			sender.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
+			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
 		if (!confirmations.contains(sender)) {
 			confirmations.add(sender);
 			plugin.getServer().getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 200);
-			sender.sendMessage(chatManager.prefixedMessage("Commands.Are-You-Sure"));
+			sender.sendMessage(chatManager.prefixedMessage("commands.are_you_sure"));
 			return;
 		}
 
@@ -174,7 +174,7 @@ public class AdminCommands {
 		config.set("instances." + arguments.getArgument(0), null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		sender.sendMessage(chatManager.prefixedMessage("Commands.Removed-Game-Instance"));
+		sender.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
 	}
 
 	@Command(
@@ -190,7 +190,7 @@ public class AdminCommands {
 		Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
 
 		if (arena == null) {
-			player.sendMessage(chatManager.prefixedMessage("Commands.No-Arena-Like-That"));
+			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
@@ -239,7 +239,7 @@ public class AdminCommands {
 		}
 
 		ArenaRegistry.registerArenas();
-		sender.sendMessage(chatManager.prefixedMessage("Commands.Success-Reload"));
+		sender.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 
 		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}
@@ -296,11 +296,11 @@ public class AdminCommands {
 	)
 	public void listCommand(CommandArguments arguments) {
 		if (ArenaRegistry.getArenas().isEmpty()) {
-			arguments.sendMessage(chatManager.prefixedMessage("Commands.List-Command.No-Arenas-Created"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
 			return;
 		}
 
 		Set<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toSet());
-		arguments.sendMessage(chatManager.prefixedMessage("Commands.List-Command.Format").replace("%list%", String.join(", ", arenas)));
+		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", String.join(", ", arenas)));
 	}
 }

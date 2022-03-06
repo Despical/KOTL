@@ -70,7 +70,7 @@ public class Arena {
 				return;
 			}
 
-			this.gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("Bossbar.Game-Info"), BarColor.BLUE, BarStyle.SOLID);
+			this.gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.BLUE, BarStyle.SOLID);
 		}
 	}
 	
@@ -86,7 +86,6 @@ public class Arena {
 	 * Get arena identifier used to get arenas by string.
 	 *
 	 * @return arena name
-	 * @see ArenaRegistry#getArena(String)
 	 */
 	public String getId() {
 		return id;
@@ -174,7 +173,7 @@ public class Arena {
 
 	@NotNull
 	public String getKingName() {
-		return king == null ? plugin.getChatManager().message("In-Game.There-Is-No-King") : king.getName();
+		return king == null ? plugin.getChatManager().message("in_game.there_is_no_king") : king.getName();
 	}
 	
 	/**

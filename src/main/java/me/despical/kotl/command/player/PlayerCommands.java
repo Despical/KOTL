@@ -63,7 +63,7 @@ public class PlayerCommands {
 			List<StringMatcher.Match> matches = StringMatcher.match(arguments.getArgument(0), plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + '.', "")).collect(Collectors.toList()));
 
 			if (!matches.isEmpty()) {
-				arguments.sendMessage(chatManager.message("Commands.Did-You-Mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+				arguments.sendMessage(chatManager.message("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
 			}
 		});
 	}
@@ -90,21 +90,22 @@ public class PlayerCommands {
 		Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? Bukkit.getPlayer(arguments.getArgument(0)) : sender;
 
 		if (player == null) {
-			arguments.sendMessage(chatManager.prefixedMessage("Commands.Player-Not-Found"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
 			return;
 		}
 
 		User user = plugin.getUserManager().getUser(player);
+		String path = "commands.stats_command.";
 
 		if (player.equals(sender)) {
-			arguments.sendMessage(chatManager.message("Commands.Stats-Command.Header", player));
+			arguments.sendMessage(chatManager.message(path + "header", player));
 		} else {
-			arguments.sendMessage(chatManager.message("Commands.Stats-Command.Header-Other", player));
+			arguments.sendMessage(chatManager.message(path + "header_other", player));
 		}
 
-		sender.sendMessage(chatManager.message("Commands.Stats-Command.Tours-Played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-		sender.sendMessage(chatManager.message("Commands.Stats-Command.Score", player) + user.getStat(StatsStorage.StatisticType.SCORE));
-		sender.sendMessage(chatManager.message("Commands.Stats-Command.Footer", player));
+		sender.sendMessage(chatManager.message(path + "tours_played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+		sender.sendMessage(chatManager.message(path + "score", player) + user.getStat(StatsStorage.StatisticType.SCORE));
+		sender.sendMessage(chatManager.message(path + "footer", player));
 	}
 
 	@Command(
@@ -114,20 +115,20 @@ public class PlayerCommands {
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage(chatManager.prefixedMessage("Commands.Statistics.Type-Name"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.type_name"));
 			return;
 		}
 
 		try {
 			printLeaderboard(arguments.getSender(), StatsStorage.StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
 		} catch (IllegalArgumentException exception) {
-			arguments.sendMessage(chatManager.prefixedMessage("Commands.Statistics.Invalid-Name"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.invalid_name"));
 		}
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
 		Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
-		sender.sendMessage(plugin.getChatManager().message("Commands.Statistics.Header"));
+		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
 
 		String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
@@ -158,7 +159,7 @@ public class PlayerCommands {
 	}
 
 	private String formatMessage(String statisticName, String playerName, int position, int value) {
-		String message = chatManager.message("Commands.Statistics.Format");
+		String message = chatManager.message("commands.statistics.format");
 
 		message = StringUtils.replace(message, "%position%", Integer.toString(position));
 		message = StringUtils.replace(message, "%name%", playerName);

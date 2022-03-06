@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # +---------------------------------------------------------+ #
-# |     King of the Ladder by Despical (Version 2.0.0)      | #
+# |     King of the Ladder by Despical (Version 2.0.1)      | #
 # +---------------------------------------------------------+ #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -21,12 +21,12 @@ Scoreboard-Enabled: true
 # Enable this option when you're using MySQL, otherwise it won't work.
 # Be careful when changing this because there is NO migrator between
 # flat file and MySQL for player stats.
-Database-Activated: false
+Database-Enabled: false
 
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
-Inventory-Manager: true
+Inventory-Manager-Enabled: true
 
 # Should we clear player's inventory on joining and leaving the game area.
 # Also disable InventoryManager option before enabling this option.
@@ -58,15 +58,15 @@ Whitelisted-Commands:
 Rewards-Enabled: false
 
 # Should we block every not King of the Ladder associated commands in game?
-Block-Commands-In-Game: true
+Block-Commands: true
 
+# When players click these blocks should we remove them from the game?
+Death-Blocks-Enabled: true
+
+# Blocks which shouldn't you click in game, remove all of them to disable.
 Death-Blocks:
-  # When players click these blocks should we remove them from the game?
-  Enabled: true
-  # Blocks which shouldn't you click in game, remove all of them to disable.
-  Blacklisted-Blocks:
-    - BEDROCK
-    - GLASS
+  - BEDROCK
+  - GLASS
   
 # When player enters the game area should we notify players?
 Join-Notify: true
@@ -74,8 +74,7 @@ Join-Notify: true
 # When player leaves the game area should we notify players?
 Leave-Notify: true
 
-Update-Notifier:
-  # Should we check for updates on plugin start/after admin join?
-  Enabled: true
+# Should we check for updates on plugin start/after admin join?
+Update-Notifier-Enabled:
 
 # No way! You've reached the end! But... where's the dragon!?

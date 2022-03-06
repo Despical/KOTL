@@ -43,11 +43,11 @@ public class ArenaRegistry {
 	private static final Set<Arena> arenas = new HashSet<>();
 
 	public static boolean isInArena(Player player) {
-		return arenas.stream().anyMatch(arena -> arena.getPlayers().contains(player));
+		return getArena(player) != null;
 	}
 
 	public static boolean isArena(String id) {
-		return arenas.stream().anyMatch(loopArena -> loopArena.getId().equalsIgnoreCase(id));
+		return getArena(id) != null;
 	}
 
 	public static Arena getArena(Player p) {
@@ -76,39 +76,39 @@ public class ArenaRegistry {
 		arenas.clear();
 
 		if (!config.contains("instances")) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
 		ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.No-Instances-Created"));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
 			return;
 		}
 
 		for (String id : section.getKeys(false)) {
 			Arena arena;
-			String s = "instances." + id + ".";
+			String path = "instances." + id + ".";
 
-			if (s.contains("default")) {
+			if (path.contains("default")) {
 				continue;
 			}
 
 			arena = new Arena(id);
-			arena.setEndLocation(LocationSerializer.fromString(config.getString(s + "endLocation")));
-			arena.setPlateLocation(LocationSerializer.fromString(config.getString(s + "plateLocation")));
+			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 
-			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(s + "hologramLocation")));
-			hologram.appendLine(plugin.getChatManager().message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
+			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
+			hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
 
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());
 
-			if (LocationSerializer.fromString(config.getString(s + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
-				config.set(s + "plateLocation", LocationSerializer.SERIALIZED_LOCATION);
-				config.set(s + "isdone", false);
+			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
+				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
+				config.set(path + "plateLocation", LocationSerializer.SERIALIZED_LOCATION);
+				config.set(path + "isdone", false);
 				arena.setReady(false);
 
 				registerArena(arena);
@@ -116,9 +116,9 @@ public class ArenaRegistry {
 				continue;
 			}
 
-			if (!config.getBoolean(s + "isdone")) {
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Invalid-Arena-Configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
-				config.set(s + "isdone", false);
+			if (!config.getBoolean(path + "isdone")) {
+				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
+				config.set(path + "isdone", false);
 				arena.setReady(false);
 
 				registerArena(arena);
@@ -127,7 +127,7 @@ public class ArenaRegistry {
 			}
 
 			registerArena(arena);
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("Validator.Instance-Started").replace("%arena%", id));
+			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
 

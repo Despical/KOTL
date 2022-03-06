@@ -34,11 +34,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
  * @since 1.0.0
  * <p>
+ * Created at 20.06.2020
  */
 public class StatsStorage {
 
@@ -48,28 +50,23 @@ public class StatsStorage {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				Statement statement = connection.createStatement();
-				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.getName() + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.getName());
+				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
 				Map<UUID, Integer> column = new HashMap<>();
 
 				while (set.next()) {
-					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.name));
 				}
 
 				return column;
 			} catch (SQLException exception) {
 				LogUtils.log(Level.WARNING, "SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
 				LogUtils.sendConsoleMessage("&cCannot get contents from MySQL database!");
-				LogUtils.sendConsoleMessage("&cCheck configuration of mysql.yml file or disable mysql option in config.yml");
 				return null;
 			}
 		}
 
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		Map<UUID, Integer> stats = new HashMap<>();
-
-		for (String string : config.getKeys(false)) {
-			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
-		}
+		Map<UUID, Integer> stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
 
 		return SortUtils.sortByValue(stats);
 	}
@@ -81,8 +78,8 @@ public class StatsStorage {
 	public enum StatisticType {
 		TOURS_PLAYED("toursplayed"), SCORE("score");
 
-		private final String name;
-		private final boolean persistent;
+		String name;
+		boolean persistent;
 
 		StatisticType(String name) {
 			this(name, true);

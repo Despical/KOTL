@@ -18,7 +18,6 @@
 
 package me.despical.kotl.arena.managers;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.scoreboard.common.EntryBuilder;
 import me.despical.commons.scoreboard.type.Entry;
@@ -27,6 +26,7 @@ import me.despical.commons.scoreboard.type.ScoreboardHandler;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
+import me.despical.kotl.user.User;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
@@ -95,13 +95,12 @@ public class ScoreboardManager {
 		formattedLine = StringUtils.replace(formattedLine, "%arena%", arena.getId());
 		formattedLine = StringUtils.replace(formattedLine, "%players%", Integer.toString(arena.getPlayers().size()));
 		formattedLine = StringUtils.replace(formattedLine, "%king%", arena.getKingName());
-		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE)));
-		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED)));
 
-		if (plugin.getConfigPreferences().isPapiEnabled()) {
-			formattedLine = PlaceholderAPI.setPlaceholders(player, formattedLine);
-		}
+		User user = plugin.getUserManager().getUser(player);
 
+		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
+		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
+		formattedLine = plugin.getChatManager().formatPlaceholders(formattedLine, player);
 		return plugin.getChatManager().coloredRawMessage(formattedLine);
 	}
 }

@@ -207,7 +207,7 @@ public class Main extends JavaPlugin {
 
 		startPluginMetrics();
 
-		if (configPreferences.isPapiEnabled()) {
+		if (chatManager.isPapiEnabled()) {
 			LogUtils.log("Hooking into PlaceholderAPI.");
 			new PlaceholderManager(this);
 		}

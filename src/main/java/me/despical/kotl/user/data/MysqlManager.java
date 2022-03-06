@@ -52,8 +52,8 @@ public class MysqlManager implements UserDatabase {
 					+ "  `score` int(11) NOT NULL DEFAULT '0',\n"
 					+ "  `toursplayed` int(11) NOT NULL DEFAULT '0'\n"
 					+ ");");
-			} catch (SQLException e) {
-				e.printStackTrace();
+			} catch (SQLException exception) {
+				exception.printStackTrace();
 				LogUtils.sendConsoleMessage("Cannot save contents to MySQL database!");
 				LogUtils.sendConsoleMessage("Check configuration of mysql.yml file or disable mysql option in config.yml");
 			}
@@ -96,7 +96,7 @@ public class MysqlManager implements UserDatabase {
 				ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (rs.next()) {
-					LogUtils.log("MySQL Stats | Player {0} already exist. Getting Stats...", name);
+					LogUtils.log("MySQL Stats | Player {0} already exist. Getting stats...", name);
 
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;

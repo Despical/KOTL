@@ -18,6 +18,8 @@
 
 package me.despical.kotl;
 
+import me.despical.commons.string.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,58 +30,36 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-	private final Main plugin;
-	private final boolean papiEnabled;
-	private final Map<Option, Boolean> options = new HashMap<>();
+	private final Map<Option, Boolean> options;
 
 	public ConfigPreferences(Main plugin) {
-		this.plugin = plugin;
-		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+		this.options = new HashMap<>();
 
-		loadOptions();
+		for (Option option : Option.values()) {
+			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
+		}
 	}
 
 	public boolean getOption(Option option) {
 		return options.get(option);
 	}
 
-	private void loadOptions() {
-		for (Option option : Option.values()) {
-			options.put(option, plugin.getConfig().getBoolean(option.getPath(), option.getDefault()));
-		}
-	}
-
-	public boolean isPapiEnabled() {
-		return papiEnabled;
-	}
-
 	public enum Option {
-		BLOCK_COMMANDS("Block-Commands-In-Game", false), BOSS_BAR_ENABLED("Boss-Bar-Enabled"),
-		CHAT_FORMAT_ENABLED("Chat-Format-Enabled"), CLEAR_EFFECTS("Clear-Effects"),
-		CLEAR_INVENTORY("Clear-Inventory", false), DATABASE_ENABLED("Database-Activated", false),
-		DEATH_BLOCKS_ENABLED("Death-Blocks.Enabled"), DISABLE_FALL_DAMAGE("Disable-Fall-Damage"),
-		DISABLE_SEPARATE_CHAT("Disable-Separate-Chat", false), INVENTORY_MANAGER_ENABLED("Inventory-Manager"), JOIN_NOTIFY("Join-Notify"),
-		LEAVE_NOTIFY("Leave-Notify"), REWARDS_ENABLED("Rewards-Enabled", false),
-		SCOREBOARD_ENABLED("Scoreboard-Enabled"), UPDATE_NOTIFIER_ENABLED("Update-Notifier.Enabled");
+		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
+		CLEAR_INVENTORY(false), DATABASE_ENABLED(false), DEATH_BLOCKS_ENABLED(false),
+		DISABLE_FALL_DAMAGE, DISABLE_SEPARATE_CHAT(false), INVENTORY_MANAGER_ENABLED, JOIN_NOTIFY,
+		LEAVE_NOTIFY, REWARDS_ENABLED(false), SCOREBOARD_ENABLED, UPDATE_NOTIFIER_ENABLED(false);
 
-		private final String path;
-		private final boolean def;
+		String path;
+		boolean def;
 
-		Option(String path) {
-			this(path, true);
+		Option() {
+			this(true);
 		}
 
-		Option(String path, boolean def) {
-			this.path = path;
+		Option(boolean def) {
 			this.def = def;
-		}
-
-		public String getPath() {
-			return path;
-		}
-
-		public boolean getDefault() {
-			return def;
+			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(), '-', '.');
 		}
 	}
 }

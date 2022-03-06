@@ -79,7 +79,7 @@ public class Events implements Listener {
 		}
 
 		event.setCancelled(true);
-		player.sendMessage(plugin.getChatManager().prefixedMessage("In-Game.Only-Command-Is-Leave"));
+		player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.only_command_is_leave"));
 	}
 	
 	@EventHandler

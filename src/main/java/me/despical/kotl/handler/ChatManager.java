@@ -37,15 +37,17 @@ import java.util.List;
  */
 public class ChatManager {
 
-	private String prefix;
+	private final Main plugin;
 	private FileConfiguration config;
 
-	private final Main plugin;
+	private final String prefix;
+	private final boolean papiEnabled;
 
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = message("In-Game.Plugin-Prefix");
+		this.prefix = message("in-game.plugin-prefix");
+		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholdersAPI");
 	}
 
 	public String coloredRawMessage(String message) {
@@ -57,18 +59,30 @@ public class ChatManager {
 	}
 
 	public String message(String path) {
+		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
 		return coloredRawMessage(config.getString(path));
 	}
 
 	public String prefixedMessage(String path) {
 		return prefix + message(path);
 	}
-	
+
+	public boolean isPapiEnabled() {
+		return papiEnabled;
+	}
+
 	public String message(String path, Player player) {
 		String returnString = message(path);
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
+		returnString = formatPlaceholders(returnString, player);
 
-		if (plugin.getConfigPreferences().isPapiEnabled()) {
+		return returnString;
+	}
+
+	public String formatPlaceholders(String message, Player player) {
+		String returnString = message;
+
+		if (papiEnabled) {
 			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
 		}
 
@@ -79,10 +93,7 @@ public class ChatManager {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
 		returnString = formatPlaceholders(returnString, arena);
-
-		if (plugin.getConfigPreferences().isPapiEnabled()) {
-			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
-		}
+		returnString = formatPlaceholders(returnString, player);
 
 		return coloredRawMessage(returnString);
 	}
@@ -99,32 +110,31 @@ public class ChatManager {
 	public List<String> getStringList(String path) {
 		return config.getStringList(path);
 	}
-	
+
 	public void broadcastAction(Arena arena, Player player, ActionType action) {
 		String path;
 
 		switch (action) {
 			case JOIN:
-				path = "In-Game.Join";
+				path = "Join";
 				break;
 			case LEAVE:
-				path = "In-Game.Leave";
+				path = "Leave";
 				break;
 			case NEW_KING:
-				path = "In-Game.New-King";
+				path = "New-King";
 
-				arena.getHologram().appendLine(formatMessage(arena, message("In-Game.Last-King-Hologram"), player));
+				arena.getHologram().appendLine(formatMessage(arena, message("in_game.last_king_hologram"), player));
 				break;
 			default:
 				return;
 		}
 
-		arena.broadcastMessage(prefix + formatMessage(arena, message(path), player));
+		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
 	}
-	
+
 	public void reloadConfig() {
 		config = ConfigUtils.getConfig(plugin, "messages");
-		prefix = message("In-Game.Plugin-Prefix");
 	}
 
 	public enum ActionType {

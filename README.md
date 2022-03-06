@@ -3,9 +3,9 @@
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Despical/KOTL/KOTL%20Build)
 
-King of the Ladder is an old Minecraft mini game. Each player have to kick other players out of the ladders
-to be the king. The king tries to stand on the top of the ladders while not letting others to climb and punching
-them out of the way!
+King of the Ladder is an old Minecraft mini game that supports almost every version. Each player have to kick other players
+out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
+punching them out of the way!
 
 ## Documentation
 More information can be found on the [wiki page](https://github.com/Despical/KOTL/wiki). The [Javadoc](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html) can be browsed.
@@ -26,7 +26,7 @@ To add this project as a dependency to your project, add the following to your p
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -39,7 +39,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.0.0;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.0.1;
 }
 ```
 
@@ -65,6 +65,6 @@ You can learn more about contributing via GitHub in [contribution guidelines](CO
 If you want to build this project from source code, run the following from Git Bash:
 ```
 git clone https://www.github.com/Despical/KOTL.git && cd KOTL
-mvn clean package
+mvn clean package -Dmaven.javadoc.skip=true (to not generate docs)
 ```
 Also don't forget to install Maven before building.

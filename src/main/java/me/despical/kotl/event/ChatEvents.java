@@ -18,7 +18,6 @@
 
 package me.despical.kotl.event;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
@@ -63,7 +62,7 @@ public class ChatEvents implements Listener {
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-			String message = formatChatPlaceholders(plugin.getChatManager().message("In-Game.Chat-Format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
+			String message = formatChatPlaceholders(plugin.getChatManager().message("in_game.chat_format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
 
 			if (!disabledSeparateChat) {
 				event.setCancelled(true);
@@ -81,13 +80,10 @@ public class ChatEvents implements Listener {
 
 	private String formatChatPlaceholders(String message, Player player, String saidMessage) {
 		String formatted = message;
+
 		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
-
-		if (plugin.getConfigPreferences().isPapiEnabled()) {
-			formatted = PlaceholderAPI.setPlaceholders(player, formatted);
-		}
-
+		formatted = plugin.getChatManager().formatPlaceholders(formatted, player);
 		return plugin.getChatManager().coloredRawMessage(formatted);
 	}
 }
