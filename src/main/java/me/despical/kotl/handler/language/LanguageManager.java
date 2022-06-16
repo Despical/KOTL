@@ -46,6 +46,9 @@ public class LanguageManager {
 	}
 
 	private void init() {
+		//noinspection ConfusingArgumentToVarargsMethod
+		if (Collections.contains(plugin.getChatManager().message("language"), pluginLocale.aliases)) return;
+
 		try {
 			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/" + pluginLocale.prefix + ".yml"), new File(plugin.getDataFolder(), "messages.yml"));
 		} catch (IOException e) {
@@ -79,8 +82,8 @@ public class LanguageManager {
 		}
 
 		if (pluginLocale == null) {
-			LogUtils.sendConsoleMessage("&c[KOTL] Plugin locale is invalid! Using default one.");
 			pluginLocale = LocaleRegistry.getByName("English");
+			LogUtils.sendConsoleMessage("&c[KOTLP] Selected locale is invalid! Using default locale.");
 			return;
 		}
 

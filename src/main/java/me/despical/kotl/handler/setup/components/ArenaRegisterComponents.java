@@ -43,9 +43,10 @@ public class ArenaRegisterComponents implements SetupComponent {
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
 		Player player = setupInventory.getPlayer();
+		Arena arena = setupInventory.getArena();
 		ItemBuilder registeredItem;
 
-		if (!setupInventory.getArena().isReady()) {
+		if (!arena.isReady()) {
 			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
 				.name("&e&lRegister Arena - Finish Setup")
 				.lore("&7Click this when you're done with configuration.")
@@ -60,7 +61,6 @@ public class ArenaRegisterComponents implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			Arena arena = setupInventory.getArena();
 			String path = "instances." + arena.getId() + ".";
 
 			player.closeInventory();
@@ -82,17 +82,15 @@ public class ArenaRegisterComponents implements SetupComponent {
 			ArenaRegistry.unregisterArena(arena);
 
 			arena.deleteHologram();
-			arena = new Arena(arena.getId());
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 
-			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
-
+			final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
 			arena.setHologramLocation(hologram.getLocation());
 
-			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: " + arena.getId()));
+			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 
 			config.set(path + "isdone", true);
 			ConfigUtils.saveConfig(plugin, config, "arenas");

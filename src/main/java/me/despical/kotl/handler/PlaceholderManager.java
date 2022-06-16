@@ -18,6 +18,7 @@
 
 package me.despical.kotl.handler;
 
+import me.despical.kotl.user.User;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -63,11 +64,13 @@ public class PlaceholderManager extends PlaceholderExpansion {
 			return null;
 		}
 
+		User user = plugin.getUserManager().getUser(player);
+
 		switch (id.toLowerCase()) {
 			case "score":
-				return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.SCORE));
+				return Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
 			case "tours_played":
-				return Integer.toString(StatsStorage.getUserStats(player, StatsStorage.StatisticType.TOURS_PLAYED));
+				return Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
 			default:
 				return handleArenaPlaceholderRequest(id);
 		}

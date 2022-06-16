@@ -69,19 +69,6 @@ public class PlayerCommands {
 	}
 
 	@Command(
-		name = "kotl"
-	)
-	public void mainCommand(CommandArguments arguments) {
-		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
-
-			if (arguments.hasPermission("kotl.admin")) {
-				arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
-			}
-		}
-	}
-
-	@Command(
 		name = "kotl.stats",
 		usage = "/kotl stats [<player>]",
 		senderType = Command.SenderType.PLAYER

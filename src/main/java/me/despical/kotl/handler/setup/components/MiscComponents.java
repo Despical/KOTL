@@ -54,7 +54,7 @@ public class MiscComponents implements SetupComponent {
 			player.closeInventory();
 
 			Location location = player.getLocation();
-			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram location for arena " + arena.getId() + " set at your location!"));
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			Hologram hologram = new Hologram(location, chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);

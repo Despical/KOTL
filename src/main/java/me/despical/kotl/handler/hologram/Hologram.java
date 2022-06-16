@@ -18,11 +18,9 @@
 
 package me.despical.kotl.handler.hologram;
 
-import me.despical.kotl.Main;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,8 +35,6 @@ public class Hologram {
 	private final Location location;
 	private final Set<String> lines;
 	private final Set<ArmorStand> armorStands;
-
-	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public Hologram(Location location, String... lines) {
 		this.location = location;
@@ -56,8 +52,6 @@ public class Hologram {
 		for (ArmorStand armor : armorStands) {
 			armor.setCustomNameVisible(false);
 			armor.remove();
-
-			plugin.getHologramManager().remove(armor);
 		}
 
 		armorStands.clear();
@@ -72,8 +66,6 @@ public class Hologram {
 			ArmorStand holo = getEntityArmorStand(location, y);
 			holo.setCustomName(line);
 			armorStands.add(holo);
-
-			plugin.getHologramManager().add(holo);
 		}
 	}
 

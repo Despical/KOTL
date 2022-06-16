@@ -32,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.despical.kotl.Main;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Despical
@@ -50,13 +51,20 @@ public class CuboidSelector implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	public void giveSelectorWand(Player p) {
-		p.getInventory().addItem(new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build());
-		
-		p.sendMessage(chatManager.prefixedRawMessage("&eYou received area selector wand!"));
-		p.sendMessage(chatManager.prefixedRawMessage("&eSelect bottom corner using left click!"));
-	}
+	public boolean giveSelectorWand(Player player) {
+		Selection selection = selections.get(player);
+		ItemStack item = new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build();
 
+		if (selection == null || !player.getInventory().contains(item)) {
+			player.getInventory().addItem(item);
+
+			player.sendMessage(chatManager.prefixedRawMessage("&eYou received area selector wand!"));
+			player.sendMessage(chatManager.prefixedRawMessage("&eSelect bottom corner using left click!"));
+			return true;
+		}
+
+		return false;
+	}
 	public Selection getSelection(Player player) {
 		return selections.get(player);
 	}

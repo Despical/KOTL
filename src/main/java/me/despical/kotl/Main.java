@@ -20,7 +20,6 @@ package me.despical.kotl;
 
 import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
@@ -43,7 +42,6 @@ import me.despical.kotl.event.JoinEvent;
 import me.despical.kotl.event.QuitEvent;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.PlaceholderManager;
-import me.despical.kotl.handler.hologram.HologramManager;
 import me.despical.kotl.handler.language.LanguageManager;
 import me.despical.kotl.handler.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
@@ -74,7 +72,6 @@ public class Main extends JavaPlugin {
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
 	private LanguageManager languageManager;
-	private HologramManager hologramManager;
 
 	@Override
 	public void onEnable() {
@@ -89,7 +86,7 @@ public class Main extends JavaPlugin {
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
-		exceptionLogHandler.setMainPackage("me.despical.kotl");
+		exceptionLogHandler.setMainPackage("me.despical");
 		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
 		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Create an issue on our GitHub repo with the following error given above!");
 
@@ -108,7 +105,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_18_R1)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R1)) {
 			LogUtils.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
 			LogUtils.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
@@ -132,9 +129,8 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		if (forceDisable) {
-			return;
-		}
+		if (forceDisable) return;
+
 
 		LogUtils.log("System disable initialized.");
 		long start = System.currentTimeMillis();
@@ -142,7 +138,7 @@ public class Main extends JavaPlugin {
 		getServer().getLogger().removeHandler(exceptionLogHandler);
 		saveAllUserStatistics();
 
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+		if (database != null) {
 			database.shutdownConnPool();
 		}
 
@@ -176,7 +172,7 @@ public class Main extends JavaPlugin {
 		ScoreboardLib.setPluginInstance(this);
 
 		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			database = new MysqlDatabase(ConfigUtils.getConfig(this, "mysql"));
+			database = new MysqlDatabase(this, "mysql");
 		}
 
 		chatManager = new ChatManager(this);
@@ -185,7 +181,6 @@ public class Main extends JavaPlugin {
 		commandFramework = new CommandFramework(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
-		hologramManager = new HologramManager();
 
 		ArenaRegistry.registerArenas();
 
@@ -218,19 +213,16 @@ public class Main extends JavaPlugin {
 	private void startPluginMetrics() {
 		Metrics metrics = new Metrics(this, 7938);
 
-		if (!metrics.isEnabled()) {
-			return;
-		}
+		if (!metrics.isEnabled()) return;
 
-		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new Metrics.SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix));
+		metrics.addCustomChart(new Metrics.SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new Metrics.SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
 	
 	private void checkUpdate() {
-		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) {
-			return;
-		}
+		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
+
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
@@ -267,10 +259,6 @@ public class Main extends JavaPlugin {
 	
 	public RewardsFactory getRewardsFactory() {
 		return rewardsFactory;
-	}
-
-	public HologramManager getHologramManager() {
-		return hologramManager;
 	}
 
 	public UserManager getUserManager() {

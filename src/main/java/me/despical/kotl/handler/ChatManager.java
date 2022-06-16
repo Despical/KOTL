@@ -116,13 +116,13 @@ public class ChatManager {
 
 		switch (action) {
 			case JOIN:
-				path = "Join";
+				path = "join";
 				break;
 			case LEAVE:
-				path = "Leave";
+				path = "leave";
 				break;
 			case NEW_KING:
-				path = "New-King";
+				path = "new_king";
 
 				arena.getHologram().appendLine(formatMessage(arena, message("in_game.last_king_hologram"), player));
 				break;

@@ -56,7 +56,7 @@ public class SpawnComponents implements SetupComponent {
 			player.closeInventory();
 
 			Location location = player.getLocation();
-			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena " + arena.getId() + " set at your location!"));
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			arena.setEndLocation(location);
 
@@ -79,7 +79,7 @@ public class SpawnComponents implements SetupComponent {
 			location.getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
 
 			arena.setPlateLocation(location);
-			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena " + arena.getId() + " set at your location!"));
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -97,10 +97,7 @@ public class SpawnComponents implements SetupComponent {
 
 			CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
 
-			if (selection == null) {
-				plugin.getCuboidSelector().giveSelectorWand(player);
-				return;
-			}
+			if (plugin.getCuboidSelector().giveSelectorWand(player)) return;
 
 			if (selection.secondPos == null) {
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
@@ -109,7 +106,8 @@ public class SpawnComponents implements SetupComponent {
 
 			config.set(path + "areaMin", LocationSerializer.toString(selection.firstPos));
 			config.set(path + "areaMax", LocationSerializer.toString(selection.secondPos));
-			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena " + arena.getId() + " set as you selection!"));
+
+			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena &e" + arena.getId() + " &aset as you selection!"));
 			plugin.getCuboidSelector().removeSelection(player);
 
 			ConfigUtils.saveConfig(plugin, config, "arenas");

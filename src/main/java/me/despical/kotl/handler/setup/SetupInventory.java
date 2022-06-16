@@ -19,6 +19,7 @@
 package me.despical.kotl.handler.setup;
 
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
@@ -58,11 +59,13 @@ public class SetupInventory {
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 3, "King of the Ladder Arena Setup");
+		this.gui = new Gui(plugin, 3, "Arena Setup Menu");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
 		StaticPane pane = new StaticPane(9, 3);
-		pane.fillProgressBorder(GuiItem.of(XMaterial.GREEN_STAINED_GLASS_PANE.parseItem()), GuiItem.of(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()), arena.isReady() ? 100 : 0);
+		ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"),
+			notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
+		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
 		this.gui.addPane(pane);
 
 		prepareComponents(pane);
@@ -85,23 +88,23 @@ public class SetupInventory {
 
 		switch (ThreadLocalRandom.current().nextInt(9)) {
 			case 0:
-				tip = "&e&lTIP: &7We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
+				tip = "We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
 				break;
 			case 1:
-				tip = "&e&lTIP: &7Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
+				tip = "Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
 				break;
 			case 2:
-				tip = "&e&lTIP: &7Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO;
+				tip = "Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO;
 				break;
 			case 3:
-				tip = "&e&lTIP: &7Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
+				tip = "Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
 				break;
 			default:
 				break;
 		}
 
 		if (!tip.isEmpty()) {
-			player.sendMessage(chatManager.coloredRawMessage(tip));
+			player.sendMessage(chatManager.coloredRawMessage("&e&lTIP: &7" + tip));
 		}
 	}
 
