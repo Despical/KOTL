@@ -5,12 +5,19 @@ version: ${project.version}
 api-version: 1.13
 softdepend: [Multiverse-Core, PlaceholderAPI]
 
+commands:
+  kingoftheladder:
+    description: KOTL Commands
+    aliases: [kotl, kingotladder]
+
 permissions:
   kotl.admin.*:
     default: op
     children:
       kotl.admin: true
-      kotl.admin.edit: true
       kotl.admin.create: true
       kotl.admin.delete: true
+      kotl.admin.edit: true
       kotl.admin.list: true
+      kotl.admin.help: true
+      kotl.admin.reload: true

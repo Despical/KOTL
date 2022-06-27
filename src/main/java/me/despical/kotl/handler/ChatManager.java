@@ -46,7 +46,7 @@ public class ChatManager {
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = message("in-game.plugin-prefix");
+		this.prefix = message("in_game.plugin_prefix");
 		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholdersAPI");
 	}
 

@@ -10,6 +10,7 @@
 Commands:
   Did-You-Mean: "&cDid you mean &7/%command%&c?"
   Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
+  Type-Arena-Name: "&cPlease type arena name!"
   Removed-Game-Instance: "&aSuccessfully removed game instance."
   No-Arena-Like-That: "&cThere is no arena with that ID!"
   Only-By-Player: "&cYou can execute this command only as player!"
@@ -31,8 +32,8 @@ Commands:
     No-Arenas-Created: "&cThere aren't any arena to show!"
     Format: "&aExisting arenas: &7%list%"
 
+# Used in most game messages.
 In-Game:
-  # Used in most game messages.
   Plugin-Prefix: "&8[&6KOTL&8] "
   Join: "&7%player%&b joined the game!"
   Leave: "&7%player%&b left the game!"
@@ -65,7 +66,7 @@ Scoreboard:
       - ""
       - "Score: &a%score%"
       - ""
-      - "&egithub.com/Despical"
+      - "&epatreon.com/Despical"
   
 Validator:
   Invalid-Arena-Configuration: "[KOTL] Arena %arena% has invalid configuration! Missing node: %error%"

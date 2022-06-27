@@ -18,14 +18,16 @@
 
 package me.despical.kotl.command;
 
-import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,23 +37,20 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 22.06.2020
  */
-public class TabCompletion {
+public class TabCompletion implements TabCompleter {
 
-	public Main plugin;
+	private final Main plugin;
 
 	public TabCompletion(Main plugin) {
 		this.plugin = plugin;
-		this.plugin.getCommandFramework().registerCommands(this);
 	}
 
-	@Completer(
-		name = "kotl"
-	)
-	public List<String> onTabComplete(CommandArguments arguments) {
-		List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+	@Override
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+		List<String> completions = new ArrayList<>(), commands = plugin.getCommandHandler().getSubCommands().stream().map(SubCommand::getName).collect(Collectors.toList());
 		commands.remove("kotl");
 
-		String args[] = arguments.getArguments(), arg = args[0];
+		String arg = args[0];
 
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(arg, commands, completions);
@@ -67,8 +66,8 @@ public class TabCompletion {
 			}
 
 			List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
+
 			arenas.sort(null);
 			return arenas;
 		}

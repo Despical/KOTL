@@ -86,7 +86,7 @@ public class SetupInventory {
 		ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
-		switch (ThreadLocalRandom.current().nextInt(9)) {
+		switch (ThreadLocalRandom.current().nextInt(15)) {
 			case 0:
 				tip = "We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
 				break;
@@ -98,6 +98,15 @@ public class SetupInventory {
 				break;
 			case 3:
 				tip = "Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
+				break;
+			case 4:
+				tip = "You can support us with becoming Patron on https://www.patreon.com/despical to make updates better and sooner.";
+				break;
+			case 5:
+				tip = "Need help? You can join our small Discord community. Check out https://discord.gg/rVkaGmyszE";
+				break;
+			case 6:
+				tip = "You have suggestions to improve the plugin? Use our issue tracker or join our Discord server.";
 				break;
 			default:
 				break;
