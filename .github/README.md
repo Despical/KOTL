@@ -1,7 +1,8 @@
 # King of the Ladder
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Despical/KOTL/KOTL%20Build)
+![](https://img.shields.io/github/workflow/status/Despical/KOTL/KOTL%20Build)
+[![Discord](https://img.shields.io/discord/719922452259668000.svg?color=lime&label=Discord)](https://discord.gg/rVkaGmyszE)
 
 King of the Ladder is an old Minecraft mini game that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
@@ -10,7 +11,7 @@ punching them out of the way!
 ## Documentation
 More information can be found on the [wiki page](https://github.com/Despical/KOTL/wiki).
 The [Javadoc](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html) can be browsed.
-Also you can join our small [Discord community](https://www.discord.gg/rVkaGmyszE) to get support and news early.
+Also you can join our [Discord community](https://www.discord.gg/rVkaGmyszE) to get support and news early.
 
 ## Donations
 You like the KOTL? Then [donate](https://www.patreon.com/despical) back me to support the development.
@@ -68,6 +69,6 @@ You can learn more about contributing via GitHub in [contribution guidelines](..
 If you want to build this project from source code, run the following from Git Bash:
 ```
 git clone https://www.github.com/Despical/KOTL.git && cd KOTL
-mvn clean package -Dmaven.javadoc.skip=true (to not generate docs)
+mvn clean package -Dmaven.javadoc.skip=true
 ```
 Also don't forget to install Maven before building.
