@@ -69,6 +69,6 @@ Scoreboard:
       - "&epatreon.com/Despical"
   
 Validator:
-  Invalid-Arena-Configuration: "[KOTL] Arena %arena% has invalid configuration! Missing node: %error%"
+  Invalid-Arena-Configuration: "[KOTL] &cArena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[KOTL] Arena %arena% instance successfully started!"
   No-Instances-Created: "[KOTL] There are no arena instances created in configuration!"

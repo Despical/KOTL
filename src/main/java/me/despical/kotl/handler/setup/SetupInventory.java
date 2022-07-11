@@ -86,7 +86,7 @@ public class SetupInventory {
 		ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
-		switch (ThreadLocalRandom.current().nextInt(15)) {
+		switch (ThreadLocalRandom.current().nextInt(16)) {
 			case 0:
 				tip = "We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
 				break;
@@ -103,10 +103,13 @@ public class SetupInventory {
 				tip = "You can support us with becoming Patron on https://www.patreon.com/despical to make updates better and sooner.";
 				break;
 			case 5:
-				tip = "Need help? You can join our small Discord community. Check out https://discord.gg/rVkaGmyszE";
+				tip = "Need help? You can join our Discord community. Check out https://discord.gg/rVkaGmyszE";
 				break;
 			case 6:
 				tip = "You have suggestions to improve the plugin? Use our issue tracker or join our Discord server.";
+				break;
+			case 7:
+				tip = "If you like the plugin you can try the premium version with more features and better performance. Check out https://spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/";
 				break;
 			default:
 				break;

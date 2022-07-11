@@ -273,22 +273,13 @@ public class Arena {
 		players.forEach(this::teleportToEndLocation);
 	}
 	
-	public void doBarAction(BarAction action, Player p) {
-		if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
-			return;
-		}
+	public void doBarAction(BarAction action, Player player) {
+		if (gameBar == null || player == null) return;
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
-			return;
-		}
-
-		switch (action) {
-			case ADD:
-				gameBar.addPlayer(p);
-				break;
-			case REMOVE:
-				gameBar.removePlayer(p);
-				break;
+		if (action == BarAction.ADD) {
+			gameBar.addPlayer(player);
+		} else {
+			gameBar.removePlayer(player);
 		}
 	}
 

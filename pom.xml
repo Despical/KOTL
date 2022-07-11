@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>2.1.1</version>
+	<version>2.1.2</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -56,12 +56,12 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons</artifactId>
-			<version>1.5.2</version>
+			<version>1.5.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>InventoryFramework</artifactId>
-			<version>2.2.0</version>
+			<version>2.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>me.clip</groupId>
@@ -88,7 +88,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<goals>
 					<goal>compile</goal>
 				</goals>

@@ -33,7 +33,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +58,7 @@ public class StatsStorage {
 
 				return column;
 			} catch (SQLException exception) {
-				LogUtils.log(Level.WARNING, "SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
+				LogUtils.log("SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
 				LogUtils.sendConsoleMessage("&cCannot get contents from MySQL database!");
 				return null;
 			}
@@ -82,7 +81,7 @@ public class StatsStorage {
 		boolean persistent;
 
 		StatisticType(String name) {
-			this(name, true);
+			this (name, true);
 		}
 
 		StatisticType(String name, boolean persistent) {

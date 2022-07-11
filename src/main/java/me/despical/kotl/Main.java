@@ -73,8 +73,8 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if (getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug-Messages")) {
-			LogUtils.enableLogging();
 			LogUtils.setLoggerName("KOTL");
+			LogUtils.enableLogging();
 		}
 
 		if ((forceDisable = !validateIfPluginShouldStart())) {
