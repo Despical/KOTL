@@ -46,7 +46,7 @@ public class FileStats implements UserDatabase {
 
 	@Override
 	public void saveAllStatistic(User user) {
-		String uuid = user.getUniqueId().toString();
+		final String uuid = user.getUniqueId().toString();
 
 		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
@@ -59,7 +59,7 @@ public class FileStats implements UserDatabase {
 
 	@Override
 	public void loadStatistics(User user) {
-		String uuid = user.getUniqueId().toString();
+		final String uuid = user.getUniqueId().toString();
 
 		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));

@@ -26,6 +26,7 @@ import me.despical.commons.scoreboard.type.ScoreboardHandler;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
+import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.user.User;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
@@ -36,13 +37,15 @@ import java.util.Set;
 
 public class ScoreboardManager {
 
-	private final Arena arena;
 	private final Main plugin;
+	private final Arena arena;
+	private final ChatManager chatManager;
 	private final Set<Scoreboard> scoreboards;
 
-	public ScoreboardManager(Arena arena, Main plugin) {
-		this.arena = arena;
+	public ScoreboardManager(Main plugin, Arena arena) {
 		this.plugin = plugin;
+		this.arena = arena;
+		this.chatManager = plugin.getChatManager();
 		this.scoreboards = new HashSet<>();
 	}
 
@@ -51,7 +54,7 @@ public class ScoreboardManager {
 
 			@Override
 			public String getTitle(Player player) {
-				return plugin.getChatManager().message("Scoreboard.Title");
+				return chatManager.message("scoreboard.title");
 			}
 
 			@Override
@@ -82,7 +85,7 @@ public class ScoreboardManager {
 	private List<Entry> formatScoreboard(Player player) {
 		EntryBuilder builder = new EntryBuilder();
 
-		for (String line : plugin.getChatManager().getStringList("Scoreboard.Content.Playing")) {
+		for (String line : chatManager.getStringList("Scoreboard.Content.Playing")) {
 			builder.next(formatScoreboardLine(line, player));
 		}
 
@@ -100,7 +103,7 @@ public class ScoreboardManager {
 
 		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
 		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
-		formattedLine = plugin.getChatManager().formatPlaceholders(formattedLine, player);
-		return plugin.getChatManager().coloredRawMessage(formattedLine);
+		formattedLine = chatManager.formatMessage(formattedLine, player);
+		return chatManager.coloredRawMessage(formattedLine);
 	}
 }

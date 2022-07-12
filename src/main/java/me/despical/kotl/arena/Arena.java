@@ -63,7 +63,7 @@ public class Arena {
 
 	public Arena(String id) {
 		this.id = id;
-		this.scoreboardManager = new ScoreboardManager(this, plugin);
+		this.scoreboardManager = new ScoreboardManager(plugin, this);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
 			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {

@@ -35,8 +35,6 @@ import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.command.CommandHandler;
 import me.despical.kotl.event.ChatEvents;
 import me.despical.kotl.event.Events;
-import me.despical.kotl.event.JoinEvent;
-import me.despical.kotl.event.QuitEvent;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.PlaceholderManager;
 import me.despical.kotl.handler.language.LanguageManager;
@@ -85,9 +83,8 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler = new ExceptionLogHandler(this);
 		exceptionLogHandler.setMainPackage("me.despical");
 		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Create an issue on our GitHub repo with the following error given above!");
+		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (link: https://discord.gg/rVkaGmyszE) with the following error given above!");
 
-		saveDefaultConfig();
 		configPreferences = new ConfigPreferences(this);
 
 		LogUtils.log("Initialization started!");
@@ -98,6 +95,7 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
+		LogUtils.sendConsoleMessage("Initialization finished. Join our Discord server to get support and news about KOTL. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
@@ -183,8 +181,6 @@ public class Main extends JavaPlugin {
 		new ChatEvents(this);
 		new Events(this);
 		new ArenaEvents(this);
-		new JoinEvent(this);
-		new QuitEvent(this);
 
 		registerSoftDependencies();
 	}
@@ -214,7 +210,6 @@ public class Main extends JavaPlugin {
 	
 	private void checkUpdate() {
 		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
-
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {

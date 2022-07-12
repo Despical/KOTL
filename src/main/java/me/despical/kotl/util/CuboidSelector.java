@@ -23,12 +23,11 @@ import java.util.Map;
 
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
-import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.event.ListenerAdapter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.despical.kotl.Main;
@@ -39,16 +38,13 @@ import org.bukkit.inventory.ItemStack;
  * <p>
  * Created at 24.06.2020
  */
-public class CuboidSelector implements Listener {
+public class CuboidSelector extends ListenerAdapter {
 
-	private final ChatManager chatManager;
 	private final Map<Player, Selection> selections;
 
 	public CuboidSelector(Main plugin) {
-		this.chatManager = plugin.getChatManager();
+		super (plugin);
 		this.selections = new HashMap<>();
-
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	public boolean giveSelectorWand(Player player) {
@@ -65,6 +61,7 @@ public class CuboidSelector implements Listener {
 
 		return false;
 	}
+
 	public Selection getSelection(Player player) {
 		return selections.get(player);
 	}

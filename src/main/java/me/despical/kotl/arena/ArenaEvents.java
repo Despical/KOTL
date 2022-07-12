@@ -24,6 +24,7 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.event.ListenerAdapter;
 import me.despical.kotl.handler.ChatManager.ActionType;
 import me.despical.kotl.handler.rewards.Reward;
 import me.despical.kotl.user.User;
@@ -34,7 +35,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -47,14 +47,10 @@ import java.util.Set;
  * <p>
  * Created at 22.06.2020
  */
-public class ArenaEvents implements Listener {
-
-	private final Main plugin;
+public class ArenaEvents extends ListenerAdapter {
 
 	public ArenaEvents(Main plugin) {
-		this.plugin = plugin;
-
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		super (plugin);
 	}
 
 	@EventHandler
@@ -71,20 +67,20 @@ public class ArenaEvents implements Listener {
 			arena.doBarAction(Arena.BarAction.ADD, player);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
-				plugin.getChatManager().broadcastAction(arena, player, ActionType.JOIN);
+				chatManager.broadcastAction(arena, player, ActionType.JOIN);
 			}
 		}
 
 		if (ArenaRegistry.isInArena(player) && arena == null) {
-			Arena a = ArenaRegistry.getArena(player);
+			Arena tempArena = ArenaRegistry.getArena(player);
 
-			a.doBarAction(Arena.BarAction.REMOVE, player);
+			tempArena.doBarAction(Arena.BarAction.REMOVE, player);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
-				plugin.getChatManager().broadcastAction(a, player, ActionType.LEAVE);
+				chatManager.broadcastAction(tempArena, player, ActionType.LEAVE);
 			}
 
-			a.removePlayer(player);
+			tempArena.removePlayer(player);
 
 			plugin.getUserManager().getDatabase().saveAllStatistic(plugin.getUserManager().getUser(player));
 		}
@@ -104,7 +100,7 @@ public class ArenaEvents implements Listener {
 				if (arena.getPlayers().size() == 1 && arena.getKing() != null && arena.getKing().equals(player)) return;
 				arena.setKing(player);
 
-				plugin.getChatManager().broadcastAction(arena, player, ActionType.NEW_KING);
+				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 
 				User user = plugin.getUserManager().getUser(player);
@@ -140,7 +136,7 @@ public class ArenaEvents implements Listener {
 			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
 					arena.doBarAction(Arena.BarAction.REMOVE, player);
-					arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
+					arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 

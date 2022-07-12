@@ -48,7 +48,7 @@ public class UserManager {
 	}
 
 	public User getUser(Player player) {
-		UUID uuid = player.getUniqueId();
+		final UUID uuid = player.getUniqueId();
 
 		for (User user : users) {
 			if (user.getUniqueId().equals(uuid)) {
@@ -58,8 +58,10 @@ public class UserManager {
 
 		LogUtils.log("Registering new user {0} ({1})", uuid, player.getName());
 
-		User user = new User(uuid);
+		final User user = new User(uuid);
 		users.add(user);
+
+		database.loadStatistics(user);
 		return user;
 	}
 

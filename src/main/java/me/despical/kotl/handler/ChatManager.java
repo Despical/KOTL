@@ -74,12 +74,12 @@ public class ChatManager {
 	public String message(String path, Player player) {
 		String returnString = message(path);
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
-		returnString = formatPlaceholders(returnString, player);
+		returnString = formatMessage(returnString, player);
 
 		return returnString;
 	}
 
-	public String formatPlaceholders(String message, Player player) {
+	public String formatMessage(String message, Player player) {
 		String returnString = message;
 
 		if (papiEnabled) {
@@ -92,13 +92,13 @@ public class ChatManager {
 	private String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
 		returnString = StringUtils.replace(returnString, "%player%", player.getName());
-		returnString = formatPlaceholders(returnString, arena);
-		returnString = formatPlaceholders(returnString, player);
+		returnString = formatMessage(returnString, arena);
+		returnString = formatMessage(returnString, player);
 
 		return coloredRawMessage(returnString);
 	}
 
-	private String formatPlaceholders(String message, Arena arena) {
+	private String formatMessage(String message, Arena arena) {
 		String returnString = message;
 
 		returnString = StringUtils.replace(returnString, "%arena%", arena.getId());

@@ -26,25 +26,19 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.regex.Pattern;
-
 
 /**
  * @author Despical
  * <p>
  * Created at 22.06.2020
  */
-public class ChatEvents implements Listener {
-
-	private final Main plugin;
+public class ChatEvents extends ListenerAdapter {
 
 	public ChatEvents(Main plugin) {
-		this.plugin = plugin;
-
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		super (plugin);
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -62,7 +56,7 @@ public class ChatEvents implements Listener {
 		}
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
-			String message = formatChatPlaceholders(plugin.getChatManager().message("in_game.chat_format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
+			String message = formatChatPlaceholders(chatManager.message("in_game.chat_format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
 
 			if (!disabledSeparateChat) {
 				event.setCancelled(true);
@@ -83,7 +77,7 @@ public class ChatEvents implements Listener {
 
 		formatted = StringUtils.replace(formatted, "%player%", player.getName());
 		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
-		formatted = plugin.getChatManager().formatPlaceholders(formatted, player);
-		return plugin.getChatManager().coloredRawMessage(formatted);
+		formatted = chatManager.formatMessage(formatted, player);
+		return chatManager.coloredRawMessage(formatted);
 	}
 }

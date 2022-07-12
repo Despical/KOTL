@@ -18,12 +18,15 @@
 
 package me.despical.kotl.event;
 
+import me.despical.commons.serializer.InventorySerializer;
+import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import me.despical.kotl.handler.ChatManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -35,21 +38,46 @@ import org.bukkit.event.player.*;
  * <p>
  * Created at 22.06.2020
  */
-public class Events implements Listener {
-
-	private final Main plugin;
+public class Events extends ListenerAdapter {
 
 	public Events(Main plugin) {
-		this.plugin = plugin;
-
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		super (plugin);
 	}
 
 	@EventHandler
-	public void onDrop(PlayerDropItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
-			event.setCancelled(true);
+	public void onJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+
+		plugin.getUserManager().loadStatistics(player);
+
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+			InventorySerializer.loadInventory(plugin, player);
 		}
+
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) || !player.hasPermission("kotl.updatenotify")) {
+			return;
+		}
+
+		UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
+			if (result.requiresUpdate()) {
+				player.sendMessage(chatManager.coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion()));
+				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));
+			}
+		});
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = ArenaRegistry.getArena(player);
+
+		if (arena != null) {
+			chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
+
+			arena.removePlayer(player);
+		}
+
+		plugin.getUserManager().removeUser(player);
 	}
 
 	@EventHandler
@@ -79,7 +107,7 @@ public class Events implements Listener {
 		}
 
 		event.setCancelled(true);
-		player.sendMessage(plugin.getChatManager().prefixedMessage("in_game.only_command_is_leave"));
+		player.sendMessage(chatManager.prefixedMessage("in_game.only_command_is_leave"));
 	}
 	
 	@EventHandler
@@ -119,14 +147,21 @@ public class Events implements Listener {
 	}
 	
 	@EventHandler
-	public void onBlockBreakEvent(BlockBreakEvent event) {
+	public void onBreak(BlockBreakEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
-	public void onBuild(BlockPlaceEvent event) {
+	public void onPlace(BlockPlaceEvent event) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onDrop(PlayerDropItemEvent event) {
 		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}

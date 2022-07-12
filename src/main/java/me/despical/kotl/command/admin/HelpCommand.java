@@ -40,6 +40,8 @@ public class HelpCommand extends SubCommand {
 		sender.sendMessage("");
 		sender.sendMessage(chatManager.coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		sender.sendMessage("");
+		sender.sendMessage(chatManager.coloredRawMessage("&3Join our Discord server: &bhttps://discord.gg/rVkaGmyszE"));
+		sender.sendMessage("");
 
 		for (SubCommand subCommand : plugin.getCommandHandler().getSubCommands()) {
 			if (subCommand.getType() == SubCommand.CommandType.GENERIC) {

@@ -83,7 +83,7 @@ public class LanguageManager {
 
 		if (pluginLocale == null) {
 			pluginLocale = LocaleRegistry.getByName("English");
-			LogUtils.sendConsoleMessage("&c[KOTLP] Selected locale is invalid! Using default locale.");
+			LogUtils.sendConsoleMessage("&c[KOTL] Selected locale is invalid! Using default locale.");
 			return;
 		}
 

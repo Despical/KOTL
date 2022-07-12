@@ -35,6 +35,8 @@ public class ConfigPreferences {
 	public ConfigPreferences(Main plugin) {
 		this.options = new HashMap<>();
 
+		plugin.saveDefaultConfig();
+
 		for (Option option : Option.values()) {
 			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
 		}
