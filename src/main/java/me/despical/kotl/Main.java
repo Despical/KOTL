@@ -94,7 +94,7 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		LogUtils.sendConsoleMessage("Initialization finished. Join our Discord server to get support and news about KOTL. (https://discord.gg/rVkaGmyszE)");
+		LogUtils.sendConsoleMessage("[KOTL] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
