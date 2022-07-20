@@ -69,17 +69,17 @@ public class CreateCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.PLAYER;
+	public int getSenderType() {
+		return PLAYER;
 	}
 
 	private void setupDefaultConfiguration(String id) {
-		String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
+		final String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
 
 		config.set(path + "endlocation", def);
 		config.set(path + "areaMin", def);

@@ -47,6 +47,6 @@ public class LocaleRegistry {
 			}
 		}
 
-		return new Locale("Unknown", "Undefined", "");
+		return null;
 	}
 }

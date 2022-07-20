@@ -37,15 +37,18 @@ import java.util.regex.Pattern;
  */
 public class ChatEvents extends ListenerAdapter {
 
+	private final boolean disabledSeparateChat, chatFormatEnabled;
+
 	public ChatEvents(Main plugin) {
 		super (plugin);
+		this.disabledSeparateChat = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT);
+		this.chatFormatEnabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED);
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onChatInGame(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 		Arena arena = ArenaRegistry.getArena(player);
-		boolean disabledSeparateChat = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT);
 
 		if (arena == null) {
 			if (!disabledSeparateChat) {
@@ -55,7 +58,7 @@ public class ChatEvents extends ListenerAdapter {
 			return;
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
+		if (chatFormatEnabled) {
 			String message = formatChatPlaceholders(chatManager.message("in_game.chat_format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
 
 			if (!disabledSeparateChat) {

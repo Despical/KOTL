@@ -62,28 +62,28 @@ public class SetupInventory {
 		this.gui = new Gui(plugin, 3, "Arena Setup Menu");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 
-		StaticPane pane = new StaticPane(9, 3);
-		ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"),
-			notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
+		final StaticPane pane = new StaticPane(9, 3);
+		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
+
 		this.gui.addPane(pane);
 
 		prepareComponents(pane);
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		SpawnComponents spawnComponents = new SpawnComponents();
+		final SpawnComponents spawnComponents = new SpawnComponents();
 		spawnComponents.injectComponents(this, pane);
 		
-		MiscComponents miscComponents = new MiscComponents();
+		final MiscComponents miscComponents = new MiscComponents();
 		miscComponents.injectComponents(this, pane);
 		
-		ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
+		final ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
 		arenaRegistryComponents.injectComponents(this, pane);
 	}
 
 	private void sendProTip(Player player) {
-		ChatManager chatManager = plugin.getChatManager();
+		final ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
 		switch (ThreadLocalRandom.current().nextInt(16)) {

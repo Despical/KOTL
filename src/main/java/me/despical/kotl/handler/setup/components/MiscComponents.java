@@ -39,9 +39,9 @@ public class MiscComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		Player player = setupInventory.getPlayer();
-		Arena arena = setupInventory.getArena();
-		String path = "instances." + arena.getId() + ".";
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final String path = "instances." + arena.getId() + ".";
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ARMOR_STAND)
 			.name("&e&lSet King Hologram")
@@ -53,10 +53,10 @@ public class MiscComponents implements SetupComponent {
 			
 			player.closeInventory();
 
-			Location location = player.getLocation();
+			final Location location = player.getLocation();
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram location for arena &e" + arena.getId() + " &aset at your location!"));
 
-			Hologram hologram = new Hologram(location, chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
+			final Hologram hologram = new Hologram(location, chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
 			arena.setHologramLocation(location);
 

@@ -40,9 +40,9 @@ public class SpawnComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		Player player = setupInventory.getPlayer();
-		Arena arena = setupInventory.getArena();
-		String path = "instances." + arena.getId() + ".";
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final String path = "instances." + arena.getId() + ".";
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
@@ -75,7 +75,7 @@ public class SpawnComponents implements SetupComponent {
 
 			player.closeInventory();
 
-			Location location = player.getLocation();
+			final Location location = player.getLocation();
 			location.getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
 
 			arena.setPlateLocation(location);
@@ -95,7 +95,7 @@ public class SpawnComponents implements SetupComponent {
 
 			player.closeInventory();
 
-			CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+			final CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
 
 			if (plugin.getCuboidSelector().giveSelectorWand(player)) return;
 

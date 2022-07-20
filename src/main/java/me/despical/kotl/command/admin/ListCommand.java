@@ -33,14 +33,14 @@ public class ListCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		Set<Arena> arenas = ArenaRegistry.getArenas();
+		final Set<Arena> arenas = ArenaRegistry.getArenas();
 
 		if (arenas.isEmpty()) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
 			return;
 		}
 
-		String arenaNames = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
+		final String arenaNames = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		sender.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", arenaNames));
 	}
 
@@ -50,12 +50,12 @@ public class ListCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

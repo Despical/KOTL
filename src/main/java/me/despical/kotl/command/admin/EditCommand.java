@@ -32,7 +32,7 @@ public class EditCommand extends SubCommand {
 
 	@Override
 	public void execute(CommandSender sender, String label, String[] args) {
-		Arena arena = ArenaRegistry.getArena(args[0]);
+		final Arena arena = ArenaRegistry.getArena(args[0]);
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -48,12 +48,12 @@ public class EditCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.PLAYER;
+	public int getSenderType() {
+		return PLAYER;
 	}
 }

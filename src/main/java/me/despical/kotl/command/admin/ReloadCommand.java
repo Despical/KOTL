@@ -37,7 +37,7 @@ public class ReloadCommand extends SubCommand {
 	public void execute(CommandSender sender, String label, String[] args) {
 		LogUtils.log("Initialized plugin reload by {0}.", sender.getName());
 
-		long start = System.currentTimeMillis();
+		final long start = System.currentTimeMillis();
 
 		plugin.reloadConfig();
 		plugin.getChatManager().reloadConfig();
@@ -46,6 +46,7 @@ public class ReloadCommand extends SubCommand {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());
 
 			arena.deleteHologram();
+			arena.getScoreboardManager().stopAllScoreboards();
 
 			for (Player player : arena.getPlayers()) {
 				player.setWalkSpeed(0.2f);
@@ -59,7 +60,6 @@ public class ReloadCommand extends SubCommand {
 				}
 
 				arena.doBarAction(Arena.BarAction.REMOVE, player);
-				arena.getScoreboardManager().removeScoreboard(player);
 				AttributeUtils.resetAttackCooldown(player);
 			}
 
@@ -79,12 +79,12 @@ public class ReloadCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.GENERIC;
+	public int getType() {
+		return GENERIC;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

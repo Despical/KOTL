@@ -57,24 +57,24 @@ public class TopPlayersCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.HIDDEN;
+	public int getType() {
+		return HIDDEN;
 	}
 
 	@Override
-	public SubCommand.SenderType getSenderType() {
-		return SubCommand.SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-		Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
+		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
 		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
 
-		String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
+		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
 		for (int i = 0; i < 10; i++) {
 			try {
-				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
+				final UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 				sender.sendMessage(formatMessage(statistic, plugin.getServer().getOfflinePlayer(current).getName(), i + 1, stats.remove(current)));
 			} catch (IndexOutOfBoundsException ex) {
 				sender.sendMessage(formatMessage(statistic, "Empty", i + 1, 0));
@@ -83,8 +83,8 @@ public class TopPlayersCommand extends SubCommand {
 
 				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
-						Statement statement = connection.createStatement();
-						ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
+						final Statement statement = connection.createStatement();
+						final ResultSet set = statement.executeQuery("SELECT name FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " WHERE UUID='" + current.toString() + "'");
 
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));

@@ -40,11 +40,9 @@ public class HelpCommand extends SubCommand {
 		sender.sendMessage("");
 		sender.sendMessage(chatManager.coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		sender.sendMessage("");
-		sender.sendMessage(chatManager.coloredRawMessage("&3Join our Discord server: &bhttps://discord.gg/rVkaGmyszE"));
-		sender.sendMessage("");
 
 		for (SubCommand subCommand : plugin.getCommandHandler().getSubCommands()) {
-			if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
+			if (subCommand.getType() == GENERIC) {
 				String usage = "/" + label + " " + subCommand.getName() + (subCommand.getPossibleArguments() != null ? " " + subCommand.getPossibleArguments() : "");
 
 				if (sender instanceof Player) {
@@ -85,12 +83,12 @@ public class HelpCommand extends SubCommand {
 	}
 
 	@Override
-	public CommandType getType() {
-		return CommandType.HIDDEN;
+	public int getType() {
+		return HIDDEN;
 	}
 
 	@Override
-	public SenderType getSenderType() {
-		return SenderType.BOTH;
+	public int getSenderType() {
+		return BOTH;
 	}
 }

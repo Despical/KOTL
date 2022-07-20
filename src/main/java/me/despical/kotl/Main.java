@@ -70,14 +70,15 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if (getDescription().getVersion().contains("debug") || getConfig().getBoolean("Debug-Messages")) {
-			LogUtils.setLoggerName("KOTL");
-			LogUtils.enableLogging();
-		}
-
 		if ((forceDisable = !validateIfPluginShouldStart())) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
+		}
+
+		if (getConfig().getBoolean("Debug-Messages")) {
+			LogUtils.setLoggerName("KOTL");
+			LogUtils.enableLogging();
+			LogUtils.log("Initialization started!");
 		}
 
 		exceptionLogHandler = new ExceptionLogHandler(this);
@@ -86,8 +87,6 @@ public class Main extends JavaPlugin {
 		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (link: https://discord.gg/rVkaGmyszE) with the following error given above!");
 
 		configPreferences = new ConfigPreferences(this);
-
-		LogUtils.log("Initialization started!");
 
 		long start = System.currentTimeMillis();
 
@@ -254,13 +253,14 @@ public class Main extends JavaPlugin {
 
 	private void saveAllUserStatistics() {
 		for (Player player : getServer().getOnlinePlayers()) {
-			User user = userManager.getUser(player);
+			final User user = userManager.getUser(player);
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
 				StringBuilder update = new StringBuilder(" SET ");
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
+
 					int val = user.getStat(stat);
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
@@ -270,8 +270,8 @@ public class Main extends JavaPlugin {
 					update.append(", ").append(stat.getName()).append("'='").append(val);
 				}
 
-				String finalUpdate = update.toString();
-				MysqlManager database = ((MysqlManager) userManager.getDatabase());
+				final String finalUpdate = update.toString();
+				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}

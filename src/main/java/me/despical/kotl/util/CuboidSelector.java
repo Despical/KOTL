@@ -40,19 +40,20 @@ import org.bukkit.inventory.ItemStack;
  */
 public class CuboidSelector extends ListenerAdapter {
 
+	private final ItemStack wandItem;
 	private final Map<Player, Selection> selections;
 
 	public CuboidSelector(Main plugin) {
 		super (plugin);
+		this.wandItem = new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build();
 		this.selections = new HashMap<>();
 	}
 
 	public boolean giveSelectorWand(Player player) {
 		Selection selection = selections.get(player);
-		ItemStack item = new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build();
 
-		if (selection == null || !player.getInventory().contains(item)) {
-			player.getInventory().addItem(item);
+		if (selection == null || !player.getInventory().contains(wandItem)) {
+			player.getInventory().addItem(wandItem);
 
 			player.sendMessage(chatManager.prefixedRawMessage("&eYou received area selector wand!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&eSelect bottom corner using left click!"));
@@ -78,7 +79,7 @@ public class CuboidSelector extends ListenerAdapter {
 
 		event.setCancelled(true);
 
-		Player player = event.getPlayer();
+		final Player player = event.getPlayer();
 
 		switch (event.getAction()) {
 			case LEFT_CLICK_BLOCK:

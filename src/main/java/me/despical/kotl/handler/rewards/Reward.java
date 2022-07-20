@@ -49,7 +49,7 @@ public class Reward {
 		}
 
 		if (processedCode.contains("chance(")) {
-			int loc = processedCode.indexOf(")");
+			final int loc = processedCode.indexOf(")");
 
 			if (loc == -1) {
 				LogUtils.sendConsoleMessage("&cRewards configuration is broken! Make sure you don't forget using ')' character in chance condition! Command: " + rawCode);

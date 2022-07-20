@@ -42,9 +42,9 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		Player player = setupInventory.getPlayer();
-		Arena arena = setupInventory.getArena();
-		ItemBuilder registeredItem;
+		final Player player = setupInventory.getPlayer();
+		final Arena arena = setupInventory.getArena();
+		final ItemBuilder registeredItem;
 
 		if (!arena.isReady()) {
 			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
@@ -61,7 +61,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			String path = "instances." + arena.getId() + ".";
+			final String path = "instances." + arena.getId() + ".";
 
 			player.closeInventory();
 

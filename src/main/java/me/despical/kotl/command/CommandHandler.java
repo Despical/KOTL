@@ -29,11 +29,10 @@ public class CommandHandler implements CommandExecutor {
 		this.plugin = plugin;
 		this.subCommands = new HashSet<>();
 
-		SubCommand[] cmds = {new CreateCommand(), new DeleteCommand(), new EditCommand(), new ListCommand(),
-			new ReloadCommand(), new HelpCommand(), new StatsCommand(), new TopPlayersCommand()};
+		SubCommand[] commands = {new CreateCommand(), new DeleteCommand(), new EditCommand(), new ListCommand(), new ReloadCommand(), new HelpCommand(), new StatsCommand(), new TopPlayersCommand()};
 
-		for (SubCommand cmd : cmds) {
-			registerSubCommand(cmd);
+		for (SubCommand command : commands) {
+			registerSubCommand(command);
 		}
 
 		Optional.ofNullable(plugin.getCommand("kotl")).ifPresent(command -> {
@@ -57,6 +56,8 @@ public class CommandHandler implements CommandExecutor {
 
 			if (sender.hasPermission("kotl.admin")) {
 				sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3Commands: &b/" + label + " help"));
+				sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3If you liked this version then consider buying the premium one with better performance and additional features."));
+				sender.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/"));
 			}
 
 			return true;
@@ -69,7 +70,7 @@ public class CommandHandler implements CommandExecutor {
 					return true;
 				}
 
-				if (subCommand.getSenderType() == SubCommand.SenderType.PLAYER && !(sender instanceof Player)) {
+				if (subCommand.getSenderType() == 0 && !(sender instanceof Player)) {
 					sender.sendMessage(plugin.getChatManager().prefixedMessage("commands.only_by_player"));
 					return true;
 				}
@@ -80,7 +81,7 @@ public class CommandHandler implements CommandExecutor {
 					} catch (CommandException exception) {
 						sender.sendMessage(plugin.getChatManager().coloredRawMessage("&c" + exception.getMessage()));
 					}
-				} else if (subCommand.getType() == SubCommand.CommandType.GENERIC) {
+				} else if (subCommand.getType() == 0) {
 					sender.sendMessage(plugin.getChatManager().coloredRawMessage("&cUsage: /" + label + " " + subCommand.getName() + " " + (subCommand.getPossibleArguments().length() > 0 ? subCommand.getPossibleArguments() : "")));
 				}
 
@@ -88,7 +89,7 @@ public class CommandHandler implements CommandExecutor {
 			}
 		}
 
-		List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
+		final List<StringMatcher.Match> matches = StringMatcher.match(args[0], subCommands.stream().map(SubCommand::getName).collect(Collectors.toList()));
 
 		if (!matches.isEmpty()) {
 			sender.sendMessage(plugin.getChatManager().message("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
