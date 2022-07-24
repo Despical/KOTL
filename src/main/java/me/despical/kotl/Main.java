@@ -18,6 +18,7 @@
 
 package me.despical.kotl;
 
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
@@ -32,7 +33,9 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaEvents;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.command.CommandHandler;
+import me.despical.kotl.command.AdminCommands;
+import me.despical.kotl.command.PlayerCommands;
+import me.despical.kotl.command.TabCompletion;
 import me.despical.kotl.event.ChatEvents;
 import me.despical.kotl.event.Events;
 import me.despical.kotl.handler.ChatManager;
@@ -62,7 +65,7 @@ public class Main extends JavaPlugin {
 	private ConfigPreferences configPreferences;
 	private MysqlDatabase database;
 	private UserManager userManager;
-	private CommandHandler commandHandler;
+	private CommandFramework commandFramework;
 	private CuboidSelector cuboidSelector;
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
@@ -171,7 +174,7 @@ public class Main extends JavaPlugin {
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
-		commandHandler = new CommandHandler(this);
+		commandFramework = new CommandFramework(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
 
@@ -180,6 +183,10 @@ public class Main extends JavaPlugin {
 		new ChatEvents(this);
 		new Events(this);
 		new ArenaEvents(this);
+
+		new PlayerCommands(this);
+		new AdminCommands(this);
+		new TabCompletion(this);
 
 		registerSoftDependencies();
 	}
@@ -231,8 +238,8 @@ public class Main extends JavaPlugin {
 		return database;
 	}
 
-	public CommandHandler getCommandHandler() {
-		return commandHandler;
+	public CommandFramework getCommandFramework() {
+		return commandFramework;
 	}
 
 	public CuboidSelector getCuboidSelector() {

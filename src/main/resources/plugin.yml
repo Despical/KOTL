@@ -5,11 +5,6 @@ version: ${project.version}
 api-version: 1.13
 softdepend: [Multiverse-Core, PlaceholderAPI]
 
-commands:
-  kingoftheladder:
-    description: KOTL Commands
-    aliases: [kotl, kingotladder]
-
 permissions:
   kotl.admin.*:
     default: op
