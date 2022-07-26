@@ -173,6 +173,8 @@ public class ArenaEvents extends ListenerAdapter {
 			first = LocationSerializer.fromString(config.getString("instances." + arena.getId() + ".areaMin"));
 			second = LocationSerializer.fromString(config.getString("instances." + arena.getId() + ".areaMax"));
 
+			if (first.getWorld() != null && !first.getWorld().equals(origin.getWorld())) return null;
+
 			if (new IntRange(first.getX(), second.getX()).containsDouble(origin.getX())
 				&& new IntRange(first.getY(), second.getY()).containsDouble(origin.getY())
 				&& new IntRange(first.getZ(), second.getZ()).containsDouble(origin.getZ())) {
