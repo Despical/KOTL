@@ -114,9 +114,6 @@ public class SetupInventory {
 			case 8:
 				tip = "Check out our other plugins: https://spigotmc.org/resources/authors/despical.615094/";
 				break;
-			case 9:
-				tip = "You liked KOTL? Check out my other plugin that you can like it too: https://spigotmc.org/resources/whack-me-1-9-1-19.103482/";
-				break;
 			default:
 				break;
 		}

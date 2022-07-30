@@ -230,9 +230,7 @@ public class AdminCommands {
 
 	@Command(
 		name = "kotl.help",
-		permission = "kotl.admin.help",
-		usage = "/kotl help",
-		desc = "Sends all of the command and their usages"
+		permission = "kotl.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
 		arguments.sendMessage("");

@@ -103,21 +103,21 @@ public class Main extends JavaPlugin {
 	
 	private boolean validateIfPluginShouldStart() {
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R1)) {
-			LogUtils.sendConsoleMessage("&cYour server version is not supported by King of the Ladder!");
-			LogUtils.sendConsoleMessage("&cSadly, we must shut off. Maybe you consider changing your server version?");
+			LogUtils.sendConsoleMessage("[KOTL] &cYour server version is not supported by King of the Ladder!");
+			LogUtils.sendConsoleMessage("[KOTL] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
 		}
 
 		if (JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
-			LogUtils.sendConsoleMessage("&cThis plugin won't support Java 8 in future updates.");
-			LogUtils.sendConsoleMessage("&cSo, maybe consider to update your version, right?");
+			LogUtils.sendConsoleMessage("[KOTL] &cThis plugin won't support Java 8 in future updates.");
+			LogUtils.sendConsoleMessage("[KOTL] &cSo, maybe consider to update your version, right?");
 		}
 
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			LogUtils.sendConsoleMessage("&cYour server software is not supported by King of the Ladder!");
-			LogUtils.sendConsoleMessage("&cWe support only Spigot and Spigot forks only! Shutting off...");
+			LogUtils.sendConsoleMessage("[KOTL] &cYour server software is not supported by King of the Ladder!");
+			LogUtils.sendConsoleMessage("[KOTL] &cWe support only Spigot and Spigot forks only! Shutting off...");
 			return false;
 		}
 

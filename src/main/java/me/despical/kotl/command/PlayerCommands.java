@@ -2,6 +2,7 @@ package me.despical.kotl.command;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commons.string.StringMatcher;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -9,7 +10,6 @@ import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.data.MysqlManager;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,8 +17,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Despical
@@ -34,6 +36,17 @@ public class PlayerCommands {
 		this.plugin = plugin;
 		this.chatManager = plugin.getChatManager();
 		this.plugin.getCommandFramework().registerCommands(this);
+		this.plugin.getCommandFramework().setAnyMatch(arguments -> {
+			if (arguments.isArgumentsEmpty()) return;
+
+			String label = arguments.getLabel(), arg = arguments.getArgument(0);
+
+			List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+
+			if (!matches.isEmpty()) {
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+			}
+		});
 	}
 
 	@Command(
@@ -45,8 +58,8 @@ public class PlayerCommands {
 
 			if (arguments.hasPermission("kotl.admin")) {
 				arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
-				arguments.sendMessage(plugin.getChatManager().coloredRawMessage("&3If you liked this version then consider buying the premium one with better performance and additional features."));
-				arguments.sendMessage(plugin.getChatManager().coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/"));
+				arguments.sendMessage(chatManager.coloredRawMessage("&3If you liked this version then consider buying the premium one with better performance and additional features."));
+				arguments.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/"));
 			}
 		}
 	}
@@ -56,7 +69,7 @@ public class PlayerCommands {
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(CommandArguments arguments) {
-		Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? Bukkit.getPlayer(arguments.getArgument(0)) : sender;
+		Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? plugin.getServer().getPlayer(arguments.getArgument(0)) : sender;
 
 		if (player == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
@@ -78,8 +91,7 @@ public class PlayerCommands {
 	}
 
 	@Command(
-		name = "kotl.top",
-		senderType = Command.SenderType.PLAYER
+		name = "kotl.top"
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -95,7 +107,7 @@ public class PlayerCommands {
 	}
 
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
-		sender.sendMessage(plugin.getChatManager().message("commands.statistics.header"));
+		sender.sendMessage(chatManager.message("commands.statistics.header"));
 
 		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
 		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
