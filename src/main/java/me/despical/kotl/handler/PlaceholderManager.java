@@ -26,6 +26,7 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -47,19 +48,25 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		return true;
 	}
 
+	@NotNull
+	@Override
 	public String getIdentifier() {
 		return "kotl";
 	}
 
+	@NotNull
+	@Override
 	public String getAuthor() {
 		return "Despical";
 	}
 
+	@NotNull
+	@Override
 	public String getVersion() {
 		return plugin.getDescription().getVersion();
 	}
 
-	public String onPlaceholderRequest(Player player, String id) {
+	public String onPlaceholderRequest(Player player, @NotNull String id) {
 		if (player == null) return null;
 
 		final User user = plugin.getUserManager().getUser(player);

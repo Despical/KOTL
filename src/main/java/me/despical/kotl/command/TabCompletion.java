@@ -3,7 +3,6 @@ package me.despical.kotl.command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
-import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import org.bukkit.entity.Player;
@@ -18,14 +17,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 24.07.2022
  */
-public class TabCompletion {
-
-	private final Main plugin;
-
-	public TabCompletion(Main plugin) {
-		this.plugin = plugin;
-		this.plugin.getCommandFramework().registerCommands(this);
-	}
+public class TabCompletion implements CommandImpl {
 
 	@Completer(
 		name = "kotl"
@@ -56,5 +48,9 @@ public class TabCompletion {
 
 		completions.sort(null);
 		return completions;
+	}
+
+	{
+		register(this);
 	}
 }

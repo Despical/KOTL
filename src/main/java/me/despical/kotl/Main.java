@@ -185,9 +185,9 @@ public class Main extends JavaPlugin {
 		new Events(this);
 		new ArenaEvents(this);
 
-		new PlayerCommands(this);
-		new AdminCommands(this);
-		new TabCompletion(this);
+		new PlayerCommands();
+		new AdminCommands();
+		new TabCompletion();
 
 		registerSoftDependencies();
 	}

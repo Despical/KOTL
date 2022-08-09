@@ -9,10 +9,8 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -20,13 +18,13 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static me.despical.commandframework.Command.SenderType.PLAYER;
 import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
 
 /**
@@ -34,28 +32,16 @@ import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
  * <p>
  * Created at 24.07.2022
  */
-public class AdminCommands {
+public class AdminCommands implements CommandImpl {
 
-	private final Main plugin;
-	private final ChatManager chatManager;
-	private final FileConfiguration config;
-	private final Set<CommandSender> confirmations;
-
-	public AdminCommands(Main plugin) {
-		this.plugin = plugin;
-		this.chatManager = plugin.getChatManager();
-		this.config = ConfigUtils.getConfig(plugin, "arenas");
-		this.confirmations = new HashSet<>();
-
-		this.plugin.getCommandFramework().registerCommands(this);
-	}
+	private final Set<CommandSender> confirmations = new HashSet<>();
 
 	@Command(
 		name = "kotl.create",
 		permission = "kotl.admin.create",
 		usage = "/kotl create <id>",
 		desc = "Creates a new arena with default configuration",
-		senderType = Command.SenderType.PLAYER
+		senderType = PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -168,7 +154,7 @@ public class AdminCommands {
 		usage = "/kotl edit <arena>",
 		desc = "Opens the arena editor",
 		min = 1,
-		senderType = Command.SenderType.PLAYER
+		senderType = PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
 		Player player = arguments.getSender();
@@ -287,5 +273,9 @@ public class AdminCommands {
 
 		String list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
+	}
+	
+	{
+		register(this);
 	}
 }
