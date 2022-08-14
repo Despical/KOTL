@@ -89,7 +89,7 @@
 			</resource>
 		</resources>
 
-		<defaultGoal>package -Dmaven.javadoc.skip=true</defaultGoal>
+		<defaultGoal>clean package -Dmaven.javadoc.skip=true</defaultGoal>
 		
 		<plugins>
 			<plugin>
