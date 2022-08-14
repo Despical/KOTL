@@ -47,7 +47,7 @@ public class ChatManager {
 		this.plugin = plugin;
 		this.config = ConfigUtils.getConfig(plugin, "messages");
 		this.prefix = message("in_game.plugin_prefix");
-		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholdersAPI");
+		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
 	}
 
 	public String coloredRawMessage(String message) {
