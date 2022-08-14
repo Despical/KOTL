@@ -88,6 +88,8 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
+		<defaultGoal>package -Dmaven.javadoc.skip=true</defaultGoal>
 		
 		<plugins>
 			<plugin>
