@@ -52,8 +52,8 @@ public class Arena {
 	private final String id;
 	private boolean ready = true;
 
-	private final Set<Player> players = new HashSet<>();
-	private final Map<GameLocation, Location> gameLocations = new EnumMap<>(GameLocation.class);
+	private final Set<Player> players;
+	private final Map<GameLocation, Location> gameLocations;
 
 	private Player king;
 	private Hologram hologram;
@@ -63,6 +63,8 @@ public class Arena {
 
 	public Arena(String id) {
 		this.id = id;
+		this.players = new HashSet<>();
+		this.gameLocations = new EnumMap<>(GameLocation.class);
 		this.scoreboardManager = new ScoreboardManager(plugin, this);
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
@@ -237,9 +239,7 @@ public class Arena {
 	}
 	
 	public void removePlayer(Player player) {
-		if (player == null) {
-			return;
-		}
+		if (player == null) return;
 
 		players.remove(player);
 
@@ -259,7 +259,7 @@ public class Arena {
 	}
 
 	public void teleportToEndLocation(Player player) {
-		Location location = getEndLocation();
+		final Location location = getEndLocation();
 
 		if (location == null) {
 			LogUtils.sendConsoleMessage("&cCouldn't teleport " + player.getName() + " to end location!");

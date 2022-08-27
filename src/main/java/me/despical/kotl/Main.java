@@ -74,14 +74,12 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		configPreferences = new ConfigPreferences(this);
-
 		if ((forceDisable = !validateIfPluginShouldStart())) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
-		if (getConfig().getBoolean("Debug-Messages")) {
+		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DEBUG_MESSAGES)) {
 			LogUtils.setLoggerName("KOTL");
 			LogUtils.enableLogging();
 			LogUtils.log("Initialization started!");
@@ -262,7 +260,8 @@ public class Main extends JavaPlugin {
 			final User user = userManager.getUser(player);
 
 			if (userManager.getDatabase() instanceof MysqlManager) {
-				StringBuilder update = new StringBuilder(" SET ");
+				final StringBuilder update = new StringBuilder(" SET ");
+				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
@@ -277,7 +276,6 @@ public class Main extends JavaPlugin {
 				}
 
 				final String finalUpdate = update.toString();
-				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
 				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
