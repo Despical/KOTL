@@ -91,9 +91,7 @@ public class ArenaRegistry {
 			Arena arena;
 			String path = "instances." + id + ".";
 
-			if (path.contains("default")) {
-				continue;
-			}
+			if (path.contains("default")) continue;
 
 			arena = new Arena(id);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
@@ -103,7 +101,6 @@ public class ArenaRegistry {
 			hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
 
 			arena.setHologram(hologram);
-			arena.setHologramLocation(hologram.getLocation());
 
 			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
 				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
@@ -135,6 +132,6 @@ public class ArenaRegistry {
 	}
 
 	public static Set<Arena> getArenas() {
-		return arenas;
+		return new HashSet<>(arenas);
 	}
 }

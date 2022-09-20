@@ -187,6 +187,7 @@ public class Arena {
 		deleteHologram();
 
 		this.hologram = hologram;
+		this.setHologramLocation(hologram.getLocation());
 	}
 
 	/**

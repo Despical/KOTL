@@ -38,4 +38,9 @@ public interface SetupComponent {
 	FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 
 	void injectComponents(SetupInventory setupInventory, StaticPane pane);
+
+	// Utility method - do not override
+	default void saveConfig() {
+		ConfigUtils.saveConfig(plugin, config, "arenas");
+	}
 }

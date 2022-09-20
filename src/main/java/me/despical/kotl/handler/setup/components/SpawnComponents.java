@@ -19,7 +19,6 @@
 package me.despical.kotl.handler.setup.components;
 
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
@@ -61,7 +60,7 @@ public class SpawnComponents implements SetupComponent {
 			arena.setEndLocation(location);
 
 			config.set(path + "endLocation", LocationSerializer.toString(location));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+			saveConfig();
 		}), 1, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE)
@@ -82,7 +81,7 @@ public class SpawnComponents implements SetupComponent {
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+			saveConfig();
 		}), 2, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
@@ -110,7 +109,7 @@ public class SpawnComponents implements SetupComponent {
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena &e" + arena.getId() + " &aset as you selection!"));
 			plugin.getCuboidSelector().removeSelection(player);
 
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+			saveConfig();
 		}), 3, 1);
 	}
 }

@@ -19,7 +19,6 @@
 package me.despical.kotl.handler.setup.components;
 
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
@@ -48,6 +47,9 @@ public class MiscComponents implements SetupComponent {
 			.lore("&7Click to set king's hologram location")
 			.lore("&7on the place where you are standing.")
 			.lore("&8(where the last king displays)")
+			.lore("")
+			.lore("&8Holograms may be buggy with some servers.")
+			.lore("&8We're going to add support for popular plugins.")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "hologramLocation"))
 			.build(), e -> {
 			
@@ -61,7 +63,7 @@ public class MiscComponents implements SetupComponent {
 			arena.setHologramLocation(location);
 
 			config.set(path + "hologramLocation", LocationSerializer.toString(location));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+			saveConfig();
 		}), 4, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.FILLED_MAP)

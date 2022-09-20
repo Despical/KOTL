@@ -19,7 +19,6 @@
 package me.despical.kotl.handler.setup.components;
 
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
@@ -88,12 +87,11 @@ public class ArenaRegisterComponents implements SetupComponent {
 
 			final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
-			arena.setHologramLocation(hologram.getLocation());
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 
 			config.set(path + "isdone", true);
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+			saveConfig();
 
 			ArenaRegistry.registerArena(arena);
 		}), 7, 1);
