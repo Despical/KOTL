@@ -18,9 +18,11 @@
 
 package me.despical.kotl.handler.setup.components;
 
+import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.arena.Arena;
@@ -65,6 +67,20 @@ public class MiscComponents implements SetupComponent {
 			config.set(path + "hologramLocation", LocationSerializer.toString(location));
 			saveConfig();
 		}), 4, 1);
+
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
+			.name(chatManager.coloredRawMessage("&e&lChange Arena Plate"))
+			.lore("&7Click here to change arena plate.")
+			.lore("&8(Opens arena plate changer menu)")
+			.build(), e -> {
+
+			setupInventory.getPaginatedPane().setPage(2);
+
+			final Gui gui = setupInventory.getGui();
+			gui.setRows(VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1) ? 6 : 4);
+			gui.setTitle("Arena Plate Editor");
+			gui.update();
+		}), 5, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.FILLED_MAP)
 			.name(chatManager.coloredRawMessage("&e&lView Setup Video"))
@@ -74,6 +90,6 @@ public class MiscComponents implements SetupComponent {
 			
 			player.closeInventory();
 			player.sendMessage(chatManager.prefixedRawMessage("&aCheck out this video: &7" + SetupInventory.TUTORIAL_VIDEO));
-		}), 6, 1);
+		}), 6, 3);
 	}
 }

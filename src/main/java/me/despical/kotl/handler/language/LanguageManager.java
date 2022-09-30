@@ -21,6 +21,7 @@ package me.despical.kotl.handler.language;
 import me.despical.commons.file.FileUtils;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.LogUtils;
+import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 
 import java.io.File;
@@ -39,6 +40,9 @@ public class LanguageManager {
 
 	public LanguageManager(Main plugin) {
 		this.plugin = plugin;
+
+		// Do not initialize language manager, could be some changes in messages file
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DEBUG_MESSAGES)) return;
 
 		registerLocales();
 		setupLocale();

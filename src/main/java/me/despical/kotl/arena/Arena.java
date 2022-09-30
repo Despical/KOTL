@@ -19,17 +19,16 @@
 package me.despical.kotl.arena;
 
 import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.compat.XMaterial;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handler.hologram.Hologram;
 import org.bukkit.Location;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +56,8 @@ public class Arena {
 
 	private Player king;
 	private Hologram hologram;
-	private BossBar gameBar;
+	private XMaterial arenaPlate;
+	private BossBarManager bossBarManager;
 
 	private final ScoreboardManager scoreboardManager;
 
@@ -66,13 +66,12 @@ public class Arena {
 		this.players = new HashSet<>();
 		this.gameLocations = new EnumMap<>(GameLocation.class);
 		this.scoreboardManager = new ScoreboardManager(plugin, this);
+		this.arenaPlate = XMaterial.OAK_PRESSURE_PLATE;
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
-			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) {
-				return;
-			}
+			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) return;
 
-			this.gameBar = plugin.getServer().createBossBar(plugin.getChatManager().message("boss_bar.game_info"), BarColor.BLUE, BarStyle.SOLID);
+			this.bossBarManager = new BossBarManager(plugin);
 		}
 	}
 	
@@ -198,6 +197,14 @@ public class Arena {
 	public Hologram getHologram() {
 		return hologram;
 	}
+
+	public void setArenaPlate(XMaterial arenaPlate) {
+		this.arenaPlate = arenaPlate;
+	}
+
+	public XMaterial getArenaPlate() {
+		return arenaPlate;
+	}
 	
 	/**
 	 * Get arena's scoreboard manager
@@ -273,14 +280,14 @@ public class Arena {
 	public void teleportAllToEndLocation() {
 		players.forEach(this::teleportToEndLocation);
 	}
-	
+
 	public void doBarAction(BarAction action, Player player) {
-		if (gameBar == null || player == null) return;
+		if (bossBarManager == null) return;
 
 		if (action == BarAction.ADD) {
-			gameBar.addPlayer(player);
+			bossBarManager.addPlayer(player);
 		} else {
-			gameBar.removePlayer(player);
+			bossBarManager.removePlayer(player);
 		}
 	}
 

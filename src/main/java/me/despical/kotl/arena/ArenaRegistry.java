@@ -70,7 +70,7 @@ public class ArenaRegistry {
 
 	public static void registerArenas() {
 		LogUtils.log("Arena registration started.");
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		long start = System.currentTimeMillis();
 		
 		arenas.clear();
@@ -80,7 +80,7 @@ public class ArenaRegistry {
 			return;
 		}
 
-		ConfigurationSection section = config.getConfigurationSection("instances");
+		final ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
 			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
@@ -96,19 +96,19 @@ public class ArenaRegistry {
 			arena = new Arena(id);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
 			hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
 
 			arena.setHologram(hologram);
 
-			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
+			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
 				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
 				config.set(path + "plateLocation", LocationSerializer.SERIALIZED_LOCATION);
 				config.set(path + "isdone", false);
 				arena.setReady(false);
 
-				registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}

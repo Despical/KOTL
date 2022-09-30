@@ -108,6 +108,7 @@ public class ChatManager {
 	}
 
 	public List<String> getStringList(String path) {
+		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
 		return config.getStringList(path);
 	}
 

@@ -63,7 +63,7 @@ public class SpawnComponents implements SetupComponent {
 			saveConfig();
 		}), 1, 1);
 		
-		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.OAK_PRESSURE_PLATE)
+		pane.addItem(GuiItem.of(new ItemBuilder(arena.getArenaPlate())
 			.name("&e&lSet Plate Location")
 			.lore("&7Click to set plate location on")
 			.lore("&7the place where you are standing.")
@@ -75,7 +75,7 @@ public class SpawnComponents implements SetupComponent {
 			player.closeInventory();
 
 			final Location location = player.getLocation();
-			location.getBlock().getRelative(BlockFace.DOWN).setType(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
+			location.getBlock().getRelative(BlockFace.DOWN).setType(arena.getArenaPlate().parseMaterial());
 
 			arena.setPlateLocation(location);
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena &e" + arena.getId() + " &aset at your location!"));

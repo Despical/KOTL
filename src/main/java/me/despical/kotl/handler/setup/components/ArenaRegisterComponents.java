@@ -84,6 +84,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
@@ -94,6 +95,6 @@ public class ArenaRegisterComponents implements SetupComponent {
 			saveConfig();
 
 			ArenaRegistry.registerArena(arena);
-		}), 7, 1);
+		}), 7, 3);
 	}
 }

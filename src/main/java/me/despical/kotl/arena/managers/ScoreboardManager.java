@@ -83,9 +83,9 @@ public class ScoreboardManager {
 	}
 
 	private List<Entry> formatScoreboard(Player player) {
-		EntryBuilder builder = new EntryBuilder();
+		final EntryBuilder builder = new EntryBuilder();
 
-		for (String line : chatManager.getStringList("Scoreboard.Content.Playing")) {
+		for (String line : chatManager.getStringList("scoreboard.content.playing")) {
 			builder.next(formatScoreboardLine(line, player));
 		}
 

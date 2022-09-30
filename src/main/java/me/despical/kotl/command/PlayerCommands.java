@@ -36,8 +36,6 @@ public class PlayerCommands implements CommandImpl {
 
 			if (arguments.hasPermission("kotl.admin")) {
 				arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
-				arguments.sendMessage(chatManager.coloredRawMessage("&3If you liked this version then consider buying the premium one with better performance and additional features."));
-				arguments.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/"));
 			}
 		}
 	}

@@ -22,12 +22,15 @@ import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
+import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
 import me.despical.kotl.handler.setup.components.MiscComponents;
+import me.despical.kotl.handler.setup.components.PressurePlateComponents;
 import me.despical.kotl.handler.setup.components.SpawnComponents;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,6 +50,8 @@ public class SetupInventory {
 	private final Player player;
 	private final SetupUtilities setupUtilities;
 
+	private PaginatedPane paginatedPane;
+
 	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
 
 	public SetupInventory(Arena arena, Player player) {
@@ -59,14 +64,17 @@ public class SetupInventory {
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 3, "Arena Setup Menu");
+		this.gui = new Gui(plugin, 5, "Arena Setup Menu");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+		this.paginatedPane = new PaginatedPane(9, 5);
 
-		final StaticPane pane = new StaticPane(9, 3);
+		final StaticPane pane = new StaticPane(9, 5);
 		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
+
 		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
 
-		this.gui.addPane(pane);
+		paginatedPane.addPane(0, pane);
+		this.gui.addPane(paginatedPane);
 
 		prepareComponents(pane);
 	}
@@ -80,9 +88,14 @@ public class SetupInventory {
 		
 		final ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
 		arenaRegistryComponents.injectComponents(this, pane);
+
+		final PressurePlateComponents pressurePlateComponents = new PressurePlateComponents();
+		pressurePlateComponents.injectComponents(this, pane);
 	}
 
 	private void sendProTip(Player player) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SEND_SETUP_TIPS)) return;
+
 		final ChatManager chatManager = plugin.getChatManager();
 		String tip = "";
 
@@ -109,9 +122,6 @@ public class SetupInventory {
 				tip = "You have suggestions to improve the plugin? Use our issue tracker or join our Discord server.";
 				break;
 			case 7:
-				tip = "If you like the plugin you can try the premium version with more features and better performance. Check out https://spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/";
-				break;
-			case 8:
 				tip = "Check out our other plugins: https://spigotmc.org/resources/authors/despical.615094/";
 				break;
 			default:
@@ -142,5 +152,13 @@ public class SetupInventory {
 
 	public SetupUtilities getSetupUtilities() {
 		return setupUtilities;
+	}
+
+	public Gui getGui() {
+		return gui;
+	}
+
+	public PaginatedPane getPaginatedPane() {
+		return paginatedPane;
 	}
 }

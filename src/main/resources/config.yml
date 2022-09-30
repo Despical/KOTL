@@ -1,7 +1,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                             #
-#       King of the Ladder by Despical (Version 2.3.7)        #
+#       King of the Ladder by Despical (Version ${project.version})        #
 #                                                             #
 #              https://www.patreon.com/despical               #
 #   Support us with becoming Patron and use Patron benefits   #
@@ -82,5 +82,8 @@ Leave-Notify: true
 
 # Should we check for updates on plugin start/after admin join?
 Update-Notifier-Enabled: true
+
+# Enable this option to see log messages and timings.
+Debug-Messages: false
 
 # No way! You've reached the end! But... where's the dragon!?

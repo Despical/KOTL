@@ -2,6 +2,7 @@ package me.despical.kotl.command;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -79,6 +80,7 @@ public class AdminCommands implements CommandImpl {
 		config.set(path + "isdone", false);
 		config.set(path + "hologramLocation", def);
 		config.set(path + "plateLocation", def);
+		config.set(path + "arenaPlate", XMaterial.OAK_PRESSURE_PLATE.name());
 
 		ConfigUtils.saveConfig(plugin, config, "arenas");
 

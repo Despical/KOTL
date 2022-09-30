@@ -47,9 +47,17 @@ In-Game:
 
 # Has usage only when boss bar is enabled in config
 # Also not compatible with the versions before Minecraft 1.9
+# Color values: PINK, BLUE, RED, GREEN, YELLOW, PURPLE and WHITE
+# Style values: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
 Boss-Bar:
-  Game-Info: "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
-  
+  Color: "BLUE"
+  Style: "SOLID"
+  Interval: "300" # 20 ticks = 1 second
+  Messages:
+    - "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
+    - "&e&lTHANK YOU FOR &b&lSUPPORTING &e&lUS!"
+    - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
+
 # In game scoreboard messages.
 # Don't use more than 48 characters if you use old versions of Minecraft!
 # Can be used up to 144 characters in 1.14 and higher versions.

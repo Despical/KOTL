@@ -18,7 +18,6 @@
 
 package me.despical.kotl.arena;
 
-import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
@@ -96,7 +95,7 @@ public class ArenaEvents extends ListenerAdapter {
 		}
 
 		if (event.getAction() == Action.PHYSICAL) {
-			if (event.getClickedBlock().getType() == XMaterial.OAK_PRESSURE_PLATE.parseMaterial()) {
+			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
 				if (arena.getPlayers().size() == 1 && arena.getKing() != null && arena.getKing().equals(player)) return;
 				arena.setKing(player);
 
