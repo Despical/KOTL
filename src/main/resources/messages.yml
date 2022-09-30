@@ -81,3 +81,7 @@ Validator:
   Invalid-Arena-Configuration: "[KOTL] &cArena %arena% has invalid configuration! Missing node: %error%"
   Instance-Started: "[KOTL] Arena %arena% instance successfully started!"
   No-Instances-Created: "[KOTL] There are no arena instances created in configuration!"
+
+# If you change the value the file will be replaced with default yaml
+# So you shouldn't edit here. Be careful to make changes here!
+Language: default
