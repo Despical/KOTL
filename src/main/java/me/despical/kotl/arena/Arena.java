@@ -136,6 +136,10 @@ public class Arena {
 	public void setHologramLocation(Location hologramLoc) {
 		gameLocations.put(GameLocation.HOLOGRAM, hologramLoc);
 	}
+
+	public boolean hasHologram() {
+		return hologram != null;
+	}
 	
 	/**
 	 * Get arena's plate location.

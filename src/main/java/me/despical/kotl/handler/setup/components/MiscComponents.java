@@ -44,6 +44,20 @@ public class MiscComponents implements SetupComponent {
 		final Arena arena = setupInventory.getArena();
 		final String path = "instances." + arena.getId() + ".";
 
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
+			.name(chatManager.coloredRawMessage("&e&lChange Arena Plate"))
+			.lore("&7Click here to change arena plate.")
+			.lore("&8(opens arena plate changer menu)")
+			.build(), e -> {
+
+			setupInventory.getPaginatedPane().setPage(2);
+
+			final Gui gui = setupInventory.getGui();
+			gui.setRows(VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1) ? 6 : 4);
+			gui.setTitle("Arena Plate Editor");
+			gui.update();
+		}), 4, 1);
+
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ARMOR_STAND)
 			.name("&e&lSet King Hologram")
 			.lore("&7Click to set king's hologram location")
@@ -66,20 +80,6 @@ public class MiscComponents implements SetupComponent {
 
 			config.set(path + "hologramLocation", LocationSerializer.toString(location));
 			saveConfig();
-		}), 4, 1);
-
-		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
-			.name(chatManager.coloredRawMessage("&e&lChange Arena Plate"))
-			.lore("&7Click here to change arena plate.")
-			.lore("&8(Opens arena plate changer menu)")
-			.build(), e -> {
-
-			setupInventory.getPaginatedPane().setPage(2);
-
-			final Gui gui = setupInventory.getGui();
-			gui.setRows(VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1) ? 6 : 4);
-			gui.setTitle("Arena Plate Editor");
-			gui.update();
 		}), 5, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.FILLED_MAP)

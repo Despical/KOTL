@@ -69,7 +69,7 @@ public class ArenaRegisterComponents implements SetupComponent {
 				return;
 			}
 
-			String[] locations = {"plateLocation", "hologramLocation", "endLocation", "areaMin", "areaMax"};
+			String[] locations = {"plateLocation", "endLocation", "areaMin", "areaMax"};
 
 			for (String loc : locations) {
 				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
@@ -86,8 +86,12 @@ public class ArenaRegisterComponents implements SetupComponent {
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
-			final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
-			arena.setHologram(hologram);
+			if (!config.isSet(path + "hologramLocation") || LocationSerializer.isDefaultLocation(config.getString(path + "hologramLocation"))) {
+				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aNo hologram location found skipping hologram creation."));
+			} else {
+				final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
+				arena.setHologram(hologram);
+			}
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 

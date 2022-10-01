@@ -198,9 +198,7 @@ public class Main extends JavaPlugin {
 		if (chatManager.isPapiEnabled()) {
 			LogUtils.log("Hooking into PlaceholderAPI.");
 			new PlaceholderManager(this);
-		}
-
-		LogUtils.log("Hooked into soft dependencies.");
+		} else LogUtils.log("PlaceholderAPI not found skipped hooking.");
 	}
 	
 	private void startPluginMetrics() {

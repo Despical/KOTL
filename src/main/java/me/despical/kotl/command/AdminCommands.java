@@ -174,7 +174,7 @@ public class AdminCommands implements CommandImpl {
 		name = "kotl.reload",
 		permission = "kotl.admin.reload",
 		usage = "/kotl reload",
-		desc = "Opens the arena editor"
+		desc = "Reloads all configuration and stops arenas"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		CommandSender sender = arguments.getSender();

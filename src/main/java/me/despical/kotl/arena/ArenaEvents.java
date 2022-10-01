@@ -19,6 +19,7 @@
 package me.despical.kotl.arena;
 
 import me.despical.commons.configuration.ConfigUtils;
+import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
@@ -38,6 +39,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Set;
 
@@ -109,9 +111,13 @@ public class ArenaEvents extends ListenerAdapter {
 				Set<Player> players = arena.getPlayers();
 				players.remove(player);
 
+				spawnFireworks(arena, player);
+
 				for (Player p : players) {
 					plugin.getUserManager().getUser(p).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
 					plugin.getRewardsFactory().performReward(p, Reward.RewardType.LOSE);
+
+					spawnFireworks(arena, p);
 				}
 			}
 		}
@@ -182,5 +188,23 @@ public class ArenaEvents extends ListenerAdapter {
 		}
 
 		return null;
+	}
+
+	private void spawnFireworks(Arena arena, Player player) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
+
+		new BukkitRunnable() {
+
+			private int i = 0;
+
+			public void run() {
+				if (i == 2 || !arena.getPlayers().contains(player)) {
+					cancel();
+				}
+
+				MiscUtils.spawnRandomFirework(player.getLocation());
+				i++;
+			}
+		}.runTaskTimer(plugin, 10, 20);
 	}
 }

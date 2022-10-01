@@ -125,7 +125,10 @@ public class ChatManager {
 			case NEW_KING:
 				path = "new_king";
 
-				arena.getHologram().appendLine(formatMessage(arena, message("in_game.last_king_hologram"), player));
+				if (arena.hasHologram()) {
+					arena.getHologram().appendLine(formatMessage(arena, message("in_game.last_king_hologram"), player));
+				}
+
 				break;
 			default:
 				return;

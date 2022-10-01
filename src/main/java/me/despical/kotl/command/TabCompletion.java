@@ -26,6 +26,8 @@ public class TabCompletion implements CommandImpl {
 		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
 		final String args[] = arguments.getArguments(), arg = args[0];
 
+		commands.remove("kotl");
+
 		if (args.length == 1) {
 			StringUtil.copyPartialMatches(arg, commands, completions);
 		}

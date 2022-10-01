@@ -62,6 +62,9 @@ Whitelisted-Commands:
 # Enable in game rewards? See rewards.yml for more.
 Rewards-Enabled: false
 
+# Should we spawn some cool fireworks around the game area when someone becomes king?
+Fireworks-On-New-King: true
+
 # Should we block every not King of the Ladder associated commands in game?
 Block-Commands: true
 

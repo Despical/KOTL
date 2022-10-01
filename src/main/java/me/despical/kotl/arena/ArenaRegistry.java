@@ -98,10 +98,12 @@ public class ArenaRegistry {
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
-			Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
-			hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
+			if (!LocationSerializer.isDefaultLocation(config.getString(path + "hologramLocation"))) {
+				Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
+				hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
 
-			arena.setHologram(hologram);
+				arena.setHologram(hologram);
+			} else LogUtils.log("Skipping hologram creation for {0}.", id);
 
 			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
 				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
@@ -109,6 +111,7 @@ public class ArenaRegistry {
 				config.set(path + "isdone", false);
 				arena.setReady(false);
 
+				registerArena(arena);
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
