@@ -9,10 +9,6 @@ out of the ladders to be the king. The king tries to stand on the top of the lad
 punching them out of the way! If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
 If you still didn't find an answer see documentation section below. Also a [tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is available for the plugin by SpigotFAQ.
 
-Did you like our plugin? We have a premium version of KOTL with more features such as
-animated game bar, animated scoreboard, interactable game signs, custom arena plate editor,
-with lots of optimizations and so much more. Click [here](https://www.spigotmc.org/resources/king-of-the-ladder-premium-1-8-1-19.102644/) to see features of premium version.
-
 ## Documentation
 More information can be found on the [wiki page](https://github.com/Despical/KOTL/wiki).
 The [Java documentations](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html) can be browsed.
@@ -38,7 +34,7 @@ To add this project as a dependency to your project, add the following to your p
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.3.6</version>
+    <version>2.4.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -51,7 +47,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.3.6;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.4.1;
 }
 ```
 

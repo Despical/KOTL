@@ -148,14 +148,18 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		final Player player = event.getPlayer();
+
+		if (ArenaRegistry.isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		final Player player = event.getPlayer();
+
+		if (ArenaRegistry.isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);
 		}
 	}
@@ -169,7 +173,7 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if(ArenaRegistry.isInArena(event.getPlayer())) {
+		if (ArenaRegistry.isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}
