@@ -1,8 +1,9 @@
 instances:
   default:
-    endlocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
+    endLocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
     areaMin: world, -994.000, 4.000, 853.000, 0.000, 0.000
     areaMax: world, -994.000, 4.000, 853.000, 0.000, 0.000
     isdone: false
     hologramLocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
     plateLocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
+    arenaPlate: OAK_PRESSURE_PLATE

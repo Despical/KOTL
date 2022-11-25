@@ -20,7 +20,6 @@ package me.despical.kotl.handler.setup.components;
 
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
@@ -51,7 +50,7 @@ public class PressurePlateComponents implements SetupComponent {
 		final StaticPane pressurePlatesPane = new StaticPane(9, 6);
 		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE)
 			.name("&eClick to change plate!")
-			.lore("", "&7Current plate: &a" + arena.getArenaPlate().name()).build());
+			.lore("", "&7Current plate: &a" + arena.getArenaPlate().toString()).build());
 
 		setupInventory.getPaginatedPane().addPane(2, pressurePlatesPane);
 
@@ -91,12 +90,13 @@ public class PressurePlateComponents implements SetupComponent {
 
 			pressurePlatesPane.addItem(GuiItem.of(itemBuilder.build(), inventoryClickEvent -> {
 				player.closeInventory();
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate.name()));
-
-				arena.setArenaPlate(plate);
 
 				config.set(path + "arenaPlate", plate.name());
-				ConfigUtils.saveConfig(plugin, config, "arenas");
+				saveConfig();
+
+				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate.toString()));
+
+				arena.setArenaPlate(plate);
 			}), slot % 9, slot / 9);
 		}
 

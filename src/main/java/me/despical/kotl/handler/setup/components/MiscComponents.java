@@ -72,14 +72,14 @@ public class MiscComponents implements SetupComponent {
 			player.closeInventory();
 
 			final Location location = player.getLocation();
+			config.set(path + "hologramLocation", LocationSerializer.toString(location));
+			saveConfig();
+
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			final Hologram hologram = new Hologram(location, chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
 			arena.setHologram(hologram);
 			arena.setHologramLocation(location);
-
-			config.set(path + "hologramLocation", LocationSerializer.toString(location));
-			saveConfig();
 		}), 5, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.FILLED_MAP)
