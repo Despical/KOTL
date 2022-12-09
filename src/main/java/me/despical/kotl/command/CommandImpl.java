@@ -15,4 +15,10 @@ public interface CommandImpl {
 	default void register(Object object) {
 		plugin.getCommandFramework().registerCommands(object);
 	}
+
+	static void registerCommands() {
+		new PlayerCommands();
+		new AdminCommands();
+		new TabCompletion();
+	}
 }

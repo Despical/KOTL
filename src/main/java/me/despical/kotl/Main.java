@@ -31,13 +31,9 @@ import me.despical.commons.util.LogUtils;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaEvents;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.command.AdminCommands;
-import me.despical.kotl.command.PlayerCommands;
-import me.despical.kotl.command.TabCompletion;
-import me.despical.kotl.event.ChatEvents;
-import me.despical.kotl.event.Events;
+import me.despical.kotl.command.CommandImpl;
+import me.despical.kotl.event.ListenerAdapter;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.PlaceholderManager;
 import me.despical.kotl.handler.language.LanguageManager;
@@ -80,8 +76,7 @@ public class Main extends JavaPlugin {
 		}
 
 		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DEBUG_MESSAGES)) {
-			LogUtils.setLoggerName("KOTL");
-			LogUtils.enableLogging();
+			this.setDebugMode(true);
 			LogUtils.log("Initialization started!");
 		}
 
@@ -178,14 +173,8 @@ public class Main extends JavaPlugin {
 		rewardsFactory = new RewardsFactory(this);
 
 		ArenaRegistry.registerArenas();
-
-		new ChatEvents(this);
-		new Events(this);
-		new ArenaEvents(this);
-
-		new PlayerCommands();
-		new AdminCommands();
-		new TabCompletion();
+		ListenerAdapter.registerEvents(this);
+		CommandImpl.registerCommands();
 
 		registerSoftDependencies();
 	}
@@ -253,6 +242,12 @@ public class Main extends JavaPlugin {
 		return userManager;
 	}
 
+	public void setDebugMode(boolean debugMode) {
+		if (debugMode && !LogUtils.isEnabled()) {
+			LogUtils.enableLogging("KOTL");
+		} else LogUtils.disableLogging();
+	}
+
 	private void saveAllUserStatistics() {
 		for (Player player : getServer().getOnlinePlayers()) {
 			final User user = userManager.getUser(player);
@@ -264,13 +259,14 @@ public class Main extends JavaPlugin {
 				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					int val = user.getStat(stat);
+					final int val = user.getStat(stat);
+					final String statName = stat.getName();
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(stat.getName()).append("'='").append(val);
+						update.append(statName).append("'='").append(val);
 					}
 
-					update.append(", ").append(stat.getName()).append("'='").append(val);
+					update.append(", ").append(statName).append("'='").append(val);
 				}
 
 				final String finalUpdate = update.toString();
