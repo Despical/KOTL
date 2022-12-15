@@ -9,16 +9,16 @@
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
-punching them out of the way! If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
+punching them out of the way!<br> If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
 If you still didn't find an answer see documentation section below.
-<br>Also a [tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is available for the plugin by SpigotFAQ.
+<br>[Tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is available for the plugin by SpigotFAQ.
 
 </div>
 
 ## Documentation
-More information can be found on the [wiki page](https://github.com/Despical/KOTL/wiki).
-The [Java documentations](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html) can be browsed.
-You can also join our [Discord community](https://www.discord.gg/rVkaGmyszE) to get support and news early.
+- [Wiki](https://github.com/Despical/KOTL/wiki)
+- [JavaDocs](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
+- [Discord Community](https://www.discord.gg/rVkaGmyszE)
 
 ## Donations
 You like the KOTL? Then [donate](https://www.patreon.com/despical) back me to support the development.
@@ -26,9 +26,9 @@ Donations are more like motivation than money and, they are speeding up the deve
 
 ## Using King of the Ladder API
 The project isn't in the Central Repository yet, so specifying a repository is needed.<br>
-To add this project as a dependency to your project, add the following to your pom.xml:
 
-### Maven dependency
+<details>
+<summary>Maven dependency</summary>
 
 ```xml
 <repository>
@@ -40,12 +40,16 @@ To add this project as a dependency to your project, add the following to your p
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.4.2</version>
+    <version>2.4.3</version>
     <scope>compile</scope>
 </dependency>
 ```
 
-### Gradle dependency
+</details>
+
+<details>
+<summary>Gradle dependency</summary>
+
 ```
 repositories {
     maven { url 'https://jitpack.io' }
@@ -53,9 +57,10 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.4.2;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.4.3;
 }
 ```
+</details>
 
 ## License
 This code is under [GPL-3.0 License](http://www.gnu.org/licenses/gpl-3.0.html)
@@ -73,9 +78,10 @@ I accept Pull Requests via GitHub. There are some guidelines which will make app
 You can learn more about contributing via GitHub in [contribution guidelines](../CONTRIBUTING.md).
 
 ## Building from source
-If you want to build this project from source code, run the following from Git Bash:
+To build this project from source code, run the following from Git Bash:
 ```
 git clone https://www.github.com/Despical/KOTL.git && cd KOTL
 mvn clean package -Dmaven.javadoc.skip=true
 ```
-Also don't forget to install Maven before building.
+
+> **Note** Don't forget to install Maven before building.
