@@ -9,14 +9,15 @@
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
-punching them out of the way!< If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
-If you still didn't find an answer see documentation section below. [Tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is also available.
+punching them out of the way! If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
+If you still didn't find an answer see documentation section below.
 
 </div>
 
 ## Documentation
 - [Wiki](https://github.com/Despical/KOTL/wiki)
 - [JavaDocs](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
+- [Tutorial Video](https://www.youtube.com/watch?v=O_vkf_J4OgY)
 - [Discord Community](https://www.discord.gg/rVkaGmyszE)
 
 ## Donations
