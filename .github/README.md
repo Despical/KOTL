@@ -1,4 +1,7 @@
-# King of the Ladder
+<h1 align="center">King of the Ladder</h1>
+
+<div align="center">
+
 [![KOTL Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
@@ -7,7 +10,10 @@
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
 punching them out of the way! If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
-If you still didn't find an answer see documentation section below. Also a [tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is available for the plugin by SpigotFAQ.
+If you still didn't find an answer see documentation section below.
+<br>Also a [tutorial video](https://www.youtube.com/watch?v=O_vkf_J4OgY) is available for the plugin by SpigotFAQ.
+
+</div>
 
 ## Documentation
 More information can be found on the [wiki page](https://github.com/Despical/KOTL/wiki).
