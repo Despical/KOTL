@@ -1,7 +1,7 @@
 # King of the Ladder
+[![KOTL Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
-![](https://img.shields.io/github/workflow/status/Despical/KOTL/KOTL%20Build)
 [![Discord](https://img.shields.io/discord/719922452259668000.svg?color=lime&label=Discord)](https://discord.gg/rVkaGmyszE)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
