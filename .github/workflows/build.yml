@@ -1,4 +1,4 @@
-name: KOTL Build
+name: Build
 
 on:
   push:
