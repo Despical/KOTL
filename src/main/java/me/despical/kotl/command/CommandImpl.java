@@ -24,6 +24,11 @@ import me.despical.kotl.handler.ChatManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @author Despical
+ * <p>
+ * Created at 24.07.2022
+ */
 public interface CommandImpl {
 
 	Main plugin = JavaPlugin.getPlugin(Main.class);
