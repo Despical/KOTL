@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others to climb top of the ladders!
- * Copyright (C) 2022 Despical
+ * Copyright (C) 2023 Despical
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
