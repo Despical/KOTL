@@ -3,8 +3,8 @@
 <div align="center">
 
 [![KOTL Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
-[![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
+[![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
 [![Discord](https://img.shields.io/discord/719922452259668000.svg?color=lime&label=Discord)](https://discord.gg/rVkaGmyszE)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
@@ -40,7 +40,7 @@ The project isn't in the Central Repository yet, so specifying a repository is n
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.4.3</version>
+    <version>2.4.4</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -57,7 +57,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.4.3;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.4.4;
 }
 ```
 </details>
