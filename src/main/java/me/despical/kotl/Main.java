@@ -76,7 +76,7 @@ public class Main extends JavaPlugin {
 		}
 
 		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DEBUG_MESSAGES)) {
-			this.setDebugMode(true);
+			LogUtils.enableLogging("KOTL");
 			LogUtils.log("Initialization started!");
 		}
 
@@ -240,12 +240,6 @@ public class Main extends JavaPlugin {
 
 	public UserManager getUserManager() {
 		return userManager;
-	}
-
-	public void setDebugMode(boolean debugMode) {
-		if (debugMode && !LogUtils.isEnabled()) {
-			LogUtils.enableLogging("KOTL");
-		} else LogUtils.disableLogging();
 	}
 
 	private void saveAllUserStatistics() {

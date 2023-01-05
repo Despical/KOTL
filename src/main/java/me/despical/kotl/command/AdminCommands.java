@@ -294,18 +294,6 @@ public class AdminCommands implements CommandImpl {
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
 	}
 
-	@Command(
-		name = "kotl.debug",
-		permission = "kotl.admin"
-	)
-	public void debugCommand(CommandArguments arguments) {
-		final boolean debugMode = arguments.getArgumentAsBoolean(0);
-
-		LogUtils.sendConsoleMessage("[KOTL] Debugging is now " + (debugMode ? "enabled" : "disabled"));
-
-		plugin.setDebugMode(debugMode);
-	}
-	
 	{
 		register(this);
 	}
