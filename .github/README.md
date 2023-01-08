@@ -3,9 +3,10 @@
 <div align="center">
 
 [![Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
+[![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
-[![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
 [![Discord](https://img.shields.io/discord/719922452259668000.svg?color=lime&label=Discord)](https://discord.gg/rVkaGmyszE)
+[![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
