@@ -59,19 +59,32 @@ public class MiscComponents implements SetupComponent {
 		}), 4, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ARMOR_STAND)
-			.name("&e&lSet King Hologram")
+			.name("&e&lSet King Hologram (OPTIONAL)")
 			.lore("&7Click to set king's hologram location")
 			.lore("&7on the place where you are standing.")
 			.lore("&8(where the last king displays)")
 			.lore("")
-			.lore("&8Holograms may be buggy with some servers.")
-			.lore("&8We're going to add support for popular plugins.")
+			.lore("&8Shift click to remove arena's current hologram.")
+			.lore("&8Holograms may can't be deleted because some of your plugins.")
 			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "hologramLocation"))
 			.build(), e -> {
 			
 			player.closeInventory();
 
 			final Location location = player.getLocation();
+
+			if (e.isShiftClick()) {
+				if (arena.hasHologram()) {
+					arena.deleteHologram();
+
+					config.set(path + "hologramLocation", LocationSerializer.SERIALIZED_LOCATION);
+					saveConfig();
+
+					player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aHologram of arena &e" + arena.getId() + " &adeleted successfully!"));
+					return;
+				}
+			}
+
 			config.set(path + "hologramLocation", LocationSerializer.toString(location));
 			saveConfig();
 

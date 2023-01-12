@@ -50,11 +50,14 @@ public class Hologram {
 
 	public void delete() {
 		for (ArmorStand armor : armorStands) {
-			armor.setCustomNameVisible(false);
 			armor.remove();
 		}
 
 		armorStands.clear();
+	}
+
+	public boolean isDeleted() {
+		return this.armorStands.isEmpty();
 	}
 
 	public void append() {

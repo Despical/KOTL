@@ -38,6 +38,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -224,7 +225,13 @@ public class Arena {
 	}
 
 	public void deleteHologram() {
-		if (hologram != null) hologram.delete();
+		if (hologram != null) {
+			hologram.delete();
+
+			if (!hologram.isDeleted()) LogUtils.log(Level.WARNING, "Could not remove arena hologram for {0}.", id);
+		}
+
+		hologram = null;
 	}
 	
 	public void addPlayer(Player player) {
