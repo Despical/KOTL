@@ -45,10 +45,9 @@ public class TabCompletion implements CommandImpl {
 		final String args[] = arguments.getArguments(), arg = args[0];
 
 		commands.remove("kotl");
-		commands.remove("debug");
 
 		if (args.length == 1) {
-			StringUtil.copyPartialMatches(arg, commands, completions);
+			StringUtil.copyPartialMatches(arg, arguments.hasPermission("kotl.admin") || arguments.getSender().isOp() ? commands : Collections.listOf("top", "stats"), completions);
 		}
 
 		if (args.length == 2) {
