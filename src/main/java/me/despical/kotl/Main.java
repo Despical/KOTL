@@ -96,7 +96,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R1)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R2)) {
 			LogUtils.sendConsoleMessage("[KOTL] &cYour server version is not supported by King of the Ladder!");
 			LogUtils.sendConsoleMessage("[KOTL] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
