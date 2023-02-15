@@ -59,7 +59,7 @@ public class ArenaEvents extends ListenerAdapter {
 		Player player = event.getPlayer();
 		Arena arena = isInArea(player.getLocation());
 
-		if (!ArenaRegistry.isInArena(player) && arena != null) {
+		if (!plugin.getArenaRegistry().isInArena(player) && arena != null) {
 			arena.addPlayer(player);
 
 			player.setGameMode(GameMode.SURVIVAL);
@@ -72,8 +72,8 @@ public class ArenaEvents extends ListenerAdapter {
 			}
 		}
 
-		if (ArenaRegistry.isInArena(player) && arena == null) {
-			Arena tempArena = ArenaRegistry.getArena(player);
+		if (plugin.getArenaRegistry().isInArena(player) && arena == null) {
+			Arena tempArena = plugin.getArenaRegistry().getArena(player);
 
 			tempArena.doBarAction(Arena.BarAction.REMOVE, player);
 
@@ -90,7 +90,7 @@ public class ArenaEvents extends ListenerAdapter {
 	@EventHandler
 	public void onInteractWithPlate(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		Arena arena = ArenaRegistry.getArena(player);
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			return;
@@ -131,7 +131,7 @@ public class ArenaEvents extends ListenerAdapter {
 			return;
 		}
 
-		Arena arena = ArenaRegistry.getArena(player);
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			return;
@@ -160,7 +160,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 		Player entity = (Player) event.getEntity(), damager = (Player) event.getDamager();
 
-		if (ArenaRegistry.isInArena(entity) && ArenaRegistry.isInArena(damager)) {
+		if (plugin.getArenaRegistry().isInArena(entity) && plugin.getArenaRegistry().isInArena(damager)) {
 			event.setCancelled(false);
 			event.setDamage(0d);
 		}
@@ -170,7 +170,7 @@ public class ArenaEvents extends ListenerAdapter {
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
 		Location first, second;
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
+		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			if (!config.getBoolean("instances." + arena.getId() + ".isdone")) {
 				continue;
 			}

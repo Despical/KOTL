@@ -19,9 +19,10 @@
 package me.despical.kotl.handler.setup;
 
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.Gui;
-import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.ConfigPreferences;
@@ -29,9 +30,9 @@ import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
-import me.despical.kotl.handler.setup.components.MiscComponents;
 import me.despical.kotl.handler.setup.components.PressurePlateComponents;
 import me.despical.kotl.handler.setup.components.SpawnComponents;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,7 +49,6 @@ public class SetupInventory {
 	private final Main plugin;
 	private final Arena arena;
 	private final Player player;
-	private final SetupUtilities setupUtilities;
 
 	private PaginatedPane paginatedPane;
 
@@ -58,20 +58,18 @@ public class SetupInventory {
 		this.arena = arena;
 		this.player = player;
 		this.plugin = JavaPlugin.getPlugin(Main.class);
-		this.setupUtilities = new SetupUtilities(plugin);
 
 		prepareGui();
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 5, "Arena Setup Menu");
+		this.gui = new Gui(plugin, 4, "KOTL Arena Editor");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-		this.paginatedPane = new PaginatedPane(9, 5);
+		this.paginatedPane = new PaginatedPane(9, 4);
 
-		final StaticPane pane = new StaticPane(9, 5);
+		final StaticPane pane = new StaticPane(9, 4);
 		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
-
-		pane.fillProgressBorder(GuiItem.of(registeredItem.build()), GuiItem.of(notRegisteredItem.build()), arena.isReady() ? 100 : 0);
+		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 
 		paginatedPane.addPane(0, pane);
 		this.gui.addPane(paginatedPane);
@@ -82,10 +80,7 @@ public class SetupInventory {
 	private void prepareComponents(StaticPane pane) {
 		final SpawnComponents spawnComponents = new SpawnComponents();
 		spawnComponents.injectComponents(this, pane);
-		
-		final MiscComponents miscComponents = new MiscComponents();
-		miscComponents.injectComponents(this, pane);
-		
+
 		final ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
 		arenaRegistryComponents.injectComponents(this, pane);
 
@@ -101,7 +96,7 @@ public class SetupInventory {
 
 		switch (ThreadLocalRandom.current().nextInt(20)) {
 			case 0:
-				tip = "We are open source! You can always help us by contributing! Check https://github.com/Despical/KOTL";
+				tip = "We are open source! You can always help us by contributing! Check out https://github.com/Despical/KOTL";
 				break;
 			case 1:
 				tip = "Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
@@ -119,9 +114,6 @@ public class SetupInventory {
 				tip = "Need help? You can join our Discord community. Check out https://discord.gg/rVkaGmyszE";
 				break;
 			case 6:
-				tip = "You have suggestions to improve the plugin? Use our issue tracker or join our Discord server.";
-				break;
-			case 7:
 				tip = "Check out our other plugins: https://spigotmc.org/resources/authors/despical.615094/";
 				break;
 			default:
@@ -150,15 +142,28 @@ public class SetupInventory {
 		return player;
 	}
 
-	public SetupUtilities getSetupUtilities() {
-		return setupUtilities;
-	}
-
 	public Gui getGui() {
 		return gui;
 	}
 
 	public PaginatedPane getPaginatedPane() {
 		return paginatedPane;
+	}
+
+	public interface SetupComponent {
+
+		Main plugin = JavaPlugin.getPlugin(Main.class);
+		ChatManager chatManager = plugin.getChatManager();
+		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+
+		void injectComponents(SetupInventory setupInventory, StaticPane pane);
+
+		default void saveConfig() {
+			ConfigUtils.saveConfig(plugin, config, "arenas");
+		}
+
+		default String isOptionDoneBool(String path) {
+			return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
+		}
 	}
 }

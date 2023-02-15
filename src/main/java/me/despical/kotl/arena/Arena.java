@@ -27,7 +27,6 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
-import me.despical.kotl.handler.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,7 +37,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -56,7 +54,6 @@ public class Arena {
 	private final Map<GameLocation, Location> gameLocations;
 
 	private Player king;
-	private Hologram hologram;
 	private XMaterial arenaPlate;
 	private BossBarManager bossBarManager;
 
@@ -121,28 +118,6 @@ public class Arena {
 	}
 
 	/**
-	 * Get last king hologram's location of arena.
-	 * 
-	 * @return hologram location of last king
-	 */
-	public Location getHologramLocation() {
-		return gameLocations.get(GameLocation.HOLOGRAM);
-	}
-	
-	/**
-	 * Set last king's hologram location.
-	 * 
-	 * @param hologramLoc new hologram location of arena
-	 */
-	public void setHologramLocation(Location hologramLoc) {
-		gameLocations.put(GameLocation.HOLOGRAM, hologramLoc);
-	}
-
-	public boolean hasHologram() {
-		return hologram != null;
-	}
-	
-	/**
 	 * Get arena's plate location.
 	 * 
 	 * @return plate location of arena
@@ -181,27 +156,6 @@ public class Arena {
 	public String getKingName() {
 		return king == null ? plugin.getChatManager().message("in_game.there_is_no_king") : king.getName();
 	}
-	
-	/**
-	 * Set hologram of last king.
-	 *
-	 * @param hologram last king's hologram
-	 */
-	public void setHologram(Hologram hologram) {
-		deleteHologram();
-
-		this.hologram = hologram;
-		this.setHologramLocation(hologram.getLocation());
-	}
-
-	/**
-	 * Get last king's hologram.
-	 *
-	 * @return last king's hologram
-	 */
-	public Hologram getHologram() {
-		return hologram;
-	}
 
 	public void setArenaPlate(XMaterial arenaPlate) {
 		this.arenaPlate = arenaPlate;
@@ -224,16 +178,6 @@ public class Arena {
 		for (Player player : players) player.sendMessage(message);
 	}
 
-	public void deleteHologram() {
-		if (hologram != null) {
-			hologram.delete();
-
-			if (!hologram.isDeleted()) LogUtils.log(Level.WARNING, "Could not remove arena hologram for {0}.", id);
-		}
-
-		hologram = null;
-	}
-	
 	public void addPlayer(Player player) {
 		players.add(player);
 
@@ -307,6 +251,6 @@ public class Arena {
 	}
 	
 	public enum GameLocation {
-		END, HOLOGRAM, PLATE
+		END, PLATE
 	}
 }

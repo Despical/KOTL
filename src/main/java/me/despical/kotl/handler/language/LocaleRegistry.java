@@ -21,6 +21,8 @@ package me.despical.kotl.handler.language;
 import java.util.HashSet;
 import java.util.Set;
 
+import me.despical.kotl.handler.language.LanguageManager.Locale;
+
 /**
  * @author Despical
  * <p>
@@ -28,7 +30,7 @@ import java.util.Set;
  */
 public class LocaleRegistry {
 
-	private static final Set<Locale> registeredLocales = new HashSet<>();
+	private static final Set<LanguageManager.Locale> registeredLocales = new HashSet<>();
 
 	public static void registerLocale(Locale locale) {
 		registeredLocales.removeIf(l -> l.prefix.equals(locale.prefix));

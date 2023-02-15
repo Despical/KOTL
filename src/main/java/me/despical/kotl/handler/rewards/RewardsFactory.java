@@ -24,7 +24,6 @@ import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -55,7 +54,7 @@ public class RewardsFactory {
 			return;
 		}
 
-		Arena arena = ArenaRegistry.getArena(player);
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		for (Reward reward : rewards) {
 			if (reward.getType() == type) {

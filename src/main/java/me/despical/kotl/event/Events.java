@@ -23,7 +23,6 @@ import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handler.ChatManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,7 +68,7 @@ public class Events extends ListenerAdapter {
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		Arena arena = ArenaRegistry.getArena(player);
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
@@ -84,7 +83,7 @@ public class Events extends ListenerAdapter {
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 
-		if (!ArenaRegistry.isInArena(player)) {
+		if (!plugin.getArenaRegistry().isInArena(player)) {
 			return;
 		}
 
@@ -118,7 +117,7 @@ public class Events extends ListenerAdapter {
 
 		Player victim = (Player) e.getEntity();
 
-		if (!ArenaRegistry.isInArena(victim)) {
+		if (!plugin.getArenaRegistry().isInArena(victim)) {
 			return;
 		}
 
@@ -133,14 +132,14 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onInGameBedEnter(PlayerBedEnterEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
-		if (event.getEntity() instanceof Player && ArenaRegistry.isInArena((Player) event.getEntity())) {
+		if (event.getEntity() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getEntity())) {
 			event.setFoodLevel(20);
 			event.setCancelled(true);
 		}
@@ -150,7 +149,7 @@ public class Events extends ListenerAdapter {
 	public void onBreak(BlockBreakEvent event) {
 		final Player player = event.getPlayer();
 
-		if (ArenaRegistry.isInArena(player) && !player.isOp()) {
+		if (plugin.getArenaRegistry().isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);
 		}
 	}
@@ -159,21 +158,21 @@ public class Events extends ListenerAdapter {
 	public void onPlace(BlockPlaceEvent event) {
 		final Player player = event.getPlayer();
 
-		if (ArenaRegistry.isInArena(player) && !player.isOp()) {
+		if (plugin.getArenaRegistry().isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 		}
 	}
 	
 	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if (ArenaRegistry.isInArena(event.getPlayer())) {
+		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}

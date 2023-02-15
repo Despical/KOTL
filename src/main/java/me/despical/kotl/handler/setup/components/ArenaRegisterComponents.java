@@ -24,8 +24,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.handler.hologram.Hologram;
 import me.despical.kotl.handler.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -37,7 +35,7 @@ import org.bukkit.inventory.ItemFlag;
  * <p>
  *  Created at 22.06.2020
  */
-public class ArenaRegisterComponents implements SetupComponent {
+public class ArenaRegisterComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
@@ -78,27 +76,15 @@ public class ArenaRegisterComponents implements SetupComponent {
 				}
 			}
 
-			ArenaRegistry.unregisterArena(arena);
-
-			arena.deleteHologram();
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
-			if (!config.isSet(path + "hologramLocation") || LocationSerializer.isDefaultLocation(config.getString(path + "hologramLocation"))) {
-				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aNo hologram location found skipping hologram creation."));
-			} else {
-				final Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")), chatManager.message("In-Game.Last-King-Hologram").replace("%king%", arena.getKingName()));
-				arena.setHologram(hologram);
-			}
-
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 
 			config.set(path + "isdone", true);
 			saveConfig();
-
-			ArenaRegistry.registerArena(arena);
-		}), 7, 3);
+		}), 4, 2);
 	}
 }

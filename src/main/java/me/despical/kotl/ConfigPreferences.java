@@ -47,14 +47,15 @@ public class ConfigPreferences {
 	}
 
 	public enum Option {
+
 		BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED, CLEAR_EFFECTS,
 		CLEAR_INVENTORY(false), DEBUG_MESSAGES(false), DATABASE_ENABLED(false), DEATH_BLOCKS_ENABLED(false),
 		DISABLE_FALL_DAMAGE, DISABLE_SEPARATE_CHAT(false), INVENTORY_MANAGER_ENABLED, JOIN_NOTIFY,
 		LEAVE_NOTIFY, REWARDS_ENABLED(false), SCOREBOARD_ENABLED, UPDATE_NOTIFIER_ENABLED(false), SEND_SETUP_TIPS,
 		FIREWORKS_ON_NEW_KING;
 
-		String path;
-		boolean def;
+		final String path;
+		final boolean def;
 
 		Option() {
 			this(true);

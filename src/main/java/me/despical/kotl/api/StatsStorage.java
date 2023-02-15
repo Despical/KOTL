@@ -77,8 +77,8 @@ public class StatsStorage {
 	public enum StatisticType {
 		TOURS_PLAYED("toursplayed"), SCORE("score");
 
-		String name;
-		boolean persistent;
+		final String name;
+		final boolean persistent;
 
 		StatisticType(String name) {
 			this (name, true);

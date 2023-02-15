@@ -28,7 +28,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.handler.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -70,7 +69,7 @@ public class AdminCommands implements CommandImpl {
 		String arg = arguments.getArgument(0);
 		Player player = arguments.getSender();
 
-		if (ArenaRegistry.isArena(arg)) {
+		if (plugin.getArenaRegistry().isArena(arg)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /kotl list"));
 			return;
@@ -95,7 +94,6 @@ public class AdminCommands implements CommandImpl {
 		config.set(path + "areaMin", def);
 		config.set(path + "areaMax", def);
 		config.set(path + "isdone", false);
-		config.set(path + "hologramLocation", def);
 		config.set(path + "plateLocation", def);
 		config.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
 
@@ -104,10 +102,9 @@ public class AdminCommands implements CommandImpl {
 		Arena arena = new Arena(id);
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
-		arena.setHologramLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setReady(false);
 
-		ArenaRegistry.registerArena(arena);
+		plugin.getArenaRegistry().registerArena(arena);
 	}
 
 	@Command(
@@ -119,7 +116,7 @@ public class AdminCommands implements CommandImpl {
 	)
 	public void deleteCommand(CommandArguments arguments) {
 		CommandSender sender = arguments.getSender();
-		Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
+		Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -134,8 +131,6 @@ public class AdminCommands implements CommandImpl {
 		}
 
 		confirmations.remove(sender);
-
-		arena.deleteHologram();
 
 		if (!arena.getPlayers().isEmpty()) {
 			arena.getScoreboardManager().stopAllScoreboards();
@@ -159,7 +154,7 @@ public class AdminCommands implements CommandImpl {
 			arena.getPlayers().clear();
 		}
 
-		ArenaRegistry.unregisterArena(arena);
+		plugin.getArenaRegistry().unregisterArena(arena);
 
 		config.set("instances." + arguments.getArgument(0), null);
 		ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -177,7 +172,7 @@ public class AdminCommands implements CommandImpl {
 	)
 	public void editCommand(CommandArguments arguments) {
 		Player player = arguments.getSender();
-		Arena arena = ArenaRegistry.getArena(arguments.getArgument(0));
+		Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -202,10 +197,8 @@ public class AdminCommands implements CommandImpl {
 		plugin.reloadConfig();
 		plugin.getChatManager().reloadConfig();
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
+		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());
-
-			arena.deleteHologram();
 
 			for (Player player : arena.getPlayers()) {
 				player.setWalkSpeed(.2F);
@@ -227,7 +220,7 @@ public class AdminCommands implements CommandImpl {
 			arena.getPlayers().clear();
 		}
 
-		ArenaRegistry.registerArenas();
+		plugin.getArenaRegistry().registerArenas();
 		sender.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 
 		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);
@@ -283,7 +276,7 @@ public class AdminCommands implements CommandImpl {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		Set<Arena> arenas = ArenaRegistry.getArenas();
+		Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));

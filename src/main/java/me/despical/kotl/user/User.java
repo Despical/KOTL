@@ -29,7 +29,6 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
 
 /**
  * @author Despical
@@ -51,7 +50,7 @@ public class User {
 	}
 
 	public Arena getArena() {
-		return ArenaRegistry.getArena(player);
+		return plugin.getArenaRegistry().getArena(player);
 	}
 
 	public Player getPlayer() {

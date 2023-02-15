@@ -97,4 +97,15 @@ public class LanguageManager {
 	public Locale getPluginLocale() {
 		return pluginLocale;
 	}
+
+	public static class Locale {
+
+		public final String name, prefix, aliases[];
+
+		Locale(String name, String prefix, String... aliases) {
+			this.prefix = prefix;
+			this.name = name;
+			this.aliases = aliases;
+		}
+	}
 }

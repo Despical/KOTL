@@ -39,7 +39,7 @@ import java.util.List;
  * <p>
  * Created at 30.09.2022
  */
-public class PressurePlateComponents implements SetupComponent {
+public class PressurePlateComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {

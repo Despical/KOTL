@@ -24,9 +24,7 @@ import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.exception.ExceptionLogHandler;
 import me.despical.commons.util.Collections;
-import me.despical.commons.util.JavaVersion;
 import me.despical.commons.util.LogUtils;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
@@ -46,6 +44,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -58,7 +57,6 @@ public class Main extends JavaPlugin {
 
 	private boolean forceDisable;
 
-	private ExceptionLogHandler exceptionLogHandler;
 	private ConfigPreferences configPreferences;
 	private MysqlDatabase database;
 	private UserManager userManager;
@@ -67,10 +65,13 @@ public class Main extends JavaPlugin {
 	private ChatManager chatManager;
 	private RewardsFactory rewardsFactory;
 	private LanguageManager languageManager;
+	private ArenaRegistry arenaRegistry;
 
 	@Override
 	public void onEnable() {
-		if ((forceDisable = !validateIfPluginShouldStart())) {
+		this.forceDisable = validateIfPluginShouldStart();
+
+		if (!forceDisable) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -79,11 +80,6 @@ public class Main extends JavaPlugin {
 			LogUtils.enableLogging("KOTL");
 			LogUtils.log("Initialization started!");
 		}
-
-		exceptionLogHandler = new ExceptionLogHandler(this);
-		exceptionLogHandler.setMainPackage("me.despical");
-		exceptionLogHandler.addBlacklistedClass("me.despical.kotl.user.data.MysqlManager", "me.despical.commons.database.MysqlDatabase");
-		exceptionLogHandler.setRecordMessage("[KOTL] We have found a bug in the code. Contact us at our official Discord server (link: https://discord.gg/rVkaGmyszE) with the following error given above!");
 
 		long start = System.currentTimeMillis();
 
@@ -100,11 +96,6 @@ public class Main extends JavaPlugin {
 			LogUtils.sendConsoleMessage("[KOTL] &cYour server version is not supported by King of the Ladder!");
 			LogUtils.sendConsoleMessage("[KOTL] &cSadly, we must shut off. Maybe you consider changing your server version?");
 			return false;
-		}
-
-		if (JavaVersion.getCurrentVersion().isAt(JavaVersion.JAVA_8)) {
-			LogUtils.sendConsoleMessage("[KOTL] &cThis plugin won't support Java 8 in future updates.");
-			LogUtils.sendConsoleMessage("[KOTL] &cSo, maybe consider to update your version, right?");
 		}
 
 		try {
@@ -125,14 +116,13 @@ public class Main extends JavaPlugin {
 		LogUtils.log("System disable initialized.");
 		long start = System.currentTimeMillis();
 		
-		getServer().getLogger().removeHandler(exceptionLogHandler);
 		saveAllUserStatistics();
 
 		if (database != null) {
 			database.shutdownConnPool();
 		}
 
-		for (Arena arena : ArenaRegistry.getArenas()) {
+		for (Arena arena : arenaRegistry.getArenas()) {
 			for (Player player : arena.getPlayers()) {
 				if (getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(this, player);
@@ -150,8 +140,6 @@ public class Main extends JavaPlugin {
 
 				AttributeUtils.resetAttackCooldown(player);
 			}
-
-			arena.deleteHologram();
 		}
 
 		LogUtils.log("System disable finished took {0} ms.", System.currentTimeMillis() - start);
@@ -171,8 +159,8 @@ public class Main extends JavaPlugin {
 		commandFramework = new CommandFramework(this);
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
+		arenaRegistry = new ArenaRegistry(this);
 
-		ArenaRegistry.registerArenas();
 		ListenerAdapter.registerEvents(this);
 		CommandImpl.registerCommands();
 
@@ -214,32 +202,44 @@ public class Main extends JavaPlugin {
 		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
+	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
 	}
-	
+
+	@NotNull
 	public MysqlDatabase getMysqlDatabase() {
 		return database;
 	}
 
+	@NotNull
 	public CommandFramework getCommandFramework() {
 		return commandFramework;
 	}
 
+	@NotNull
 	public CuboidSelector getCuboidSelector() {
 		return cuboidSelector;
 	}
-	
+
+	@NotNull
 	public ChatManager getChatManager() {
 		return chatManager;
 	}
-	
+
+	@NotNull
 	public RewardsFactory getRewardsFactory() {
 		return rewardsFactory;
 	}
 
+	@NotNull
 	public UserManager getUserManager() {
 		return userManager;
+	}
+
+	@NotNull
+	public ArenaRegistry getArenaRegistry() {
+		return arenaRegistry;
 	}
 
 	private void saveAllUserStatistics() {

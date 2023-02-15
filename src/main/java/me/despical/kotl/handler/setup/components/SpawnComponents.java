@@ -18,9 +18,11 @@
 
 package me.despical.kotl.handler.setup.components;
 
+import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.arena.Arena;
@@ -35,7 +37,7 @@ import org.bukkit.entity.Player;
  * <p>
  * Created at 22.06.2020
  */
-public class SpawnComponents implements SetupComponent {
+public class SpawnComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
@@ -49,7 +51,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "endLocation"))
+			.lore("", isOptionDoneBool(path + "endLocation"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -69,7 +71,7 @@ public class SpawnComponents implements SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will try to")
 			.lore("&8reach)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "plateLocation"))
+			.lore("", isOptionDoneBool(path + "plateLocation"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -82,14 +84,14 @@ public class SpawnComponents implements SetupComponent {
 
 			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
 			saveConfig();
-		}), 2, 1);
+		}), 5, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
 			.name("&e&lSet Arena Region")
 			.lore("&7Click to set arena's region")
 			.lore("&7with the cuboid selector.")
 			.lore("&8(area where game will be playing)")
-			.lore("", setupInventory.getSetupUtilities().isOptionDoneBool(path + "areaMax"))
+			.lore("", isOptionDoneBool(path + "areaMax"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -111,5 +113,19 @@ public class SpawnComponents implements SetupComponent {
 
 			saveConfig();
 		}), 3, 1);
+
+		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
+			.name(chatManager.coloredRawMessage("&e&lChange Arena Plate"))
+			.lore("&7Click here to change arena plate.")
+			.lore("&8(opens arena plate changer menu)")
+			.build(), e -> {
+
+			setupInventory.getPaginatedPane().setPage(2);
+
+			final Gui gui = setupInventory.getGui();
+			gui.setRows(VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1) ? 6 : 4);
+			gui.setTitle("Arena Plate Editor");
+			gui.update();
+		}), 7, 1);
 	}
 }

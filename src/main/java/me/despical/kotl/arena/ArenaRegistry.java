@@ -21,16 +21,14 @@ package me.despical.kotl.arena;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.Main;
-import me.despical.kotl.handler.hologram.Hologram;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -39,102 +37,82 @@ import java.util.Set;
  */
 public class ArenaRegistry {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static final Set<Arena> arenas = new HashSet<>();
+	private final Main plugin;
+	private final Set<Arena> arenas;
 
-	public static boolean isInArena(Player player) {
-		return getArena(player) != null;
+	public ArenaRegistry(final Main plugin) {
+		this.plugin = plugin;
+		this.arenas = new HashSet<>();
+
+		this.registerArenas();
 	}
 
-	public static boolean isArena(String id) {
-		return getArena(id) != null;
+	public void registerArena(final Arena arena) {
+		this.arenas.add(arena);
 	}
 
-	public static Arena getArena(Player p) {
-		return p == null || !p.isOnline() ? null : arenas.stream().filter(arena -> arena.getPlayers().stream().anyMatch(player -> player.getUniqueId().equals(p.getUniqueId()))).findFirst().orElse(null);
+	public void unregisterArena(final Arena arena) {
+		this.arenas.remove(arena);
 	}
 
-	public static Arena getArena(String id) {
-		return arenas.stream().filter(loopArena -> loopArena.getId().equalsIgnoreCase(id)).findFirst().orElse(null);
+	public Set<Arena> getArenas() {
+		return new HashSet<>(arenas);
 	}
 
-	public static void registerArena(Arena arena) {
-		LogUtils.log("Registering new game instance {0}", arena.getId());
-		arenas.add(arena);
+	public Arena getArena(final String id) {
+		if (id == null) return null;
+
+		return this.arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
 	}
 
-	public static void unregisterArena(Arena arena) {
-		LogUtils.log("Unregistering game instance {0}", arena.getId());
-		arenas.remove(arena);
+	public Arena getArena(final Player player) {
+		if (player == null) return null;
+
+		return this.arenas.stream().filter(arena -> arena.getPlayers().contains(player)).findFirst().orElse(null);
 	}
 
-	public static void registerArenas() {
-		LogUtils.log("Arena registration started.");
+	public boolean isArena(final String arenaId) {
+		return arenaId != null && getArena(arenaId) != null;
+	}
+
+	public boolean isInArena(final Player player) {
+		return this.getArena(player) != null;
+	}
+	public void registerArenas() {
+		this.arenas.clear();
+
 		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		long start = System.currentTimeMillis();
-		
-		arenas.clear();
-
-		if (!config.contains("instances")) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
-			return;
-		}
-
 		final ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.no_instances_created"));
+			plugin.getLogger().log(Level.WARNING, "Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
 			return;
 		}
 
 		for (String id : section.getKeys(false)) {
-			Arena arena;
-			String path = "instances." + id + ".";
+			if (id.equals("default")) continue;
 
-			if (path.contains("default")) continue;
+			final String path = "instances." + id + ".";
+			final Arena arena = new Arena(id);
 
-			arena = new Arena(id);
+			this.registerArena(arena);
+
+			arena.setReady(config.getBoolean(path + "isdone"));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
-			if (!LocationSerializer.isDefaultLocation(config.getString(path + "hologramLocation"))) {
-				Hologram hologram = new Hologram(LocationSerializer.fromString(config.getString(path + "hologramLocation")));
-				hologram.appendLine(plugin.getChatManager().message("in_game.last_king_hologram").replace("%king%", arena.getKingName()));
+			if (arena.isReady() && LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
+				plugin.getServer().getLogger().log(Level.WARNING, "Founded plate block material is not the same type as you set on setup!");
 
-				arena.setHologram(hologram);
-			} else LogUtils.log("Skipping hologram creation for {0}.", id);
-
-			if (LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "MISSING PLATE LOCATION"));
-				config.set(path + "plateLocation", LocationSerializer.SERIALIZED_LOCATION);
-				config.set(path + "isdone", false);
 				arena.setReady(false);
-
-				registerArena(arena);
-				ConfigUtils.saveConfig(plugin, config, "arenas");
 				continue;
 			}
 
-			if (!config.getBoolean(path + "isdone")) {
-				LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.invalid_arena_configuration").replace("%arena%", id).replace("%error%", "NOT VALIDATED"));
-				config.set(path + "isdone", false);
-				arena.setReady(false);
-
-				registerArena(arena);
-				ConfigUtils.saveConfig(plugin, config, "arenas");
-				continue;
+			if (!arena.isReady()) {
+				plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
+				return;
 			}
-
-			registerArena(arena);
-			LogUtils.sendConsoleMessage(plugin.getChatManager().message("validator.instance_started").replace("%arena%", id));
-			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}
-
-		LogUtils.log("Arenas registration completed, took {0} ms.", System.currentTimeMillis() - start);
-	}
-
-	public static Set<Arena> getArenas() {
-		return new HashSet<>(arenas);
 	}
 }

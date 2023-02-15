@@ -22,7 +22,6 @@ import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
 import me.despical.commons.util.Collections;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
@@ -59,7 +58,7 @@ public class TabCompletion implements CommandImpl {
 				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
-			final List<String> arenas = ArenaRegistry.getArenas().stream().map(Arena::getId).collect(Collectors.toList());
+			final List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 
 			StringUtil.copyPartialMatches(args[1], arenas, completions);
 			arenas.sort(null);
