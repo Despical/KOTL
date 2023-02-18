@@ -65,7 +65,7 @@ public class ArenaEvents extends ListenerAdapter {
 			player.setGameMode(GameMode.SURVIVAL);
 			player.setFoodLevel(20);
 
-			arena.doBarAction(Arena.BarAction.ADD, player);
+			arena.doBarAction(player, 1);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
 				chatManager.broadcastAction(arena, player, ActionType.JOIN);
@@ -75,7 +75,7 @@ public class ArenaEvents extends ListenerAdapter {
 		if (plugin.getArenaRegistry().isInArena(player) && arena == null) {
 			Arena tempArena = plugin.getArenaRegistry().getArena(player);
 
-			tempArena.doBarAction(Arena.BarAction.REMOVE, player);
+			tempArena.doBarAction(player, 0);
 
 			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
 				chatManager.broadcastAction(tempArena, player, ActionType.LEAVE);
@@ -140,7 +140,7 @@ public class ArenaEvents extends ListenerAdapter {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
-					arena.doBarAction(Arena.BarAction.REMOVE, player);
+					arena.doBarAction(player, 0);
 					arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);

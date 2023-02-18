@@ -30,7 +30,7 @@ import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.command.CommandImpl;
+import me.despical.kotl.command.AbstractCommand;
 import me.despical.kotl.event.ListenerAdapter;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.PlaceholderManager;
@@ -135,7 +135,7 @@ public class Main extends JavaPlugin {
 				}
 
 				arena.teleportToEndLocation(player);
-				arena.doBarAction(Arena.BarAction.REMOVE, player);
+				arena.doBarAction(player, 0);
 				arena.getScoreboardManager().removeScoreboard(player);
 
 				AttributeUtils.resetAttackCooldown(player);
@@ -162,7 +162,7 @@ public class Main extends JavaPlugin {
 		arenaRegistry = new ArenaRegistry(this);
 
 		ListenerAdapter.registerEvents(this);
-		CommandImpl.registerCommands();
+		AbstractCommand.registerCommands(this);
 
 		registerSoftDependencies();
 	}

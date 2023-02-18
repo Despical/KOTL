@@ -38,10 +38,10 @@ import java.util.List;
 public class ChatManager {
 
 	private final Main plugin;
-	private FileConfiguration config;
-
-	private final String prefix;
 	private final boolean papiEnabled;
+
+	private FileConfiguration config;
+	private String prefix;
 
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
@@ -132,8 +132,12 @@ public class ChatManager {
 		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
 	}
 
-	public void reloadConfig() {
+	public void reload() {
+		plugin.reloadConfig();
+		plugin.getConfigPreferences().loadOptions();
+
 		config = ConfigUtils.getConfig(plugin, "messages");
+		prefix = message("in_game.plugin_prefix");
 	}
 
 	public enum ActionType {

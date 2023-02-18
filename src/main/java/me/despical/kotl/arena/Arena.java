@@ -236,20 +236,16 @@ public class Arena {
 		players.forEach(this::teleportToEndLocation);
 	}
 
-	public void doBarAction(BarAction action, Player player) {
+	public void doBarAction(Player player, int action) {
 		if (bossBarManager == null) return;
 
-		if (action == BarAction.ADD) {
+		if (action == 1) {
 			bossBarManager.addPlayer(player);
 		} else {
 			bossBarManager.removePlayer(player);
 		}
 	}
 
-	public enum BarAction {
-		ADD, REMOVE
-	}
-	
 	public enum GameLocation {
 		END, PLATE
 	}

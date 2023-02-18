@@ -27,6 +27,7 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
@@ -49,9 +50,14 @@ import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
  * <p>
  * Created at 24.07.2022
  */
-public class AdminCommands implements CommandImpl {
+public class AdminCommands extends AbstractCommand {
 
-	private final Set<CommandSender> confirmations = new HashSet<>();
+	private final Set<CommandSender> confirmations;
+
+	public AdminCommands(Main plugin) {
+		super(plugin);
+		this.confirmations = new HashSet<>();
+	}
 
 	@Command(
 		name = "kotl.create",
@@ -90,14 +96,14 @@ public class AdminCommands implements CommandImpl {
 	private void setupDefaultConfiguration(String id) {
 		String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
 
-		config.set(path + "endLocation", def);
-		config.set(path + "areaMin", def);
-		config.set(path + "areaMax", def);
-		config.set(path + "isdone", false);
-		config.set(path + "plateLocation", def);
-		config.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
+		arenaConfig.set(path + "endLocation", def);
+		arenaConfig.set(path + "areaMin", def);
+		arenaConfig.set(path + "areaMax", def);
+		arenaConfig.set(path + "isdone", false);
+		arenaConfig.set(path + "plateLocation", def);
+		arenaConfig.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
 
-		ConfigUtils.saveConfig(plugin, config, "arenas");
+		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
 
 		Arena arena = new Arena(id);
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
@@ -147,7 +153,7 @@ public class AdminCommands implements CommandImpl {
 				}
 
 				AttributeUtils.resetAttackCooldown(player);
-				arena.doBarAction(Arena.BarAction.REMOVE, player);
+				arena.doBarAction(player, 0);
 			}
 
 			arena.teleportAllToEndLocation();
@@ -156,8 +162,8 @@ public class AdminCommands implements CommandImpl {
 
 		plugin.getArenaRegistry().unregisterArena(arena);
 
-		config.set("instances." + arguments.getArgument(0), null);
-		ConfigUtils.saveConfig(plugin, config, "arenas");
+		arenaConfig.set("instances." + arguments.getArgument(0), null);
+		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
 
 		sender.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
 	}
@@ -189,13 +195,11 @@ public class AdminCommands implements CommandImpl {
 		desc = "Reloads all configuration and stops arenas"
 	)
 	public void reloadCommand(CommandArguments arguments) {
-		CommandSender sender = arguments.getSender();
-		LogUtils.log("Initialized plugin reload by {0}.", sender.getName());
+		LogUtils.log("Initialized plugin reload by {0}.", arguments.getSender().getName());
 
 		long start = System.currentTimeMillis();
 
-		plugin.reloadConfig();
-		plugin.getChatManager().reloadConfig();
+		chatManager.reload();
 
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 			LogUtils.log("Stopping arena called {0}.", arena.getId());
@@ -211,7 +215,7 @@ public class AdminCommands implements CommandImpl {
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 				}
 
-				arena.doBarAction(Arena.BarAction.REMOVE, player);
+				arena.doBarAction(player, 0);
 				arena.getScoreboardManager().removeScoreboard(player);
 				AttributeUtils.resetAttackCooldown(player);
 			}
@@ -221,7 +225,7 @@ public class AdminCommands implements CommandImpl {
 		}
 
 		plugin.getArenaRegistry().registerArenas();
-		sender.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
+		arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
 
 		LogUtils.log("Finished reloading took {0} ms", System.currentTimeMillis() - start);
 	}
@@ -235,11 +239,11 @@ public class AdminCommands implements CommandImpl {
 		arguments.sendMessage(chatManager.coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
 		arguments.sendMessage("");
 
-		CommandSender sender = arguments.getSender();
-		boolean isPlayer = arguments.isSenderPlayer();
+		final CommandSender sender = arguments.getSender();
+		final boolean isPlayer = arguments.isSenderPlayer();
 
-		for (Command command : plugin.getCommandFramework().getCommands()) {
-			String usage = command.usage(), desc = command.desc();
+		for (final Command command : plugin.getCommandFramework().getCommands()) {
+			final String usage = command.usage(), desc = command.desc();
 
 			if (usage.isEmpty()) continue;
 
@@ -256,6 +260,7 @@ public class AdminCommands implements CommandImpl {
 
 		if (isPlayer) {
 			final Player player = arguments.getSender();
+
 			player.sendMessage("");
 			player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
 				.append(" Try to ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)
@@ -285,9 +290,5 @@ public class AdminCommands implements CommandImpl {
 
 		String list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
-	}
-
-	{
-		register(this);
 	}
 }

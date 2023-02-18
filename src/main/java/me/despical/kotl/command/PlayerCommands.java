@@ -22,6 +22,7 @@ import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commons.string.StringMatcher;
 import me.despical.kotl.ConfigPreferences;
+import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.data.MysqlManager;
@@ -43,7 +44,23 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 24.07.2022
  */
-public class PlayerCommands implements CommandImpl {
+public class PlayerCommands extends AbstractCommand {
+
+	public PlayerCommands(Main plugin) {
+		super(plugin);
+
+		plugin.getCommandFramework().setAnyMatch(arguments -> {
+			if (arguments.isArgumentsEmpty()) return;
+
+			String label = arguments.getLabel(), arg = arguments.getArgument(0);
+
+			List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+
+			if (!matches.isEmpty()) {
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+			}
+		});
+	}
 
 	@Command(
 		name = "kotl"
@@ -141,21 +158,5 @@ public class PlayerCommands implements CommandImpl {
 		message = StringUtils.replace(message, "%value%", Integer.toString(value));
 		message = StringUtils.replace(message, "%statistic%", statisticName);
 		return message;
-	}
-
-	{
-		register(this);
-
-		plugin.getCommandFramework().setAnyMatch(arguments -> {
-			if (arguments.isArgumentsEmpty()) return;
-
-			String label = arguments.getLabel(), arg = arguments.getArgument(0);
-
-			List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
-
-			if (!matches.isEmpty()) {
-				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
-			}
-		});
 	}
 }
