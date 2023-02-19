@@ -71,11 +71,11 @@ public class ScoreboardManager {
 		for (Scoreboard board : scoreboards) {
 			if (board.getHolder().equals(player)) {
 				board.deactivate();
+				scoreboards.remove(board);
 				return;
 			}
 		}
 
-		scoreboards.clear();
 	}
 
 	public void stopAllScoreboards() {
