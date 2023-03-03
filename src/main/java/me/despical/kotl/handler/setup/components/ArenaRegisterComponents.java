@@ -79,6 +79,8 @@ public class ArenaRegisterComponents implements SetupInventory.SetupComponent {
 			arena.setReady(true);
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
+			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));

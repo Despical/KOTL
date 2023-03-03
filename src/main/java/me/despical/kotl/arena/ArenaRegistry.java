@@ -78,6 +78,7 @@ public class ArenaRegistry {
 	public boolean isInArena(final Player player) {
 		return this.getArena(player) != null;
 	}
+
 	public void registerArenas() {
 		this.arenas.clear();
 
@@ -100,6 +101,8 @@ public class ArenaRegistry {
 			arena.setReady(config.getBoolean(path + "isdone"));
 			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
+			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			if (arena.isReady() && LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {

@@ -19,6 +19,7 @@
 package me.despical.kotl.user;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,14 +39,17 @@ import me.despical.kotl.arena.Arena;
 public class User {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+	private static long cooldownCounter = 0;
 
 	private final UUID uuid;
 	private final Player player;
+	private final Map<String, Double> cooldowns;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	public User(UUID uuid) {
 		this.uuid = uuid;
 		this.player = plugin.getServer().getPlayer(uuid);
+		this.cooldowns = new HashMap<>();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
@@ -80,5 +84,19 @@ public class User {
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {
 		setStat(stat, getStat(stat) + value);
+	}
+
+	public void setCooldown(String s, double seconds) {
+		cooldowns.put(s, seconds + cooldownCounter);
+	}
+
+	public double getCooldown(String s) {
+		final Double cooldown = cooldowns.get(s);
+
+		return (cooldown == null || cooldown <= cooldownCounter) ? 0 : cooldown - cooldownCounter;
+	}
+
+	public static void cooldownHandlerTask() {
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
 	}
 }

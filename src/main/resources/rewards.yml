@@ -39,3 +39,6 @@ rewards:
   lose:
     - chance(10):eco give %player% 8
     - say I lost the game!
+
+# Should players have to wait to receive next reward?
+time-between-rewards: 5

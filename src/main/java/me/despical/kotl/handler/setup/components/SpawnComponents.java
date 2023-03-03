@@ -108,6 +108,9 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 			config.set(path + "areaMin", LocationSerializer.toString(selection.firstPos));
 			config.set(path + "areaMax", LocationSerializer.toString(selection.secondPos));
 
+			arena.setMinCorner(selection.firstPos);
+			arena.setMaxCorner(selection.secondPos);
+
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena &e" + arena.getId() + " &aset as you selection!"));
 			plugin.getCuboidSelector().removeSelection(player);
 

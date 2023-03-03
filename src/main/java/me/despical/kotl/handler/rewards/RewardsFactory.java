@@ -24,6 +24,7 @@ import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
+import me.despical.kotl.user.User;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -40,19 +41,27 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RewardsFactory {
 
 	private final Main plugin;
+	private final double delay;
+	private final FileConfiguration config;
 	private final Set<Reward> rewards;
 
 	public RewardsFactory(Main plugin) {
 		this.plugin = plugin;
+		this.config = ConfigUtils.getConfig(plugin, "rewards");
+		this.delay = config.getDouble("time-between-rewards", 5) * 20;
 		this.rewards = new HashSet<>();
 
 		registerRewards();
 	}
 
 	public void performReward(Player player, Reward.RewardType type) {
-		if (rewards.isEmpty()) {
-			return;
-		}
+		if (rewards.isEmpty()) return;
+
+		final User user = plugin.getUserManager().getUser(player);
+
+		if (user.getCooldown("rewards") > 0) return;
+
+		user.setCooldown("rewards", delay);
 
 		Arena arena = plugin.getArenaRegistry().getArena(player);
 
@@ -97,14 +106,11 @@ public class RewardsFactory {
 	}
 
 	private void registerRewards() {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) {
-			return;
-		}
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) return;
 
-		LogUtils.log("[Rewards Factory] Starting rewards registration");
+		LogUtils.log("[Rewards Factory] Starting rewards registration.");
 
 		long start = System.currentTimeMillis();
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "rewards");
 
 		for (Reward.RewardType rewardType : Reward.RewardType.values()) {
 			for (String reward : config.getStringList(rewardType.getPath())) {
@@ -112,6 +118,6 @@ public class RewardsFactory {
 			}
 		}
 
-		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms", System.currentTimeMillis() - start);
+		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms.", System.currentTimeMillis() - start);
 	}
 }

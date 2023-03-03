@@ -147,11 +147,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void initializeClasses() {
-		ScoreboardLib.setPluginInstance(this);
-
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
-			database = new MysqlDatabase(this, "mysql");
-		}
+		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
@@ -163,6 +159,8 @@ public class Main extends JavaPlugin {
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
+		ScoreboardLib.setPluginInstance(this);
+		User.cooldownHandlerTask();
 
 		registerSoftDependencies();
 	}

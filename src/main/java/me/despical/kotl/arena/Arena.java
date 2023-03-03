@@ -27,6 +27,9 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
+import me.despical.kotl.handler.ChatManager;
+import org.apache.commons.lang.math.IntRange;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -134,7 +137,23 @@ public class Arena {
 	public void setPlateLocation(Location plateLoc) {
 		gameLocations.put(GameLocation.PLATE, plateLoc);
 	}
-	
+
+	public Location getMinCorner() {
+		return gameLocations.get(GameLocation.MIN);
+	}
+
+	public void setMinCorner(final Location minCorner) {
+		gameLocations.put(GameLocation.MIN, minCorner);
+	}
+
+	public Location getMaxCorner() {
+		return gameLocations.get(GameLocation.MAX);
+	}
+
+	public void setMaxCorner(final Location maxCorner) {
+		gameLocations.put(GameLocation.MAX, maxCorner);
+	}
+
 	/**
 	 * Set new king of arena.
 	 * 
@@ -163,6 +182,22 @@ public class Arena {
 
 	public XMaterial getArenaPlate() {
 		return arenaPlate;
+	}
+
+	@Nullable
+	public Arena isInArea(final Player player) {
+		if (!ready) return null;
+
+		final Location min = getMinCorner(), max = getMaxCorner(), origin = player.getLocation();
+
+		if (new IntRange(min.getX(), max.getX()).containsDouble(origin.getX())
+			&& new IntRange(min.getY(), max.getY()).containsDouble(origin.getY())
+			&& new IntRange(min.getZ(), max.getZ()).containsDouble(origin.getZ())) {
+
+			return this;
+		}
+
+		return null;
 	}
 	
 	/**
@@ -199,6 +234,15 @@ public class Arena {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
+
+		player.setGameMode(GameMode.SURVIVAL);
+		player.setFoodLevel(20);
+
+		doBarAction(player, 1);
+
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
+			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
+		}
 	}
 	
 	public void removePlayer(Player player) {
@@ -217,6 +261,14 @@ public class Arena {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(player);
 		}
+
+		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
+			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.LEAVE);
+		}
+
+		doBarAction(player, 0);
+
+		plugin.getUserManager().getDatabase().saveAllStatistic(plugin.getUserManager().getUser(player));
 
 		AttributeUtils.resetAttackCooldown(player);
 	}
@@ -247,6 +299,6 @@ public class Arena {
 	}
 
 	public enum GameLocation {
-		END, PLATE
+		MIN, MAX, END, PLATE
 	}
 }

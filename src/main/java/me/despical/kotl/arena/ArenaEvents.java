@@ -18,9 +18,7 @@
 
 package me.despical.kotl.arena;
 
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
-import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -28,11 +26,7 @@ import me.despical.kotl.event.ListenerAdapter;
 import me.despical.kotl.handler.ChatManager.ActionType;
 import me.despical.kotl.handler.rewards.Reward;
 import me.despical.kotl.user.User;
-import org.apache.commons.lang.math.IntRange;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -57,33 +51,16 @@ public class ArenaEvents extends ListenerAdapter {
 	@EventHandler
 	public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		Arena arena = isInArea(player.getLocation());
+		Arena arena = isInArea(player);
 
 		if (!plugin.getArenaRegistry().isInArena(player) && arena != null) {
 			arena.addPlayer(player);
-
-			player.setGameMode(GameMode.SURVIVAL);
-			player.setFoodLevel(20);
-
-			arena.doBarAction(player, 1);
-
-			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
-				chatManager.broadcastAction(arena, player, ActionType.JOIN);
-			}
 		}
 
 		if (plugin.getArenaRegistry().isInArena(player) && arena == null) {
 			Arena tempArena = plugin.getArenaRegistry().getArena(player);
 
-			tempArena.doBarAction(player, 0);
-
-			if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
-				chatManager.broadcastAction(tempArena, player, ActionType.LEAVE);
-			}
-
 			tempArena.removePlayer(player);
-
-			plugin.getUserManager().getDatabase().saveAllStatistic(plugin.getUserManager().getUser(player));
 		}
 	}
 
@@ -92,9 +69,7 @@ public class ArenaEvents extends ListenerAdapter {
 		Player player = event.getPlayer();
 		Arena arena = plugin.getArenaRegistry().getArena(player);
 
-		if (arena == null) {
-			return;
-		}
+		if (arena == null) return;
 
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
@@ -115,6 +90,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 				for (Player p : players) {
 					plugin.getUserManager().getUser(p).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+
 					plugin.getRewardsFactory().performReward(p, Reward.RewardType.LOSE);
 
 					spawnFireworks(arena, p);
@@ -166,25 +142,11 @@ public class ArenaEvents extends ListenerAdapter {
 		}
 	}
 
-	private Arena isInArea(Location origin) {
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		Location first, second;
-
+	private Arena isInArea(final Player player) {
 		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			if (!config.getBoolean("instances." + arena.getId() + ".isdone")) {
-				continue;
-			}
+			final Arena target = arena.isInArea(player);
 
-			first = LocationSerializer.fromString(config.getString("instances." + arena.getId() + ".areaMin"));
-			second = LocationSerializer.fromString(config.getString("instances." + arena.getId() + ".areaMax"));
-
-			if (first.getWorld() != null && !first.getWorld().equals(origin.getWorld())) return null;
-
-			if (new IntRange(first.getX(), second.getX()).containsDouble(origin.getX())
-				&& new IntRange(first.getY(), second.getY()).containsDouble(origin.getY())
-				&& new IntRange(first.getZ(), second.getZ()).containsDouble(origin.getZ())) {
-				return arena;
-			}
+			if (target != null) return target;
 		}
 
 		return null;
