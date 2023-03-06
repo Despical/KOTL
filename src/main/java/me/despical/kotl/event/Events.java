@@ -40,7 +40,7 @@ import org.bukkit.event.player.*;
 public class Events extends ListenerAdapter {
 
 	public Events(Main plugin) {
-		super (plugin);
+		super(plugin);
 	}
 
 	@EventHandler

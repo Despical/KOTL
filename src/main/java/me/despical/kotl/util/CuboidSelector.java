@@ -44,7 +44,7 @@ public class CuboidSelector extends ListenerAdapter {
 	private final Map<Player, Selection> selections;
 
 	public CuboidSelector(Main plugin) {
-		super (plugin);
+		super(plugin);
 		this.wandItem = new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build();
 		this.selections = new HashMap<>();
 	}

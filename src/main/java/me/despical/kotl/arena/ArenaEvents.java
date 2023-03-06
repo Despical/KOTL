@@ -45,7 +45,7 @@ import java.util.Set;
 public class ArenaEvents extends ListenerAdapter {
 
 	public ArenaEvents(Main plugin) {
-		super (plugin);
+		super(plugin);
 	}
 
 	@EventHandler

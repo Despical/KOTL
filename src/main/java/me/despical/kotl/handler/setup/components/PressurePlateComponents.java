@@ -21,11 +21,14 @@ package me.despical.kotl.handler.setup.components;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -94,9 +97,13 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 				config.set(path + "arenaPlate", plate.name());
 				saveConfig();
 
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate.toString()));
+				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate));
 
 				arena.setArenaPlate(plate);
+
+				final Location plateLoc = arena.getPlateLocation();
+
+				if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().getRelative(BlockFace.DOWN).setType(plate.parseMaterial());
 			}), slot % 9, slot / 9);
 		}
 

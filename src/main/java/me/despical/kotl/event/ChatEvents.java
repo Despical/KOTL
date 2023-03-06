@@ -39,7 +39,7 @@ public class ChatEvents extends ListenerAdapter {
 	private final boolean disabledSeparateChat, chatFormatEnabled;
 
 	public ChatEvents(Main plugin) {
-		super (plugin);
+		super(plugin);
 		this.disabledSeparateChat = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT);
 		this.chatFormatEnabled = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED);
 	}
