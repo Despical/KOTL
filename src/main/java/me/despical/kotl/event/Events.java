@@ -97,7 +97,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		if (player.isOp() || player.hasPermission("kotl.admin")) {
+		if (player.isOp() || player.hasPermission("kotl.command.override")) {
 			return;
 		}
 
