@@ -190,6 +190,8 @@ public class Arena {
 
 		final Location min = getMinCorner(), max = getMaxCorner(), origin = player.getLocation();
 
+		if (!min.getWorld().equals(player.getWorld())) return null;
+
 		if (new IntRange(min.getX(), max.getX()).containsDouble(origin.getX())
 			&& new IntRange(min.getY(), max.getY()).containsDouble(origin.getY())
 			&& new IntRange(min.getZ(), max.getZ()).containsDouble(origin.getZ())) {
