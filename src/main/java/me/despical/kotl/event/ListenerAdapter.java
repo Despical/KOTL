@@ -52,7 +52,7 @@ public abstract class ListenerAdapter implements Listener {
 				LogUtils.log("[Listener Adapter] Registering new listener class: {0}", listenerAdapter.getSimpleName());
 			}
 		} catch (Exception ignored) {
-			plugin.getLogger().log(Level.SEVERE, "An exception occured on event registering.");
+			plugin.getLogger().log(Level.SEVERE, "An exception occurred on event registering.");
 		}
 	}
 }

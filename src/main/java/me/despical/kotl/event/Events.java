@@ -24,10 +24,12 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
@@ -131,8 +133,15 @@ public class Events extends ListenerAdapter {
 	}
 
 	@EventHandler
-	public void onInGameBedEnter(PlayerBedEnterEvent event) {
-		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+	public void onFireworkDamage(EntityDamageByEntityEvent event) {
+		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
+		if (!(event.getEntity() instanceof Player)) return;
+
+		final Player player = (Player) event.getEntity();
+
+		if (!plugin.getArenaRegistry().isInArena(player)) return;
+
+		if (event.getDamager() instanceof Firework) {
 			event.setCancelled(true);
 		}
 	}

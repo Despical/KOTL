@@ -92,7 +92,7 @@ public class CuboidSelector extends ListenerAdapter {
 					break;
 				}
 
-				selections.put(player, new Selection(selections.get(player).firstPos, event.getClickedBlock().getLocation()));
+				selections.replace(player, new Selection(selections.get(player).firstPos, event.getClickedBlock().getLocation()));
 
 				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
 				break;

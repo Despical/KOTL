@@ -73,7 +73,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-				if (arena.getPlayers().size() == 1 && arena.getKing() != null && arena.getKing().equals(player)) return;
+				if (arena.getKing() != null && arena.getKing().equals(player) && (arena.getPlayers().size() == 1 || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
 				arena.setKing(player);
 
 				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);

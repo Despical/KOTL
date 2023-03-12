@@ -51,6 +51,9 @@ Disable-Separate-Chat: false
 # Should players get fall damage?
 Disable-Fall-Damage: true
 
+# Should we let players become king in a row?
+Become-King-In-A-Row: false
+
 # The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
 Hit-Cooldown-Delay: 16
 
