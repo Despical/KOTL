@@ -18,6 +18,8 @@ Commands:
   No-Permission: "&cYou don't have enough permission to use this command!"
   Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
   Player-Not-Found: "&cPlayer not found with that name!"
+  Not-Playing: "&cTarget player is not playing at the moment!"
+  Kicked-Player: "&aPlayer has kicked successfully from the game."
   Statistics:
     Type-Name: "&cPlease type statistic name to view!"
     Invalid-Name: "&cName of statistic is invalid! Type: score or tours_played"
@@ -63,7 +65,7 @@ Boss-Bar:
 Scoreboard:
   Title: "&e&lKOTL"
   Content:
-    # Can be find more information about placeholders on our wiki.
+    # Can be found more information about placeholders on our wiki.
     Playing:
       - ""
       - "Arena: &a%arena%"

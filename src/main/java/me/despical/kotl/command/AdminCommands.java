@@ -291,4 +291,33 @@ public class AdminCommands extends AbstractCommand {
 		String list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
 	}
+
+	@Command(
+		name = "kotl.kick",
+		permission = "kotl.admin.kick",
+		usage = "/kotl kick <player>",
+		desc = "Kicks specified player if they're playing",
+		min = 1
+	)
+	public void kickCommand(CommandArguments arguments) {
+		final String target = arguments.getArgument(0);
+		final Player player = plugin.getServer().getPlayer(target);
+
+		if (player == null) {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
+			return;
+		}
+
+		final Arena arena = plugin.getArenaRegistry().getArena(player);
+
+		if (arena == null) {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
+			return;
+		}
+
+		arena.removePlayer(player);
+		arena.teleportToEndLocation(player);
+
+		arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
+	}
 }

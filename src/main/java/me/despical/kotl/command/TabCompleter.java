@@ -59,7 +59,7 @@ public class TabCompleter extends AbstractCommand {
 				return Collections.listOf("tours_played", "score");
 			}
 
-			if (arg.equalsIgnoreCase("stats")) {
+			if (arg.equalsIgnoreCase("stats") || arg.equalsIgnoreCase("kick")) {
 				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 

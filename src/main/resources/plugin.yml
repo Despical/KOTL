@@ -16,3 +16,4 @@ permissions:
       kotl.admin.list: true
       kotl.admin.help: true
       kotl.admin.reload: true
+      kotl.admin.kick: true
