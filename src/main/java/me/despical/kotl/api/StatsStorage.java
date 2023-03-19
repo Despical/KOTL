@@ -20,20 +20,20 @@ package me.despical.kotl.api;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -45,27 +45,32 @@ public class StatsStorage {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
+	@NotNull
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
-				Statement statement = connection.createStatement();
-				ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
-				Map<UUID, Integer> column = new HashMap<>();
+				final Statement statement = connection.createStatement();
+				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
 
-				while (set.next()) {
-					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.name));
+				final Map<UUID, Integer> column = new HashMap<>();
+
+				while(set.next()) {
+					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
 				}
 
 				return column;
-			} catch (SQLException exception) {
-				LogUtils.log("SQL Exception occurred! " + exception.getSQLState() + " (" + exception.getErrorCode() + ")");
-				LogUtils.sendConsoleMessage("&cCannot get contents from MySQL database!");
-				return null;
+			} catch(SQLException e) {
+				plugin.getLogger().log(Level.WARNING, "SQLException occurred during getting statistics from database!");
+				return new HashMap<>();
 			}
 		}
 
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		Map<UUID, Integer> stats = config.getKeys(false).stream().collect(Collectors.toMap(UUID::fromString, string -> config.getInt(string + "." + stat.name), (a, b) -> b));
+		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
+		final Map<UUID, Integer> stats = new LinkedHashMap<>();
+
+		for (String string : config.getKeys(false)) {
+			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+		}
 
 		return SortUtils.sortByValue(stats);
 	}
