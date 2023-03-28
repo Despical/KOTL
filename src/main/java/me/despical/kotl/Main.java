@@ -71,7 +71,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		this.forceDisable = validateIfPluginShouldStart();
 
-		if (!forceDisable) {
+		if (forceDisable) {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -92,10 +92,10 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R2)) {
+		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R3)) {
 			LogUtils.sendConsoleMessage("[KOTL] &cYour server version is not supported by King of the Ladder!");
 			LogUtils.sendConsoleMessage("[KOTL] &cSadly, we must shut off. Maybe you consider changing your server version?");
-			return false;
+			return true;
 		}
 
 		try {
@@ -103,10 +103,10 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) {
 			LogUtils.sendConsoleMessage("[KOTL] &cYour server software is not supported by King of the Ladder!");
 			LogUtils.sendConsoleMessage("[KOTL] &cWe support only Spigot and Spigot forks only! Shutting off...");
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 	
 	@Override
