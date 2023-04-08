@@ -63,7 +63,9 @@ public class PlayerCommands extends AbstractCommand {
 	}
 
 	@Command(
-		name = "kotl"
+		name = "kotl",
+		desc = "Main command of King of the Ladder plugin.",
+		usage = "/kotl help"
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -80,15 +82,15 @@ public class PlayerCommands extends AbstractCommand {
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(CommandArguments arguments) {
-		Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? plugin.getServer().getPlayer(arguments.getArgument(0)) : sender;
+		final Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? plugin.getServer().getPlayer(arguments.getArgument(0)) : sender;
 
 		if (player == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
 			return;
 		}
 
-		User user = plugin.getUserManager().getUser(player);
-		String path = "commands.stats_command.";
+		final User user = plugin.getUserManager().getUser(player);
+		final String path = "commands.stats_command.";
 
 		if (player.equals(sender)) {
 			arguments.sendMessage(chatManager.message(path + "header", player));
