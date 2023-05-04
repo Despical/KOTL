@@ -278,7 +278,7 @@ public class Arena {
 		final Location location = getEndLocation();
 
 		if (location == null) {
-			plugin.getServer().getLogger().warning("Couldn't teleport " + player.getName() + " to end location!");
+			plugin.getLogger().warning("Couldn't teleport " + player.getName() + " to end location!");
 			return;
 		}
 

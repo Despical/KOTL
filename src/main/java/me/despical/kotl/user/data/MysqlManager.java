@@ -55,8 +55,8 @@ public class MysqlManager implements UserDatabase {
 			} catch (SQLException exception) {
 				exception.printStackTrace();
 
-				plugin.getServer().getLogger().severe("Cannot save contents to MySQL database!");
-				plugin.getServer().getLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
+				plugin.getLogger().severe("Cannot save contents to MySQL database!");
+				plugin.getLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
 			}
 		});
 	}

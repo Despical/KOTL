@@ -88,12 +88,12 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		getServer().getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
+		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
 	private boolean validateIfPluginShouldStart() {
-		final Logger logger = getServer().getLogger();
+		final Logger logger = getLogger();
 
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R3)) {
 			logger.warning("Your server version is not supported by King of the Ladder!");
@@ -192,7 +192,7 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				final Logger logger = getServer().getLogger();
+				final Logger logger = getLogger();
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");

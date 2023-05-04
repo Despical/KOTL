@@ -86,7 +86,7 @@ public class ArenaRegistry {
 		final ConfigurationSection section = config.getConfigurationSection("instances");
 
 		if (section == null) {
-			plugin.getLogger().log(Level.WARNING, "Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
+			plugin.getLogger().warning("Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class ArenaRegistry {
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			if (arena.isReady() && LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
-				plugin.getServer().getLogger().log(Level.WARNING, "Founded plate block material is not the same type as you set on setup!");
+				plugin.getLogger().warning("Founded plate block material is not the same type as you set on setup!");
 
 				arena.setReady(false);
 				continue;
