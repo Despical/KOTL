@@ -47,9 +47,8 @@ In-Game:
   Clicked-Death-Block: "&7%player%&b clicked a death block and died!"
 
 # Has usage only when boss bar is enabled in config
-# Also not compatible with the versions before Minecraft 1.9
-# Color values: PINK, BLUE, RED, GREEN, YELLOW, PURPLE and WHITE
-# Style values: SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20
+# Not compatible with the versions before Minecraft 1.9
+# Leave any section empty to hide bar until next message.
 Boss-Bar:
   Color: "BLUE"
   Style: "SOLID"

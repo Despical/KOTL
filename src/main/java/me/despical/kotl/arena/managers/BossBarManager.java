@@ -62,5 +62,6 @@ public class BossBarManager extends BukkitRunnable {
 		if (queue + 1 > messages.size()) queue = 0;
 
 		this.bossBar.setTitle(plugin.getChatManager().coloredRawMessage(messages.get(queue++)));
+		this.bossBar.setVisible(!this.bossBar.getTitle().isEmpty());
 	}
 }

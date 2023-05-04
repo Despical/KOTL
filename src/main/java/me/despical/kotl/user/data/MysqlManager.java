@@ -54,8 +54,9 @@ public class MysqlManager implements UserDatabase {
 					+ ");");
 			} catch (SQLException exception) {
 				exception.printStackTrace();
-				LogUtils.sendConsoleMessage("[KOTL] &cCannot save contents to MySQL database!");
-				LogUtils.sendConsoleMessage("[KOTL] &cCheck configuration of mysql.yml file or disable mysql option in config.yml");
+
+				plugin.getServer().getLogger().severe("Cannot save contents to MySQL database!");
+				plugin.getServer().getLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
 			}
 		});
 	}

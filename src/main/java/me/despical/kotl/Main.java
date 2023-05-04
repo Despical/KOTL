@@ -47,6 +47,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -87,22 +88,24 @@ public class Main extends JavaPlugin {
 		initializeClasses();
 		checkUpdate();
 
-		LogUtils.sendConsoleMessage("[KOTL] &aInitialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
+		getServer().getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
 	private boolean validateIfPluginShouldStart() {
+		final Logger logger = getServer().getLogger();
+
 		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R3)) {
-			LogUtils.sendConsoleMessage("[KOTL] &cYour server version is not supported by King of the Ladder!");
-			LogUtils.sendConsoleMessage("[KOTL] &cSadly, we must shut off. Maybe you consider changing your server version?");
+			logger.warning("Your server version is not supported by King of the Ladder!");
+			logger.warning("Sadly, we must shut off. Maybe you consider changing your server version?");
 			return true;
 		}
 
 		try {
 			Class.forName("org.spigotmc.SpigotConfig");
 		} catch (Exception e) {
-			LogUtils.sendConsoleMessage("[KOTL] &cYour server software is not supported by King of the Ladder!");
-			LogUtils.sendConsoleMessage("[KOTL] &cWe support only Spigot and Spigot forks only! Shutting off...");
+			logger.warning("Your server software is not supported by King of the Ladder!");
+			logger.warning("We support only Spigot and Spigot forks only! Shutting off...");
 			return true;
 		}
 
@@ -189,9 +192,11 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				LogUtils.sendConsoleMessage("[KOTL] Found a new version available: v" + result.getNewestVersion());
-				LogUtils.sendConsoleMessage("[KOTL] Download it on SpigotMC:");
-				LogUtils.sendConsoleMessage("[KOTL] spigotmc.org/resources/king-of-the-ladder.80686/");
+				final Logger logger = getServer().getLogger();
+
+				logger.info("Found a new version available: v" + result.getNewestVersion());
+				logger.info("Download it on SpigotMC:");
+				logger.info("spigotmc.org/resources/king-of-the-ladder.80686/");
 			}
 		});
 	}
