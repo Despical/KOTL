@@ -22,8 +22,8 @@ If you still didn't find an answer see documentation section below.
 - [Discord Community](https://www.discord.gg/rVkaGmyszE)
 
 ## Donations
-You like the KOTL? Then [donate](https://www.patreon.com/despical) back me to support the development.
-Donations are more like motivation than money and, they are speeding up the development.
+- [Patreon](https://www.patreon.com/despical)
+- [Buy Me A Coffe](https://www.buymeacoffee.com/despical)
 
 ## Using King of the Ladder API
 The project isn't in the Central Repository yet, so specifying a repository is needed.<br>
