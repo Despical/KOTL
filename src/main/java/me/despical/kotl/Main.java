@@ -20,6 +20,7 @@ package me.despical.kotl;
 
 import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
@@ -42,6 +43,8 @@ import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.util.*;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -87,6 +90,7 @@ public class Main extends JavaPlugin {
 		setupFiles();
 		initializeClasses();
 		checkUpdate();
+		initializeMcRankings();
 
 		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
 		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
@@ -203,6 +207,26 @@ public class Main extends JavaPlugin {
 	
 	private void setupFiles() {
 		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+	}
+
+	private void initializeMcRankings() {
+		final McRankings mcRankings = new McRankings(this);
+		final McRankings.Leaderboard scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
+		final McRankings.Leaderboard gamesLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Game Players", "Games Played", true);
+
+		final FileConfiguration config = ConfigUtils.getConfig(this, "stats");
+
+		for (final OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
+			final String uuid = offlinePlayer.getUniqueId().toString();
+
+			if (config.contains(uuid)) {
+				scoresLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.score", uuid)));
+				gamesLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.toursplayed", uuid)));
+			}
+		}
+
+		getLogger().info("Check out your top scorer leaderboard at: " + scoresLeaderboard.getUrl());
+		getLogger().info("Check out top game players leaderboard at: " + gamesLeaderboard.getUrl());
 	}
 
 	@NotNull
