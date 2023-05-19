@@ -146,7 +146,6 @@
 									<shadedPattern>me.despical.kotl.util</shadedPattern>
 								</relocation>
 							</relocations>
-							<createDependencyReducedPom>false</createDependencyReducedPom>
 						</configuration>
 					</execution>
 				</executions>
