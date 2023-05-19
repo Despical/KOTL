@@ -70,6 +70,7 @@ public class Main extends JavaPlugin {
 	private RewardsFactory rewardsFactory;
 	private LanguageManager languageManager;
 	private ArenaRegistry arenaRegistry;
+	private McRankings mcRankings;
 
 	@Override
 	public void onEnable() {
@@ -210,9 +211,9 @@ public class Main extends JavaPlugin {
 	}
 
 	private void initializeMcRankings() {
-		final McRankings mcRankings = new McRankings(this);
+		this.mcRankings = new McRankings(this);
 		final McRankings.Leaderboard scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
-		final McRankings.Leaderboard gamesLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Game Players", "Games Played", true);
+		final McRankings.Leaderboard gamesLeaderboard = mcRankings.getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
 
 		final FileConfiguration config = ConfigUtils.getConfig(this, "stats");
 
@@ -225,8 +226,7 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-		getLogger().info("Check out your top scorer leaderboard at: " + scoresLeaderboard.getUrl());
-		getLogger().info("Check out top game players leaderboard at: " + gamesLeaderboard.getUrl());
+		getLogger().info("McRankings leaderboard entries updated, use '/kotl leaderboard' for URLs");
 	}
 
 	@NotNull
@@ -267,6 +267,11 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public ArenaRegistry getArenaRegistry() {
 		return arenaRegistry;
+	}
+
+	@NotNull
+	public McRankings getMcRankings() {
+		return mcRankings;
 	}
 
 	private void saveAllUserStatistics() {
