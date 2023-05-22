@@ -18,13 +18,10 @@
 
 package me.despical.kotl.event;
 
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.ArenaEvents;
 import me.despical.kotl.handler.ChatManager;
 import org.bukkit.event.Listener;
-
-import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -48,11 +45,9 @@ public abstract class ListenerAdapter implements Listener {
 		try {
 			for (Class<?> listenerAdapter : listenerAdapters) {
 				listenerAdapter.getConstructor(Main.class).newInstance(plugin);
-
-				LogUtils.log("[Listener Adapter] Registering new listener class: {0}", listenerAdapter.getSimpleName());
 			}
 		} catch (Exception ignored) {
-			plugin.getLogger().log(Level.SEVERE, "An exception occurred on event registering.");
+			plugin.getLogger().severe("An exception occurred during event registration.");
 		}
 	}
 }

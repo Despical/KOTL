@@ -20,7 +20,6 @@ package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 
@@ -63,12 +62,7 @@ public class MysqlManager implements UserDatabase {
 
 	@Override
 	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			final String query = "UPDATE " + tableName + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';";
-			database.executeUpdate(query);
-
-			LogUtils.log("Executed MySQL: " + query);
-		});
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + " SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';"));
 	}
 
 	@Override
@@ -101,15 +95,12 @@ public class MysqlManager implements UserDatabase {
 				final ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (rs.next()) {
-					LogUtils.log("MySQL Stats | Player {0} already exist. Getting stats...", name);
-
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, rs.getInt(stat.getName()));
 					}
 				} else {
-					LogUtils.log("MySQL Stats | Player {0} does not exist. Creating new one...", name);
 					statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + name + "');");
 
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {

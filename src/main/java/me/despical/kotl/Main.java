@@ -18,6 +18,7 @@
 
 package me.despical.kotl;
 
+import de.hthoene.mcrankings.McRankings;
 import me.despical.commandframework.CommandFramework;
 import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.configuration.ConfigUtils;
@@ -26,7 +27,6 @@ import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
-import me.despical.commons.util.LogUtils;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
@@ -77,16 +77,9 @@ public class Main extends JavaPlugin {
 		this.forceDisable = validateIfPluginShouldStart();
 
 		if (forceDisable) {
-			getServer().getPluginManager().disablePlugin(this);
+			setEnabled(false);
 			return;
 		}
-
-		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DEBUG_MESSAGES)) {
-			LogUtils.enableLogging("KOTL");
-			LogUtils.log("Initialization started!");
-		}
-
-		long start = System.currentTimeMillis();
 
 		setupFiles();
 		initializeClasses();
@@ -94,7 +87,6 @@ public class Main extends JavaPlugin {
 		initializeMcRankings();
 
 		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
-		LogUtils.log("Initialization finished took {0} ms.", System.currentTimeMillis() - start);
 	}
 	
 	private boolean validateIfPluginShouldStart() {
@@ -121,9 +113,6 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		if (forceDisable) return;
 
-		LogUtils.log("System disable initialized.");
-		long start = System.currentTimeMillis();
-		
 		saveAllUserStatistics();
 
 		if (database != null) {
@@ -149,14 +138,10 @@ public class Main extends JavaPlugin {
 				AttributeUtils.resetAttackCooldown(player);
 			}
 		}
-
-		LogUtils.log("System disable finished took {0} ms.", System.currentTimeMillis() - start);
-		LogUtils.disableLogging();
 	}
 	
 	private void initializeClasses() {
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
-
+		configPreferences = new ConfigPreferences(this);
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
@@ -165,25 +150,17 @@ public class Main extends JavaPlugin {
 		rewardsFactory = new RewardsFactory(this);
 		arenaRegistry = new ArenaRegistry(this);
 
+		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
+
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 		ScoreboardLib.setPluginInstance(this);
 		User.cooldownHandlerTask();
 
-		registerSoftDependencies();
-	}
-	
-	private void registerSoftDependencies() {
-		LogUtils.log("Hooking into soft dependencies.");
-
 		startPluginMetrics();
-
-		if (chatManager.isPapiEnabled()) {
-			LogUtils.log("Hooking into PlaceholderAPI.");
-			new PlaceholderManager(this);
-		} else LogUtils.log("PlaceholderAPI not found skipped hooking.");
 	}
-	
+
 	private void startPluginMetrics() {
 		Metrics metrics = new Metrics(this, 7938);
 

@@ -20,7 +20,6 @@ package me.despical.kotl.handler.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
@@ -108,16 +107,10 @@ public class RewardsFactory {
 	private void registerRewards() {
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) return;
 
-		LogUtils.log("[Rewards Factory] Starting rewards registration.");
-
-		long start = System.currentTimeMillis();
-
 		for (Reward.RewardType rewardType : Reward.RewardType.values()) {
 			for (String reward : config.getStringList(rewardType.getPath())) {
 				rewards.add(new Reward(rewardType, reward));
 			}
 		}
-
-		LogUtils.log("[Rewards Factory] Registered all rewards took {0} ms.", System.currentTimeMillis() - start);
 	}
 }

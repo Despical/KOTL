@@ -18,7 +18,6 @@
 
 package me.despical.kotl.user;
 
-import me.despical.commons.util.LogUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.FileStats;
@@ -55,8 +54,6 @@ public class UserManager {
 				return user;
 			}
 		}
-
-		LogUtils.log("Registering new user {0} ({1})", uuid, player.getName());
 
 		final User user = new User(uuid);
 		users.add(user);

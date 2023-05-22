@@ -90,7 +90,4 @@ Leave-Notify: true
 # Should we check for updates on plugin start/after admin join?
 Update-Notifier-Enabled: true
 
-# Enable this option to see log messages and timings.
-Debug-Messages: false
-
 # No way! You've reached the end! But... where's the dragon!?

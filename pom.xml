@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>2.5.8</version>
+	<version>2.5.9</version>
 	<name>King of the Ladder</name>
 
 	<properties>
@@ -44,6 +44,11 @@
 			<id>codemc-repo</id>
 			<url>https://repo.codemc.org/repository/maven-public/</url>
 		</repository>
+
+		<repository>
+			<id>repsy</id>
+			<url>https://repo.repsy.io/mvn/hannes/mc-rankings</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -78,6 +83,11 @@
 			<artifactId>placeholderapi</artifactId>
 			<version>2.11.2</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.hthoene</groupId>
+			<artifactId>mcrankings</artifactId>
+			<version>1.2.4</version>
 		</dependency>
 	</dependencies>
 
