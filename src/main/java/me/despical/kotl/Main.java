@@ -188,7 +188,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void initializeMcRankings() {
-		this.mcRankings = new McRankings(this);
+		this.mcRankings = new McRankings(this).withoutLogging();
 		final McRankings.Leaderboard scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
 		final McRankings.Leaderboard gamesLeaderboard = mcRankings.getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
 
