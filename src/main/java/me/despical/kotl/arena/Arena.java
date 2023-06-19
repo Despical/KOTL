@@ -18,7 +18,7 @@
 
 package me.despical.kotl.arena;
 
-import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
@@ -69,7 +69,7 @@ public class Arena {
 		this.arenaPlate = XMaterial.OAK_PRESSURE_PLATE;
 
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
-			if (VersionResolver.isCurrentLower(VersionResolver.ServerVersion.v1_9_R1)) return;
+			if (!ReflectionUtils.supports(9)) return;
 
 			this.bossBarManager = new BossBarManager(plugin);
 		}

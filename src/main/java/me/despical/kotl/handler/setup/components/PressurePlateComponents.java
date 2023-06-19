@@ -18,7 +18,7 @@
 
 package me.despical.kotl.handler.setup.components;
 
-import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
@@ -63,7 +63,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
 			add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
 
-			if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1)) {
+			if (ReflectionUtils.supports(13)) {
 				add(XMaterial.ACACIA_PRESSURE_PLATE);
 				add(XMaterial.BIRCH_PRESSURE_PLATE);
 				add(XMaterial.SPRUCE_PRESSURE_PLATE);
@@ -71,11 +71,13 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 				add(XMaterial.JUNGLE_PRESSURE_PLATE); // 1.13
 			}
 
-			if (VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_16_R1)) {
+			if (ReflectionUtils.supports(16)) {
 				add(XMaterial.CRIMSON_PRESSURE_PLATE);
 				add(XMaterial.POLISHED_BLACKSTONE_PRESSURE_PLATE);
 				add(XMaterial.WARPED_PRESSURE_PLATE); // 1.16
 			}
+
+			if (ReflectionUtils.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
 		}};
 
 		final List<Integer> slots = getSlots(pressurePlates.size());
@@ -127,7 +129,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 		if (size == 9) {
 			slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
 		} else {
-			slots.addAll(Arrays.asList(20, 24, 28, 30, 32, 34, 38, 42));
+			slots.addAll(Arrays.asList(20, 22, 24, 28, 30, 32, 34, 38, 42));
 		}
 
 		return slots;

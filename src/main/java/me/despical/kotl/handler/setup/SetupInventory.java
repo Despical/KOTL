@@ -63,7 +63,7 @@ public class SetupInventory {
 	}
 
 	private void prepareGui() {
-		this.gui = new Gui(plugin, 4, "KOTL Arena Editor");
+		this.gui = new Gui(plugin, 4, "         KOTL Arena Editor");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 		this.paginatedPane = new PaginatedPane(9, 4);
 

@@ -18,7 +18,7 @@
 
 package me.despical.kotl.handler.setup.components;
 
-import me.despical.commons.compat.VersionResolver;
+import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
@@ -126,8 +126,8 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 			setupInventory.getPaginatedPane().setPage(2);
 
 			final Gui gui = setupInventory.getGui();
-			gui.setRows(VersionResolver.isCurrentEqualOrHigher(VersionResolver.ServerVersion.v1_13_R1) ? 6 : 4);
-			gui.setTitle("Arena Plate Editor");
+			gui.setRows(ReflectionUtils.supports(13) ? 6 : 4);
+			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);
 	}

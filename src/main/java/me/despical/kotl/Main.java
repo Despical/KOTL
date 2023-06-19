@@ -20,7 +20,6 @@ package me.despical.kotl;
 
 import de.hthoene.mcrankings.McRankings;
 import me.despical.commandframework.CommandFramework;
-import me.despical.commons.compat.VersionResolver;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
@@ -59,8 +58,6 @@ import java.util.logging.Logger;
  */
 public class Main extends JavaPlugin {
 
-	private boolean forceDisable;
-
 	private ConfigPreferences configPreferences;
 	private MysqlDatabase database;
 	private UserManager userManager;
@@ -74,45 +71,16 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.forceDisable = validateIfPluginShouldStart();
-
-		if (forceDisable) {
-			setEnabled(false);
-			return;
-		}
-
 		setupFiles();
 		initializeClasses();
 		checkUpdate();
 		initializeMcRankings();
 
-		getLogger().info("Initialization finished. Join our Discord server if you need any help. (https://discord.gg/rVkaGmyszE)");
+		getLogger().info("Initialization finished. Join our Discord server: https://discord.gg/rVkaGmyszE");
 	}
-	
-	private boolean validateIfPluginShouldStart() {
-		final Logger logger = getLogger();
 
-		if (!VersionResolver.isCurrentBetween(VersionResolver.ServerVersion.v1_8_R1, VersionResolver.ServerVersion.v1_19_R3)) {
-			logger.warning("Your server version is not supported by King of the Ladder!");
-			logger.warning("Sadly, we must shut off. Maybe you consider changing your server version?");
-			return true;
-		}
-
-		try {
-			Class.forName("org.spigotmc.SpigotConfig");
-		} catch (Exception e) {
-			logger.warning("Your server software is not supported by King of the Ladder!");
-			logger.warning("We support only Spigot and Spigot forks only! Shutting off...");
-			return true;
-		}
-
-		return false;
-	}
-	
 	@Override
 	public void onDisable() {
-		if (forceDisable) return;
-
 		saveAllUserStatistics();
 
 		if (database != null) {
