@@ -32,14 +32,17 @@
 			<id>papermc</id>
 			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
+
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
 		</repository>
+
 		<repository>
 			<id>papi-repo</id>
 			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+
 		<repository>
 			<id>codemc-repo</id>
 			<url>https://repo.codemc.org/repository/maven-public/</url>
@@ -53,41 +56,47 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.destroystokyo.paper</groupId>
-			<artifactId>paper-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons</artifactId>
 			<version>1.6.4</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>InventoryFramework</artifactId>
 			<version>2.2.6</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>CommandFramework</artifactId>
 			<version>1.1.9</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
 			<version>3.0.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>de.hthoene</groupId>
+			<artifactId>mcrankings</artifactId>
+			<version>1.2.4</version>
+		</dependency>
+
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
 			<version>2.11.2</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>de.hthoene</groupId>
-			<artifactId>mcrankings</artifactId>
-			<version>1.2.4</version>
+			<groupId>com.destroystokyo.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -109,10 +118,10 @@
 				<goals>
 					<goal>compile</goal>
 				</goals>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-					</configuration>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -137,7 +146,6 @@
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
-					<outputDirectory>C:\Users\berke\OneDrive\Masaüstü\1.20 Server\plugins</outputDirectory>
 				</configuration>
 			</plugin>
 
@@ -164,7 +172,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
-
 </project>
