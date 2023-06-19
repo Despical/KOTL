@@ -26,8 +26,6 @@ If you still didn't find an answer see documentation section below.
 - [Buy Me A Coffe](https://www.buymeacoffee.com/despical)
 
 ## Using King of the Ladder API
-The project isn't in the Central Repository yet, so specifying a repository is needed.<br>
-
 <details>
 <summary>Maven dependency</summary>
 
