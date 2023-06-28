@@ -20,8 +20,6 @@ package me.despical.kotl.event;
 
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,8 +44,8 @@ public class ChatEvents extends ListenerAdapter {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onChatInGame(AsyncPlayerChatEvent event) {
-		Player player = event.getPlayer();
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		final var player = event.getPlayer();
+		final var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			if (!disabledSeparateChat) {
@@ -63,7 +61,7 @@ public class ChatEvents extends ListenerAdapter {
 			if (!disabledSeparateChat) {
 				event.setCancelled(true);
 
-				for (Player p : arena.getPlayers()) {
+				for (var p : arena.getPlayers()) {
 					p.sendMessage(message);
 				}
 
@@ -77,8 +75,8 @@ public class ChatEvents extends ListenerAdapter {
 	private String formatChatPlaceholders(String message, Player player, String saidMessage) {
 		String formatted = message;
 
-		formatted = StringUtils.replace(formatted, "%player%", player.getName());
-		formatted = StringUtils.replace(formatted, "%message%", ChatColor.stripColor(saidMessage));
+		formatted = formatted.replace("%player%", player.getName());
+		formatted = formatted.replace("%message%", ChatColor.stripColor(saidMessage));
 		formatted = chatManager.formatMessage(formatted, player);
 		return chatManager.coloredRawMessage(formatted);
 	}

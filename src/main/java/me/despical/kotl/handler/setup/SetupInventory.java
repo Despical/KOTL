@@ -25,7 +25,6 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
@@ -35,8 +34,6 @@ import me.despical.kotl.handler.setup.components.SpawnComponents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Despical
@@ -67,7 +64,7 @@ public class SetupInventory {
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 		this.paginatedPane = new PaginatedPane(9, 4);
 
-		final StaticPane pane = new StaticPane(9, 4);
+		final var pane = new StaticPane(9, 4);
 		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 
@@ -78,55 +75,17 @@ public class SetupInventory {
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		final SpawnComponents spawnComponents = new SpawnComponents();
+		final var spawnComponents = new SpawnComponents();
 		spawnComponents.injectComponents(this, pane);
 
-		final ArenaRegisterComponents arenaRegistryComponents = new ArenaRegisterComponents();
+		final var arenaRegistryComponents = new ArenaRegisterComponents();
 		arenaRegistryComponents.injectComponents(this, pane);
 
-		final PressurePlateComponents pressurePlateComponents = new PressurePlateComponents();
+		final var pressurePlateComponents = new PressurePlateComponents();
 		pressurePlateComponents.injectComponents(this, pane);
 	}
 
-	private void sendProTip(Player player) {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SEND_SETUP_TIPS)) return;
-
-		final ChatManager chatManager = plugin.getChatManager();
-		String tip = "";
-
-		switch (ThreadLocalRandom.current().nextInt(20)) {
-			case 0:
-				tip = "We are open source! You can always help us by contributing! Check out https://github.com/Despical/KOTL";
-				break;
-			case 1:
-				tip = "Need help? Check our wiki: https://github.com/Despical/KOTL/wiki";
-				break;
-			case 2:
-				tip = "Don't know where to start? Check out our tutorial video: " + TUTORIAL_VIDEO;
-				break;
-			case 3:
-				tip = "Help us translating plugin to your language here: https://github.com/Despical/LocaleStorage/";
-				break;
-			case 4:
-				tip = "You can support us with becoming Patron on https://www.patreon.com/despical to make updates better and sooner.";
-				break;
-			case 5:
-				tip = "Need help? You can join our Discord community. Check out https://discord.gg/rVkaGmyszE";
-				break;
-			case 6:
-				tip = "Check out our other plugins: https://spigotmc.org/resources/authors/despical.615094/";
-				break;
-			default:
-				break;
-		}
-
-		if (!tip.isEmpty()) {
-			player.sendMessage(chatManager.coloredRawMessage("&e&lTIP: &7" + tip));
-		}
-	}
-
 	public void openInventory() {
-		sendProTip(player);
 		gui.show(player);
 	}
 

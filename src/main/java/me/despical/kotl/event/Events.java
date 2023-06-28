@@ -22,7 +22,6 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		Player player = event.getPlayer();
+		var player = event.getPlayer();
 
 		plugin.getUserManager().loadStatistics(player);
 
@@ -62,15 +61,15 @@ public class Events extends ListenerAdapter {
 		UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
 				player.sendMessage(chatManager.coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://www.spigotmc.org/resources/king-of-the-ladder.80686"));
+				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/80686"));
 			}
 		});
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		var player = event.getPlayer();
+		var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
@@ -83,7 +82,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		Player player = event.getPlayer();
+		var player = event.getPlayer();
 
 		if (!plugin.getArenaRegistry().isInArena(player)) {
 			return;
@@ -113,11 +112,9 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onFallDamage(EntityDamageEvent e) {
-		if (!(e.getEntity() instanceof Player)) {
+		if (!(e.getEntity() instanceof Player victim)) {
 			return;
 		}
-
-		Player victim = (Player) e.getEntity();
 
 		if (!plugin.getArenaRegistry().isInArena(victim)) {
 			return;
@@ -135,9 +132,7 @@ public class Events extends ListenerAdapter {
 	@EventHandler
 	public void onFireworkDamage(EntityDamageByEntityEvent event) {
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
-		if (!(event.getEntity() instanceof Player)) return;
-
-		final Player player = (Player) event.getEntity();
+		if (!(event.getEntity() instanceof Player player)) return;
 
 		if (!plugin.getArenaRegistry().isInArena(player)) return;
 
@@ -156,7 +151,7 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
-		final Player player = event.getPlayer();
+		final var player = event.getPlayer();
 
 		if (plugin.getArenaRegistry().isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);
@@ -165,7 +160,7 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onPlace(BlockPlaceEvent event) {
-		final Player player = event.getPlayer();
+		final var player = event.getPlayer();
 
 		if (plugin.getArenaRegistry().isInArena(player) && !player.isOp()) {
 			event.setCancelled(true);

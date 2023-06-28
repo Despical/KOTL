@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * @author Despical
@@ -47,15 +46,15 @@ public class UserManager {
 	}
 
 	public User getUser(Player player) {
-		final UUID uuid = player.getUniqueId();
+		final var uuid = player.getUniqueId();
 
-		for (User user : users) {
+		for (var user : users) {
 			if (user.getUniqueId().equals(uuid)) {
 				return user;
 			}
 		}
 
-		final User user = new User(uuid);
+		final var user = new User(uuid);
 		users.add(user);
 
 		database.loadStatistics(user);

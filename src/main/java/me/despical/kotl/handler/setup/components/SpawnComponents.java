@@ -22,15 +22,10 @@ import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
-import me.despical.kotl.util.CuboidSelector;
-import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 
 /**
  * @author Despical
@@ -41,9 +36,9 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
-		final String path = "instances." + arena.getId() + ".";
+		final var player = setupInventory.getPlayer();
+		final var arena = setupInventory.getArena();
+		final var path = "instances.%s.".formatted(arena.getId());
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("&e&lSet Ending Location")
@@ -56,7 +51,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 
 			player.closeInventory();
 
-			Location location = player.getLocation();
+			var location = player.getLocation();
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			arena.setEndLocation(location);
@@ -76,7 +71,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 
 			player.closeInventory();
 
-			final Location location = player.getLocation();
+			final var location = player.getLocation();
 			location.getBlock().getRelative(BlockFace.DOWN).setType(arena.getArenaPlate().parseMaterial());
 
 			arena.setPlateLocation(location);
@@ -96,23 +91,24 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 
 			player.closeInventory();
 
-			final CuboidSelector.Selection selection = plugin.getCuboidSelector().getSelection(player);
+			final var selector =  plugin.getCuboidSelector();
+			final var selection = selector.getSelection(player);
 
-			if (plugin.getCuboidSelector().giveSelectorWand(player)) return;
+			if (selector.giveSelectorWand(player)) return;
 
-			if (selection.secondPos == null) {
+			if (selection.secondPos() == null) {
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select top corner using right click!"));
 				return;
 			}
 
-			config.set(path + "areaMin", LocationSerializer.toString(selection.firstPos));
-			config.set(path + "areaMax", LocationSerializer.toString(selection.secondPos));
+			config.set(path + "areaMin", LocationSerializer.toString(selection.firstPos()));
+			config.set(path + "areaMax", LocationSerializer.toString(selection.secondPos()));
 
-			arena.setMinCorner(selection.firstPos);
-			arena.setMaxCorner(selection.secondPos);
+			arena.setMinCorner(selection.firstPos());
+			arena.setMaxCorner(selection.secondPos());
 
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena &e" + arena.getId() + " &aset as you selection!"));
-			plugin.getCuboidSelector().removeSelection(player);
+			selector.removeSelection(player);
 
 			saveConfig();
 		}), 3, 1);
@@ -125,7 +121,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 
 			setupInventory.getPaginatedPane().setPage(2);
 
-			final Gui gui = setupInventory.getGui();
+			final var gui = setupInventory.getGui();
 			gui.setRows(ReflectionUtils.supports(13) ? 6 : 4);
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();

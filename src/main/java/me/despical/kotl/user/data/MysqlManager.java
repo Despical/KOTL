@@ -23,10 +23,7 @@ import me.despical.commons.database.MysqlDatabase;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author Despical
@@ -43,8 +40,8 @@ public class MysqlManager implements UserDatabase {
 		this.database = plugin.getMysqlDatabase();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (Connection connection = database.getConnection()) {
-				final Statement statement = connection.createStatement();
+			try (final var connection = database.getConnection()) {
+				final var statement = connection.createStatement();
 				statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + tableName + "` (\n"
 					+ "  `UUID` char(36) NOT NULL PRIMARY KEY,\n"
 					+ "  `name` varchar(32) NOT NULL,\n"
@@ -55,7 +52,6 @@ public class MysqlManager implements UserDatabase {
 				exception.printStackTrace();
 
 				plugin.getLogger().severe("Cannot save contents to MySQL database!");
-				plugin.getLogger().severe("Check configuration of mysql.yml file or disable mysql option in config.yml");
 			}
 		});
 	}
@@ -67,12 +63,12 @@ public class MysqlManager implements UserDatabase {
 
 	@Override
 	public void saveAllStatistic(User user) {
-		final StringBuilder update = new StringBuilder(" SET ");
+		final var update = new StringBuilder(" SET ");
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final var stat : StatsStorage.StatisticType.values()) {
 			if (!stat.isPersistent()) continue;
 
-			final int value = user.getStat(stat);
+			final var value = user.getStat(stat);
 
 			if (update.toString().equalsIgnoreCase(" SET ")) {
 				update.append(stat.getName()).append("=").append(value);
@@ -81,7 +77,7 @@ public class MysqlManager implements UserDatabase {
 			update.append(", ").append(stat.getName()).append("=").append(value);
 		}
 
-		final String finalUpdate = update.toString();
+		final var finalUpdate = update.toString();
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE " + tableName + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
 	}
 
@@ -90,9 +86,9 @@ public class MysqlManager implements UserDatabase {
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
 
-			try (Connection connection = database.getConnection()) {
-				final Statement statement = connection.createStatement();
-				final ResultSet rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
+			try (final var connection = database.getConnection()) {
+				final var statement = connection.createStatement();
+				final var rs = statement.executeQuery("SELECT * from " + tableName + " WHERE UUID='" + uuid + "';");
 
 				if (rs.next()) {
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -103,7 +99,7 @@ public class MysqlManager implements UserDatabase {
 				} else {
 					statement.executeUpdate("INSERT INTO " + tableName + " (UUID,name) VALUES ('" + uuid + "','" + name + "');");
 
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+					for (final var stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
 
 						user.setStat(stat, 0);

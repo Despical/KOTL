@@ -27,8 +27,6 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
-import me.despical.kotl.user.User;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -50,7 +48,7 @@ public class ScoreboardManager {
 	}
 
 	public void createScoreboard(Player player) {
-		Scoreboard scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
+		var scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
 
 			@Override
 			public String getTitle(Player player) {
@@ -68,7 +66,7 @@ public class ScoreboardManager {
 	}
 
 	public void removeScoreboard(Player player) {
-		for (Scoreboard board : scoreboards) {
+		for (var board : scoreboards) {
 			if (board.getHolder().equals(player)) {
 				board.deactivate();
 				scoreboards.remove(board);
@@ -84,9 +82,9 @@ public class ScoreboardManager {
 	}
 
 	private List<Entry> formatScoreboard(Player player) {
-		final EntryBuilder builder = new EntryBuilder();
+		final var builder = new EntryBuilder();
 
-		for (String line : chatManager.getStringList("scoreboard.content.playing")) {
+		for (var line : chatManager.getStringList("scoreboard.content.playing")) {
 			builder.next(formatScoreboardLine(line, player));
 		}
 
@@ -96,14 +94,14 @@ public class ScoreboardManager {
 	private String formatScoreboardLine(String line, Player player) {
 		String formattedLine = line;
 
-		formattedLine = StringUtils.replace(formattedLine, "%arena%", arena.getId());
-		formattedLine = StringUtils.replace(formattedLine, "%players%", Integer.toString(arena.getPlayers().size()));
-		formattedLine = StringUtils.replace(formattedLine, "%king%", arena.getKingName());
+		formattedLine = formattedLine.replace("%arena%", arena.getId());
+		formattedLine = formattedLine.replace("%players%", Integer.toString(arena.getPlayers().size()));
+		formattedLine = formattedLine.replace("%king%", arena.getKingName());
 
-		User user = plugin.getUserManager().getUser(player);
+		var user = plugin.getUserManager().getUser(player);
 
-		formattedLine = StringUtils.replace(formattedLine, "%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
-		formattedLine = StringUtils.replace(formattedLine, "%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
+		formattedLine = formattedLine.replace("%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
+		formattedLine = formattedLine.replace("%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
 		formattedLine = chatManager.formatMessage(formattedLine, player);
 		return chatManager.coloredRawMessage(formattedLine);
 	}

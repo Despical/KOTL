@@ -50,7 +50,7 @@ public class CuboidSelector extends ListenerAdapter {
 	}
 
 	public boolean giveSelectorWand(Player player) {
-		Selection selection = selections.get(player);
+		final var selection = selections.get(player);
 
 		if (selection == null || !player.getInventory().contains(wandItem)) {
 			player.getInventory().addItem(wandItem);
@@ -82,36 +82,30 @@ public class CuboidSelector extends ListenerAdapter {
 		final Player player = event.getPlayer();
 
 		switch (event.getAction()) {
-			case LEFT_CLICK_BLOCK:
+			case LEFT_CLICK_BLOCK -> {
 				selections.put(player, new Selection(event.getClickedBlock().getLocation(), null));
 				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow select top corner using right click!"));
-				break;
-			case RIGHT_CLICK_BLOCK:
+			}
+
+			case RIGHT_CLICK_BLOCK -> {
 				if (!selections.containsKey(player)) {
 					player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select bottom corner using left click first!"));
 					break;
 				}
 
 				selections.replace(player, new Selection(selections.get(player).firstPos, event.getClickedBlock().getLocation()));
-
 				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
-				break;
-			case LEFT_CLICK_AIR:
-			case RIGHT_CLICK_AIR:
+			}
+
+			case LEFT_CLICK_AIR, RIGHT_CLICK_AIR ->
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select solid block, not air!"));
-				break;
-			default:
-				break;
+
+			default -> {
+			}
 		}
 	}
 
-	public static class Selection {
+	public record Selection(Location firstPos, Location secondPos) {
 
-		public final Location firstPos, secondPos;
-
-		public Selection(Location firstPos, Location secondPos) {
-			this.firstPos = firstPos;
-			this.secondPos = secondPos;
-		}
 	}
 }

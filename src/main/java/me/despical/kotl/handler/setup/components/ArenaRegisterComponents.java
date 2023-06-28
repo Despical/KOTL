@@ -23,11 +23,9 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 
 /**
@@ -39,8 +37,8 @@ public class ArenaRegisterComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
+		final var player = setupInventory.getPlayer();
+		final var arena = setupInventory.getArena();
 		final ItemBuilder registeredItem;
 
 		if (!arena.isReady()) {
@@ -58,7 +56,7 @@ public class ArenaRegisterComponents implements SetupInventory.SetupComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			final String path = "instances." + arena.getId() + ".";
+			final String path = "instances.%s.".formatted(arena.getId());
 
 			player.closeInventory();
 

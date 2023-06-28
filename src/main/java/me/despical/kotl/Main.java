@@ -39,11 +39,9 @@ import me.despical.kotl.handler.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
-import me.despical.kotl.util.*;
+import me.despical.kotl.util.CuboidSelector;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +69,6 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		setupFiles();
 		initializeClasses();
 		checkUpdate();
 		initializeMcRankings();
@@ -109,6 +106,8 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void initializeClasses() {
+		this.setupConfigurationFiles();
+
 		configPreferences = new ConfigPreferences(this);
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
@@ -126,17 +125,12 @@ public class Main extends JavaPlugin {
 		ScoreboardLib.setPluginInstance(this);
 		User.cooldownHandlerTask();
 
-		startPluginMetrics();
-	}
-
-	private void startPluginMetrics() {
-		Metrics metrics = new Metrics(this, 7938);
-
+		final var metrics = new Metrics(this, 7938);
 		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix));
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
-	
+
 	private void checkUpdate() {
 		if (!configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
 
@@ -146,28 +140,28 @@ public class Main extends JavaPlugin {
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
-				logger.info("spigotmc.org/resources/king-of-the-ladder.80686/");
+				logger.info("https://spigotmc.org/resources/80686");
 			}
 		});
 	}
 	
-	private void setupFiles() {
+	private void setupConfigurationFiles() {
 		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	private void initializeMcRankings() {
 		this.mcRankings = new McRankings(this).withoutLogging();
-		final McRankings.Leaderboard scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
-		final McRankings.Leaderboard gamesLeaderboard = mcRankings.getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
+		final var scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
+		final var gamesLeaderboard = mcRankings.getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
 
-		final FileConfiguration config = ConfigUtils.getConfig(this, "stats");
+		final var config = ConfigUtils.getConfig(this, "stats");
 
-		for (final OfflinePlayer offlinePlayer : getServer().getOfflinePlayers()) {
-			final String uuid = offlinePlayer.getUniqueId().toString();
+		for (final var offlinePlayer : getServer().getOfflinePlayers()) {
+			final var uuid = offlinePlayer.getUniqueId().toString();
 
 			if (config.contains(uuid)) {
-				scoresLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.score", uuid)));
-				gamesLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.toursplayed", uuid)));
+				scoresLeaderboard.setScore(offlinePlayer, config.getInt("%s.score".formatted(uuid)));
+				gamesLeaderboard.setScore(offlinePlayer, config.getInt("%s.toursplayed".formatted(uuid)));
 			}
 		}
 
@@ -220,18 +214,17 @@ public class Main extends JavaPlugin {
 	}
 
 	private void saveAllUserStatistics() {
-		for (Player player : getServer().getOnlinePlayers()) {
-			final User user = userManager.getUser(player);
+		for (final var player : getServer().getOnlinePlayers()) {
+			final var user = userManager.getUser(player);
 
-			if (userManager.getDatabase() instanceof MysqlManager) {
-				final StringBuilder update = new StringBuilder(" SET ");
-				final MysqlManager database = ((MysqlManager) userManager.getDatabase());
+			if (userManager.getDatabase() instanceof MysqlManager mysqlDatabase) {
+				final var update = new StringBuilder(" SET ");
 
-				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+				for (final var stat : StatsStorage.StatisticType.values()) {
 					if (!stat.isPersistent()) continue;
 
-					final int val = user.getStat(stat);
-					final String statName = stat.getName();
+					final var val = user.getStat(stat);
+					final var statName = stat.getName();
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
 						update.append(statName).append("'='").append(val);
@@ -240,8 +233,8 @@ public class Main extends JavaPlugin {
 					update.append(", ").append(statName).append("'='").append(val);
 				}
 
-				final String finalUpdate = update.toString();
-				database.getDatabase().executeUpdate("UPDATE " + database.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				final var finalUpdate = update.toString();
+				mysqlDatabase.getDatabase().executeUpdate("UPDATE " + mysqlDatabase.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 

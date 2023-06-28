@@ -20,13 +20,8 @@ package me.despical.kotl.handler.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.engine.ScriptEngine;
-import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,78 +34,68 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RewardsFactory {
 
+	private double rewardInterval;
+
 	private final Main plugin;
-	private final double delay;
-	private final FileConfiguration config;
 	private final Set<Reward> rewards;
 
-	public RewardsFactory(Main plugin) {
+	public RewardsFactory(final Main plugin) {
 		this.plugin = plugin;
-		this.config = ConfigUtils.getConfig(plugin, "rewards");
-		this.delay = config.getDouble("time-between-rewards", 5) * 20;
 		this.rewards = new HashSet<>();
 
 		registerRewards();
 	}
 
-	public void performReward(Player player, Reward.RewardType type) {
-		if (rewards.isEmpty()) return;
+	public void performReward(final User user, final Reward.RewardType type) {
+		final var rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
 
-		final User user = plugin.getUserManager().getUser(player);
-
+		if (rewardList.isEmpty()) return;
 		if (user.getCooldown("rewards") > 0) return;
 
-		user.setCooldown("rewards", delay);
+		user.setCooldown("rewards", rewardInterval);
 
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		for (final var mainRewards : rewardList) {
+			for (final var reward : mainRewards.getRewards()){
+				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
-		for (Reward reward : rewards) {
-			if (reward.getType() == type) {
-				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) {
-					continue;
-				}
-
-				String command = reward.getExecutableCode();
-				command = formatCommandPlaceholders(command, arena, player);
+				final var arena = user.getArena();
+				final var player = user.getPlayer();
+				final var command = formatCommandPlaceholders(reward, user);
 
 				switch (reward.getExecutor()) {
-					case CONSOLE:
-						plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
-						break;
-					case PLAYER:
-						player.performCommand(command);
-						break;
-					case SCRIPT:
-						ScriptEngine engine = new ScriptEngine();
-
-						engine.setValue("arena", arena);
+					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
+					case 2 -> player.performCommand(command);
+					case 3 -> {
+						final var engine = new ScriptEngine();
 						engine.setValue("player", player);
 						engine.setValue("server", plugin.getServer());
+						engine.setValue("arena", arena);
 						engine.execute(command);
-						break;
-					default:
-						break;
+					}
 				}
 			}
 		}
 	}
 
-	private String formatCommandPlaceholders(String command, Arena arena, Player player) {
-		String formatted = command;
+	private String formatCommandPlaceholders(final Reward.SubReward reward, final User user) {
+		var arena = user.getArena();
+		var formatted = reward.getExecutableCode();
 
-		formatted = StringUtils.replace(formatted, "%arena%", arena.getId());
-		formatted = StringUtils.replace(formatted, "%player%", player.getName());
-		formatted = StringUtils.replace(formatted, "%players%", Integer.toString(arena.getPlayers().size()));
+		formatted = formatted.replace("%arena%", arena.getId());
+		formatted = formatted.replace("%player%", user.getPlayer().getName());
+		formatted = formatted.replace("%players%", Integer.toString(arena.getPlayers().size()));
 		return formatted;
 	}
 
 	private void registerRewards() {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.REWARDS_ENABLED)) return;
+		var config = ConfigUtils.getConfig(plugin, "rewards");
 
-		for (Reward.RewardType rewardType : Reward.RewardType.values()) {
-			for (String reward : config.getStringList(rewardType.getPath())) {
-				rewards.add(new Reward(rewardType, reward));
-			}
+		this.rewardInterval = config.getDouble("Reward-Interval", 5) * 20;
+
+		if (!config.getBoolean("Rewards-Enabled")) return;
+
+		for (final var rewardType : Reward.RewardType.values()) {
+			rewards.add(new Reward(plugin, rewardType, config.getStringList(rewardType.path)));
 		}
 	}
 }

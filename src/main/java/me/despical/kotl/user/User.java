@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import me.despical.kotl.handler.rewards.Reward;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -66,7 +67,7 @@ public class User {
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {
-		final Integer statistic = stats.get(statisticType);
+		final var statistic = stats.get(statisticType);
 
 		if (statistic == null) {
 			stats.put(statisticType, 0);
@@ -86,12 +87,16 @@ public class User {
 		setStat(stat, getStat(stat) + value);
 	}
 
+	public void performReward(final Reward.RewardType rewardType) {
+		plugin.getRewardsFactory().performReward(this, rewardType);
+	}
+
 	public void setCooldown(String s, double seconds) {
 		cooldowns.put(s, seconds + cooldownCounter);
 	}
 
 	public double getCooldown(String s) {
-		final Double cooldown = cooldowns.get(s);
+		final var cooldown = cooldowns.get(s);
 
 		return (cooldown == null || cooldown <= cooldownCounter) ? 0 : cooldown - cooldownCounter;
 	}

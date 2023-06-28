@@ -73,7 +73,7 @@ public class ChatManager {
 
 	public String message(String path, Player player) {
 		String returnString = message(path);
-		returnString = StringUtils.replace(returnString, "%player%", player.getName());
+		returnString = returnString.replace("%player%", player.getName());
 		returnString = formatMessage(returnString, player);
 
 		return returnString;
@@ -91,7 +91,7 @@ public class ChatManager {
 
 	private String formatMessage(Arena arena, String message, Player player) {
 		String returnString = message;
-		returnString = StringUtils.replace(returnString, "%player%", player.getName());
+		returnString = returnString.replace("%player%", player.getName());
 		returnString = formatMessage(returnString, arena);
 		returnString = formatMessage(returnString, player);
 
@@ -101,9 +101,9 @@ public class ChatManager {
 	private String formatMessage(String message, Arena arena) {
 		String returnString = message;
 
-		returnString = StringUtils.replace(returnString, "%arena%", arena.getId());
-		returnString = StringUtils.replace(returnString, "%players%", Integer.toString(arena.getPlayers().size()));
-		returnString = StringUtils.replace(returnString, "%king%", arena.getKingName());
+		returnString = returnString.replace("%arena%", arena.getId());
+		returnString = returnString.replace("%players%", Integer.toString(arena.getPlayers().size()));
+		returnString = returnString.replace("%king%", arena.getKingName());
 		return returnString;
 	}
 
@@ -116,17 +116,12 @@ public class ChatManager {
 		String path;
 
 		switch (action) {
-			case JOIN:
-				path = "join";
-				break;
-			case LEAVE:
-				path = "leave";
-				break;
-			case NEW_KING:
-				path = "new_king";
-				break;
-			default:
+			case JOIN -> path = "join";
+			case LEAVE -> path = "leave";
+			case NEW_KING -> path = "new_king";
+			default -> {
 				return;
+			}
 		}
 
 		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));

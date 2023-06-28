@@ -25,7 +25,6 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.event.ListenerAdapter;
 import me.despical.kotl.handler.ChatManager.ActionType;
 import me.despical.kotl.handler.rewards.Reward;
-import me.despical.kotl.user.User;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,8 +33,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Set;
 
 /**
  * @author Despical
@@ -50,15 +47,15 @@ public class ArenaEvents extends ListenerAdapter {
 
 	@EventHandler
 	public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
-		Player player = event.getPlayer();
-		Arena arena = isInArea(player);
+		var player = event.getPlayer();
+		var arena = isInArea(player);
 
 		if (!plugin.getArenaRegistry().isInArena(player) && arena != null) {
 			arena.addPlayer(player);
 		}
 
 		if (plugin.getArenaRegistry().isInArena(player) && arena == null) {
-			Arena tempArena = plugin.getArenaRegistry().getArena(player);
+			var tempArena = plugin.getArenaRegistry().getArena(player);
 
 			tempArena.removePlayer(player);
 		}
@@ -77,21 +74,21 @@ public class ArenaEvents extends ListenerAdapter {
 				arena.setKing(player);
 
 				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
-				plugin.getRewardsFactory().performReward(player, Reward.RewardType.WIN);
 
-				User user = plugin.getUserManager().getUser(player);
+				var user = plugin.getUserManager().getUser(player);
 				user.addStat(StatsStorage.StatisticType.SCORE, 1);
 				user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+				user.performReward(Reward.RewardType.WIN);
 
-				Set<Player> players = arena.getPlayers();
+				var players = arena.getPlayers();
 				players.remove(player);
 
 				spawnFireworks(arena, player);
 
-				for (Player p : players) {
-					plugin.getUserManager().getUser(p).addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-
-					plugin.getRewardsFactory().performReward(p, Reward.RewardType.LOSE);
+				for (var p : players) {
+					final var u = plugin.getUserManager().getUser(p);
+					u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+					u.performReward(Reward.RewardType.LOSE);
 
 					spawnFireworks(arena, p);
 				}
@@ -101,17 +98,16 @@ public class ArenaEvents extends ListenerAdapter {
 
 	@EventHandler
 	public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
+		var player = event.getPlayer();
 
 		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DEATH_BLOCKS_ENABLED)) {
 			return;
 		}
 
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		var user = plugin.getUserManager().getUser(player);
+		var arena = user.getArena();
 
-		if (arena == null) {
-			return;
-		}
+		if (arena == null) return;
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
@@ -121,7 +117,7 @@ public class ArenaEvents extends ListenerAdapter {
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 
-					plugin.getRewardsFactory().performReward(player, Reward.RewardType.LOSE);
+					user.performReward(Reward.RewardType.LOSE);
 					return;
 				}
 			}
@@ -130,11 +126,9 @@ public class ArenaEvents extends ListenerAdapter {
 
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent event) {
-		if (!(event.getEntity() instanceof Player && event.getDamager() instanceof Player)) {
+		if (!(event.getEntity() instanceof Player entity && event.getDamager() instanceof Player damager)) {
 			return;
 		}
-
-		Player entity = (Player) event.getEntity(), damager = (Player) event.getDamager();
 
 		if (plugin.getArenaRegistry().isInArena(entity) && plugin.getArenaRegistry().isInArena(damager)) {
 			event.setCancelled(false);
@@ -143,8 +137,8 @@ public class ArenaEvents extends ListenerAdapter {
 	}
 
 	private Arena isInArea(final Player player) {
-		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			final Arena target = arena.isInArea(player);
+		for (var arena : plugin.getArenaRegistry().getArenas()) {
+			final var target = arena.isInArea(player);
 
 			if (target != null) return target;
 		}

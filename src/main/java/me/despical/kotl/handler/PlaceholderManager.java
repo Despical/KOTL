@@ -18,13 +18,10 @@
 
 package me.despical.kotl.handler;
 
-import me.despical.kotl.user.User;
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.arena.Arena;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -68,31 +65,25 @@ public class PlaceholderManager extends PlaceholderExpansion {
 	public String onPlaceholderRequest(Player player, @NotNull String id) {
 		if (player == null) return null;
 
-		final User user = plugin.getUserManager().getUser(player);
+		final var user = plugin.getUserManager().getUser(player);
 
-		switch (id.toLowerCase()) {
-			case "score":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
-			case "tours_played":
-				return Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-			default:
-				return handleArenaPlaceholderRequest(id);
-		}
+		return switch (id.toLowerCase()) {
+			case "score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
+			case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+			default -> handleArenaPlaceholderRequest(id);
+		};
 	}
 
 	private String handleArenaPlaceholderRequest(String id) {
-		final String[] data = id.split(":");
-		final Arena arena = plugin.getArenaRegistry().getArena(data[0]);
+		final var data = id.split(":");
+		final var arena = plugin.getArenaRegistry().getArena(data[0]);
 
 		if (arena == null) return null;
 
-		switch (data[1].toLowerCase()) {
-			case "players":
-				return Integer.toString(arena.getPlayers().size());
-			case "king":
-				return arena.getKingName();
-			default:
-				return null;
-		}
+		return switch (data[1].toLowerCase()) {
+			case "players" -> Integer.toString(arena.getPlayers().size());
+			case "king" -> arena.getKingName();
+			default -> null;
+		};
 	}
 }

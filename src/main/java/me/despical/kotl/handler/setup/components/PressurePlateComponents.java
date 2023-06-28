@@ -22,15 +22,11 @@ import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.setup.SetupInventory;
-import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
@@ -46,18 +42,18 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final Player player = setupInventory.getPlayer();
-		final Arena arena = setupInventory.getArena();
-		final String path = "instances." + arena.getId() + ".";
+		final var player = setupInventory.getPlayer();
+		final var arena = setupInventory.getArena();
+		final var path = "instances.%s.".formatted(arena.getId());
 
-		final StaticPane pressurePlatesPane = new StaticPane(9, 6);
+		final var pressurePlatesPane = new StaticPane(9, 6);
 		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE)
 			.name("&eClick to change plate!")
 			.lore("", "&7Current plate: &a" + arena.getArenaPlate().toString()).build());
 
 		setupInventory.getPaginatedPane().addPane(2, pressurePlatesPane);
 
-		final List<XMaterial> pressurePlates = new ArrayList<XMaterial>() {{
+		final var pressurePlates = new ArrayList<XMaterial>() {{
 			add(XMaterial.OAK_PRESSURE_PLATE);
 			add(XMaterial.STONE_PRESSURE_PLATE);
 			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
@@ -80,12 +76,12 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 			if (ReflectionUtils.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
 		}};
 
-		final List<Integer> slots = getSlots(pressurePlates.size());
+		final var slots = getSlots(pressurePlates.size());
 
 		for (int i = 0; i < pressurePlates.size(); i++) {
 			final int slot = slots.get(i);
-			final XMaterial plate = pressurePlates.get(i);
-			final ItemBuilder itemBuilder = new ItemBuilder(plate);
+			final var plate = pressurePlates.get(i);
+			final var itemBuilder = new ItemBuilder(plate);
 
 			if (arena.getArenaPlate().equals(plate)) {
 				itemBuilder.name("&7This plate is the current arena plate.").enchantment(Enchantment.ARROW_DAMAGE).flag(ItemFlag.HIDE_ENCHANTS);
@@ -103,7 +99,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 
 				arena.setArenaPlate(plate);
 
-				final Location plateLoc = arena.getPlateLocation();
+				final var plateLoc = arena.getPlateLocation();
 
 				if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().getRelative(BlockFace.DOWN).setType(plate.parseMaterial());
 			}), slot % 9, slot / 9);
@@ -116,7 +112,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 
 			setupInventory.getPaginatedPane().setPage(0);
 
-			final Gui gui = setupInventory.getGui();
+			final var gui = setupInventory.getGui();
 			gui.setRows(5);
 			gui.setTitle("Arena Setup Menu");
 			gui.update();
@@ -124,7 +120,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 	}
 
 	private List<Integer> getSlots(int size) {
-		final List<Integer> slots = new ArrayList<>(Arrays.asList(10, 12, 14, 16));
+		final var slots = me.despical.commons.util.Collections.listOf(10, 12, 14, 16);
 
 		if (size == 9) {
 			slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
