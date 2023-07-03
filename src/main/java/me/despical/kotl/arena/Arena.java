@@ -55,7 +55,7 @@ public class Arena {
 	private final Set<Player> players;
 	private final Map<GameLocation, Location> gameLocations;
 
-	private Player king;
+	private String king;
 	private XMaterial arenaPlate;
 	private BossBarManager bossBarManager;
 
@@ -153,26 +153,18 @@ public class Arena {
 		gameLocations.put(GameLocation.MAX, maxCorner);
 	}
 
-	/**
-	 * Set new king of arena.
-	 * 
-	 * @param player new king of arena
-	 */
-	public void setKing(Player player) {
-		this.king = player;
+	public void setKing(String king) {
+		this.king = king;
 	}
-	
-	/**
-	 * @return null if king is not online
-	 */
+
 	@Nullable
-	public Player getKing() {
+	public String getKing() {
 		return king;
 	}
 
 	@NotNull
 	public String getKingName() {
-		return king == null ? plugin.getChatManager().message("in_game.there_is_no_king") : king.getName();
+		return king == null ? plugin.getChatManager().message("in_game.there_is_no_king") : king;
 	}
 
 	public void setArenaPlate(XMaterial arenaPlate) {

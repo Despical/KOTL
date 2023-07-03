@@ -63,15 +63,15 @@ public class ArenaEvents extends ListenerAdapter {
 
 	@EventHandler
 	public void onInteractWithPlate(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		Arena arena = plugin.getArenaRegistry().getArena(player);
+		var player = event.getPlayer();
+		var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) return;
 
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-				if (arena.getKing() != null && arena.getKing().equals(player) && (arena.getPlayers().size() == 1 || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
-				arena.setKing(player);
+				if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
+				arena.setKing(player.getName());
 
 				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 
