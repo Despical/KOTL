@@ -32,7 +32,12 @@ Database-Enabled: false
 # Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
-Inventory-Manager-Enabled: true
+Inventory-Manager:
+  Enabled: true
+  # Usable elements: health, max-health, health-scale
+  Do-Not-Restore:
+    - "max-health"
+    - "health-scale"
 
 # Should we clear player's inventory on joining and leaving the game area.
 # Also disable InventoryManager option before enabling this option.

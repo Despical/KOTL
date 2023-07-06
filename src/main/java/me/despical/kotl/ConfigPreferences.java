@@ -18,7 +18,11 @@
 
 package me.despical.kotl;
 
+import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.string.StringUtils;
+import me.despical.commons.util.function.DoubleSupplier;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,11 +34,11 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-	private final Map<Option, Boolean> options;
-	private final Main plugin;
+	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	public ConfigPreferences(Main plugin) {
-		this.plugin = plugin;
+	private final Map<Option, Boolean> options;
+
+	public ConfigPreferences() {
 		this.options = new HashMap<>();
 
 		plugin.saveDefaultConfig();
@@ -49,8 +53,10 @@ public class ConfigPreferences {
 	public void loadOptions() {
 		this.options.clear();
 
+		final var config = plugin.getConfig();
+
 		for (Option option : Option.values()) {
-			options.put(option, plugin.getConfig().getBoolean(option.path, option.def));
+			options.put(option, config.getBoolean(option.path, option.def));
 		}
 	}
 
@@ -58,8 +64,14 @@ public class ConfigPreferences {
 
 		BECOME_KING_IN_A_ROW(false), BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED,
 		CLEAR_EFFECTS, CLEAR_INVENTORY(false), DATABASE_ENABLED(false), DEATH_BLOCKS_ENABLED(false),
-		DISABLE_FALL_DAMAGE, DISABLE_SEPARATE_CHAT(false), FIREWORKS_ON_NEW_KING, INVENTORY_MANAGER_ENABLED,
-		JOIN_NOTIFY, LEAVE_NOTIFY, SCOREBOARD_ENABLED, UPDATE_NOTIFIER_ENABLED(false);
+		DISABLE_FALL_DAMAGE, DISABLE_SEPARATE_CHAT(false), FIREWORKS_ON_NEW_KING, INVENTORY_MANAGER_ENABLED("Inventory-Manager.Enabled"),
+		JOIN_NOTIFY, LEAVE_NOTIFY, SCOREBOARD_ENABLED, UPDATE_NOTIFIER_ENABLED(false),
+		HEAL_PLAYER((config) -> {
+			final var list = config.getStringList("Inventory-Manager.Do-Not-Restore");
+			list.forEach(InventorySerializer::addNonSerializableElements);
+
+			return !list.contains("health");
+		});
 
 		final String path;
 		final boolean def;
@@ -71,6 +83,16 @@ public class ConfigPreferences {
 		Option(boolean def) {
 			this.def = def;
 			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(), '-', '.');
+		}
+
+		Option(String path) {
+			this.def = true;
+			this.path = path;
+		}
+
+		Option(DoubleSupplier<FileConfiguration, Boolean> supplier) {
+			this.path = "";
+			this.def = supplier.accept(plugin.getConfig());
 		}
 	}
 }

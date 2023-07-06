@@ -77,6 +77,11 @@ public class AdminCommands extends AbstractCommand {
 		String arg = arguments.getArgument(0);
 		Player player = arguments.getSender();
 
+		if (arg.equals("default")) {
+			player.sendMessage(chatManager.prefixedRawMessage("&cYou can not create an arena named default!"));
+			return;
+		}
+
 		if (plugin.getArenaRegistry().isArena(arg)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
 			player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /kotl list"));

@@ -210,21 +210,26 @@ public class Arena {
 		players.add(player);
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
-		AttributeUtils.healPlayer(player);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		final var preferences = plugin.getConfigPreferences();
+
+		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+		if (preferences.getOption(ConfigPreferences.Option.HEAL_PLAYER)) {
+			AttributeUtils.healPlayer(player);
+		}
+
+		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.createScoreboard(player);
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+		if (preferences.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
@@ -233,7 +238,7 @@ public class Arena {
 
 		doBarAction(player, 1);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
+		if (preferences.getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
 		}
 	}
