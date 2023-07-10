@@ -222,6 +222,8 @@ public class Arena {
 		}
 
 		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+			plugin.getUserManager().getUser(player).cacheScoreboard();
+
 			scoreboardManager.createScoreboard(player);
 		}
 
@@ -248,19 +250,23 @@ public class Arena {
 
 		players.remove(player);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		final var preferences = plugin.getConfigPreferences();
+
+		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(player);
+
+			plugin.getUserManager().getUser(player).removeScoreboard();
 		}
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
+		if (preferences.getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.LEAVE);
 		}
 

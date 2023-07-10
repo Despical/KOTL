@@ -31,6 +31,7 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
+import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * @author Despical
@@ -46,6 +47,8 @@ public class User {
 	private final Player player;
 	private final Map<String, Double> cooldowns;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
+
+	private Scoreboard cachedScoreboard;
 
 	public User(UUID uuid) {
 		this.uuid = uuid;
@@ -89,6 +92,17 @@ public class User {
 
 	public void performReward(final Reward.RewardType rewardType) {
 		plugin.getRewardsFactory().performReward(this, rewardType);
+	}
+
+	public void cacheScoreboard() {
+		this.cachedScoreboard = this.player.getScoreboard();
+	}
+
+	public void removeScoreboard() {
+		if (this.cachedScoreboard == null) return;
+
+		this.player.setScoreboard(this.cachedScoreboard);
+		this.cachedScoreboard = null;
 	}
 
 	public void setCooldown(String s, double seconds) {
