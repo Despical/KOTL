@@ -109,7 +109,9 @@ public class Reward {
 	public enum RewardType {
 
 		WIN("Win"),
-		LOSE("Lose");
+		LOSE("Lose"),
+		JOIN("Join"),
+		LEAVE("Leave");
 
 		final String path;
 

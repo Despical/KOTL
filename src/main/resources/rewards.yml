@@ -37,12 +37,18 @@ Rewards-Enabled: true
 # How many seconds should we wait before giving new reward to same player?
 Reward-Interval: 5
 
+# Multiple command execution is supported.
 Rewards:
-  # This reward will be performed if the player wins.
+  # This reward will be executed if the player wins.
   Win:
     - chance(10):eco give %player% 8
     - p:say I won the game!
-  # This reward will be performed if the player loses.
+  # This reward will be executed if the player loses.
   Lose:
     - chance(99):eco give %player% 1
     - p:say Hmm, I think lost the game!
+  # If you have a kit command then you can execute
+  # it here or, you can do whatever you want.
+  Join: []
+  # This reward will be executed after player left the arena.
+  Leave: []

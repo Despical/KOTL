@@ -27,6 +27,7 @@ import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handler.rewards.Reward;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -212,6 +213,7 @@ public class Arena {
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 
 		final var preferences = plugin.getConfigPreferences();
+		final var user = plugin.getUserManager().getUser(player);
 
 		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
@@ -222,7 +224,7 @@ public class Arena {
 		}
 
 		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
-			plugin.getUserManager().getUser(player).cacheScoreboard();
+			user.cacheScoreboard();
 
 			scoreboardManager.createScoreboard(player);
 		}
@@ -243,14 +245,18 @@ public class Arena {
 		if (preferences.getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
 		}
+
+		user.performReward(Reward.RewardType.JOIN);
 	}
 	
 	public void removePlayer(Player player) {
 		if (player == null) return;
 
-		players.remove(player);
-
 		final var preferences = plugin.getConfigPreferences();
+		final var user = plugin.getUserManager().getUser(player);
+		user.performReward(Reward.RewardType.LEAVE);
+
+		players.remove(player);
 
 		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
@@ -263,7 +269,7 @@ public class Arena {
 		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(player);
 
-			plugin.getUserManager().getUser(player).removeScoreboard();
+			user.removeScoreboard();
 		}
 
 		if (preferences.getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
@@ -272,7 +278,7 @@ public class Arena {
 
 		doBarAction(player, 0);
 
-		plugin.getUserManager().getDatabase().saveAllStatistic(plugin.getUserManager().getUser(player));
+		plugin.getUserManager().getDatabase().saveAllStatistic(user);
 
 		AttributeUtils.resetAttackCooldown(player);
 	}
