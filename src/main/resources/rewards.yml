@@ -18,15 +18,9 @@
 #    - p:chance(99):spawn                         # Player has %99 chance to teleport to spawn                                #
 #    - chance(50):eco give %player% 10            # Console has %50 chance to give player 10$                                 #
 #                                                                                                                             #
-#   Just add example reward:                                                                                                  #
-#    - script:player.sendMessage("oh, hi %player%");      # It will send "oh, hi <player name>" to player! %100 plain Java!   #
-#    - script:server.broadcastMessage("hello everyone");  # Broadcasts "hello everyone" to whole server                       #
-#    - script:player.getInventory().addItem(new org.bukkit.inventory.ItemStack(org.bukkit.Material.DIRT));                    #
-#         ^ Gives player dirt item (you must always use direct package names for not provided objects)                        #
-#                                                                                                                             #
 #             All object documents that can be used in commands:                                                              #
 #                                                                                                                             #
-#       arena  - KOTL arena object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)       #
+#       arena  - Arena  object (API methods https://javadoc.jitpack.io/com/github/Despical/KOTL/2.6.4/javadoc/index.html)     #
 #       player - Player object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/Player.html)           #
 #       server - Server object (API methods https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Server.html)                  #
 #                                                                                                                             #
