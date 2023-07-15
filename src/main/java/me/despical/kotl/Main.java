@@ -234,11 +234,11 @@ public class Main extends JavaPlugin {
 				}
 
 				final var finalUpdate = update.toString();
-				mysqlDatabase.getDatabase().executeUpdate("UPDATE " + mysqlDatabase.getTableName() + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+				mysqlDatabase.getDatabase().executeUpdate("UPDATE playerstats" + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
 				continue;
 			}
 
-			userManager.getDatabase().saveAllStatistic(user);
+			userManager.getDatabase().saveStatistics(user);
 		}
 	}
 }

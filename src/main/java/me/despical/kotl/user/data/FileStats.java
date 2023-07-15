@@ -19,49 +19,52 @@
 package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
+import me.despical.kotl.Main;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
  * <p>
  * Created at 20.06.2020
  */
-public class FileStats implements UserDatabase {
+public non-sealed class FileStats extends IUserDatabase {
 
 	private final FileConfiguration config;
 
-	public FileStats() {
+	public FileStats(Main plugin) {
+		super(plugin);
 		this.config = ConfigUtils.getConfig(plugin, "stats");
 	}
 
 	@Override
-	public void saveStatistic(User user, StatsStorage.StatisticType stat) {
-		config.set(user.getUniqueId().toString() + "." + stat.getName(), user.getStat(stat));
+	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
+		config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
 
 		ConfigUtils.saveConfig(plugin, config, "stats");
 	}
 
 	@Override
-	public void saveAllStatistic(User user) {
-		final var uuid = user.getUniqueId().toString();
+	public void saveStatistics(@NotNull User user) {
+		final String uuid = user.getUniqueId().toString();
 
-		for (final var stat : StatsStorage.StatisticType.values()) {
-			if (!stat.isPersistent()) continue;
-
-			config.set(uuid + "." + stat.getName(), user.getStat(stat));
+		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+			if (stat.isPersistent()) {
+				config.set(uuid + "." + stat.getName(), user.getStat(stat));
+			}
 		}
 
 		ConfigUtils.saveConfig(plugin, config, "stats");
 	}
 
 	@Override
-	public void loadStatistics(User user) {
-		final var uuid = user.getUniqueId().toString();
+	public void loadStatistics(@NotNull User user) {
+		final String uuid = user.getUniqueId().toString();
 
-		for (final var stat : StatsStorage.StatisticType.values()) {
+		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
 			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
 		}
 	}

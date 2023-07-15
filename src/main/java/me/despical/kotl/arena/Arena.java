@@ -278,7 +278,7 @@ public class Arena {
 
 		doBarAction(player, 0);
 
-		plugin.getUserManager().getDatabase().saveAllStatistic(user);
+		plugin.getUserManager().getDatabase().saveStatistics(user);
 
 		AttributeUtils.resetAttackCooldown(player);
 	}

@@ -22,8 +22,9 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.FileStats;
 import me.despical.kotl.user.data.MysqlManager;
-import me.despical.kotl.user.data.UserDatabase;
+import me.despical.kotl.user.data.IUserDatabase;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,15 +37,16 @@ import java.util.Set;
 public class UserManager {
 
 	private final Set<User> users;
-	private final UserDatabase database;
+	private final IUserDatabase database;
 
 	public UserManager(Main plugin) {
 		this.users = new HashSet<>();
-		this.database = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager() : new FileStats();
+		this.database = plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStats(plugin);
 
 		plugin.getServer().getOnlinePlayers().forEach(this::loadStatistics);
 	}
 
+	@NotNull
 	public User getUser(Player player) {
 		final var uuid = player.getUniqueId();
 
@@ -69,7 +71,8 @@ public class UserManager {
 		users.remove(getUser(player));
 	}
 
-	public UserDatabase getDatabase() {
+	@NotNull
+	public IUserDatabase getDatabase() {
 		return database;
 	}
 }

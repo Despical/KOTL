@@ -22,7 +22,6 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,7 +49,7 @@ public class StatsStorage {
 		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				final Statement statement = connection.createStatement();
-				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM " + ((MysqlManager) plugin.getUserManager().getDatabase()).getTableName() + " ORDER BY " + stat.name);
+				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM playerstats ORDER BY " + stat.name);
 
 				final Map<UUID, Integer> column = new HashMap<>();
 

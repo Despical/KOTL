@@ -22,19 +22,25 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
  * <p>
  * Created at 20.06.2020
  */
-public interface UserDatabase {
+public abstract sealed class IUserDatabase permits FileStats, MysqlManager {
 
-	Main plugin = JavaPlugin.getPlugin(Main.class);
+	@NotNull
+	protected final Main plugin;
 
-	void saveStatistic(User user, StatsStorage.StatisticType stat);
+	public IUserDatabase(final @NotNull Main plugin) {
+		this.plugin = plugin;
+	}
 
-	void saveAllStatistic(User user);
+	public abstract void saveStatistic(final @NotNull User user, final StatsStorage.StatisticType statisticType);
 
-	void loadStatistics(User user);
+	public abstract void saveStatistics(final @NotNull User user);
+
+	public abstract void loadStatistics(final @NotNull User user);
 }
