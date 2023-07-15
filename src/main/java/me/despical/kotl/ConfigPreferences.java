@@ -34,11 +34,11 @@ import java.util.Map;
  */
 public class ConfigPreferences {
 
-	private final static Main plugin = JavaPlugin.getPlugin(Main.class);
-
+	private final Main plugin;
 	private final Map<Option, Boolean> options;
 
-	public ConfigPreferences() {
+	public ConfigPreferences(Main plugin) {
+		this.plugin = plugin;
 		this.options = new HashMap<>();
 
 		plugin.saveDefaultConfig();
@@ -92,7 +92,7 @@ public class ConfigPreferences {
 
 		Option(DoubleSupplier<FileConfiguration, Boolean> supplier) {
 			this.path = "";
-			this.def = supplier.accept(plugin.getConfig());
+			this.def = supplier.accept(JavaPlugin.getPlugin(Main.class).getConfig());
 		}
 	}
 }

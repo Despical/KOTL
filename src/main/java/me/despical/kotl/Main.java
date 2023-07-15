@@ -108,7 +108,7 @@ public class Main extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		configPreferences = new ConfigPreferences();
+		configPreferences = new ConfigPreferences(this);
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
