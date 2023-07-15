@@ -11,7 +11,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
-# Select locale of King of the Ladder, default it's English.
+
 # Available locales:
 #    default - English
 #    de - Deutsche
@@ -29,7 +29,7 @@ Scoreboard-Enabled: true
 # flat file and MySQL for player stats.
 Database-Enabled: false
 
-# Enable Inventory Manager for your games? (VERY USEFUL feature for MULTI ARENA)
+# Enable Inventory Manager for your games? (Very useful feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
 Inventory-Manager:
