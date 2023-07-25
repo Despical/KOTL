@@ -5,7 +5,6 @@
 [![Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
-[![Discord](https://img.shields.io/discord/719922452259668000.svg?color=lime&label=Discord)](https://discord.gg/rVkaGmyszE)
 [![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
@@ -19,7 +18,6 @@ If you still didn't find an answer see documentation section below.
 - [Wiki](https://github.com/Despical/KOTL/wiki)
 - [JavaDocs](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
 - [Tutorial Video](https://www.youtube.com/watch?v=O_vkf_J4OgY)
-- [Discord Community](https://www.discord.gg/rVkaGmyszE)
 
 ## Donations
 - [Patreon](https://www.patreon.com/despical)
