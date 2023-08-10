@@ -49,9 +49,9 @@ public non-sealed class FileStats extends IUserDatabase {
 
 	@Override
 	public void saveStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString();
+		final var uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final var stat : StatsStorage.StatisticType.values()) {
 			if (stat.isPersistent()) {
 				config.set(uuid + "." + stat.getName(), user.getStat(stat));
 			}
@@ -62,9 +62,9 @@ public non-sealed class FileStats extends IUserDatabase {
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString();
+		final var uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
+		for (final var stat : StatsStorage.StatisticType.values()) {
 			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
 		}
 	}

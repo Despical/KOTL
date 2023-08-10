@@ -55,7 +55,7 @@ public class ConfigPreferences {
 
 		final var config = plugin.getConfig();
 
-		for (Option option : Option.values()) {
+		for (final var option : Option.values()) {
 			options.put(option, config.getBoolean(option.path, option.def));
 		}
 	}

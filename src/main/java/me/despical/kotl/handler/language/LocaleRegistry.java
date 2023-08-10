@@ -33,18 +33,18 @@ public class LocaleRegistry {
 	private static final Set<LanguageManager.Locale> registeredLocales = new HashSet<>();
 
 	public static void registerLocale(Locale locale) {
-		registeredLocales.removeIf(l -> l.prefix.equals(locale.prefix));
+		registeredLocales.removeIf(l -> l.prefix().equals(locale.prefix()));
 
 		registeredLocales.add(locale);
 	}
 
 	public static Set<Locale> getRegisteredLocales() {
-		return registeredLocales;
+		return new HashSet<>(registeredLocales);
 	}
 
 	public static Locale getByName(String name) {
-		for (Locale locale : registeredLocales) {
-			if (locale.name.equals(name)) {
+		for (final var locale : registeredLocales) {
+			if (locale.name().equals(name)) {
 				return locale;
 			}
 		}

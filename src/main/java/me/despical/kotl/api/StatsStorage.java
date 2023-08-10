@@ -22,7 +22,6 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +30,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -51,23 +51,23 @@ public class StatsStorage {
 				final Statement statement = connection.createStatement();
 				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM playerstats ORDER BY " + stat.name);
 
-				final Map<UUID, Integer> column = new HashMap<>();
+				final var column = new LinkedHashMap<UUID, Integer>();
 
-				while(set.next()) {
+				while (set.next()) {
 					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
 				}
 
 				return column;
 			} catch(SQLException e) {
-				plugin.getLogger().log(Level.WARNING, "SQLException occurred during getting statistics from database!");
-				return new HashMap<>();
+				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
+				return new LinkedHashMap<>();
 			}
 		}
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-		final Map<UUID, Integer> stats = new LinkedHashMap<>();
+		final var config = ConfigUtils.getConfig(plugin, "stats");
+		final var stats = new LinkedHashMap<UUID, Integer>();
 
-		for (String string : config.getKeys(false)) {
+		for (final var string : config.getKeys(false)) {
 			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
 		}
 

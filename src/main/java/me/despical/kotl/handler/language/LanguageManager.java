@@ -64,15 +64,15 @@ public class LanguageManager {
 	}
 
 	private void setupLocale() {
-		String localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
+		final var localeName = plugin.getConfig().getString("locale", "default").toLowerCase();
 
-		for (Locale locale : LocaleRegistry.getRegisteredLocales()) {
+		for (final var locale : LocaleRegistry.getRegisteredLocales()) {
 			if (locale.prefix.equalsIgnoreCase(localeName)) {
 				pluginLocale = locale;
 				break;
 			}
 
-			for (String alias : locale.aliases) {
+			for (final var alias : locale.aliases) {
 				if (alias.equals(localeName)) {
 					pluginLocale = locale;
 					break;
@@ -93,14 +93,6 @@ public class LanguageManager {
 		return pluginLocale;
 	}
 
-	public static class Locale {
-
-		public final String name, prefix, aliases[];
-
-		Locale(String name, String prefix, String... aliases) {
-			this.prefix = prefix;
-			this.name = name;
-			this.aliases = aliases;
-		}
+	public record Locale(String name, String prefix, String... aliases) {
 	}
 }
