@@ -33,13 +33,16 @@ import java.sql.SQLException;
  */
 public non-sealed class MysqlManager extends IUserDatabase {
 
-	private final MysqlDatabase database;
+	private MysqlDatabase database;
 
 	public MysqlManager(Main plugin) {
 		super(plugin);
-		this.database = plugin.getMysqlDatabase();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			this.database = plugin.getMysqlDatabase();
+
+			this.checkInitializedAndSleep();
+
 			try (final var connection = database.getConnection()) {
 				final var statement = connection.createStatement();
 				statement.executeUpdate("""
@@ -59,7 +62,11 @@ public non-sealed class MysqlManager extends IUserDatabase {
 
 	@Override
 	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType stat) {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';"));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			this.checkInitializedAndSleep();
+
+			database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';");
+		});
 	}
 
 	@Override
@@ -70,26 +77,33 @@ public non-sealed class MysqlManager extends IUserDatabase {
 			if (!stat.isPersistent()) continue;
 
 			final var value = user.getStat(stat);
+			final var name = stat.getName();
 
 			if (update.toString().equalsIgnoreCase(" SET ")) {
-				update.append(stat.getName()).append("=").append(value);
+				update.append(name).append("=").append(value);
 			}
 
-			update.append(", ").append(stat.getName()).append("=").append(value);
+			update.append(", ").append(name).append("=").append(value);
 		}
 
 		final var finalUpdate = update.toString();
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE playerstats" + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';"));
+
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			this.checkInitializedAndSleep();
+
+			database.executeUpdate("UPDATE playerstats" + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+		});
 	}
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
+		final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
+			this.checkInitializedAndSleep();
 
 			try (final var connection = database.getConnection()) {
 				final var statement = connection.createStatement();
-				final var rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='" + uuid + "';");
+				final var rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='%s';".formatted(uuid));
 
 				if (rs.next()) {
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -98,7 +112,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 						user.setStat(stat, rs.getInt(stat.getName()));
 					}
 				} else {
-					statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('" + uuid + "','" + name + "');");
+					statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('%s','%s');".formatted(uuid, name));
 
 					for (final var stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
@@ -115,5 +129,17 @@ public non-sealed class MysqlManager extends IUserDatabase {
 	@NotNull
 	public MysqlDatabase getDatabase() {
 		return database;
+	}
+
+	private void checkInitializedAndSleep() {
+		try {
+			if (plugin.getMysqlDatabase() == null || this.database == null) {
+				Thread.sleep(5000L);
+
+				if (plugin.getMysqlDatabase() != null) this.database = plugin.getMysqlDatabase();
+			}
+		} catch (InterruptedException exception) {
+			throw new RuntimeException(exception);
+		}
 	}
 }
