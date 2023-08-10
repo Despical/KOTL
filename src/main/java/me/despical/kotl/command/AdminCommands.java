@@ -18,7 +18,6 @@
 
 package me.despical.kotl.command;
 
-import de.hthoene.mcrankings.McRankings;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commons.configuration.ConfigUtils;
@@ -35,9 +34,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -324,31 +321,5 @@ public class AdminCommands extends AbstractCommand {
 		arena.teleportToEndLocation(player);
 
 		arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
-	}
-
-	@Command(
-		name = "kotl.leaderboard",
-		permission = "kotl.admin.leaderboard",
-		usage = "/kotl leaderboard",
-		desc = "Updates McRankings' leaderboard datas",
-		cooldown = 60
-	)
-	public void leaderboardCommand(CommandArguments arguments) {
-		final McRankings.Leaderboard scoresLeaderboard = plugin.getMcRankings().getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
-		final McRankings.Leaderboard gamesLeaderboard = plugin.getMcRankings().getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
-
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
-
-		for (final OfflinePlayer offlinePlayer : plugin.getServer().getOfflinePlayers()) {
-			final String uuid = offlinePlayer.getUniqueId().toString();
-
-			if (config.contains(uuid)) {
-				scoresLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.score", uuid)));
-				gamesLeaderboard.setScore(offlinePlayer, config.getInt(String.format("%s.toursplayed", uuid)));
-			}
-		}
-
-		arguments.sendMessage(chatManager.prefixedRawMessage("Top Scorers Leaderboard: &7" + scoresLeaderboard.getUrl()));
-		arguments.sendMessage(chatManager.prefixedRawMessage("Top Game Players: &7" + gamesLeaderboard.getUrl()));
 	}
 }

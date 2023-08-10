@@ -18,9 +18,7 @@
 
 package me.despical.kotl;
 
-import de.hthoene.mcrankings.McRankings;
 import me.despical.commandframework.CommandFramework;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
@@ -65,15 +63,13 @@ public class Main extends JavaPlugin {
 	private RewardsFactory rewardsFactory;
 	private LanguageManager languageManager;
 	private ArenaRegistry arenaRegistry;
-	private McRankings mcRankings;
 
 	@Override
 	public void onEnable() {
 		initializeClasses();
 		checkUpdate();
-		initializeMcRankings();
 
-		getLogger().info("Initialization finished. Join our Discord server: https://discord.gg/rVkaGmyszE");
+		getLogger().info("Initialization finished. Consider donating: https://buymeacoffee.com/despical");
 	}
 
 	@Override
@@ -149,25 +145,6 @@ public class Main extends JavaPlugin {
 		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
-	private void initializeMcRankings() {
-		this.mcRankings = new McRankings(this).withoutLogging();
-		final var scoresLeaderboard = mcRankings.getLeaderboard(0, "King of the Ladder Top Scorers", "Score", true);
-		final var gamesLeaderboard = mcRankings.getLeaderboard(1, "King of the Ladder Top Game Players", "Games Played", true);
-
-		final var config = ConfigUtils.getConfig(this, "stats");
-
-		for (final var offlinePlayer : getServer().getOfflinePlayers()) {
-			final var uuid = offlinePlayer.getUniqueId().toString();
-
-			if (config.contains(uuid)) {
-				scoresLeaderboard.setScore(offlinePlayer, config.getInt("%s.score".formatted(uuid)));
-				gamesLeaderboard.setScore(offlinePlayer, config.getInt("%s.toursplayed".formatted(uuid)));
-			}
-		}
-
-		getLogger().info("McRankings leaderboard entries updated, use '/kotl leaderboard' for URLs");
-	}
-
 	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
@@ -206,11 +183,6 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public ArenaRegistry getArenaRegistry() {
 		return arenaRegistry;
-	}
-
-	@NotNull
-	public McRankings getMcRankings() {
-		return mcRankings;
 	}
 
 	private void saveAllUserStatistics() {
