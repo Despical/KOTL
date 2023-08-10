@@ -122,7 +122,7 @@ public class Main extends JavaPlugin {
 		User.cooldownHandlerTask();
 
 		final var metrics = new Metrics(this, 7938);
-		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix));
+		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix()));
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> configPreferences.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
 	}
