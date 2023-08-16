@@ -21,10 +21,10 @@ package me.despical.kotl.command;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commons.string.StringMatcher;
-import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
+import me.despical.kotl.user.data.MysqlManager;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -48,8 +48,8 @@ public class PlayerCommands extends AbstractCommand {
 	public PlayerCommands(Main plugin) {
 		super(plugin);
 
-		plugin.getCommandFramework().setAnyMatch(arguments -> {
-			if (arguments.isArgumentsEmpty()) return;
+		plugin.getCommandFramework().setMatchFunction(arguments -> {
+			if (arguments.isArgumentsEmpty()) return false;
 
 			String label = arguments.getLabel(), arg = arguments.getArgument(0);
 
@@ -57,7 +57,10 @@ public class PlayerCommands extends AbstractCommand {
 
 			if (!matches.isEmpty()) {
 				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+				return true;
 			}
+
+			return false;
 		});
 	}
 
@@ -134,10 +137,10 @@ public class PlayerCommands extends AbstractCommand {
 			} catch (NullPointerException ex) {
 				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+				if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
 					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
-						ResultSet set = statement.executeQuery("SELECT name FROM playerstats WHERE UUID='" + current.toString() + "'");
+						ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mysqlManager.getTable(), current.toString()));
 
 						if (set.next()) {
 							sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
