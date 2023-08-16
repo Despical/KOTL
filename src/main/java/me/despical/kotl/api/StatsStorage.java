@@ -22,6 +22,7 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -46,10 +47,10 @@ public class StatsStorage {
 
 	@NotNull
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+		if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
 			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
 				final Statement statement = connection.createStatement();
-				final ResultSet set = statement.executeQuery("SELECT UUID, " + stat.name + " FROM playerstats ORDER BY " + stat.name);
+				final ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.name, mysqlManager.getTable(), stat.name));
 
 				final var column = new LinkedHashMap<UUID, Integer>();
 

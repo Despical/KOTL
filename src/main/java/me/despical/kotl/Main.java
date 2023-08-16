@@ -104,7 +104,8 @@ public class Main extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		configPreferences = new ConfigPreferences(this);
+		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
@@ -113,13 +114,12 @@ public class Main extends JavaPlugin {
 		rewardsFactory = new RewardsFactory(this);
 		arenaRegistry = new ArenaRegistry(this);
 
-		if (configPreferences.getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
-		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
-
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
 		ScoreboardLib.setPluginInstance(this);
 		User.cooldownHandlerTask();
+
+		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
 		final var metrics = new Metrics(this, 7938);
 		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix()));
@@ -188,7 +188,7 @@ public class Main extends JavaPlugin {
 		for (final var player : getServer().getOnlinePlayers()) {
 			final var user = userManager.getUser(player);
 
-			if (userManager.getDatabase() instanceof MysqlManager mysqlDatabase) {
+			if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
 				final var update = new StringBuilder(" SET ");
 
 				for (final var stat : StatsStorage.StatisticType.values()) {
@@ -198,14 +198,15 @@ public class Main extends JavaPlugin {
 					final var statName = stat.getName();
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(statName).append("'='").append(val);
+						update.append(statName).append("=").append(val);
 					}
 
-					update.append(", ").append(statName).append("'='").append(val);
+					update.append(", ").append(statName).append("=").append(val);
 				}
 
 				final var finalUpdate = update.toString();
-				mysqlDatabase.getDatabase().executeUpdate("UPDATE playerstats" + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
+
+				mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), finalUpdate, user.getUniqueId().toString()));
 				continue;
 			}
 

@@ -18,6 +18,7 @@
 
 package me.despical.kotl.user.data;
 
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.database.MysqlDatabase;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -33,40 +34,38 @@ import java.sql.SQLException;
  */
 public non-sealed class MysqlManager extends IUserDatabase {
 
+	private final String table;
+
 	private MysqlDatabase database;
 
 	public MysqlManager(Main plugin) {
 		super(plugin);
+		this.table = ConfigUtils.getConfig(plugin, "mysql").getString("table", "kotl_stats");
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			this.database = plugin.getMysqlDatabase();
 
-			this.checkInitializedAndSleep();
-
 			try (final var connection = database.getConnection()) {
 				final var statement = connection.createStatement();
+
 				statement.executeUpdate("""
-					CREATE TABLE IF NOT EXISTS `playerstats` (
-					  `UUID` char(36) NOT NULL PRIMARY KEY,
-					  `name` varchar(32) NOT NULL,
-					  `score` int(11) NOT NULL DEFAULT '0',
-					  `toursplayed` int(11) NOT NULL DEFAULT '0'
-					);""");
+						CREATE TABLE IF NOT EXISTS `%s` (
+						  `UUID` char(36) NOT NULL PRIMARY KEY,
+						  `name` varchar(32) NOT NULL,
+						  `toursplayed` int(11) NOT NULL DEFAULT '0',
+						  `score` int(11) NOT NULL DEFAULT '0'
+						);""".formatted(table));
 			} catch (SQLException exception) {
 				exception.printStackTrace();
 
-				plugin.getLogger().severe("Cannot save contents to MySQL database!");
+				plugin.getLogger().severe("Couldn't create statistics table on MySQL database!");
 			}
 		});
 	}
 
 	@Override
 	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType stat) {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			this.checkInitializedAndSleep();
-
-			database.executeUpdate("UPDATE playerstats SET " + stat.getName() + "=" + user.getStat(stat)+ " WHERE UUID='" + user.getUniqueId().toString() + "';");
-		});
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s SET %s=%d WHERE UUID='%s';".formatted(table, stat.getName(), user.getStat(stat), user.getUniqueId().toString())));
 	}
 
 	@Override
@@ -88,11 +87,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 
 		final var finalUpdate = update.toString();
 
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			this.checkInitializedAndSleep();
-
-			database.executeUpdate("UPDATE playerstats" + finalUpdate + " WHERE UUID='" + user.getUniqueId().toString() + "';");
-		});
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(table, finalUpdate, user.getUniqueId().toString())));
 	}
 
 	@Override
@@ -100,11 +95,9 @@ public non-sealed class MysqlManager extends IUserDatabase {
 		final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			this.checkInitializedAndSleep();
-
 			try (final var connection = database.getConnection()) {
 				final var statement = connection.createStatement();
-				final var rs = statement.executeQuery("SELECT * from playerstats WHERE UUID='%s';".formatted(uuid));
+				final var rs = statement.executeQuery("SELECT * from %s WHERE UUID='%s';".formatted(table, uuid));
 
 				if (rs.next()) {
 					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
@@ -113,7 +106,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 						user.setStat(stat, rs.getInt(stat.getName()));
 					}
 				} else {
-					statement.executeUpdate("INSERT INTO playerstats (UUID,name) VALUES ('%s','%s');".formatted(uuid, name));
+					statement.executeUpdate("INSERT INTO %s (UUID,name) VALUES ('%s','%s');".formatted(table, uuid, name));
 
 					for (final var stat : StatsStorage.StatisticType.values()) {
 						if (!stat.isPersistent()) continue;
@@ -132,15 +125,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 		return database;
 	}
 
-	private void checkInitializedAndSleep() {
-		try {
-			if (plugin.getMysqlDatabase() == null || this.database == null) {
-				Thread.sleep(5000L);
-
-				if (plugin.getMysqlDatabase() != null) this.database = plugin.getMysqlDatabase();
-			}
-		} catch (InterruptedException exception) {
-			throw new RuntimeException(exception);
-		}
+	public String getTable() {
+		return table;
 	}
 }

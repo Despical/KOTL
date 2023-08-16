@@ -14,3 +14,6 @@ user: <user>
 
 # Replace <password> with your MySQL password.
 password: <password>
+
+# MySQL table name.
+table: kotl_stats
