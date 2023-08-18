@@ -55,6 +55,9 @@ public class TabCompleter extends AbstractCommand {
 		}
 
 		if (args.length == 2) {
+			if (List.of("create", "list", "help", "reload").contains(arg)) return null;
+			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return null;
+
 			if (arg.equalsIgnoreCase("top")) {
 				return Collections.listOf("tours_played", "score");
 			}
