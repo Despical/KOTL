@@ -31,8 +31,12 @@ import me.despical.kotl.handler.rewards.Reward;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +55,8 @@ public class Arena {
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	private final String id;
-	private boolean ready = true;
+	private boolean ready = true, showOutlines;
+	private BukkitTask particleScheduler;
 
 	private final Set<Player> players;
 	private final Map<GameLocation, Location> gameLocations;
@@ -83,7 +88,54 @@ public class Arena {
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
-	
+
+	public void setShowOutlines(boolean showOutlines) {
+		this.showOutlines = showOutlines;
+
+		if (showOutlines) {
+			if (this.particleScheduler != null || getMinCorner() == null || getMaxCorner() == null) return;
+
+			this.particleScheduler = new BukkitRunnable() {
+				final Location min = getMinCorner();
+				final Location max = getMaxCorner();
+				final World world = min.getWorld();
+				final Particle particle = Particle.valueOf(plugin.getConfig().getString("Arena-Outlines.Particle", "flame").toUpperCase());
+				final double step = plugin.getConfig().getDouble("Arena-Outlines.Step", .4);
+
+				final double[]
+					xArr = {Math.min(min.getX(), max.getX()), Math.max(min.getX(), max.getX())},
+					yArr = {Math.min(min.getY(), max.getY()), Math.max(min.getY(), max.getY())},
+					zArr = {Math.min(min.getZ(), max.getZ()), Math.max(min.getZ(), max.getZ())};
+
+				@Override
+				public void run() {
+					for (double x = xArr[0]; x < xArr[1]; x += step) for (double y : yArr) for (double z : zArr) {
+						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+					}
+
+					for (double y = yArr[0]; y < yArr[1]; y += step) for (double x : xArr) for (double z : zArr) {
+						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+					}
+
+					for (double z = zArr[0]; z < zArr[1]; z += step) for (double y : yArr) for (double x : xArr) {
+						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+					}
+				}
+			}.runTaskTimer(plugin, 20, 1);
+		} else if (this.particleScheduler != null) {
+			this.particleScheduler.cancel();
+			this.particleScheduler = null;
+		}
+	}
+
+	public void handleOutlines() {
+		this.setShowOutlines(showOutlines);
+	}
+
+	public boolean isShowOutlines() {
+		return showOutlines;
+	}
+
 	/**
 	 * Get arena identifier used to get arenas by string.
 	 *

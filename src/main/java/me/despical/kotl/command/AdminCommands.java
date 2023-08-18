@@ -106,6 +106,7 @@ public class AdminCommands extends AbstractCommand {
 		arenaConfig.set(path + "areaMin", def);
 		arenaConfig.set(path + "areaMax", def);
 		arenaConfig.set(path + "isdone", false);
+		arenaConfig.set(path + "showOutlines", true);
 		arenaConfig.set(path + "plateLocation", def);
 		arenaConfig.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
 

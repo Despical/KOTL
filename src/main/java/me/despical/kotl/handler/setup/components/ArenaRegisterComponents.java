@@ -43,7 +43,7 @@ public class ArenaRegisterComponents implements SetupInventory.SetupComponent {
 
 		if (!arena.isReady()) {
 			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
-				.name("&e&lRegister Arena - Finish Setup")
+				.name("&e&l     Register Arena - Finish Setup")
 				.lore("&7Click this when you're done with configuration.")
 				.lore("&7It will validate and register arena.");
 		} else {

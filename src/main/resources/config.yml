@@ -60,6 +60,11 @@ Disable-Fall-Damage: true
 # Should we let players become king in a row?
 Become-King-In-A-Row: false
 
+# Your server must support particles to use that feature.
+Arena-Outlines:
+  Step: .4
+  Particle: FLAME
+
 # The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
 Hit-Cooldown-Delay: 16
 

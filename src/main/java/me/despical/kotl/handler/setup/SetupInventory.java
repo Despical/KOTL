@@ -30,7 +30,7 @@ import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handler.ChatManager;
 import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
 import me.despical.kotl.handler.setup.components.PressurePlateComponents;
-import me.despical.kotl.handler.setup.components.SpawnComponents;
+import me.despical.kotl.handler.setup.components.MainMenuComponents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -75,7 +75,7 @@ public class SetupInventory {
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		final var spawnComponents = new SpawnComponents();
+		final var spawnComponents = new MainMenuComponents();
 		spawnComponents.injectComponents(this, pane);
 
 		final var arenaRegistryComponents = new ArenaRegisterComponents();

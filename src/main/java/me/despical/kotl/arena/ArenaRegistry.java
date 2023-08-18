@@ -22,8 +22,6 @@ import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.Main;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -82,19 +80,19 @@ public class ArenaRegistry {
 	public void registerArenas() {
 		this.arenas.clear();
 
-		final FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		final ConfigurationSection section = config.getConfigurationSection("instances");
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
+		final var section = config.getConfigurationSection("instances");
 
 		if (section == null) {
 			plugin.getLogger().warning("Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
 			return;
 		}
 
-		for (String id : section.getKeys(false)) {
+		for (final var id : section.getKeys(false)) {
 			if (id.equals("default")) continue;
 
-			final String path = "instances." + id + ".";
-			final Arena arena = new Arena(id);
+			final var path = "instances." + id + ".";
+			final var arena = new Arena(id);
 
 			this.registerArena(arena);
 
@@ -104,6 +102,7 @@ public class ArenaRegistry {
 			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
 			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
+			arena.setShowOutlines(config.getBoolean(path + "showOutlines"));
 
 			if (arena.isReady() && LocationSerializer.fromString(config.getString(path + "plateLocation")).getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
 				plugin.getLogger().warning("Founded plate block material is not the same type as you set on setup!");

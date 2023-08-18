@@ -32,7 +32,19 @@ import org.bukkit.block.BlockFace;
  * <p>
  * Created at 22.06.2020
  */
-public class SpawnComponents implements SetupInventory.SetupComponent {
+public class MainMenuComponents implements SetupInventory.SetupComponent {
+
+	private static boolean supportsParticle;;
+
+	static {
+		try {
+			Class.forName("org.bukkit.Particle");
+
+			supportsParticle = true;
+		} catch (ClassNotFoundException exception) {
+			supportsParticle = false;
+		}
+	}
 
 	@Override
 	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
@@ -41,7 +53,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 		final var path = "instances.%s.".formatted(arena.getId());
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("&e&lSet Ending Location")
+			.name("&e&l       Set Ending Location       ")
 			.lore("&7Click to set ending location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
@@ -61,7 +73,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 		}), 1, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(arena.getArenaPlate())
-			.name("&e&lSet Plate Location")
+			.name("&e&l        Set Plate Location        ")
 			.lore("&7Click to set plate location on")
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will try to")
@@ -82,7 +94,7 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 		}), 5, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
-			.name("&e&lSet Arena Region")
+			.name("&e&l         Set Arena Region         ")
 			.lore("&7Click to set arena's region")
 			.lore("&7with the cuboid selector.")
 			.lore("&8(area where game will be playing)")
@@ -110,11 +122,13 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aGame area of arena &e" + arena.getId() + " &aset as you selection!"));
 			selector.removeSelection(player);
 
+			arena.handleOutlines();
+
 			saveConfig();
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
-			.name(chatManager.coloredRawMessage("&e&lChange Arena Plate"))
+			.name("&e&l       Change Arena Plate       ")
 			.lore("&7Click here to change arena plate.")
 			.lore("&8(opens arena plate changer menu)")
 			.build(), e -> {
@@ -126,5 +140,19 @@ public class SpawnComponents implements SetupInventory.SetupComponent {
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);
+
+		final var outlineItem = supportsParticle ? new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_EYE : XMaterial.ENDER_PEARL)
+			.name("           " + (arena.isShowOutlines() ? "&c&lDisable" : "&e&lEnable") + " Outline Particles           ")
+			.lore("&7You can create particles around the game arena.") :
+			new ItemBuilder(XMaterial.BARREL).name("&c&lYour server does not support Particles!");
+
+		pane.addItem(GuiItem.of(outlineItem.build(), e -> {
+			arena.setShowOutlines(!arena.isShowOutlines());
+
+			config.set(path + "showOutlines", arena.isShowOutlines());
+			saveConfig();
+
+			new SetupInventory(arena, player).openInventory();
+		}), 8, 3);
 	}
 }

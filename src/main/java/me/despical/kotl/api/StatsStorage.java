@@ -20,7 +20,6 @@ package me.despical.kotl.api;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
-import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
@@ -59,7 +58,7 @@ public class StatsStorage {
 				}
 
 				return column;
-			} catch(SQLException e) {
+			} catch (SQLException e) {
 				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
 				return new LinkedHashMap<>();
 			}
