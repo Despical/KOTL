@@ -142,6 +142,7 @@ public class Main extends JavaPlugin {
 		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
+	@Deprecated(forRemoval = true)
 	@NotNull
 	public ConfigPreferences getConfigPreferences() {
 		return configPreferences;
