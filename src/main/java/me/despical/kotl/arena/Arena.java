@@ -26,8 +26,8 @@ import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
-import me.despical.kotl.handler.ChatManager;
-import me.despical.kotl.handler.rewards.Reward;
+import me.despical.kotl.handlers.ChatManager;
+import me.despical.kotl.handlers.rewards.Reward;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -74,7 +74,7 @@ public class Arena {
 		this.scoreboardManager = new ScoreboardManager(plugin, this);
 		this.arenaPlate = XMaterial.OAK_PRESSURE_PLATE;
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.BOSS_BAR_ENABLED)) {
 			if (!ReflectionUtils.supports(9)) return;
 
 			this.bossBarManager = new BossBarManager(plugin);
@@ -264,28 +264,27 @@ public class Arena {
 
 		AttributeUtils.setAttackCooldown(player, plugin.getConfig().getDouble("Hit-Cooldown-Delay", 4));
 
-		final var preferences = plugin.getConfigPreferences();
 		final var user = plugin.getUserManager().getUser(player);
 
-		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.saveInventoryToFile(plugin, player);
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.HEAL_PLAYER)) {
+		if (plugin.getOption(ConfigPreferences.Option.HEAL_PLAYER)) {
 			AttributeUtils.healPlayer(player);
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			user.cacheScoreboard();
 
 			scoreboardManager.createScoreboard(player);
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
 			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
@@ -294,7 +293,7 @@ public class Arena {
 
 		doBarAction(player, 1);
 
-		if (preferences.getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
+		if (plugin.getOption(ConfigPreferences.Option.JOIN_NOTIFY)) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
 		}
 
@@ -304,27 +303,26 @@ public class Arena {
 	public void removePlayer(Player player) {
 		if (player == null) return;
 
-		final var preferences = plugin.getConfigPreferences();
 		final var user = plugin.getUserManager().getUser(player);
 		user.performReward(Reward.RewardType.LEAVE);
 
 		players.remove(player);
 
-		if (preferences.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			scoreboardManager.removeScoreboard(player);
 
 			user.removeScoreboard();
 		}
 
-		if (preferences.getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
+		if (plugin.getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.LEAVE);
 		}
 

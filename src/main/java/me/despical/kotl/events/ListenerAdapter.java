@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.event;
+package me.despical.kotl.events;
 
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.ArenaEvents;
-import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.event.Listener;
 
 /**
@@ -40,7 +40,7 @@ public abstract class ListenerAdapter implements Listener {
 	}
 
 	public static void registerEvents(Main plugin) {
-		final Class<?>[] listenerAdapters = {Events.class, ArenaEvents.class, ChatEvents.class};
+		final Class<?>[] listenerAdapters = {Events.class, ArenaEvents.class};
 
 		try {
 			for (Class<?> listenerAdapter : listenerAdapters) {

@@ -26,7 +26,7 @@ import me.despical.commons.scoreboard.type.ScoreboardHandler;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;

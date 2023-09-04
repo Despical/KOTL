@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler.rewards;
+package me.despical.kotl.handlers.rewards;
 
 import me.despical.kotl.Main;
 

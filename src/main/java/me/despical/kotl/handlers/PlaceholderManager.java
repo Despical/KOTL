@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler;
+package me.despical.kotl.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.kotl.Main;

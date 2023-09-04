@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler.setup;
+package me.despical.kotl.handlers.setup;
 
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
@@ -27,10 +27,10 @@ import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handler.ChatManager;
-import me.despical.kotl.handler.setup.components.ArenaRegisterComponents;
-import me.despical.kotl.handler.setup.components.PressurePlateComponents;
-import me.despical.kotl.handler.setup.components.MainMenuComponents;
+import me.despical.kotl.handlers.ChatManager;
+import me.despical.kotl.handlers.setup.components.ArenaRegisterComponents;
+import me.despical.kotl.handlers.setup.components.PressurePlateComponents;
+import me.despical.kotl.handlers.setup.components.MainMenuComponents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

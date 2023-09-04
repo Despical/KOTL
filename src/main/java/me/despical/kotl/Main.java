@@ -26,26 +26,23 @@ import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.command.AbstractCommand;
-import me.despical.kotl.event.ListenerAdapter;
-import me.despical.kotl.handler.ChatManager;
-import me.despical.kotl.handler.PlaceholderManager;
-import me.despical.kotl.handler.language.LanguageManager;
-import me.despical.kotl.handler.rewards.RewardsFactory;
+import me.despical.kotl.commands.AbstractCommand;
+import me.despical.kotl.events.ListenerAdapter;
+import me.despical.kotl.handlers.ChatManager;
+import me.despical.kotl.handlers.PlaceholderManager;
+import me.despical.kotl.handlers.language.LanguageManager;
+import me.despical.kotl.handlers.rewards.RewardsFactory;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.util.CuboidSelector;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 /**
  * @author Despical
@@ -80,9 +77,9 @@ public class Main extends JavaPlugin {
 			database.shutdownConnPool();
 		}
 
-		for (Arena arena : arenaRegistry.getArenas()) {
-			for (Player player : arena.getPlayers()) {
-				if (getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		for (final var arena : arenaRegistry.getArenas()) {
+			for (final var player : arena.getPlayers()) {
+				if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(this, player);
 				} else {
 					player.getInventory().clear();
@@ -132,7 +129,7 @@ public class Main extends JavaPlugin {
 
 		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
 			if (result.requiresUpdate()) {
-				final Logger logger = getLogger();
+				final var logger = getLogger();
 
 				logger.info("Found a new version available: v" + result.getNewestVersion());
 				logger.info("Download it on SpigotMC:");
@@ -182,6 +179,10 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public ArenaRegistry getArenaRegistry() {
 		return arenaRegistry;
+	}
+
+	public boolean getOption(ConfigPreferences.Option option) {
+		return configPreferences.getOption(option);
 	}
 
 	private void saveAllUserStatistics() {

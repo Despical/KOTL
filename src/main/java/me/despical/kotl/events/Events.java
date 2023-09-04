@@ -16,13 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.event;
+package me.despical.kotl.events;
 
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
-import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handlers.ChatManager;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,6 +33,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
+
+import java.util.regex.Pattern;
 
 /**
  * @author Despical
@@ -50,11 +53,11 @@ public class Events extends ListenerAdapter {
 
 		plugin.getUserManager().loadStatistics(player);
 
-		if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) || !player.hasPermission("kotl.updatenotify")) {
+		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) || !player.hasPermission("kotl.updatenotify")) {
 			return;
 		}
 
@@ -88,7 +91,7 @@ public class Events extends ListenerAdapter {
 			return;
 		}
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
+		if (!plugin.getOption(ConfigPreferences.Option.BLOCK_COMMANDS)) {
 			return;
 		}
 
@@ -121,7 +124,7 @@ public class Events extends ListenerAdapter {
 		}
 
 		if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-			if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
+			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
 				return;
 			}
 
@@ -131,7 +134,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onFireworkDamage(EntityDamageByEntityEvent event) {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
+		if (!plugin.getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
 		if (!(event.getEntity() instanceof Player player)) return;
 
 		if (!plugin.getArenaRegistry().isInArena(player)) return;
@@ -180,5 +183,44 @@ public class Events extends ListenerAdapter {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onChatInGame(AsyncPlayerChatEvent event) {
+		final var player = event.getPlayer();
+		final var arena = plugin.getArenaRegistry().getArena(player);
+
+		if (arena == null) {
+			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+				plugin.getArenaRegistry().getArenas().forEach(loopArena -> loopArena.getPlayers().forEach(p -> event.getRecipients().remove(p)));
+			}
+
+			return;
+		}
+
+		if (plugin.getOption(ConfigPreferences.Option.CHAT_FORMAT_ENABLED)) {
+			String message = formatChatPlaceholders(chatManager.message("in_game.chat_format"), player, event.getMessage().replaceAll(Pattern.quote("[$\\]"), ""));
+
+			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_SEPARATE_CHAT)) {
+				event.setCancelled(true);
+
+				for (var p : arena.getPlayers()) {
+					p.sendMessage(message);
+				}
+
+				plugin.getServer().getConsoleSender().sendMessage(message);
+			} else {
+				event.setMessage(message);
+			}
+		}
+	}
+
+	private String formatChatPlaceholders(String message, Player player, String saidMessage) {
+		String formatted = message;
+
+		formatted = formatted.replace("%player%", player.getName());
+		formatted = formatted.replace("%message%", ChatColor.stripColor(saidMessage));
+		formatted = chatManager.formatMessage(formatted, player);
+		return chatManager.coloredRawMessage(formatted);
 	}
 }

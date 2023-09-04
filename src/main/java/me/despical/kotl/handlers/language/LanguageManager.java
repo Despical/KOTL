@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler.language;
+package me.despical.kotl.handlers.language;
 
 import me.despical.commons.file.FileUtils;
 import me.despical.commons.util.Collections;

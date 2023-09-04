@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler.language;
+package me.despical.kotl.handlers.language;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import me.despical.kotl.handler.language.LanguageManager.Locale;
+import me.despical.kotl.handlers.language.LanguageManager.Locale;
 
 /**
  * @author Despical

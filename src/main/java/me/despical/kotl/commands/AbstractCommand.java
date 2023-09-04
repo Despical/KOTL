@@ -1,8 +1,8 @@
-package me.despical.kotl.command;
+package me.despical.kotl.commands;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.kotl.Main;
-import me.despical.kotl.handler.ChatManager;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**

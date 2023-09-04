@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.command;
+package me.despical.kotl.commands;
 
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;

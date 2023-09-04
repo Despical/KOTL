@@ -23,7 +23,7 @@ import java.util.Map;
 
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
-import me.despical.kotl.event.ListenerAdapter;
+import me.despical.kotl.events.ListenerAdapter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

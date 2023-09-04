@@ -22,9 +22,9 @@ import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.event.ListenerAdapter;
-import me.despical.kotl.handler.ChatManager.ActionType;
-import me.despical.kotl.handler.rewards.Reward;
+import me.despical.kotl.events.ListenerAdapter;
+import me.despical.kotl.handlers.ChatManager.ActionType;
+import me.despical.kotl.handlers.rewards.Reward;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,7 +70,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-				if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getConfigPreferences().getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
+				if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
 				arena.setKing(player.getName());
 
 				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
@@ -100,7 +100,7 @@ public class ArenaEvents extends ListenerAdapter {
 	public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
 		var player = event.getPlayer();
 
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.DEATH_BLOCKS_ENABLED)) {
+		if (!plugin.getOption(ConfigPreferences.Option.DEATH_BLOCKS_ENABLED)) {
 			return;
 		}
 
@@ -110,7 +110,7 @@ public class ArenaEvents extends ListenerAdapter {
 		if (arena == null) return;
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
+			for (final var material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
 					arena.doBarAction(player, 0);
 					arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
@@ -147,7 +147,7 @@ public class ArenaEvents extends ListenerAdapter {
 	}
 
 	private void spawnFireworks(Arena arena, Player player) {
-		if (!plugin.getConfigPreferences().getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
+		if (!plugin.getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
 
 		new BukkitRunnable() {
 

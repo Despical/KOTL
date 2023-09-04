@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler.setup.components;
+package me.despical.kotl.handlers.setup.components;
 
 import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
@@ -24,7 +24,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.block.BlockFace;
 
 /**

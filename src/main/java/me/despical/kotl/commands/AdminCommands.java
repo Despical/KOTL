@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.command;
+package me.despical.kotl.commands;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
@@ -28,7 +28,7 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handler.setup.SetupInventory;
+import me.despical.kotl.handlers.setup.SetupInventory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
-import static me.despical.kotl.handler.setup.SetupInventory.TUTORIAL_VIDEO;
+import static me.despical.kotl.handlers.setup.SetupInventory.TUTORIAL_VIDEO;
 
 /**
  * @author Despical
@@ -73,8 +73,8 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		String arg = arguments.getArgument(0);
-		Player player = arguments.getSender();
+		final var arg = arguments.getArgument(0);
+		final Player player = arguments.getSender();
 
 		if (arg.equals("default")) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cYou can not create an arena named default!"));
@@ -128,8 +128,8 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void deleteCommand(CommandArguments arguments) {
-		CommandSender sender = arguments.getSender();
-		Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final var sender = arguments.getSender();
+		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -148,10 +148,10 @@ public class AdminCommands extends AbstractCommand {
 		if (!arena.getPlayers().isEmpty()) {
 			arena.getScoreboardManager().stopAllScoreboards();
 
-			for (Player player : arena.getPlayers()) {
+			for (final var player : arena.getPlayers()) {
 				player.setWalkSpeed(.2F);
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+				if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);
 				} else {
 					player.getInventory().clear();
@@ -184,15 +184,14 @@ public class AdminCommands extends AbstractCommand {
 		senderType = PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
-		Player player = arguments.getSender();
-		Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
-			player.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
 
-		new SetupInventory(arena, player).openInventory();
+		new SetupInventory(arena, arguments.getSender()).openInventory();
 	}
 
 	@Command(
@@ -204,11 +203,11 @@ public class AdminCommands extends AbstractCommand {
 	public void reloadCommand(CommandArguments arguments) {
 		chatManager.reload();
 
-		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-			for (Player player : arena.getPlayers()) {
+		for (final var arena : plugin.getArenaRegistry().getArenas()) {
+			for (final var player : arena.getPlayers()) {
 				player.setWalkSpeed(.2F);
 
-				if (plugin.getConfigPreferences().getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+				if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);
 				} else {
 					player.getInventory().clear();
@@ -284,14 +283,14 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
+		final var arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
 			return;
 		}
 
-		String list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
+		var list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
 	}
 
@@ -303,15 +302,15 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void kickCommand(CommandArguments arguments) {
-		final String target = arguments.getArgument(0);
-		final Player player = plugin.getServer().getPlayer(target);
+		final var target = arguments.getArgument(0);
+		final var player = plugin.getServer().getPlayer(target);
 
 		if (player == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
 			return;
 		}
 
-		final Arena arena = plugin.getArenaRegistry().getArena(player);
+		final var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));

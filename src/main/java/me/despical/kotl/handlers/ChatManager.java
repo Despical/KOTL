@@ -16,11 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handler;
+package me.despical.kotl.handlers;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
