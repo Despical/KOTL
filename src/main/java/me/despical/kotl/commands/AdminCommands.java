@@ -201,7 +201,7 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Reloads all configuration and stops arenas"
 	)
 	public void reloadCommand(CommandArguments arguments) {
-		chatManager.reload();
+		plugin.reload();
 
 		for (final var arena : plugin.getArenaRegistry().getArenas()) {
 			for (final var player : arena.getPlayers()) {

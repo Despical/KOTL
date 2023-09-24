@@ -19,7 +19,6 @@
 package me.despical.kotl.events;
 
 import me.despical.kotl.Main;
-import me.despical.kotl.arena.ArenaEvents;
 import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.event.Listener;
 

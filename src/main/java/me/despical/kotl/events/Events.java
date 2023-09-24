@@ -115,18 +115,11 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onFallDamage(EntityDamageEvent e) {
-		if (!(e.getEntity() instanceof Player victim)) {
-			return;
-		}
-
-		if (!plugin.getArenaRegistry().isInArena(victim)) {
-			return;
-		}
+		if (!(e.getEntity() instanceof Player victim)) return;
+		if (!plugin.getArenaRegistry().isInArena(victim)) return;
 
 		if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) {
-				return;
-			}
+			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) return;
 
 			e.setCancelled(true);
 		}
@@ -136,7 +129,6 @@ public class Events extends ListenerAdapter {
 	public void onFireworkDamage(EntityDamageByEntityEvent event) {
 		if (!plugin.getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
 		if (!(event.getEntity() instanceof Player player)) return;
-
 		if (!plugin.getArenaRegistry().isInArena(player)) return;
 
 		if (event.getDamager() instanceof Firework) {

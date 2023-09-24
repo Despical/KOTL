@@ -127,9 +127,6 @@ public class ChatManager {
 	}
 
 	public void reload() {
-		plugin.reloadConfig();
-		plugin.getConfigPreferences().loadOptions();
-
 		config = ConfigUtils.getConfig(plugin, "messages");
 		prefix = message("in_game.plugin_prefix");
 	}

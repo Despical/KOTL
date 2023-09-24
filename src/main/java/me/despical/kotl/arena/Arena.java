@@ -96,8 +96,7 @@ public class Arena {
 			if (this.particleScheduler != null || getMinCorner() == null || getMaxCorner() == null) return;
 
 			this.particleScheduler = new BukkitRunnable() {
-				final Location min = getMinCorner();
-				final Location max = getMaxCorner();
+				final Location min = getMinCorner(), max = getMaxCorner();
 				final World world = min.getWorld();
 				final Particle particle = Particle.valueOf(plugin.getConfig().getString("Arena-Outlines.Particle", "flame").toUpperCase());
 				final double step = plugin.getConfig().getDouble("Arena-Outlines.Step", .4);
@@ -297,9 +296,10 @@ public class Arena {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
 		}
 
+		user.giveKit();
 		user.performReward(Reward.RewardType.JOIN);
 	}
-	
+
 	public void removePlayer(Player player) {
 		if (player == null) return;
 
@@ -322,7 +322,7 @@ public class Arena {
 			user.removeScoreboard();
 		}
 
-		if (plugin.getOption(ConfigPreferences.Option.LEAVE_NOTIFY)) {
+		if (plugin.getOption(ConfigPreferences.Option.LEAVE_NOTIFY) && user.getCooldown("death") == 0) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.LEAVE);
 		}
 
