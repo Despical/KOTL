@@ -79,6 +79,10 @@ Fireworks-On-New-King: true
 # Should we block every not King of the Ladder associated commands in game?
 Block-Commands: true
 
+# Should we enable damage?
+# This option may be helpful if you enabled the kits.
+Damage-Enabled: true
+
 # When players click these blocks should we remove them from the game?
 Death-Blocks-Enabled: true
 
