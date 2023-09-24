@@ -45,6 +45,7 @@ In-Game:
   New-King: "&7%king% &bis the new king!"
   There-Is-No-King: "Nobody"
   Clicked-Death-Block: "&7%player%&b clicked a death block and died!"
+  Killed-Player: "&7%victim% &bwas slain by &e%player%&b!"
 
 # Has usage only when boss bar is enabled in config
 # Not compatible with the versions before Minecraft 1.9
