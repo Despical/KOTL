@@ -3,7 +3,7 @@ main: me.despical.kotl.Main
 author: Despical
 version: ${project.version}
 api-version: 1.13
-softdepend: [Multiverse-Core, PlaceholderAPI]
+softdepend: [ PlaceholderAPI, Multiverse-Core, WorldGuard ]
 
 permissions:
   kotl.admin.*:
@@ -18,3 +18,4 @@ permissions:
       kotl.admin.reload: true
       kotl.admin.kick: true
       kotl.admin.leaderboard: true
+      kotl.command.override: true
