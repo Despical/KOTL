@@ -1,0 +1,21 @@
+# Should we enable kits?
+kits-enabled: true
+
+# Copy and paste the kit below to create more kits.
+kits:
+
+  # Default kit without a permission.
+  default:
+
+    # Leave permission blank to make this kit available for all players.
+    permission: ""
+
+    armors:
+      - "LEATHER_BOOTS"
+      - "LEATHER_LEGGINGS"
+      - "LEATHER_CHESTPLATE"
+      - "LEATHER_HELMET"
+
+    # slot:item
+    items:
+      - "0:STONE_SWORD"

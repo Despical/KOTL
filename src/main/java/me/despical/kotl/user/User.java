@@ -94,6 +94,10 @@ public class User {
 		plugin.getRewardsFactory().performReward(this, rewardType);
 	}
 
+	public void giveKit() {
+		plugin.getKitManager().giveKit(player);
+	}
+
 	public void cacheScoreboard() {
 		this.cachedScoreboard = this.player.getScoreboard();
 	}

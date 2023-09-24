@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.arena;
+package me.despical.kotl.events;
 
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.events.ListenerAdapter;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.handlers.rewards.Reward;
 import org.bukkit.Material;
@@ -30,8 +30,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -131,9 +133,38 @@ public class ArenaEvents extends ListenerAdapter {
 		}
 
 		if (plugin.getArenaRegistry().isInArena(entity) && plugin.getArenaRegistry().isInArena(damager)) {
-			event.setCancelled(false);
-			event.setDamage(0d);
+			if (!plugin.getOption(ConfigPreferences.Option.DAMAGE_ENABLED)) {
+				event.setCancelled(false);
+				event.setDamage(0d);
+			}
 		}
+	}
+
+	@EventHandler
+	public void onDeath(PlayerDeathEvent event) {
+		final var deadPlayer = event.getEntity();
+		final var arena = plugin.getArenaRegistry().getArena(deadPlayer);
+
+		if (arena == null) return;
+
+		event.getDrops().clear();
+		event.setDroppedExp(0);
+		event.setKeepLevel(true);
+		event.setDeathMessage("");
+
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> deadPlayer.spigot().respawn(), 5);
+		plugin.getUserManager().getUser(deadPlayer).setCooldown("death", 2);
+
+		arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game.killed_player").replace("%player%", deadPlayer.getKiller().getName()).replace("%victim%", deadPlayer.getName()));
+	}
+
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent event) {
+		final var arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+
+		if (arena == null) return;
+
+		arena.removePlayer(event.getPlayer());
 	}
 
 	private Arena isInArea(final Player player) {

@@ -33,6 +33,7 @@ import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.PlaceholderManager;
 import me.despical.kotl.handlers.language.LanguageManager;
 import me.despical.kotl.handlers.rewards.RewardsFactory;
+import me.despical.kotl.kits.KitManager;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
 import me.despical.kotl.user.data.MysqlManager;
@@ -60,6 +61,7 @@ public class Main extends JavaPlugin {
 	private RewardsFactory rewardsFactory;
 	private LanguageManager languageManager;
 	private ArenaRegistry arenaRegistry;
+	private KitManager kitManager;
 
 	@Override
 	public void onEnable() {
@@ -79,11 +81,12 @@ public class Main extends JavaPlugin {
 
 		for (final var arena : arenaRegistry.getArenas()) {
 			for (final var player : arena.getPlayers()) {
+				player.getInventory().clear();
+				player.getInventory().setArmorContents(null);
+
 				if (getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(this, player);
 				} else {
-					player.getInventory().clear();
-					player.getInventory().setArmorContents(null);
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 
 					AttributeUtils.healPlayer(player);
@@ -101,7 +104,9 @@ public class Main extends JavaPlugin {
 	private void initializeClasses() {
 		this.setupConfigurationFiles();
 
-		if ((configPreferences = new ConfigPreferences(this)).getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
+		configPreferences = new ConfigPreferences(this);
+
+		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
@@ -110,6 +115,7 @@ public class Main extends JavaPlugin {
 		cuboidSelector = new CuboidSelector(this);
 		rewardsFactory = new RewardsFactory(this);
 		arenaRegistry = new ArenaRegistry(this);
+		kitManager = new KitManager(this);
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
@@ -137,15 +143,9 @@ public class Main extends JavaPlugin {
 			}
 		});
 	}
-	
-	private void setupConfigurationFiles() {
-		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
-	}
 
-	@Deprecated(forRemoval = true)
-	@NotNull
-	public ConfigPreferences getConfigPreferences() {
-		return configPreferences;
+	private void setupConfigurationFiles() {
+		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	public MysqlDatabase getMysqlDatabase() {
@@ -182,8 +182,21 @@ public class Main extends JavaPlugin {
 		return arenaRegistry;
 	}
 
+	@NotNull
+	public KitManager getKitManager() {
+		return kitManager;
+	}
+
 	public boolean getOption(ConfigPreferences.Option option) {
 		return configPreferences.getOption(option);
+	}
+
+	public void reload() {
+		kitManager.loadKits();
+		chatManager.reload();
+		configPreferences.loadOptions();
+
+		reloadConfig();
 	}
 
 	private void saveAllUserStatistics() {
