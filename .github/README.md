@@ -37,7 +37,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.7.2</version>
+    <version>2.7.3</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -54,7 +54,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.7.2;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.7.3;
 }
 ```
 </details>
