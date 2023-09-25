@@ -128,6 +128,11 @@ public class Arena {
 	}
 
 	public void handleOutlines() {
+		if (this.particleScheduler != null) {
+			this.particleScheduler.cancel();
+			this.particleScheduler = null;
+		}
+
 		this.setShowOutlines(showOutlines);
 	}
 
@@ -255,7 +260,7 @@ public class Arena {
 	}
 
 	public void broadcastMessage(String message) {
-		for (Player player : players) player.sendMessage(message);
+		for (var player : players) player.sendMessage(message);
 	}
 
 	public void addPlayer(Player player) {
@@ -310,6 +315,10 @@ public class Arena {
 
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
 			player.getInventory().clear();
+		}
+
+		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
+			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
