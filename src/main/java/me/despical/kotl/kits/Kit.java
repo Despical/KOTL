@@ -3,7 +3,9 @@ package me.despical.kotl.kits;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.number.NumberUtils;
 import me.despical.kotl.Main;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,8 +31,13 @@ public class Kit {
 
 		for (final var item : config.getStringList(path + "items")) {
 			final var array = item.split(":");
+			final var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true);
 
-			items.put(Integer.parseInt(array[0]), new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true).build());
+			if (array.length == 4) {
+				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
+			}
+
+			items.put(NumberUtils.getInt(array[0]), builder.build());
 		}
 	}
 
