@@ -20,6 +20,7 @@ package me.despical.kotl.commands;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.Completer;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -36,11 +37,9 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
@@ -100,19 +99,20 @@ public class AdminCommands extends AbstractCommand {
 	}
 
 	private void setupDefaultConfiguration(String id) {
-		String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
+		final String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
+		
+		config.set(path + "endLocation", def);
+		config.set(path + "areaMin", def);
+		config.set(path + "areaMax", def);
+		config.set(path + "isdone", false);
+		config.set(path + "showOutlines", true);
+		config.set(path + "plateLocation", def);
+		config.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
 
-		arenaConfig.set(path + "endLocation", def);
-		arenaConfig.set(path + "areaMin", def);
-		arenaConfig.set(path + "areaMax", def);
-		arenaConfig.set(path + "isdone", false);
-		arenaConfig.set(path + "showOutlines", true);
-		arenaConfig.set(path + "plateLocation", def);
-		arenaConfig.set(path + "arenaPlate", "OAK_PRESSURE_PLATE");
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
-		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
-
-		Arena arena = new Arena(id);
+		var arena = new Arena(id);
 		arena.setEndLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
 		arena.setReady(false);
@@ -167,10 +167,14 @@ public class AdminCommands extends AbstractCommand {
 			arena.getPlayers().clear();
 		}
 
+		arena.setShowOutlines(false);
+
 		plugin.getArenaRegistry().unregisterArena(arena);
 
-		arenaConfig.set("instances." + arguments.getArgument(0), null);
-		ConfigUtils.saveConfig(plugin, arenaConfig, "arenas");
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
+
+		config.set("instances." + arguments.getArgument(0), null);
+		ConfigUtils.saveConfig(plugin, config, "arenas");
 
 		sender.sendMessage(chatManager.prefixedMessage("commands.removed_game_instance"));
 	}
@@ -321,5 +325,41 @@ public class AdminCommands extends AbstractCommand {
 		arena.teleportToEndLocation(player);
 
 		arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
+	}
+
+	@Completer(
+		name = "kotl"
+	)
+	public List<String> onTabComplete(CommandArguments arguments) {
+		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		final String args[] = arguments.getArguments(), arg = args[0];
+
+		commands.remove("kotl");
+
+		if (args.length == 1) {
+			StringUtil.copyPartialMatches(arg, arguments.hasPermission("kotl.admin") || arguments.getSender().isOp() ? commands : me.despical.commons.util.Collections.listOf("top", "stats"), completions);
+		}
+
+		if (args.length == 2) {
+			if (List.of("create", "list", "help", "reload").contains(arg)) return null;
+			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return null;
+
+			if (arg.equalsIgnoreCase("top")) {
+				return me.despical.commons.util.Collections.listOf("tours_played", "score");
+			}
+
+			if (arg.equalsIgnoreCase("stats") || arg.equalsIgnoreCase("kick")) {
+				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+			}
+
+			final var arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
+
+			StringUtil.copyPartialMatches(args[1], arenas, completions);
+			arenas.sort(null);
+			return arenas;
+		}
+
+		completions.sort(null);
+		return completions;
 	}
 }

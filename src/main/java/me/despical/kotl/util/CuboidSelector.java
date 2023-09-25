@@ -79,7 +79,7 @@ public class CuboidSelector extends ListenerAdapter {
 
 		event.setCancelled(true);
 
-		final Player player = event.getPlayer();
+		final var player = event.getPlayer();
 
 		switch (event.getAction()) {
 			case LEFT_CLICK_BLOCK -> {
