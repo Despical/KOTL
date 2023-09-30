@@ -41,23 +41,19 @@ import java.util.List;
 public class PressurePlateComponents implements SetupInventory.SetupComponent {
 
 	@Override
-	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final var player = setupInventory.getPlayer();
-		final var arena = setupInventory.getArena();
+	public void injectComponents(SetupInventory setup, StaticPane pane) {
+		final var player = setup.getPlayer();
+		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
 
 		final var pressurePlatesPane = new StaticPane(9, 6);
-		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE)
-			.name("&eClick to change plate!")
-			.lore("", "&7Current plate: &a" + arena.getArenaPlate().toString()).build());
+		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + arena.getArenaPlate().toString()).build());
 
-		setupInventory.getPaginatedPane().addPane(2, pressurePlatesPane);
+		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
 
 		final var pressurePlates = new ArrayList<XMaterial>() {{
 			add(XMaterial.OAK_PRESSURE_PLATE);
-			add(XMaterial.STONE_PRESSURE_PLATE);
-			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
-			add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
+			add(XMaterial.STONE_PRESSURE_PLATE); // 1.8
 
 			if (ReflectionUtils.supports(13)) {
 				add(XMaterial.ACACIA_PRESSURE_PLATE);
@@ -105,18 +101,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 			}), slot % 9, slot / 9);
 		}
 
-		pressurePlatesPane.addItem(GuiItem.of(new ItemBuilder(XMaterial.REDSTONE)
-			.name("&e&lRestore menu")
-			.lore("&7Click here to go back.")
-			.build(), e -> {
-
-			setupInventory.getPaginatedPane().setPage(0);
-
-			final var gui = setupInventory.getGui();
-			gui.setRows(5);
-			gui.setTitle("Arena Setup Menu");
-			gui.update();
-		}), 8, 5);
+		pressurePlatesPane.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 5);
 	}
 
 	private List<Integer> getSlots(int size) {
@@ -125,7 +110,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 		if (size == 9) {
 			slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
 		} else {
-			slots.addAll(Arrays.asList(20, 22, 24, 28, 30, 32, 34, 38, 42));
+			slots.addAll(Arrays.asList(20, 24, 28, 30, 32, 34, 38, 42, 44));
 		}
 
 		return slots;
