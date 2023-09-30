@@ -55,7 +55,7 @@ public class Arena {
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	private final String id;
-	private boolean ready = true, showOutlines;
+	private boolean ready, showOutlines;
 	private BukkitTask particleScheduler;
 
 	private final Set<Player> players;
