@@ -25,7 +25,10 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.handlers.setup.SetupInventory;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 
 /**
  * @author Despical
@@ -34,23 +37,14 @@ import org.bukkit.block.BlockFace;
  */
 public class MainMenuComponents implements SetupInventory.SetupComponent {
 
-	private static boolean supportsParticle;;
-
-	static {
-		try {
-			Class.forName("org.bukkit.Particle");
-
-			supportsParticle = true;
-		} catch (ClassNotFoundException exception) {
-			supportsParticle = false;
-		}
-	}
-
 	@Override
-	public void injectComponents(SetupInventory setupInventory, StaticPane pane) {
-		final var player = setupInventory.getPlayer();
-		final var arena = setupInventory.getArena();
+	public void injectComponents(SetupInventory setup, StaticPane pane) {
+		final var player = setup.getPlayer();
+		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
+		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&lAdditional Options").lore("&7Click to open additional options menu.").enchantment(Enchantment.ARROW_INFINITE).flag(ItemFlag.HIDE_ENCHANTS);
+
+		pane.addItem(GuiItem.of(optionsItem.build(), event -> setup.setPage("   Set Additional Arena Options", 3, 3)), 4, 2);
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
 			.name("&e&l       Set Ending Location       ")
@@ -133,26 +127,58 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			.lore("&8(opens arena plate changer menu)")
 			.build(), e -> {
 
-			setupInventory.getPaginatedPane().setPage(2);
+			setup.getPaginatedPane().setPage(2);
 
-			final var gui = setupInventory.getGui();
+			final var gui = setup.getGui();
 			gui.setRows(ReflectionUtils.supports(13) ? 6 : 4);
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);
 
-		final var outlineItem = supportsParticle ? new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_EYE : XMaterial.ENDER_PEARL)
-			.name("           " + (arena.isShowOutlines() ? "&c&lDisable" : "&e&lEnable") + " Outline Particles           ")
-			.lore("&7You can create particles around the game arena.") :
-			new ItemBuilder(XMaterial.BARREL).name("&c&lYour server does not support Particles!");
+		final ItemBuilder registeredItem;
 
-		pane.addItem(GuiItem.of(outlineItem.build(), e -> {
-			arena.setShowOutlines(!arena.isShowOutlines());
+		if (!arena.isReady()) {
+			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
+				.name("&e&l     Register Arena - Finish Setup")
+				.lore("&7Click this when you're done with configuration.")
+				.lore("&7It will validate and register arena.");
+		} else {
+			registeredItem = new ItemBuilder(Material.BARRIER)
+				.name("&a&lArena Registered - Congratulations")
+				.lore("&7This arena is already registered!")
+				.lore("&7Good job, you went through whole setup!")
+				.enchantment(Enchantment.ARROW_DAMAGE)
+				.flag(ItemFlag.HIDE_ENCHANTS);
+		}
 
-			config.set(path + "showOutlines", arena.isShowOutlines());
+		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
+			player.closeInventory();
+
+			if (config.getBoolean(path + "isdone")) {
+				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
+				return;
+			}
+
+			String[] locations = {"plateLocation", "endLocation", "areaMin", "areaMax"};
+
+			for (var loc : locations) {
+				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
+					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: %s (cannot be world spawn location)".formatted(loc)));
+					return;
+				}
+			}
+
+			arena.setReady(true);
+			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
+			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
+			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
+
+			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
+
+			config.set(path + "isdone", true);
 			saveConfig();
-
-			new SetupInventory(arena, player).openInventory();
 		}), 8, 3);
 	}
 }

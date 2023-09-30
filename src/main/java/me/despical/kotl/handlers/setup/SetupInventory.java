@@ -28,11 +28,12 @@ import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager;
-import me.despical.kotl.handlers.setup.components.ArenaRegisterComponents;
+import me.despical.kotl.handlers.setup.components.ArenaOptionComponents;
 import me.despical.kotl.handlers.setup.components.PressurePlateComponents;
 import me.despical.kotl.handlers.setup.components.MainMenuComponents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -78,11 +79,11 @@ public class SetupInventory {
 		final var spawnComponents = new MainMenuComponents();
 		spawnComponents.injectComponents(this, pane);
 
-		final var arenaRegistryComponents = new ArenaRegisterComponents();
-		arenaRegistryComponents.injectComponents(this, pane);
-
 		final var pressurePlateComponents = new PressurePlateComponents();
 		pressurePlateComponents.injectComponents(this, pane);
+
+		final var arenaOptionComponents = new ArenaOptionComponents();
+		arenaOptionComponents.injectComponents(this, pane);
 	}
 
 	public void openInventory() {
@@ -109,13 +110,25 @@ public class SetupInventory {
 		return paginatedPane;
 	}
 
+	public void setPage(String title, int rows, int page) {
+		this.gui.setTitle(title != null ? title : this.gui.getTitle());
+		this.gui.setRows(rows);
+		this.paginatedPane.setPage(page);
+		this.gui.update();
+	}
+
+	public void restorePage() {
+		new LastPageCache(this, "         KOTL Arena Editor", 4, 0).restore();
+	}
+
 	public interface SetupComponent {
 
 		Main plugin = JavaPlugin.getPlugin(Main.class);
 		ChatManager chatManager = plugin.getChatManager();
 		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+		ItemStack mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn KOTL Menu").lore("&7Click to return last page!").build();
 
-		void injectComponents(SetupInventory setupInventory, StaticPane pane);
+		void injectComponents(SetupInventory setup, StaticPane pane);
 
 		default void saveConfig() {
 			ConfigUtils.saveConfig(plugin, config, "arenas");
@@ -123,6 +136,16 @@ public class SetupInventory {
 
 		default String isOptionDoneBool(String path) {
 			return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
+		}
+	}
+
+	private record LastPageCache(SetupInventory setup, String title, int rows, int page) {
+
+		void restore() {
+			setup.paginatedPane.setPage(page);
+			setup.gui.setRows(rows);
+			setup.gui.setTitle(title);
+			setup.gui.update();
 		}
 	}
 }
