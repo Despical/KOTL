@@ -20,14 +20,7 @@ public abstract class AbstractCommand {
 	}
 
 	public static void registerCommands(final Main plugin) {
-		final Class<?>[] commandClasses = new Class[] {AdminCommands.class, PlayerCommands.class};
-
-		for (Class<?> clazz : commandClasses) {
-			try {
-				clazz.getConstructor(Main.class).newInstance(plugin);
-			} catch (Exception exception) {
-				exception.fillInStackTrace();
-			}
-		}
+		new PlayerCommands(plugin);
+		new AdminCommands(plugin);
 	}
 }

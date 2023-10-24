@@ -42,7 +42,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 		final var player = setup.getPlayer();
 		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
-		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&lAdditional Options").lore("&7Click to open additional options menu.").enchantment(Enchantment.ARROW_INFINITE).flag(ItemFlag.HIDE_ENCHANTS);
+		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.").enchantment(Enchantment.ARROW_INFINITE).flag(ItemFlag.HIDE_ENCHANTS);
 
 		pane.addItem(GuiItem.of(optionsItem.build(), event -> setup.setPage("   Set Additional Arena Options", 3, 3)), 4, 2);
 

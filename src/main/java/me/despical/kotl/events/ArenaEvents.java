@@ -155,7 +155,9 @@ public class ArenaEvents extends ListenerAdapter {
 		plugin.getServer().getScheduler().runTaskLater(plugin, () -> deadPlayer.spigot().respawn(), 5);
 		plugin.getUserManager().getUser(deadPlayer).setCooldown("death", 2);
 
-		arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game.killed_player").replace("%player%", deadPlayer.getKiller().getName()).replace("%victim%", deadPlayer.getName()));
+		final var killerFound = deadPlayer.getKiller() != null;
+
+		arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? deadPlayer.getKiller().getName() : "").replace("%victim%", deadPlayer.getName()));
 	}
 
 	@EventHandler
