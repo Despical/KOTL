@@ -44,7 +44,6 @@ public class User {
 	private static long cooldownCounter = 0;
 
 	private final UUID uuid;
-	private final Player player;
 	private final Map<String, Double> cooldowns;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
@@ -52,17 +51,16 @@ public class User {
 
 	public User(UUID uuid) {
 		this.uuid = uuid;
-		this.player = plugin.getServer().getPlayer(uuid);
 		this.cooldowns = new HashMap<>();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
 	public Arena getArena() {
-		return plugin.getArenaRegistry().getArena(player);
+		return plugin.getArenaRegistry().getArena(getPlayer());
 	}
 
 	public Player getPlayer() {
-		return player;
+		return plugin.getServer().getPlayer(uuid);
 	}
 
 	public UUID getUniqueId() {
@@ -83,7 +81,7 @@ public class User {
 	public void setStat(StatsStorage.StatisticType stat, int value) {
 		stats.put(stat, value);
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), player, stat, value)));
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value)));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {
@@ -95,17 +93,17 @@ public class User {
 	}
 
 	public void giveKit() {
-		plugin.getKitManager().giveKit(player);
+		plugin.getKitManager().giveKit(getPlayer());
 	}
 
 	public void cacheScoreboard() {
-		this.cachedScoreboard = this.player.getScoreboard();
+		this.cachedScoreboard = getPlayer().getScoreboard();
 	}
 
 	public void removeScoreboard() {
 		if (this.cachedScoreboard == null) return;
 
-		this.player.setScoreboard(this.cachedScoreboard);
+		this.getPlayer().setScoreboard(this.cachedScoreboard);
 		this.cachedScoreboard = null;
 	}
 
