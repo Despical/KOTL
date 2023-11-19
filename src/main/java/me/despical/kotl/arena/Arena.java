@@ -221,7 +221,7 @@ public class Arena {
 
 	@NotNull
 	public String getKingName() {
-		return king == null ? plugin.getChatManager().message("in_game.there_is_no_king") : king;
+		return king == null ? plugin.getChatManager().message("placeholders.there_is_no_king") : king;
 	}
 
 	public void setArenaPlate(XMaterial arenaPlate) {

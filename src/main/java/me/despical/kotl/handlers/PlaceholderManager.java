@@ -70,6 +70,11 @@ public class PlaceholderManager extends PlaceholderExpansion {
 		return switch (id.toLowerCase()) {
 			case "score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
 			case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+			case "arena" -> {
+				var arena = user.getArena();
+
+				yield arena != null ? arena.getId() : plugin.getChatManager().message("placeholders.player_not_playing");
+			}
 			default -> handleArenaPlaceholderRequest(id);
 		};
 	}
