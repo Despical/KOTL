@@ -48,22 +48,6 @@ public class ArenaEvents extends ListenerAdapter {
 	}
 
 	@EventHandler
-	public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
-		var player = event.getPlayer();
-		var arena = isInArea(player);
-
-		if (!plugin.getArenaRegistry().isInArena(player) && arena != null) {
-			arena.addPlayer(player);
-		}
-
-		if (plugin.getArenaRegistry().isInArena(player) && arena == null) {
-			var tempArena = plugin.getArenaRegistry().getArena(player);
-
-			tempArena.removePlayer(player);
-		}
-	}
-
-	@EventHandler
 	public void onInteractWithPlate(PlayerInteractEvent event) {
 		var player = event.getPlayer();
 		var arena = plugin.getArenaRegistry().getArena(player);
@@ -167,16 +151,6 @@ public class ArenaEvents extends ListenerAdapter {
 		if (arena == null) return;
 
 		arena.removePlayer(event.getPlayer());
-	}
-
-	private Arena isInArea(final Player player) {
-		for (var arena : plugin.getArenaRegistry().getArenas()) {
-			final var target = arena.isInArea(player);
-
-			if (target != null) return target;
-		}
-
-		return null;
 	}
 
 	private void spawnFireworks(Arena arena, Player player) {

@@ -281,7 +281,7 @@ public class Arena {
 		if (plugin.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
 			user.cacheScoreboard();
 
-			scoreboardManager.createScoreboard(player);
+			plugin.getServer().getScheduler().runTask(plugin, () -> scoreboardManager.createScoreboard(player));
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_INVENTORY)) {
@@ -289,10 +289,10 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
-			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+			plugin.getServer().getScheduler().runTask(plugin, () -> player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType())));
 		}
 
-		player.setGameMode(GameMode.SURVIVAL);
+		plugin.getServer().getScheduler().runTask(plugin, () -> player.setGameMode(GameMode.SURVIVAL));
 		player.setFoodLevel(20);
 
 		doBarAction(player, 1);
@@ -318,7 +318,7 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.CLEAR_EFFECTS)) {
-			player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+			plugin.getServer().getScheduler().runTask(plugin, () -> player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType())));
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {

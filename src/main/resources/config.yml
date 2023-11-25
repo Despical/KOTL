@@ -18,6 +18,24 @@
 #    tr - Türkçe
 locale: default
 
+Arena-Schedulers:
+  # Type 1: Creates a general task that loops all arenas and players to check
+  # if they are inside any arena, if they are they'll be put in the game.
+  #
+  # Type 2: Creates tasks for every arena which means every arena will look for
+  # all online players in their own task.
+  #
+  # Type 3 (Slowest for big networks): Registers a PlayerMoveEvent and checks in
+  # the event if player is inside any arena.
+  Type: 1
+
+  # How many ticks should we wait to lookup for players to put in arenas
+  Interval: 2
+
+  # Should we search for arenas asynchronously?
+  # In most cases events firing in main thread so async won't work for Type 3.
+  Async: true
+
 # Enable boss bar support?
 Boss-Bar-Enabled: true
 

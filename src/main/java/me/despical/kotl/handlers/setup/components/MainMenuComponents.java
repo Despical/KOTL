@@ -175,6 +175,8 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
+			plugin.getArenaManager().createSchedulerPerArena(arena);
+
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 
 			config.set(path + "isdone", true);

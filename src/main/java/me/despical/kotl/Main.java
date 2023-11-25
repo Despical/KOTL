@@ -27,6 +27,7 @@ import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.ArenaRegistry;
+import me.despical.kotl.arena.managers.ArenaManager;
 import me.despical.kotl.commands.AbstractCommand;
 import me.despical.kotl.events.ListenerAdapter;
 import me.despical.kotl.handlers.ChatManager;
@@ -62,6 +63,7 @@ public class Main extends JavaPlugin {
 	private LanguageManager languageManager;
 	private ArenaRegistry arenaRegistry;
 	private KitManager kitManager;
+	private ArenaManager arenaManager;
 
 	@Override
 	public void onEnable() {
@@ -116,6 +118,7 @@ public class Main extends JavaPlugin {
 		rewardsFactory = new RewardsFactory(this);
 		arenaRegistry = new ArenaRegistry(this);
 		kitManager = new KitManager(this);
+		arenaManager = new ArenaManager(this);
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
@@ -185,6 +188,11 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public KitManager getKitManager() {
 		return kitManager;
+	}
+
+	@NotNull
+	public ArenaManager getArenaManager() {
+		return arenaManager;
 	}
 
 	public boolean getOption(ConfigPreferences.Option option) {
