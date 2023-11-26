@@ -146,11 +146,13 @@ public class ArenaEvents extends ListenerAdapter {
 
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent event) {
-		final var arena = plugin.getArenaRegistry().getArena(event.getPlayer());
+		final var player = event.getPlayer();
+		final var arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena == null) return;
 
-		arena.removePlayer(event.getPlayer());
+		arena.removePlayer(player);
+		event.setRespawnLocation(arena.getEndLocation());
 	}
 
 	private void spawnFireworks(Arena arena, Player player) {
