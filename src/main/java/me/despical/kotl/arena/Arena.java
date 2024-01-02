@@ -24,6 +24,8 @@ import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.api.events.player.KOTLPlayerEnterArenaEvent;
+import me.despical.kotl.api.events.player.KOTLPlayerLeaveArenaEvent;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.ChatManager;
@@ -303,6 +305,8 @@ public class Arena {
 
 		user.giveKit();
 		user.performReward(Reward.RewardType.JOIN);
+
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerEnterArenaEvent(this, player)));
 	}
 
 	public void removePlayer(Player player) {
@@ -340,6 +344,8 @@ public class Arena {
 		plugin.getUserManager().getDatabase().saveStatistics(user);
 
 		AttributeUtils.resetAttackCooldown(player);
+
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerLeaveArenaEvent(this, player)));
 	}
 
 	public void teleportToEndLocation(Player player) {
