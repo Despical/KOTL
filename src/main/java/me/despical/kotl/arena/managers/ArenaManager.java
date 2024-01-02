@@ -50,19 +50,7 @@ public class ArenaManager {
 	private void searchForPlayers0() {
 		// Less operation in small outer loop and big inner loops
 		for (var arena : plugin.getArenaRegistry().getArenas()) {
-			for (var player : plugin.getServer().getOnlinePlayers()) {
-				final var target = arena.isInArea(player);
-				final var targetArena = plugin.getArenaRegistry().getArena(player);
-				var isInArena = targetArena != null;
-
-				if (!isInArena && target != null) {
-					arena.addPlayer(player);
-				}
-
-				if (isInArena && target == null) {
-					targetArena.removePlayer(player);
-				}
-			}
+			searchForPlayers1(arena);
 		}
 	}
 
