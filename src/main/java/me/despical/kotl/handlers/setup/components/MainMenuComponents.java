@@ -24,6 +24,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -175,7 +176,11 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
 			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
-			plugin.getArenaManager().createSchedulerPerArena(arena);
+			var scheduler = plugin.getArenaManager().getArenaScheduler();
+
+			if (scheduler == ArenaScheduler.PER_ARENA) {
+				scheduler.register(plugin.getArenaManager().getOptions());
+			}
 
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 

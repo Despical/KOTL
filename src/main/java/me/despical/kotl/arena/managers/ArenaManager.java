@@ -24,9 +24,13 @@ import me.despical.kotl.arena.managers.schedulers.SchedulerOptions;
 
 public class ArenaManager {
 
+	private final SchedulerOptions options;
+	private final ArenaScheduler arenaScheduler;
+
 	public ArenaManager(Main plugin) {
 		final var config = plugin.getConfig();
-		final var scheduler = switch (config.getInt("Arena-Schedulers.Type")) {
+
+		this.arenaScheduler = switch (config.getInt("Arena-Schedulers.Type")) {
 			case 1 -> ArenaScheduler.GENERAL;
 			case 2 -> ArenaScheduler.PER_ARENA;
 			default -> ArenaScheduler.EVENT;
@@ -35,6 +39,16 @@ public class ArenaManager {
 		final int interval = config.getInt("Arena-Schedulers.Interval");
 		final boolean async = config.getBoolean("Arena-Schedulers.Async");
 
-		scheduler.register(new SchedulerOptions(async, interval));
+		this.options = new SchedulerOptions(async, interval);
+
+		arenaScheduler.register(options);
+	}
+
+	public ArenaScheduler getArenaScheduler() {
+		return arenaScheduler;
+	}
+
+	public SchedulerOptions getOptions() {
+		return options;
 	}
 }

@@ -108,7 +108,7 @@ public enum ArenaScheduler {
 
 	public abstract void register(SchedulerOptions options);
 
-	void generalSearchForPlayers(Arena arena) {
+	public void generalSearchForPlayers(Arena arena) {
 		for (var player : plugin.getServer().getOnlinePlayers()) {
 			final var target = arena.isInArea(player);
 			final var targetArena = plugin.getArenaRegistry().getArena(player);
