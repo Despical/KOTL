@@ -200,11 +200,11 @@ public class Main extends JavaPlugin {
 	}
 
 	public void reload() {
+		reloadConfig();
+
 		kitManager.loadKits();
 		chatManager.reload();
 		configPreferences.loadOptions();
-
-		reloadConfig();
 	}
 
 	private void saveAllUserStatistics() {
