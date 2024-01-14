@@ -99,13 +99,9 @@ public class CuboidSelector extends ListenerAdapter {
 
 			case LEFT_CLICK_AIR, RIGHT_CLICK_AIR ->
 				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select solid block, not air!"));
-
-			default -> {
-			}
 		}
 	}
 
 	public record Selection(Location firstPos, Location secondPos) {
-
 	}
 }

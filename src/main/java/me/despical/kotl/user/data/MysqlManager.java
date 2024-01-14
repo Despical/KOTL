@@ -125,6 +125,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 		return database;
 	}
 
+	@NotNull
 	public String getTable() {
 		return table;
 	}

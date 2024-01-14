@@ -46,7 +46,14 @@ public class KitManager {
 
 		this.isEnabled = config.getBoolean("kits-enabled");
 
-		for (final var path : config.getConfigurationSection("kits").getKeys(false)) {
+		final var section = config.getConfigurationSection("kits");
+
+		if (section == null) {
+			plugin.getLogger().warning("Section ''kits'' not found in kits.yml!");
+			return;
+		}
+
+		for (final var path : section.getKeys(false)) {
 			this.kits.add(new Kit(plugin, "kits." + path + "."));
 		}
 	}

@@ -34,12 +34,11 @@ public class LocaleRegistry {
 
 	public static void registerLocale(Locale locale) {
 		registeredLocales.removeIf(l -> l.prefix().equals(locale.prefix()));
-
 		registeredLocales.add(locale);
 	}
 
 	public static Set<Locale> getRegisteredLocales() {
-		return new HashSet<>(registeredLocales);
+		return Set.copyOf(registeredLocales);
 	}
 
 	public static Locale getByName(String name) {

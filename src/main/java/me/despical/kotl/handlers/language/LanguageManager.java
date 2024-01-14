@@ -49,7 +49,7 @@ public class LanguageManager {
 		if (Collections.contains(plugin.getChatManager().message("language"), pluginLocale.aliases)) return;
 
 		try {
-			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/" + pluginLocale.prefix + ".yml"), new File(plugin.getDataFolder(), "messages.yml"));
+			FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/%s.yml".formatted(pluginLocale.prefix)), new File(plugin.getDataFolder(), "messages.yml"));
 		} catch (IOException e) {
 			plugin.getLogger().warning("Error while connecting to internet!");
 		}
@@ -86,7 +86,7 @@ public class LanguageManager {
 			return;
 		}
 
-		plugin.getLogger().info("Loaded locale " + pluginLocale.name + " (ID: " + pluginLocale.prefix + ")");
+		plugin.getLogger().info("Loaded locale %s (ID: %s)".formatted(pluginLocale.name, pluginLocale.prefix));
 	}
 
 	public Locale getPluginLocale() {
