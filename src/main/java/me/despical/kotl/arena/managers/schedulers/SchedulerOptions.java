@@ -16,25 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.arena.managers;
+package me.despical.kotl.arena.managers.schedulers;
 
-import me.despical.kotl.Main;
-import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
-import me.despical.kotl.arena.managers.schedulers.SchedulerOptions;
-
-public class ArenaManager {
-
-	public ArenaManager(Main plugin) {
-		final var config = plugin.getConfig();
-		final var scheduler = switch (config.getInt("Arena-Schedulers.Type")) {
-			case 1 -> ArenaScheduler.GENERAL;
-			case 2 -> ArenaScheduler.PER_ARENA;
-			default -> ArenaScheduler.EVENT;
-		};
-
-		final int interval = config.getInt("Arena-Schedulers.Interval");
-		final boolean async = config.getBoolean("Arena-Schedulers.Async");
-
-		scheduler.register(new SchedulerOptions(async, interval));
-	}
+/**
+ * @author Despical
+ * <p>
+ * Created at 14.01.2024
+ */
+public record SchedulerOptions(boolean async, int interval) {
 }
