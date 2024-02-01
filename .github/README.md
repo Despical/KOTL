@@ -21,7 +21,7 @@ If you still didn't find an answer see documentation section below.
 
 ## Donations
 - [Patreon](https://www.patreon.com/despical)
-- [Buy Me A Coffe](https://www.buymeacoffee.com/despical)
+- [Buy Me A Coffee](https://www.buymeacoffee.com/despical)
 
 ## Using King of the Ladder API
 <details>
@@ -37,7 +37,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.7.9</version>
+    <version>2.8.1</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -54,7 +54,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.7.9;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.8.1;
 }
 ```
 </details>
