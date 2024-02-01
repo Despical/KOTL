@@ -107,9 +107,6 @@ public class Main extends JavaPlugin {
 		this.setupConfigurationFiles();
 
 		configPreferences = new ConfigPreferences(this);
-
-		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
-
 		chatManager = new ChatManager(this);
 		languageManager = new LanguageManager(this);
 		userManager = new UserManager(this);
@@ -125,6 +122,7 @@ public class Main extends JavaPlugin {
 		ScoreboardLib.setPluginInstance(this);
 		User.cooldownHandlerTask();
 
+		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
 		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
 
 		final var metrics = new Metrics(this, 7938);

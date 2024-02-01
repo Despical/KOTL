@@ -18,3 +18,4 @@ permissions:
       kotl.admin.reload: true
       kotl.admin.kick: true
       kotl.command.override: true
+      kotl.admin.cooldown: true

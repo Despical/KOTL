@@ -21,6 +21,7 @@ package me.despical.kotl.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.Completer;
+import me.despical.commandframework.Cooldown;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -203,6 +204,10 @@ public class AdminCommands extends AbstractCommand {
 		permission = "kotl.admin.reload",
 		usage = "/kotl reload",
 		desc = "Reloads all configuration and stops arenas"
+	)
+	@Cooldown(
+		cooldown = 5,
+		bypassPerm = "kotl.admin.cooldown"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
