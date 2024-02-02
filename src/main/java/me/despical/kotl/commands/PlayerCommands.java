@@ -81,6 +81,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl.stats",
+		allowInfiniteArgs = true,
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(CommandArguments arguments) {
