@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.api.events.player;
+package me.despical.kotl.api.events.arena;
 
 import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;

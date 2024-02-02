@@ -22,7 +22,7 @@ import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.api.events.player.KOTLNewKingEvent;
+import me.despical.kotl.api.events.arena.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.handlers.rewards.Reward;
