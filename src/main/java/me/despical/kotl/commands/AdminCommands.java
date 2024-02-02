@@ -65,6 +65,7 @@ public class AdminCommands extends AbstractCommand {
 		permission = "kotl.admin.create",
 		usage = "/kotl create <id>",
 		desc = "Creates a new arena with default configuration",
+		allowInfiniteArgs = true,
 		senderType = PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
