@@ -39,14 +39,7 @@ public abstract class ListenerAdapter implements Listener {
 	}
 
 	public static void registerEvents(Main plugin) {
-		final Class<?>[] listenerAdapters = {Events.class, ArenaEvents.class};
-
-		try {
-			for (Class<?> listenerAdapter : listenerAdapters) {
-				listenerAdapter.getConstructor(Main.class).newInstance(plugin);
-			}
-		} catch (Exception ignored) {
-			plugin.getLogger().severe("An exception occurred during event registration.");
-		}
+		new Events(plugin);
+		new ArenaEvents(plugin);
 	}
 }

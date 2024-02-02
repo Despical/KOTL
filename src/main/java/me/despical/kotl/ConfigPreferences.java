@@ -40,9 +40,6 @@ public class ConfigPreferences {
 	public ConfigPreferences(Main plugin) {
 		this.plugin = plugin;
 		this.options = new HashMap<>();
-
-		plugin.saveDefaultConfig();
-
 		this.loadOptions();
 	}
 
@@ -62,10 +59,23 @@ public class ConfigPreferences {
 
 	public enum Option {
 
-		BECOME_KING_IN_A_ROW(false), BLOCK_COMMANDS(false), BOSS_BAR_ENABLED, CHAT_FORMAT_ENABLED,
-		CLEAR_EFFECTS, CLEAR_INVENTORY(false), DATABASE_ENABLED(false), DEATH_BLOCKS_ENABLED(false),
-		DISABLE_FALL_DAMAGE, DISABLE_SEPARATE_CHAT(false), FIREWORKS_ON_NEW_KING, INVENTORY_MANAGER_ENABLED("Inventory-Manager.Enabled"),
-		JOIN_NOTIFY, LEAVE_NOTIFY, SCOREBOARD_ENABLED, UPDATE_NOTIFIER_ENABLED(false), DAMAGE_ENABLED,
+		BECOME_KING_IN_A_ROW(false),
+		BLOCK_COMMANDS(false),
+		BOSS_BAR_ENABLED,
+		CHAT_FORMAT_ENABLED,
+		CLEAR_EFFECTS,
+		CLEAR_INVENTORY(false),
+		DAMAGE_ENABLED,
+		DATABASE_ENABLED(false),
+		DEATH_BLOCKS_ENABLED(false),
+		DISABLE_FALL_DAMAGE,
+		DISABLE_SEPARATE_CHAT(false),
+		FIREWORKS_ON_NEW_KING,
+		INVENTORY_MANAGER_ENABLED("Inventory-Manager.Enabled"),
+		JOIN_NOTIFY,
+		LEAVE_NOTIFY,
+		SCOREBOARD_ENABLED,
+		UPDATE_NOTIFIER_ENABLED(false),
 		HEAL_PLAYER((config) -> {
 			final var list = config.getStringList("Inventory-Manager.Do-Not-Restore");
 			list.forEach(InventorySerializer::addNonSerializableElements);
@@ -73,8 +83,8 @@ public class ConfigPreferences {
 			return !list.contains("health");
 		});
 
-		final String path;
-		final boolean def;
+		private final String path;
+		private final boolean def;
 
 		Option() {
 			this(true);

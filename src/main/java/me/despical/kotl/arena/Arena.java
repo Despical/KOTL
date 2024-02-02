@@ -56,7 +56,6 @@ public class Arena {
 	
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
-	private final String id;
 	private boolean ready, showOutlines;
 	private BukkitTask particleScheduler;
 
@@ -67,6 +66,7 @@ public class Arena {
 	private XMaterial arenaPlate;
 	private BossBarManager bossBarManager;
 
+	private final String id;
 	private final ScoreboardManager scoreboardManager;
 
 	public Arena(String id) {

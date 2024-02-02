@@ -23,7 +23,6 @@ import me.despical.commons.database.MysqlDatabase;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.util.Collections;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.ArenaRegistry;
@@ -45,6 +44,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -122,8 +122,13 @@ public class Main extends JavaPlugin {
 		ScoreboardLib.setPluginInstance(this);
 		User.cooldownHandlerTask();
 
-		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) database = new MysqlDatabase(this, "mysql");
-		if (chatManager.isPapiEnabled()) new PlaceholderManager(this);
+		if (getOption(ConfigPreferences.Option.DATABASE_ENABLED)) {
+			database = new MysqlDatabase(this, "mysql");
+		}
+
+		if (chatManager.isPapiEnabled()) {
+			new PlaceholderManager(this);
+		}
 
 		final var metrics = new Metrics(this, 7938);
 		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix()));
@@ -146,7 +151,9 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupConfigurationFiles() {
-		Collections.streamOf("arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+		saveDefaultConfig();
+
+		Stream.of("arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	public MysqlDatabase getMysqlDatabase() {

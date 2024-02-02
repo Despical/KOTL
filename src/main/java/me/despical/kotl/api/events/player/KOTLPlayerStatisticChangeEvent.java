@@ -24,6 +24,7 @@ import org.bukkit.event.HandlerList;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -50,7 +51,7 @@ public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public @NotNull HandlerList getHandlers() {
 		return handlers;
 	}
 

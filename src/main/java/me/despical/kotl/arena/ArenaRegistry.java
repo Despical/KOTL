@@ -54,7 +54,7 @@ public class ArenaRegistry {
 	}
 
 	public Set<Arena> getArenas() {
-		return new HashSet<>(arenas);
+		return Set.copyOf(arenas);
 	}
 
 	public Arena getArena(final String id) {
