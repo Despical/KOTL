@@ -22,6 +22,7 @@ import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.events.player.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.handlers.rewards.Reward;
@@ -56,6 +57,10 @@ public class ArenaEvents extends ListenerAdapter {
 		if (event.getAction() == Action.PHYSICAL) {
 			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
 				if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
+
+				var kingEvent = new KOTLNewKingEvent(arena, player, arena.getKing() != null && arena.getKing().equals(player.getName()));
+				plugin.getServer().getPluginManager().callEvent(kingEvent);
+
 				arena.setKing(player.getName());
 
 				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
