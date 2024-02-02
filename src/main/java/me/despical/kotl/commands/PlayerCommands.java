@@ -106,11 +106,12 @@ public class PlayerCommands extends AbstractCommand {
 	}
 
 	@Command(
-		name = "kotl.top"
+		name = "kotl.top",
+		allowInfiniteArgs = true
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage(chatManager.prefixedMessage("Commands.statistics.type_name"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.statistics.type_name"));
 			return;
 		}
 
