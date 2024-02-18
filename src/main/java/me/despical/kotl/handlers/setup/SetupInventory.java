@@ -66,7 +66,7 @@ public class SetupInventory {
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
 		this.paginatedPane = new PaginatedPane(9, 4);
 
-		final var pane = new StaticPane(9, 4);
+		this.pane = new StaticPane(9, 4);
 		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
 		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 
