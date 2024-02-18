@@ -6,6 +6,7 @@
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
 [![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
+[![](https://img.shields.io/badge/BuyMeACoffee-Support-lime.svg?logo=BuyMeACoffee)](https://www.buymeacoffee.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
 out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
@@ -37,7 +38,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.8.1</version>
+    <version>2.8.2</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -54,7 +55,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.8.1;
+    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.8.2;
 }
 ```
 </details>
@@ -81,4 +82,5 @@ git clone https://www.github.com/Despical/KOTL.git && cd KOTL
 mvn clean package -Dmaven.javadoc.skip=true
 ```
 
-> **Note** Don't forget to install Maven before building.
+> [!IMPORTANT]  
+> Don't forget to install Maven before building.
