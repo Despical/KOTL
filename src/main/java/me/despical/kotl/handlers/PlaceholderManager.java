@@ -35,8 +35,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
 	public PlaceholderManager(Main plugin) {
 		this.plugin = plugin;
-
-		register();
+		super.register();
 	}
 	
 	@Override

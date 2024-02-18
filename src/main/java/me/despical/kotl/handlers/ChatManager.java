@@ -36,17 +36,17 @@ import java.util.List;
  */
 public class ChatManager {
 
+	private String prefix;
+	private FileConfiguration config;
+
 	private final Main plugin;
 	private final boolean papiEnabled;
 
-	private FileConfiguration config;
-	private String prefix;
-
 	public ChatManager(Main plugin) {
 		this.plugin = plugin;
-		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = message("in_game.plugin_prefix");
 		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+		this.prefix = message("in_game.plugin_prefix");
+		this.config = ConfigUtils.getConfig(plugin, "messages");
 	}
 
 	public String coloredRawMessage(String message) {

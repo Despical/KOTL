@@ -20,11 +20,13 @@ package me.despical.kotl.handlers.setup.components;
 
 import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
-import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.kotl.Main;
 import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
+import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -36,13 +38,19 @@ import org.bukkit.inventory.ItemFlag;
  * <p>
  * Created at 22.06.2020
  */
-public class MainMenuComponents implements SetupInventory.SetupComponent {
+public class MainMenuComponents extends AbstractComponent {
+
+	public MainMenuComponents(Main plugin) {
+		super(plugin);
+	}
 
 	@Override
-	public void injectComponents(SetupInventory setup, StaticPane pane) {
+	public void injectComponents(SetupInventory setup) {
 		final var player = setup.getPlayer();
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
 		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
+		final var pane = setup.getPane();
 		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.").enchantment(Enchantment.ARROW_INFINITE).flag(ItemFlag.HIDE_ENCHANTS);
 
 		pane.addItem(GuiItem.of(optionsItem.build(), event -> setup.setPage("   Set Additional Arena Options", 3, 3)), 4, 2);
@@ -53,7 +61,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will be")
 			.lore("&8teleported after the reloading)")
-			.lore("", isOptionDoneBool(path + "endLocation"))
+			.lore("", isOptionDoneBool(config, path + "endLocation"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -64,7 +72,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			arena.setEndLocation(location);
 
 			config.set(path + "endLocation", LocationSerializer.toString(location));
-			saveConfig();
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 1, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(arena.getArenaPlate())
@@ -73,7 +81,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			.lore("&7the place where you are standing.")
 			.lore("&8(location where players will try to")
 			.lore("&8reach)")
-			.lore("", isOptionDoneBool(path + "plateLocation"))
+			.lore("", isOptionDoneBool(config, path + "plateLocation"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -85,7 +93,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena &e" + arena.getId() + " &aset at your location!"));
 
 			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
-			saveConfig();
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 5, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
@@ -93,7 +101,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			.lore("&7Click to set arena's region")
 			.lore("&7with the cuboid selector.")
 			.lore("&8(area where game will be playing)")
-			.lore("", isOptionDoneBool(path + "areaMax"))
+			.lore("", isOptionDoneBool(config, path + "areaMax"))
 			.build(), e -> {
 
 			player.closeInventory();
@@ -110,6 +118,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 
 			config.set(path + "areaMin", LocationSerializer.toString(selection.firstPos()));
 			config.set(path + "areaMax", LocationSerializer.toString(selection.secondPos()));
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 
 			arena.setMinCorner(selection.firstPos());
 			arena.setMaxCorner(selection.secondPos());
@@ -118,8 +127,6 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			selector.removeSelection(player);
 
 			arena.handleOutlines();
-
-			saveConfig();
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
@@ -185,7 +192,7 @@ public class MainMenuComponents implements SetupInventory.SetupComponent {
 			player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aValidation succeeded! Registering new arena instance: &e" + arena.getId()));
 
 			config.set(path + "isdone", true);
-			saveConfig();
+			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 8, 3);
 	}
 }

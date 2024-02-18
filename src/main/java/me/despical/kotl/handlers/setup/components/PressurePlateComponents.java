@@ -20,10 +20,13 @@ package me.despical.kotl.handlers.setup.components;
 
 import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
+import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
+import me.despical.kotl.Main;
+import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
@@ -38,13 +41,18 @@ import java.util.List;
  * <p>
  * Created at 30.09.2022
  */
-public class PressurePlateComponents implements SetupInventory.SetupComponent {
+public class PressurePlateComponents extends AbstractComponent {
+
+	public PressurePlateComponents(Main plugin) {
+		super(plugin);
+	}
 
 	@Override
-	public void injectComponents(SetupInventory setup, StaticPane pane) {
+	public void injectComponents(SetupInventory setup) {
 		final var player = setup.getPlayer();
 		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
+		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
 		final var pressurePlatesPane = new StaticPane(9, 6);
 		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + arena.getArenaPlate().toString()).build());
@@ -89,7 +97,7 @@ public class PressurePlateComponents implements SetupInventory.SetupComponent {
 				player.closeInventory();
 
 				config.set(path + "arenaPlate", plate.name());
-				saveConfig();
+				ConfigUtils.saveConfig(plugin, config, "arenas");
 
 				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate));
 

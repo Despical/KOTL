@@ -49,13 +49,14 @@ public class SetupInventory {
 	private final Player player;
 
 	private PaginatedPane paginatedPane;
+	private StaticPane pane;
 
 	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
 
-	public SetupInventory(Arena arena, Player player) {
+	public SetupInventory(Main plugin, Arena arena, Player player) {
+		this.plugin = plugin;
 		this.arena = arena;
 		this.player = player;
-		this.plugin = JavaPlugin.getPlugin(Main.class);
 
 		prepareGui();
 	}
@@ -76,14 +77,14 @@ public class SetupInventory {
 	}
 
 	private void prepareComponents(StaticPane pane) {
-		final var spawnComponents = new MainMenuComponents();
-		spawnComponents.injectComponents(this, pane);
+		AbstractComponent spawnComponents = new MainMenuComponents(plugin);
+		spawnComponents.injectComponents(this);
 
-		final var pressurePlateComponents = new PressurePlateComponents();
-		pressurePlateComponents.injectComponents(this, pane);
+		AbstractComponent pressurePlateComponents = new PressurePlateComponents(plugin);
+		pressurePlateComponents.injectComponents(this);
 
-		final var arenaOptionComponents = new ArenaOptionComponents();
-		arenaOptionComponents.injectComponents(this, pane);
+		AbstractComponent arenaOptionComponents = new ArenaOptionComponents(plugin);
+		arenaOptionComponents.injectComponents(this);
 	}
 
 	public void openInventory() {
@@ -110,6 +111,10 @@ public class SetupInventory {
 		return paginatedPane;
 	}
 
+	public StaticPane getPane() {
+		return pane;
+	}
+
 	public void setPage(String title, int rows, int page) {
 		this.gui.setTitle(title != null ? title : this.gui.getTitle());
 		this.gui.setRows(rows);
@@ -118,34 +123,6 @@ public class SetupInventory {
 	}
 
 	public void restorePage() {
-		new LastPageCache(this, "         KOTL Arena Editor", 4, 0).restore();
-	}
-
-	public interface SetupComponent {
-
-		Main plugin = JavaPlugin.getPlugin(Main.class);
-		ChatManager chatManager = plugin.getChatManager();
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		ItemStack mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn KOTL Menu").lore("&7Click to return last page!").build();
-
-		void injectComponents(SetupInventory setup, StaticPane pane);
-
-		default void saveConfig() {
-			ConfigUtils.saveConfig(plugin, config, "arenas");
-		}
-
-		default String isOptionDoneBool(String path) {
-			return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
-		}
-	}
-
-	private record LastPageCache(SetupInventory setup, String title, int rows, int page) {
-
-		void restore() {
-			setup.paginatedPane.setPage(page);
-			setup.gui.setRows(rows);
-			setup.gui.setTitle(title);
-			setup.gui.update();
-		}
+		this.setPage("         KOTL Arena Editor", 4, 0);
 	}
 }
