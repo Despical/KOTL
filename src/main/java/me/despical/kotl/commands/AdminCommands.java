@@ -18,10 +18,7 @@
 
 package me.despical.kotl.commands;
 
-import me.despical.commandframework.Command;
-import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.Completer;
-import me.despical.commandframework.Cooldown;
+import me.despical.commandframework.*;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -53,11 +50,8 @@ import static me.despical.kotl.handlers.setup.SetupInventory.TUTORIAL_VIDEO;
  */
 public class AdminCommands extends AbstractCommand {
 
-	private final Set<CommandSender> confirmations;
-
 	public AdminCommands(Main plugin) {
 		super(plugin);
-		this.confirmations = new HashSet<>();
 	}
 
 	@Command(
@@ -65,7 +59,7 @@ public class AdminCommands extends AbstractCommand {
 		permission = "kotl.admin.create",
 		usage = "/kotl create <id>",
 		desc = "Creates a new arena with default configuration",
-		allowInfiniteArgs = true,
+		min = 1,
 		senderType = PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
@@ -77,7 +71,7 @@ public class AdminCommands extends AbstractCommand {
 		final var arg = arguments.getArgument(0);
 		final Player player = arguments.getSender();
 
-		if (arg.equals("default")) {
+		if ("default".equals(arg)) {
 			player.sendMessage(chatManager.prefixedRawMessage("&cYou can not create an arena named default!"));
 			return;
 		}
@@ -129,6 +123,11 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Deletes arena with the current configuration",
 		min = 1
 	)
+	@Confirmation(
+		message = "§c§lAre you sure you want to do this action? " +
+			"Type the command again §6§lwithin 10 seconds §c§lto confirm!",
+		expireAfter = 10
+	)
 	public void deleteCommand(CommandArguments arguments) {
 		final var sender = arguments.getSender();
 		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
@@ -137,15 +136,6 @@ public class AdminCommands extends AbstractCommand {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
 			return;
 		}
-
-		if (!confirmations.contains(sender)) {
-			confirmations.add(sender);
-			plugin.getServer().getScheduler().runTaskLater(plugin, () -> confirmations.remove(sender), 200);
-			sender.sendMessage(chatManager.prefixedMessage("commands.are_you_sure"));
-			return;
-		}
-
-		confirmations.remove(sender);
 
 		if (!arena.getPlayers().isEmpty()) {
 			arena.getScoreboardManager().stopAllScoreboards();
@@ -197,7 +187,7 @@ public class AdminCommands extends AbstractCommand {
 			return;
 		}
 
-		new SetupInventory(arena, arguments.getSender()).openInventory();
+		new SetupInventory(plugin, arena, arguments.getSender()).openInventory();
 	}
 
 	@Command(
