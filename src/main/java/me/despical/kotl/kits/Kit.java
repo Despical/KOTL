@@ -63,10 +63,7 @@ public class Kit {
 		final var inventory = player.getInventory();
 
 		inventory.setArmorContents(armors.toArray(new ItemStack[0]));
-
-		for (final var entry : this.items.entrySet()) {
-			inventory.setItem(entry.getKey(), entry.getValue());
-		}
+		this.items.forEach(inventory::setItem);
 	}
 
 	public boolean hasPermission(Player player) {
