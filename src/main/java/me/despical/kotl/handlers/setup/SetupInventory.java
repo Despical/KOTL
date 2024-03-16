@@ -19,22 +19,16 @@
 package me.despical.kotl.handlers.setup;
 
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
-import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.setup.components.ArenaOptionComponents;
-import me.despical.kotl.handlers.setup.components.PressurePlateComponents;
 import me.despical.kotl.handlers.setup.components.MainMenuComponents;
-import org.bukkit.configuration.file.FileConfiguration;
+import me.despical.kotl.handlers.setup.components.PressurePlateComponents;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author Despical
@@ -64,6 +58,7 @@ public class SetupInventory {
 	private void prepareGui() {
 		this.gui = new Gui(plugin, 4, "         KOTL Arena Editor");
 		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+		this.gui.setOnDrag(e -> e.setCancelled(true));
 		this.paginatedPane = new PaginatedPane(9, 4);
 
 		this.pane = new StaticPane(9, 4);
@@ -113,6 +108,10 @@ public class SetupInventory {
 
 	public StaticPane getPane() {
 		return pane;
+	}
+
+	public void closeInventory() {
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 4L);
 	}
 
 	public void setPage(String title, int rows, int page) {
