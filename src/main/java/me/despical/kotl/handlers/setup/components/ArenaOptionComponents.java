@@ -44,7 +44,7 @@ public class ArenaOptionComponents extends AbstractComponent {
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 		final var path = "instances.%s.".formatted(arena.getId());
 		final var arenaOptions = new StaticPane(9, 3);
-		final var outlineItem = supportsParticle ? new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_PEARL : XMaterial.ENDER_EYE).name("           " + (arena.isShowOutlines() ? "&c&lDisable" : "&e&lEnable") + " Outline Particles           ").lore("&7You can create particles around the game arena.") : new ItemBuilder(XMaterial.BARREL).name("&c&lYour server does not support Particles!");
+		final var outlineItem = supportsParticle ? new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_PEARL : XMaterial.ENDER_EYE).name("           " + (arena.isShowOutlines() ? "&c&lDisable" : "&e&lEnable") + " Outline Particles           ").lore("&7You can create particles around the game arena.") : new ItemBuilder(XMaterial.BARRIER).name("&c&lYour server does not support Particles!");
 
 		arenaOptions.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + arena.getArenaPlate().toString()).build());
 		arenaOptions.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 2);
