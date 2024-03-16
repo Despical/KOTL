@@ -230,6 +230,7 @@ public class AdminCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl.help",
+		usage = "/kotl help",
 		permission = "kotl.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
