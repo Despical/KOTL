@@ -151,9 +151,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupConfigurationFiles() {
-		saveDefaultConfig();
-
-		Stream.of("arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+		Stream.of("config", "arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(),name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
 	}
 
 	public MysqlDatabase getMysqlDatabase() {

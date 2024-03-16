@@ -54,7 +54,7 @@ public class KitManager {
 		}
 
 		for (final var path : section.getKeys(false)) {
-			this.kits.add(new Kit(plugin, "kits." + path + "."));
+			this.kits.add(new Kit(config, "kits." + path + "."));
 		}
 	}
 

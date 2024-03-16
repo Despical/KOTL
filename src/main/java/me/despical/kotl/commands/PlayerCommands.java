@@ -21,6 +21,7 @@ package me.despical.kotl.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commons.string.StringMatcher;
+import me.despical.commons.util.Strings;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
@@ -47,7 +48,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	public PlayerCommands(Main plugin) {
 		super(plugin);
-
+		plugin.getCommandFramework().setColorFormatter(Strings::format);
 		plugin.getCommandFramework().setMatchFunction(arguments -> {
 			if (arguments.isArgumentsEmpty()) return false;
 
@@ -71,10 +72,10 @@ public class PlayerCommands extends AbstractCommand {
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage(chatManager.coloredRawMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical"));
+			arguments.sendMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical");
 
 			if (arguments.hasPermission("kotl.admin")) {
-				arguments.sendMessage(chatManager.coloredRawMessage("&3Commands: &b/" + arguments.getLabel() + " help"));
+				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
 			}
 		}
 	}

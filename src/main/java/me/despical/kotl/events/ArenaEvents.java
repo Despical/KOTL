@@ -52,36 +52,35 @@ public class ArenaEvents extends ListenerAdapter {
 		var player = event.getPlayer();
 		var arena = plugin.getArenaRegistry().getArena(player);
 
-		if (arena == null) return;
+		if (arena == null || event.getAction() != Action.PHYSICAL) return;
 
-		if (event.getAction() == Action.PHYSICAL) {
-			if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-				if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW))) return;
+		if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
+			if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW)))
+				return;
 
-				var kingEvent = new KOTLNewKingEvent(arena, player, arena.getKing() != null && arena.getKing().equals(player.getName()));
-				plugin.getServer().getPluginManager().callEvent(kingEvent);
+			var kingEvent = new KOTLNewKingEvent(arena, player, arena.getKing() != null && arena.getKing().equals(player.getName()));
+			plugin.getServer().getPluginManager().callEvent(kingEvent);
 
-				arena.setKing(player.getName());
+			arena.setKing(player.getName());
 
-				chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
+			chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 
-				var user = plugin.getUserManager().getUser(player);
-				user.addStat(StatsStorage.StatisticType.SCORE, 1);
-				user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-				user.performReward(Reward.RewardType.WIN);
+			var user = plugin.getUserManager().getUser(player);
+			user.addStat(StatsStorage.StatisticType.SCORE, 1);
+			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+			user.performReward(Reward.RewardType.WIN);
 
-				var players = arena.getPlayers();
-				players.remove(player);
+			var players = arena.getPlayers();
+			players.remove(player);
 
-				spawnFireworks(arena, player);
+			spawnFireworks(arena, player);
 
-				for (var p : players) {
-					final var u = plugin.getUserManager().getUser(p);
-					u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-					u.performReward(Reward.RewardType.LOSE);
+			for (var p : players) {
+				final var u = plugin.getUserManager().getUser(p);
+				u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+				u.performReward(Reward.RewardType.LOSE);
 
-					spawnFireworks(arena, p);
-				}
+				spawnFireworks(arena, p);
 			}
 		}
 	}

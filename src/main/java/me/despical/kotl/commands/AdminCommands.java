@@ -84,14 +84,14 @@ public class AdminCommands extends AbstractCommand {
 
 		setupDefaultConfiguration(arg);
 
-		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
+		arguments.sendMessage("&l--------------------------------------------");
 		MiscUtils.sendCenteredMessage(player, "&eInstance " + arg + " created!");
 		player.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via &6/kotl edit " + arg + "&a!");
 		player.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out tutorial video:");
 		MiscUtils.sendCenteredMessage(player, "&7" + TUTORIAL_VIDEO);
-		player.sendMessage(chatManager.coloredRawMessage("&l--------------------------------------------"));
+		arguments.sendMessage("&l--------------------------------------------");
 	}
 
 	private void setupDefaultConfiguration(String id) {
@@ -234,7 +234,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void helpCommand(CommandArguments arguments) {
 		arguments.sendMessage("");
-		arguments.sendMessage(chatManager.coloredRawMessage("&3&l---- King of the Ladder Admin Commands ----"));
+		arguments.sendMessage("&3&l---- King of the Ladder Admin Commands ----");
 		arguments.sendMessage("");
 
 		final CommandSender sender = arguments.getSender();
@@ -256,7 +256,7 @@ public class AdminCommands extends AbstractCommand {
 					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
 					.create());
 			} else {
-				sender.sendMessage(chatManager.coloredRawMessage(" &8• &b" + usage + " &3- &b" + desc));
+				sender.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
 			}
 		}
 

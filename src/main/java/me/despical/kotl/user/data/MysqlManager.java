@@ -57,8 +57,6 @@ public non-sealed class MysqlManager extends IUserDatabase {
 						);""".formatted(table));
 			} catch (SQLException exception) {
 				exception.printStackTrace();
-
-				plugin.getLogger().severe("Couldn't create statistics table on MySQL database!");
 			}
 		});
 	}
