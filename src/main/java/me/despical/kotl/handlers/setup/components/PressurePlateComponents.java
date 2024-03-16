@@ -23,18 +23,19 @@ import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.commons.string.StringUtils;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
 import me.despical.kotl.Main;
 import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
-import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Despical
@@ -54,14 +55,16 @@ public class PressurePlateComponents extends AbstractComponent {
 		final var path = "instances.%s.".formatted(arena.getId());
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
-		final var pressurePlatesPane = new StaticPane(9, 6);
-		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + arena.getArenaPlate().toString()).build());
+		final var pressurePlatesPane = new StaticPane(9, setup.getGui().getRows() - 1);
+		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateNam(arena.getArenaPlate())).build());
 
 		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
 
 		final var pressurePlates = new ArrayList<XMaterial>() {{
 			add(XMaterial.OAK_PRESSURE_PLATE);
-			add(XMaterial.STONE_PRESSURE_PLATE); // 1.8
+			add(XMaterial.STONE_PRESSURE_PLATE);
+			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
+			add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
 
 			if (ReflectionUtils.supports(13)) {
 				add(XMaterial.ACACIA_PRESSURE_PLATE);
@@ -94,18 +97,18 @@ public class PressurePlateComponents extends AbstractComponent {
 			}
 
 			pressurePlatesPane.addItem(GuiItem.of(itemBuilder.build(), inventoryClickEvent -> {
-				player.closeInventory();
+				setup.closeInventory();
 
 				config.set(path + "arenaPlate", plate.name());
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + plate));
+				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + formatPlateNam(plate)));
 
 				arena.setArenaPlate(plate);
 
 				final var plateLoc = arena.getPlateLocation();
 
-				if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().getRelative(BlockFace.DOWN).setType(plate.parseMaterial());
+				if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().setType(plate.parseMaterial());
 			}), slot % 9, slot / 9);
 		}
 
@@ -122,5 +125,9 @@ public class PressurePlateComponents extends AbstractComponent {
 		}
 
 		return slots;
+	}
+
+	private String formatPlateNam(XMaterial plate) {
+		return StringUtils.capitalize(plate.name().toLowerCase(Locale.ENGLISH).replace("_", " "), ' ');
 	}
 }
