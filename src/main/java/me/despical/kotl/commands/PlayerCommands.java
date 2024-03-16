@@ -21,7 +21,6 @@ package me.despical.kotl.commands;
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commons.string.StringMatcher;
-import me.despical.commons.util.Strings;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
@@ -34,9 +33,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,16 +45,33 @@ public class PlayerCommands extends AbstractCommand {
 
 	public PlayerCommands(Main plugin) {
 		super(plugin);
-		plugin.getCommandFramework().setColorFormatter(Strings::format);
-		plugin.getCommandFramework().setMatchFunction(arguments -> {
+
+		final var commandFramework = plugin.getCommandFramework();
+
+		commandFramework.setMatchFunction(arguments -> {
 			if (arguments.isArgumentsEmpty()) return false;
 
 			String label = arguments.getLabel(), arg = arguments.getArgument(0);
-
-			List<StringMatcher.Match> matches = StringMatcher.match(arg, plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList()));
+			List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
+			List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
 
 			if (!matches.isEmpty()) {
-				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label + " " + matches.get(0).getMatch()));
+				Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
+
+				if (optionalMatch.isPresent()) {
+					String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
+					Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
+
+					if (matchedCommand.isPresent()) {
+						arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
+						return true;
+					}
+
+					arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
+					return true;
+				}
+
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
 				return true;
 			}
 
@@ -82,6 +96,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl.stats",
+		usage = "/kotl stats <player name>",
 		allowInfiniteArgs = true,
 		senderType = Command.SenderType.PLAYER
 	)
@@ -109,6 +124,7 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl.top",
+		usage = "/kotl top <statistic type>",
 		allowInfiniteArgs = true
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
@@ -165,5 +181,19 @@ public class PlayerCommands extends AbstractCommand {
 		message = message.replace("%value%", Integer.toString(value));
 		message = message.replace("%statistic%", statisticName);
 		return message;
+	}
+
+	public String getMatchingParts(String matched, String current) {
+		String[] matchedArray = matched.split("\\."), currentArray = current.split("\\.");
+		int max = Math.min(matchedArray.length, currentArray.length);
+		List<String> matchingParts = new ArrayList<>();
+
+		for (int i = 0; i < max; i++) {
+			if (matchedArray[i].equals(currentArray[i])) {
+				matchingParts.add(matchedArray[i]);
+			}
+		}
+
+		return String.join(".", matchingParts);
 	}
 }

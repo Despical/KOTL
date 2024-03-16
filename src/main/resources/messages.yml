@@ -9,7 +9,8 @@
 
 # King of the Ladder commands messages
 Commands:
-  Did-You-Mean: "&cDid you mean &7/%command%&c?"
+  Did-You-Mean: "&cDid you mean &7%command%&c?"
+  Correct-Usage: "&cCorrect usage: %usage%"
   Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
   Type-Arena-Name: "&cPlease type arena name!"
   Removed-Game-Instance: "&aSuccessfully removed game instance."
