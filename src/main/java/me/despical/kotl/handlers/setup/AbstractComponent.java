@@ -34,21 +34,12 @@ import org.bukkit.inventory.ItemStack;
 public abstract class AbstractComponent {
 
 	protected static final ItemStack mainMenuItem;
-	protected static boolean supportsParticle;
 
 	protected final Main plugin;
 	protected final ChatManager chatManager;
 
 	static {
 		mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn KOTL Menu").lore("&7Click to return last page!").build();
-
-		try {
-			Class.forName("org.bukkit.Particle");
-
-			supportsParticle = true;
-		} catch (ClassNotFoundException exception) {
-			supportsParticle = false;
-		}
 	}
 
 	public AbstractComponent(Main plugin) {

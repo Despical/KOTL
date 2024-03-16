@@ -33,7 +33,6 @@ import me.despical.kotl.handlers.rewards.Reward;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,6 +40,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.xenondevs.particle.ParticleEffect;
+import xyz.xenondevs.particle.ParticleBuilder;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ import java.util.Set;
  * Created at 20.06.2020
  */
 public class Arena {
-	
+
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	private boolean ready, showOutlines;
@@ -82,7 +83,7 @@ public class Arena {
 			this.bossBarManager = new BossBarManager(plugin);
 		}
 	}
-	
+
 	public boolean isReady() {
 		return ready;
 	}
@@ -100,8 +101,10 @@ public class Arena {
 			this.particleScheduler = new BukkitRunnable() {
 				final Location min = getMinCorner(), max = getMaxCorner();
 				final World world = min.getWorld();
-				final Particle particle = Particle.valueOf(plugin.getConfig().getString("Arena-Outlines.Particle", "flame").toUpperCase());
+				final ParticleEffect particle = ParticleEffect.valueOf(plugin.getConfig().getString("Arena-Outlines.Particle", "flame").toUpperCase());
 				final double step = plugin.getConfig().getDouble("Arena-Outlines.Step", .4);
+				final ParticleBuilder particleBuilder = new ParticleBuilder(particle);
+				final Location location = new Location(world, 0, 0, 0);
 
 				final double[]
 					xArr = {Math.min(min.getX(), max.getX()), Math.max(min.getX(), max.getX())},
@@ -111,15 +114,15 @@ public class Arena {
 				@Override
 				public void run() {
 					for (double x = xArr[0]; x < xArr[1]; x += step) for (double y : yArr) for (double z : zArr) {
-						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+						particleBuilder.setLocation(setLocation(location, x, y, z)).display();
 					}
 
 					for (double y = yArr[0]; y < yArr[1]; y += step) for (double x : xArr) for (double z : zArr) {
-						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+						particleBuilder.setLocation(setLocation(location, x, y, z)).display();
 					}
 
 					for (double z = zArr[0]; z < zArr[1]; z += step) for (double y : yArr) for (double x : xArr) {
-						world.spawnParticle(particle, new Location(world, x, y, z), 1, 0, 0, 0, 0);
+						particleBuilder.setLocation(setLocation(location, x, y, z)).display();
 					}
 				}
 			}.runTaskTimer(plugin, 20, 1);
@@ -127,6 +130,18 @@ public class Arena {
 			this.particleScheduler.cancel();
 			this.particleScheduler = null;
 		}
+	}
+
+	private Location setLocation(Location location, double x, double y, double z) {
+		try {
+			location.set(x, y, z);
+		} catch (Exception | Error e) {
+			location.setX(x);
+			location.setY(y);
+			location.setZ(z);
+		}
+
+		return location;
 	}
 
 	public void handleOutlines() {
@@ -150,7 +165,7 @@ public class Arena {
 	public String getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Get all players in arena.
 	 *
@@ -159,7 +174,7 @@ public class Arena {
 	public Set<Player> getPlayers() {
 		return new HashSet<>(players);
 	}
-	
+
 	/**
 	  * Get end location of arena.
 	  *
@@ -180,16 +195,16 @@ public class Arena {
 
 	/**
 	 * Get arena's plate location.
-	 * 
+	 *
 	 * @return plate location of arena
 	 */
 	public Location getPlateLocation() {
 		return gameLocations.get(GameLocation.PLATE);
 	}
-	
+
 	/**
 	 * Set plate location.
-	 * 
+	 *
 	 * @param plateLoc new plate location of arena
 	 */
 	public void setPlateLocation(Location plateLoc) {
@@ -251,10 +266,10 @@ public class Arena {
 
 		return null;
 	}
-	
+
 	/**
 	 * Get arena's scoreboard manager
-	 * 
+	 *
 	 * @return scoreboard manager of arena
 	 */
 	public ScoreboardManager getScoreboardManager() {
@@ -358,7 +373,7 @@ public class Arena {
 
 		player.teleport(location);
 	}
-	
+
 	public void teleportAllToEndLocation() {
 		players.forEach(this::teleportToEndLocation);
 	}
