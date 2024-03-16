@@ -29,9 +29,10 @@ import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.Material;
-import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
+
+import java.util.Optional;
 
 /**
  * @author Despical
@@ -64,7 +65,7 @@ public class MainMenuComponents extends AbstractComponent {
 			.lore("", isOptionDoneBool(config, path + "endLocation"))
 			.build(), e -> {
 
-			player.closeInventory();
+			setup.closeInventory();
 
 			var location = player.getLocation();
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aEnding location for arena &e" + arena.getId() + " &aset at your location!"));
@@ -84,27 +85,38 @@ public class MainMenuComponents extends AbstractComponent {
 			.lore("", isOptionDoneBool(config, path + "plateLocation"))
 			.build(), e -> {
 
-			player.closeInventory();
+			setup.closeInventory();
+
+			final var plateMaterial = arena.getArenaPlate().parseMaterial();
+
+			// Remove the old one if present.
+			Optional.ofNullable(arena.getPlateLocation()).ifPresent(location -> {
+				var block = location.getBlock();
+
+				if (block.getType() == arena.getArenaPlate().parseMaterial()) {
+					block.setType(Material.AIR);
+				}
+			});
 
 			final var location = player.getLocation();
-			location.getBlock().getRelative(BlockFace.DOWN).setType(arena.getArenaPlate().parseMaterial());
+			location.getBlock().setType(plateMaterial);
 
 			arena.setPlateLocation(location);
 			player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aPlate location for arena &e" + arena.getId() + " &aset at your location!"));
 
-			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getRelative(BlockFace.DOWN).getLocation()));
+			config.set(path + "plateLocation", LocationSerializer.toString(location.getBlock().getLocation()));
 			ConfigUtils.saveConfig(plugin, config, "arenas");
 		}), 5, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
 			.name("&e&l         Set Arena Region         ")
-			.lore("&7Click to set arena's region")
-			.lore("&7with the cuboid selector.")
-			.lore("&8(area where game will be playing)")
+			.lore("&7Click to set arena's region with the")
+			.lore("&7cuboid selector.")
+			.lore("&8(area where the game will be playing)")
 			.lore("", isOptionDoneBool(config, path + "areaMax"))
 			.build(), e -> {
 
-			player.closeInventory();
+			setup.closeInventory();
 
 			final var selector =  plugin.getCuboidSelector();
 			final var selection = selector.getSelection(player);
@@ -130,7 +142,7 @@ public class MainMenuComponents extends AbstractComponent {
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
-			.name("&e&l       Change Arena Plate       ")
+			.name("&e&l       Change Arena Plate    ")
 			.lore("&7Click here to change arena plate.")
 			.lore("&8(opens arena plate changer menu)")
 			.build(), e -> {
@@ -138,7 +150,7 @@ public class MainMenuComponents extends AbstractComponent {
 			setup.getPaginatedPane().setPage(2);
 
 			final var gui = setup.getGui();
-			gui.setRows(ReflectionUtils.supports(13) ? 6 : 4);
+			gui.setRows(ReflectionUtils.supports(13) ? 6 : 3);
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);
@@ -160,7 +172,7 @@ public class MainMenuComponents extends AbstractComponent {
 		}
 
 		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
-			player.closeInventory();
+			setup.closeInventory();
 
 			if (config.getBoolean(path + "isdone")) {
 				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
