@@ -18,16 +18,19 @@
 
 package me.despical.kotl.kits;
 
+import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
-import me.despical.kotl.Main;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Kit {
 
@@ -35,21 +38,22 @@ public class Kit {
 	private final Set<ItemStack> armors;
 	private final Map<Integer, ItemStack> items;
 
-	public Kit(Main plugin, String path) {
+	public Kit(FileConfiguration config, String path) {
 		this.armors = new LinkedHashSet<>();
 		this.items = new HashMap<>();
 
-		final var config = ConfigUtils.getConfig(plugin, "kits");
-
 		this.permission = config.getString(path + "permission");
 
-		for (final var armor : config.getStringList(path + "armors")) {
+		for (var armor : config.getStringList(path + "armors")) {
 			armors.add(XMaterial.valueOf(armor).parseItem());
 		}
 
 		for (final var item : config.getStringList(path + "items")) {
-			final var array = item.split(":");
-			final var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true);
+			var array = item.split(":");
+			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase()));
+
+			if (ReflectionUtils.supports(9))
+				builder = builder.unbreakable(true);
 
 			if (array.length == 4) {
 				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
