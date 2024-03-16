@@ -327,18 +327,23 @@ public class AdminCommands extends AbstractCommand {
 		name = "kotl"
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
-		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-		final String args[] = arguments.getArguments(), arg = args[0];
+		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		final String[] args = arguments.getArguments();
 
-		commands.remove("kotl");
-
-		if (args.length == 1) {
-			StringUtil.copyPartialMatches(arg, arguments.hasPermission("kotl.admin") || arguments.getSender().isOp() ? commands : me.despical.commons.util.Collections.listOf("top", "stats"), completions);
+		if (args.length > 0) {
+			if (List.of("create", "list", "help", "reload").contains(args[0])) {
+				return completions;
+			}
 		}
 
+		if (args.length == 1) {
+			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("kotl.admin") || arguments.getSender().isOp() ? commands : List.of("top", "stats"), completions);
+		}
+
+		final String arg = args[0];
+
 		if (args.length == 2) {
-			if (List.of("create", "list", "help", "reload").contains(arg)) return null;
-			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return null;
+			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return completions;
 
 			if (arg.equalsIgnoreCase("top")) {
 				return me.despical.commons.util.Collections.listOf("tours_played", "score");
@@ -350,12 +355,9 @@ public class AdminCommands extends AbstractCommand {
 
 			final var arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
 
-			StringUtil.copyPartialMatches(args[1], arenas, completions);
-			arenas.sort(null);
-			return arenas;
+			return StringUtil.copyPartialMatches(args[1], arenas, completions);
 		}
 
-		completions.sort(null);
 		return completions;
 	}
 }
