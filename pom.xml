@@ -53,6 +53,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.destroystokyo.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons</artifactId>
 			<version>1.7.1</version>
@@ -65,7 +71,7 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>CommandFramework</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bstats</groupId>
@@ -79,10 +85,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.destroystokyo.paper</groupId>
-			<artifactId>paper-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
+			<groupId>xyz.xenondevs</groupId>
+			<artifactId>particle</artifactId>
+			<version>1.8.4</version>
 		</dependency>
 	</dependencies>
 
@@ -111,6 +116,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
+					<outputDirectory>C:\Users\berke\OneDrive\Masaüstü\1.9.9\plugins</outputDirectory>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
