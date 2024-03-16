@@ -234,22 +234,19 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void helpCommand(CommandArguments arguments) {
 		arguments.sendMessage("");
-		arguments.sendMessage("&3&l---- King of the Ladder Admin Commands ----");
+		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3&l---- King of the Ladder Commands ----");
 		arguments.sendMessage("");
 
 		final CommandSender sender = arguments.getSender();
 		final boolean isPlayer = arguments.isSenderPlayer();
 
-		for (final var command : plugin.getCommandFramework().getCommands().stream().sorted(Collections
-			.reverseOrder(Comparator.comparingInt(cmd -> cmd.usage().length()))).toList()) {
+		for (final var command : plugin.getCommandFramework().getSubCommands()) {
 			final String usage = command.usage(), desc = command.desc();
 
-			if (usage.isEmpty() || usage.contains("help")) continue;
+			if (usage.isEmpty() || desc.isEmpty() || usage.contains("help")) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder()
-					.color(ChatColor.DARK_GRAY)
-					.append(" • ")
+				((Player) sender).spigot().sendMessage(new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
 					.append(usage)
 					.color(ChatColor.AQUA)
 					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
@@ -302,25 +299,18 @@ public class AdminCommands extends AbstractCommand {
 		min = 1
 	)
 	public void kickCommand(CommandArguments arguments) {
-		final var target = arguments.getArgument(0);
-		final var player = plugin.getServer().getPlayer(target);
+		arguments.getPlayer(0).ifPresentOrElse(player -> {
+			final var arena = plugin.getArenaRegistry().getArena(player);
+			if (arena == null) {
+				arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
+				return;
+			}
 
-		if (player == null) {
-			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
-			return;
-		}
+			arena.removePlayer(player);
+			arena.teleportToEndLocation(player);
 
-		final var arena = plugin.getArenaRegistry().getArena(player);
-
-		if (arena == null) {
-			arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
-			return;
-		}
-
-		arena.removePlayer(player);
-		arena.teleportToEndLocation(player);
-
-		arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.kicked_player"));
+		}, () -> arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found")));
 	}
 
 	@Completer(
@@ -337,7 +327,7 @@ public class AdminCommands extends AbstractCommand {
 		}
 
 		if (args.length == 1) {
-			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("kotl.admin") || arguments.getSender().isOp() ? commands : List.of("top", "stats"), completions);
+			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("kotl.admin") ? commands : List.of("top", "stats"), completions);
 		}
 
 		final String arg = args[0];
@@ -346,7 +336,7 @@ public class AdminCommands extends AbstractCommand {
 			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return completions;
 
 			if (arg.equalsIgnoreCase("top")) {
-				return me.despical.commons.util.Collections.listOf("tours_played", "score");
+				return List.of("tours_played", "score");
 			}
 
 			if (arg.equalsIgnoreCase("stats") || arg.equalsIgnoreCase("kick")) {

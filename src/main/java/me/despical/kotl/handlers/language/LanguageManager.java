@@ -25,6 +25,7 @@ import me.despical.kotl.Main;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * @author Despical
@@ -56,7 +57,7 @@ public class LanguageManager {
 	}
 
 	private void registerLocales() {
-		Collections.listOf(
+		List.of(
 			new Locale("English", "en_GB", "default", "english", "en"),
 			new Locale("German", "de_DE", "deutsch", "german", "de"),
 			new Locale("Turkish", "tr_TR", "turkish", "türkçe", "turkce", "tr"))
