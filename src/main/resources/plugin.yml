@@ -4,6 +4,7 @@ author: Despical
 version: ${project.version}
 api-version: 1.13
 softdepend: [ PlaceholderAPI, Multiverse-Core, WorldGuard ]
+website: https://spigotmc.org/resources/80686
 
 permissions:
   kotl.admin.*:
