@@ -144,6 +144,10 @@
 									<shadedPattern>me.despical.commons.database</shadedPattern>
 								</relocation>
 								<relocation>
+									<pattern>xyz.xenondevs.particle</pattern>
+									<shadedPattern>me.despical.kotl.util</shadedPattern>
+								</relocation>
+								<relocation>
 									<pattern>org.slf4j</pattern>
 									<shadedPattern>me.despical.kotl.logging</shadedPattern>
 								</relocation>
