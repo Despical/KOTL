@@ -55,7 +55,7 @@ repositories {
 ```
 ```
 dependencies {
-    compileOnly group: "com.github.Despical", name: "KOTL", version: "2.8.3";
+    compileOnly 'com.github.Despical:KOTL:2.8.3'
 }
 ```
 </details>
