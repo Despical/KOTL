@@ -341,7 +341,7 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
-			InventorySerializer.loadInventory(plugin, player);
+			plugin.getServer().getScheduler().runTask(plugin, () -> InventorySerializer.loadInventory(plugin, player));
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.SCOREBOARD_ENABLED)) {
