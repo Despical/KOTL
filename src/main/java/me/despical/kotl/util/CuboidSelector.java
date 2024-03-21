@@ -18,20 +18,19 @@
 
 package me.despical.kotl.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
+import me.despical.kotl.Main;
 import me.despical.kotl.events.ListenerAdapter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import me.despical.kotl.Main;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Despical

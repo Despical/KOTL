@@ -18,9 +18,8 @@
 
 package me.despical.kotl.api.events;
 
-import org.bukkit.event.Event;
-
 import me.despical.kotl.arena.Arena;
+import org.bukkit.event.Event;
 
 /**
  * @author Despical

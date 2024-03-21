@@ -18,10 +18,10 @@
 
 package me.despical.kotl.handlers.language;
 
+import me.despical.kotl.handlers.language.LanguageManager.Locale;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import me.despical.kotl.handlers.language.LanguageManager.Locale;
 
 /**
  * @author Despical

@@ -21,8 +21,8 @@ package me.despical.kotl.user;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.data.FileStats;
-import me.despical.kotl.user.data.MysqlManager;
 import me.despical.kotl.user.data.IUserDatabase;
+import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

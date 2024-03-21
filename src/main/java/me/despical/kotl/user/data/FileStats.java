@@ -20,10 +20,9 @@ package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.kotl.Main;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /**

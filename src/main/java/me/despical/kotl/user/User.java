@@ -18,20 +18,19 @@
 
 package me.despical.kotl.user;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import me.despical.kotl.handlers.rewards.Reward;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
+import me.despical.kotl.handlers.rewards.Reward;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Despical

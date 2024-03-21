@@ -18,14 +18,13 @@
 
 package me.despical.kotl.handlers;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 

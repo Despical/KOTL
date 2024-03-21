@@ -18,12 +18,11 @@
 
 package me.despical.kotl.api.events.player;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
+import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
