@@ -89,7 +89,7 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via &6/kotl edit " + arg + "&a!");
 		player.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out tutorial video:");
-		MiscUtils.sendCenteredMessage(player, "&7" + SetupInventory.TUTORIAL_VIDEO);
+		MiscUtils.sendCenteredMessage(player, "&7https://www.youtube.com/watch?v=O_vkf_J4OgY");
 		arguments.sendMessage("&l--------------------------------------------");
 	}
 
