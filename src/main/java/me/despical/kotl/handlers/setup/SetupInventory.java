@@ -111,7 +111,7 @@ public class SetupInventory {
 	}
 
 	public void closeInventory() {
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 4L);
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 1L);
 	}
 
 	public void setPage(String title, int rows, int page) {
