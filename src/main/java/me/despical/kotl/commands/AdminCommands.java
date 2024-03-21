@@ -140,13 +140,14 @@ public class AdminCommands extends AbstractCommand {
 			arena.getScoreboardManager().stopAllScoreboards();
 
 			for (final var player : arena.getPlayers()) {
+				player.setFlySpeed(.1F);
 				player.setWalkSpeed(.2F);
+				player.getInventory().clear();
+				player.getInventory().setArmorContents(null);
 
 				if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 					InventorySerializer.loadInventory(plugin, player);
 				} else {
-					player.getInventory().clear();
-					player.getInventory().setArmorContents(null);
 					player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
 				}
 
