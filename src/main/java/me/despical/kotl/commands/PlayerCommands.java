@@ -45,38 +45,6 @@ public class PlayerCommands extends AbstractCommand {
 
 	public PlayerCommands(Main plugin) {
 		super(plugin);
-
-		final var commandFramework = plugin.getCommandFramework();
-
-		commandFramework.setMatchFunction(arguments -> {
-			if (arguments.isArgumentsEmpty()) return false;
-
-			String label = arguments.getLabel(), arg = arguments.getArgument(0);
-			List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
-			List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
-
-			if (!matches.isEmpty()) {
-				Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
-
-				if (optionalMatch.isPresent()) {
-					String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
-					Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
-
-					if (matchedCommand.isPresent()) {
-						arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
-						return true;
-					}
-
-					arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
-					return true;
-				}
-
-				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
-				return true;
-			}
-
-			return false;
-		});
 	}
 
 	@Command(
@@ -91,13 +59,39 @@ public class PlayerCommands extends AbstractCommand {
 			if (arguments.hasPermission("kotl.admin")) {
 				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
 			}
+
+			return;
+		}
+
+		var commandFramework = plugin.getCommandFramework();
+		String label = arguments.getLabel(), arg = arguments.getArgument(0);
+		List<String> commands = commandFramework.getCommands().stream().map(cmd -> cmd.name().replace(label + ".", "")).collect(Collectors.toList());
+		List<StringMatcher.Match> matches = StringMatcher.match(arg, commands);
+
+		if (!matches.isEmpty()) {
+			Optional<Command> optionalMatch = commandFramework.getCommands().stream().filter(cmd -> cmd.name().equals(label + "." + matches.get(0).getMatch())).findFirst();
+
+			if (optionalMatch.isPresent()) {
+				String matchedName = getMatchingParts(optionalMatch.get().name(), label + "." + String.join(".", arguments.getArguments()));
+				Optional<Command> matchedCommand = commandFramework.getSubCommands().stream().filter(cmd -> cmd.name().equals(matchedName)).findFirst();
+
+				if (matchedCommand.isPresent()) {
+					arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", matchedCommand.get().usage()));
+					return;
+				}
+
+				arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", optionalMatch.get().usage()));
+				return;
+			}
+
+			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
 		}
 	}
 
 	@Command(
 		name = "kotl.stats",
 		usage = "/kotl stats <player name>",
-		allowInfiniteArgs = true,
+		max = 1,
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(CommandArguments arguments) {
@@ -125,7 +119,7 @@ public class PlayerCommands extends AbstractCommand {
 	@Command(
 		name = "kotl.top",
 		usage = "/kotl top <statistic type>",
-		allowInfiniteArgs = true
+		max = 1
 	)
 	public void leaderboardCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {

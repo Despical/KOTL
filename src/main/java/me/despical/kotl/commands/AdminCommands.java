@@ -41,7 +41,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.despical.commandframework.Command.SenderType.PLAYER;
-import static me.despical.kotl.handlers.setup.SetupInventory.TUTORIAL_VIDEO;
 
 /**
  * @author Despical
@@ -59,8 +58,8 @@ public class AdminCommands extends AbstractCommand {
 		permission = "kotl.admin.create",
 		usage = "/kotl create <id>",
 		desc = "Creates a new arena with default configuration",
-		min = 1,
-		senderType = PLAYER
+		max = 1,
+		senderType = Command.SenderType.PLAYER
 	)
 	public void createCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -90,7 +89,7 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(player, "&aEdit this arena via &6/kotl edit " + arg + "&a!");
 		player.sendMessage("");
 		MiscUtils.sendCenteredMessage(player, "&6Don't know where to start? Check out tutorial video:");
-		MiscUtils.sendCenteredMessage(player, "&7" + TUTORIAL_VIDEO);
+		MiscUtils.sendCenteredMessage(player, "&7" + SetupInventory.TUTORIAL_VIDEO);
 		arguments.sendMessage("&l--------------------------------------------");
 	}
 
