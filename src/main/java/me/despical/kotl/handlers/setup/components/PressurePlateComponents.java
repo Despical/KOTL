@@ -55,7 +55,7 @@ public class PressurePlateComponents extends AbstractComponent {
 		final var path = "instances.%s.".formatted(arena.getId());
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
-		final var pressurePlatesPane = new StaticPane(9, setup.getGui().getRows() - 1);
+		final var pressurePlatesPane = new StaticPane(9, ReflectionUtils.supports(13) ? 6 : 3);
 		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateNam(arena.getArenaPlate())).build());
 
 		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
