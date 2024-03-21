@@ -30,6 +30,8 @@ import me.despical.kotl.handlers.setup.components.MainMenuComponents;
 import me.despical.kotl.handlers.setup.components.PressurePlateComponents;
 import org.bukkit.entity.Player;
 
+import java.util.stream.Stream;
+
 /**
  * @author Despical
  * <p>
@@ -44,8 +46,6 @@ public class SetupInventory {
 
 	private PaginatedPane paginatedPane;
 	private StaticPane pane;
-
-	public static final String TUTORIAL_VIDEO = "https://www.youtube.com/watch?v=O_vkf_J4OgY";
 
 	public SetupInventory(Main plugin, Arena arena, Player player) {
 		this.plugin = plugin;
@@ -68,18 +68,7 @@ public class SetupInventory {
 		paginatedPane.addPane(0, pane);
 		this.gui.addPane(paginatedPane);
 
-		prepareComponents(pane);
-	}
-
-	private void prepareComponents(StaticPane pane) {
-		AbstractComponent spawnComponents = new MainMenuComponents(plugin);
-		spawnComponents.injectComponents(this);
-
-		AbstractComponent pressurePlateComponents = new PressurePlateComponents(plugin);
-		pressurePlateComponents.injectComponents(this);
-
-		AbstractComponent arenaOptionComponents = new ArenaOptionComponents(plugin);
-		arenaOptionComponents.injectComponents(this);
+		Stream.of(new MainMenuComponents(plugin), new PressurePlateComponents(plugin), new ArenaOptionComponents(plugin)).forEach(component -> component.injectComponents(this));
 	}
 
 	public void openInventory() {
