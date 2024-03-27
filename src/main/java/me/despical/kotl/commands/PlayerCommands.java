@@ -20,6 +20,7 @@ package me.despical.kotl.commands;
 
 import me.despical.commandframework.Command;
 import me.despical.commandframework.CommandArguments;
+import me.despical.commandframework.CommandFramework;
 import me.despical.commons.string.StringMatcher;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
@@ -34,6 +35,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +47,13 @@ public class PlayerCommands extends AbstractCommand {
 
 	public PlayerCommands(Main plugin) {
 		super(plugin);
+
+		BiFunction<Command, CommandArguments, Boolean> sendUsage = (command, arguments) -> {
+			arguments.sendMessage(chatManager.prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
+			return true;
+		};
+
+		CommandFramework.SHORT_ARG_SIZE = CommandFramework.LONG_ARG_SIZE = sendUsage;
 	}
 
 	@Command(
