@@ -38,7 +38,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.8.4</version>
+    <version>2.8.5</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -48,14 +48,14 @@ If you still didn't find an answer see documentation section below.
 <details>
 <summary>Gradle dependency</summary>
 
-```
+```gradle
 repositories {
     maven { url 'https://jitpack.io' }
 }
 ```
-```
+```gradle
 dependencies {
-    compileOnly 'com.github.Despical:KOTL:2.8.4';
+    compileOnly 'com.github.Despical:KOTL:2.8.5';
 }
 ```
 </details>
