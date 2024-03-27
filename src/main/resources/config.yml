@@ -3,7 +3,6 @@
 #                     King of the Ladder                      #
 #                          Despical                           #
 #                                                             #
-#              https://www.patreon.com/despical               #
 #            https://www.buymeacoffee.com/despical            #
 #                                                             #
 #            Donations are really appreciated! <3             #
@@ -57,11 +56,11 @@ Inventory-Manager:
     - "max-health"
     - "health-scale"
 
-# Should we clear player's inventory on joining and leaving the game area.
+# Should we clear player's inventory on joining and leaving the game area?
 # Also disable InventoryManager option before enabling this option.
 Clear-Inventory: true
 
-# Should we clear player's active potion effects when player join the arena.
+# Should we clear player's active potion effects when player join the arena?
 Clear-Effects: true
 
 # Should in game chat format be enabled?
@@ -78,7 +77,7 @@ Disable-Fall-Damage: true
 # Should we let players become king in a row?
 Become-King-In-A-Row: false
 
-# Your server must support particles to use that feature.
+# Show a cuboid particle effect around the arena corners.
 Arena-Outlines:
   Step: .4
   Particle: FLAME
@@ -109,7 +108,7 @@ Death-Blocks-Enabled: true
 Death-Blocks:
   - BEDROCK
   - GLASS
-  
+
 # When player enters the game area should we notify players?
 Join-Notify: true
 
