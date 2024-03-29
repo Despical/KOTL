@@ -55,10 +55,10 @@ public class Reward {
 		private String executableCode;
 		private final int chance, executor;
 
-		public SubReward(final Main plugin, final String rawCode) {
+		public SubReward(Main plugin, String rawCode) {
 			var processedCode = rawCode;
 
-			if (rawCode.contains("p:")) {
+			if (rawCode.startsWith("p:")) {
 				this.executor = 2;
 
 				processedCode = processedCode.replace("p:", "");
@@ -72,7 +72,7 @@ public class Reward {
 				if (loc == -1) {
 					plugin.getLogger().warning("Second '')'' is not found in chance condition! Command: %s".formatted(rawCode));
 
-					this.chance = 101;
+					this.chance = -1;
 					return;
 				}
 
@@ -83,7 +83,7 @@ public class Reward {
 
 				this.chance = Integer.parseInt(chanceStr);
 			} else {
-				this.chance = 100;
+				this.chance = -1;
 			}
 
 			this.executableCode = processedCode;

@@ -55,10 +55,11 @@ public class RewardsFactory {
 
 		for (final var mainRewards : rewardList) {
 			for (final var reward : mainRewards.getRewards()){
-				if (ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
+				if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
 				final var player = user.getPlayer();
 				final var command = formatCommandPlaceholders(reward, user);
+
 
 				switch (reward.getExecutor()) {
 					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
@@ -81,7 +82,7 @@ public class RewardsFactory {
 	private void registerRewards() {
 		var config = ConfigUtils.getConfig(plugin, "rewards");
 
-		this.rewardInterval = config.getDouble("Reward-Interval", 5) * 20;
+		this.rewardInterval = config.getDouble("Reward-Interval", 5);
 
 		if (!config.getBoolean("Rewards-Enabled")) return;
 
