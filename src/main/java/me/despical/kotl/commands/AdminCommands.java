@@ -245,7 +245,7 @@ public class AdminCommands extends AbstractCommand {
 		for (final var command : plugin.getCommandFramework().getSubCommands()) {
 			final String usage = command.usage(), desc = command.desc();
 
-			if (usage.isEmpty() || desc.isEmpty() || usage.contains("help")) continue;
+			if (usage.isEmpty() || desc.isEmpty()) continue;
 
 			if (isPlayer) {
 				((Player) sender).spigot().sendMessage(new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
