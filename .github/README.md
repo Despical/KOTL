@@ -2,10 +2,9 @@
 
 <div align="center">
 
-[![Build](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
+[![](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
 [![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
-[![Support](https://img.shields.io/badge/Patreon-Support-lime.svg?logo=Patreon)](https://www.patreon.com/despical)
 [![](https://img.shields.io/badge/BuyMeACoffee-Support-lime.svg?logo=BuyMeACoffee)](https://www.buymeacoffee.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
@@ -38,7 +37,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.8.8</version>
+    <version>2.8.9</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -55,7 +54,7 @@ repositories {
 ```
 ```gradle
 dependencies {
-    compileOnly 'com.github.Despical:KOTL:2.8.8';
+    compileOnly 'com.github.Despical:KOTL:2.8.9';
 }
 ```
 </details>
