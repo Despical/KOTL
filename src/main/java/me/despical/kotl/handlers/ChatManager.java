@@ -125,6 +125,10 @@ public class ChatManager {
 		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
 	}
 
+	public String getPrefix() {
+		return prefix;
+	}
+
 	public void reload() {
 		config = ConfigUtils.getConfig(plugin, "messages");
 		prefix = message("in_game.plugin_prefix");

@@ -144,7 +144,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 		final var killerFound = deadPlayer.getKiller() != null;
 
-		arena.broadcastMessage(plugin.getChatManager().prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? deadPlayer.getKiller().getName() : "").replace("%victim%", deadPlayer.getName()));
+		arena.broadcastMessage(chatManager.prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? deadPlayer.getKiller().getName() : "").replace("%victim%", deadPlayer.getName()));
 	}
 
 	@EventHandler

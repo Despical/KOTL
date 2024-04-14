@@ -133,14 +133,9 @@ public class Arena {
 	}
 
 	private Location setLocation(Location location, double x, double y, double z) {
-		try {
-			location.set(x, y, z);
-		} catch (Exception | Error e) {
-			location.setX(x);
-			location.setY(y);
-			location.setZ(z);
-		}
-
+		location.setX(x);
+		location.setY(y);
+		location.setZ(z);
 		return location;
 	}
 
@@ -277,6 +272,8 @@ public class Arena {
 	}
 
 	public void broadcastMessage(String message) {
+		if (message.isEmpty() || message.equals(plugin.getChatManager().getPrefix())) return;
+
 		for (var player : players) player.sendMessage(message);
 	}
 
