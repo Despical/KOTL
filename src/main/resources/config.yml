@@ -51,7 +51,10 @@ Database-Enabled: false
 # Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
 Inventory-Manager:
   Enabled: true
-  # Usable elements: health, max-health, health-scale
+  # Usable attributes:
+  #  game-mode, hunger, exp, level
+  #  health, max-health, health-scale
+  #  saturation, allow flight, fire-ticks
   Do-Not-Restore:
     - "max-health"
     - "health-scale"
@@ -76,6 +79,9 @@ Disable-Fall-Damage: true
 
 # Should we let players become king in a row?
 Become-King-In-A-Row: false
+
+# Which game mode should we set for players when they enter the arena?
+Game-Mode: SURVIVAL
 
 # Show a cuboid particle effect around the arena corners.
 Arena-Outlines:

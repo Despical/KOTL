@@ -71,17 +71,19 @@ public class ConfigPreferences {
 		DISABLE_FALL_DAMAGE,
 		DISABLE_SEPARATE_CHAT(false),
 		FIREWORKS_ON_NEW_KING,
-		INVENTORY_MANAGER_ENABLED("Inventory-Manager.Enabled"),
-		JOIN_NOTIFY,
-		LEAVE_NOTIFY,
-		SCOREBOARD_ENABLED,
-		UPDATE_NOTIFIER_ENABLED(false),
 		HEAL_PLAYER((config) -> {
 			final var list = config.getStringList("Inventory-Manager.Do-Not-Restore");
 			list.forEach(InventorySerializer::addNonSerializableElements);
 
 			return !list.contains("health");
-		});
+		}),
+		INVENTORY_MANAGER_ENABLED("Inventory-Manager.Enabled"),
+		JOIN_NOTIFY,
+		LEAVE_NOTIFY,
+		SCOREBOARD_ENABLED,
+		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
+		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
+		UPDATE_NOTIFIER_ENABLED(false);
 
 		private final String path;
 		private final boolean def;

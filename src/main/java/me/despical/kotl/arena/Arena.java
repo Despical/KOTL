@@ -306,8 +306,15 @@ public class Arena {
 			plugin.getServer().getScheduler().runTask(plugin, () -> player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType())));
 		}
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> player.setGameMode(GameMode.SURVIVAL));
-		player.setFoodLevel(20);
+		plugin.getServer().getScheduler().runTask(plugin, () -> {
+			if (plugin.getOption(ConfigPreferences.Option.UPDATE_GAME_MODE)) {
+				player.setGameMode(GameMode.valueOf(plugin.getConfig().getString("Game-Mode", "SURVIVAL")));
+			}
+
+			if (plugin.getOption(ConfigPreferences.Option.UPDATE_HUNGER)) {
+				player.setFoodLevel(20);
+			}
+		});
 
 		doBarAction(player, 1);
 
