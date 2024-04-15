@@ -54,7 +54,7 @@ Inventory-Manager:
   # Usable attributes:
   #  game-mode, hunger, exp, level
   #  health, max-health, health-scale
-  #  saturation, allow flight, fire-ticks
+  #  saturation, allow-flight, fire-ticks
   Do-Not-Restore:
     - "max-health"
     - "health-scale"
