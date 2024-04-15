@@ -104,22 +104,22 @@ public enum ArenaScheduler {
 		}
 	};
 
-	final Main plugin = JavaPlugin.getPlugin(Main.class);
+	protected final Main plugin = JavaPlugin.getPlugin(Main.class);
 
 	public abstract void register(SchedulerOptions options);
 
-	public void generalSearchForPlayers(Arena arena) {
+	protected void generalSearchForPlayers(Arena arena) {
 		for (var player : plugin.getServer().getOnlinePlayers()) {
 			final var target = arena.isInArea(player);
-			final var targetArena = plugin.getArenaRegistry().getArena(player);
-			var isInArena = targetArena != null;
+			final var current = plugin.getArenaRegistry().getArena(player);
 
-			if (!isInArena && target != null) {
+			if (current == null && target != null && !arena.getPlayers().contains(player)) {
 				arena.addPlayer(player);
+				continue;
 			}
 
-			if (isInArena && target == null) {
-				targetArena.removePlayer(player);
+			if (arena.equals(current) && target == null && arena.getPlayers().contains(player)) {
+				current.removePlayer(player);
 			}
 		}
 	}
