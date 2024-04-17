@@ -118,6 +118,11 @@ public class Events extends ListenerAdapter {
 		if (!(e.getEntity() instanceof Player victim)) return;
 		if (!plugin.getArenaRegistry().isInArena(victim)) return;
 
+		if (e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
+			e.setCancelled(true);
+			return;
+		}
+
 		if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
 			if (!plugin.getOption(ConfigPreferences.Option.DISABLE_FALL_DAMAGE)) return;
 
