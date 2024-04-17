@@ -81,7 +81,7 @@ public class User {
 	}
 
 	public void performReward(final Reward.RewardType rewardType) {
-		plugin.getRewardsFactory().performReward(this, rewardType);
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType));
 	}
 
 	public void giveKit() {
