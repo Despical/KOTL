@@ -26,6 +26,8 @@ import me.despical.kotl.api.events.arena.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.handlers.rewards.Reward;
+import me.despical.kotl.user.User;
+import me.despical.kotl.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,20 +57,42 @@ public class ArenaEvents extends ListenerAdapter {
 		if (arena == null || event.getAction() != Action.PHYSICAL) return;
 
 		if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-			if (arena.getKing() != null && arena.getKing().equals(player.getName()) && (arena.getPlayers().size() == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW)))
+			int size = arena.getPlayers().size();
+			boolean isSameKing = arena.getKing() != null && arena.getKing().equals(player.getName());
+
+			if (isSameKing && (size == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW)))
 				return;
 
-			var kingEvent = new KOTLNewKingEvent(arena, player, arena.getKing() != null && arena.getKing().equals(player.getName()));
+			int cooldown = plugin.getConfig().getInt("King-Settings.Cooldown");
+			User user = plugin.getUserManager().getUser(player);
+
+			if (user.getCooldown("king") > 0) {
+				return;
+			}
+
+			cooldown_perm_check:
+			if (size > 1 || (size == 1 && plugin.getOption(ConfigPreferences.Option.COOLDOWN_WHEN_ALONE))) {
+				String permission = plugin.getConfig().getString("King-Settings.Cooldown-Override-Perm", "");
+
+				if (!permission.isEmpty() && player.hasPermission(permission)) break cooldown_perm_check;
+
+				if (plugin.getOption(ConfigPreferences.Option.APPLY_KING_DELAY_BAR)) {
+					Utils.applyActionBarCooldown(user, cooldown);
+				}
+
+				user.setCooldown("king", cooldown);
+			}
+
+			var kingEvent = new KOTLNewKingEvent(arena, player, isSameKing);
 			plugin.getServer().getPluginManager().callEvent(kingEvent);
 
 			arena.setKing(player.getName());
 
 			chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 
-			var user = plugin.getUserManager().getUser(player);
 			user.addStat(StatsStorage.StatisticType.SCORE, 1);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-			user.performReward(Reward.RewardType.WIN);
+			user.performReward(Reward.RewardType.WIN, arena);
 
 			var players = arena.getPlayers();
 			players.remove(player);
@@ -78,7 +102,7 @@ public class ArenaEvents extends ListenerAdapter {
 			for (var p : players) {
 				final var u = plugin.getUserManager().getUser(p);
 				u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-				u.performReward(Reward.RewardType.LOSE);
+				u.performReward(Reward.RewardType.LOSE, arena);
 
 				spawnFireworks(arena, p);
 			}
@@ -106,7 +130,7 @@ public class ArenaEvents extends ListenerAdapter {
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 
-					user.performReward(Reward.RewardType.LOSE);
+					user.performReward(Reward.RewardType.LOSE, arena);
 					return;
 				}
 			}

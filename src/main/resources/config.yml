@@ -33,7 +33,29 @@ Arena-Schedulers:
 
   # Should we search for arenas asynchronously?
   # In most cases events firing in main thread so async won't work for Type 3.
-  Async: true
+  Async: false
+
+King-Settings:
+  # Should we allow players to become king in a row?
+  Become-King-In-A-Row: false
+
+  # Should we prevent players to become king again without a delay?
+  Cooldown: 5
+
+  # The permission to override king cooldown.
+  Cooldown-Override-Perm: ""
+
+  # Should we apply an action bar message that displays current cooldown of player?
+  Cooldown-Bar: true
+
+  # Should we apply the cooldown to the king when there is only one player in the arena?
+  Cooldown-When-Alone: false
+
+  Remove-Cooldown-On:
+    # Should we remove player's becoming king cooldown when they join an arena, if they have?
+    Join: false
+    # Should we remove player's becoming king cooldown when they leave an arena, if they have?
+    Leave: false
 
 # Enable boss bar support?
 Boss-Bar-Enabled: true
@@ -76,9 +98,6 @@ Disable-Separate-Chat: false
 
 # Should players get fall damage?
 Disable-Fall-Damage: true
-
-# Should we let players become king in a row?
-Become-King-In-A-Row: false
 
 # Which game mode should we set for players when they enter the arena?
 Game-Mode: SURVIVAL

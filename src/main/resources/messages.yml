@@ -48,6 +48,7 @@ In-Game:
   Killed-Player: "&7%victim% &bwas slain by &e%player%&b!"
   # Sends when player gets killed by an external method like kill command.
   Kill-Command: "&7%victim% &bis killed by a magic!"
+  Cooldown-Format: "&6COOLDOWN &8&l[%progress%&8&l] &6%time%s"
 
 Placeholders:
   There-Is-No-King: "Nobody"

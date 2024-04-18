@@ -322,8 +322,12 @@ public class Arena {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.JOIN);
 		}
 
+		if (plugin.getOption(ConfigPreferences.Option.REMOVE_COOLDOWN_ON_JOIN)) {
+			user.setCooldown("king", 0);
+		}
+
 		user.giveKit();
-		user.performReward(Reward.RewardType.JOIN);
+		user.performReward(Reward.RewardType.JOIN, this);
 
 		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerEnterArenaEvent(this, player)));
 	}
@@ -332,7 +336,7 @@ public class Arena {
 		if (player == null) return;
 
 		final var user = plugin.getUserManager().getUser(player);
-		user.performReward(Reward.RewardType.LEAVE);
+		user.performReward(Reward.RewardType.LEAVE, this);
 
 		players.remove(player);
 
@@ -356,6 +360,10 @@ public class Arena {
 
 		if (plugin.getOption(ConfigPreferences.Option.LEAVE_NOTIFY) && user.getCooldown("death") == 0) {
 			plugin.getChatManager().broadcastAction(this, player, ChatManager.ActionType.LEAVE);
+		}
+
+		if (plugin.getOption(ConfigPreferences.Option.REMOVE_COOLDOWN_ON_LEAVE)) {
+			user.setCooldown("king", 0);
 		}
 
 		doBarAction(player, 0);

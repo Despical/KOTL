@@ -60,7 +60,7 @@ public class ConfigPreferences {
 
 	public enum Option {
 
-		BECOME_KING_IN_A_ROW(false),
+		BECOME_KING_IN_A_ROW("King-Settings.Become-King-In-A-Row"),
 		BLOCK_COMMANDS(false),
 		BOSS_BAR_ENABLED,
 		CHAT_FORMAT_ENABLED,
@@ -82,6 +82,9 @@ public class ConfigPreferences {
 		JOIN_NOTIFY,
 		LEAVE_NOTIFY,
 		SCOREBOARD_ENABLED,
+		REMOVE_COOLDOWN_ON_JOIN("King-Settings.Remove-Cooldown.On.Join"),
+		REMOVE_COOLDOWN_ON_LEAVE("King-Settings.Remove-Cooldown.On.Leave"),
+		COOLDOWN_WHEN_ALONE("King-Settings.Cooldown-When-Alone"),
 		APPLY_KING_DELAY_BAR("King-Settings.Apply-Cooldown-Bar"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
