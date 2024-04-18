@@ -20,6 +20,7 @@ package me.despical.kotl.handlers.rewards;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
 
 import java.util.HashSet;
@@ -45,7 +46,7 @@ public class RewardsFactory {
 		registerRewards();
 	}
 
-	public void performReward(final User user, final Reward.RewardType type) {
+	public void performReward(User user, Reward.RewardType type, Arena arena) {
 		final var rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
 
 		if (rewardList.isEmpty()) return;
@@ -58,8 +59,7 @@ public class RewardsFactory {
 				if (reward.getChance() != -1 && ThreadLocalRandom.current().nextInt(0, 100) > reward.getChance()) continue;
 
 				final var player = user.getPlayer();
-				final var command = formatCommandPlaceholders(reward, user);
-
+				final var command = formatCommandPlaceholders(reward, user, arena);
 
 				switch (reward.getExecutor()) {
 					case 1 -> plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), command);
@@ -69,8 +69,7 @@ public class RewardsFactory {
 		}
 	}
 
-	private String formatCommandPlaceholders(final Reward.SubReward reward, final User user) {
-		var arena = user.getArena();
+	private String formatCommandPlaceholders(final Reward.SubReward reward, User user, Arena arena) {
 		var formatted = reward.getExecutableCode();
 
 		formatted = formatted.replace("%arena%", arena.getId());

@@ -80,8 +80,8 @@ public class User {
 		setStat(stat, getStat(stat) + value);
 	}
 
-	public void performReward(final Reward.RewardType rewardType) {
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType));
+	public void performReward(Reward.RewardType rewardType, Arena arena) {
+		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType, arena));
 	}
 
 	public void giveKit() {
