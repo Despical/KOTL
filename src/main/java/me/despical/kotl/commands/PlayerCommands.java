@@ -63,7 +63,7 @@ public class PlayerCommands extends AbstractCommand {
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage("&3This server is running &bKing of the Ladder &3v" + plugin.getDescription().getVersion() + " by &bDespical");
+			arguments.sendMessage("&3This server is running &bKing of the Ladder v" + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
 
 			if (arguments.hasPermission("kotl.admin")) {
 				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");

@@ -56,7 +56,7 @@ public class PressurePlateComponents extends AbstractComponent {
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
 		final var pressurePlatesPane = new StaticPane(9, ReflectionUtils.supports(13) ? 6 : 3);
-		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateNam(arena.getArenaPlate())).build());
+		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateName(arena.getArenaPlate())).build());
 
 		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
 
@@ -102,7 +102,7 @@ public class PressurePlateComponents extends AbstractComponent {
 				config.set(path + "arenaPlate", plate.name());
 				ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + formatPlateNam(plate)));
+				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + formatPlateName(plate)));
 
 				arena.setArenaPlate(plate);
 
@@ -121,13 +121,19 @@ public class PressurePlateComponents extends AbstractComponent {
 		if (size == 9) {
 			slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
 		} else {
-			slots.addAll(Arrays.asList(20, 24, 28, 30, 32, 34, 38, 42, 44));
+			slots.add(20);
+
+			if (ReflectionUtils.supports(20)) {
+				slots.add(22);
+			}
+
+			slots.addAll(Arrays.asList(24, 28, 30, 32, 34, 38, 42, 44));
 		}
 
 		return slots;
 	}
 
-	private String formatPlateNam(XMaterial plate) {
+	private String formatPlateName(XMaterial plate) {
 		return StringUtils.capitalize(plate.name().toLowerCase(Locale.ENGLISH).replace("_", " "), ' ');
 	}
 }
