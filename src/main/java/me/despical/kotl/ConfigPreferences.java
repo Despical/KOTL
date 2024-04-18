@@ -25,6 +25,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -81,6 +82,7 @@ public class ConfigPreferences {
 		JOIN_NOTIFY,
 		LEAVE_NOTIFY,
 		SCOREBOARD_ENABLED,
+		APPLY_KING_DELAY_BAR("King-Settings.Apply-Cooldown-Bar"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
 		UPDATE_NOTIFIER_ENABLED(false);
@@ -94,7 +96,7 @@ public class ConfigPreferences {
 
 		Option(boolean def) {
 			this.def = def;
-			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(), '-', '.');
+			this.path = StringUtils.capitalize(name().replace('_', '-').toLowerCase(Locale.ENGLISH), '-', '.');
 		}
 
 		Option(String path) {
