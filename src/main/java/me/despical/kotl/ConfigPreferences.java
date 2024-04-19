@@ -82,9 +82,10 @@ public class ConfigPreferences {
 		JOIN_NOTIFY,
 		LEAVE_NOTIFY,
 		SCOREBOARD_ENABLED,
-		REMOVE_COOLDOWN_ON_JOIN("King-Settings.Remove-Cooldown.On.Join"),
-		REMOVE_COOLDOWN_ON_LEAVE("King-Settings.Remove-Cooldown.On.Leave"),
-		COOLDOWN_WHEN_ALONE("King-Settings.Cooldown-When-Alone"),
+		REMOVE_COOLDOWN_ON_JOIN("King-Settings.Remove-Cooldown-On.Join", false),
+		REMOVE_COOLDOWN_ON_LEAVE("King-Settings.Remove-Cooldown-On.Leave", false),
+		COOLDOWN_WHEN_ALONE("King-Settings.Cooldown-When-Alone", false),
+		SHOW_COOLDOWN_ON_REJOIN("King-Settings.Show-Cooldown-If-Rejoin"),
 		APPLY_KING_DELAY_BAR("King-Settings.Apply-Cooldown-Bar"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
@@ -103,8 +104,12 @@ public class ConfigPreferences {
 		}
 
 		Option(String path) {
-			this.def = true;
+			this(path, true);
+		}
+
+		Option(String path, boolean def) {
 			this.path = path;
+			this.def = def;
 		}
 
 		Option(DoubleSupplier<FileConfiguration, Boolean> supplier) {

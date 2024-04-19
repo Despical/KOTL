@@ -51,6 +51,9 @@ King-Settings:
   # Should we apply the cooldown to the king when there is only one player in the arena?
   Cooldown-When-Alone: false
 
+  # Should we show the cooldown bar if player has cooldown and rejoins the arena again?
+  Show-Cooldown-If-Rejoin: true
+
   Remove-Cooldown-On:
     # Should we remove player's becoming king cooldown when they join an arena, if they have?
     Join: false

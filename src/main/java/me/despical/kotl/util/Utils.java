@@ -1,5 +1,6 @@
 package me.despical.kotl.util;
 
+import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.user.User;
 import org.bukkit.entity.Player;
@@ -19,19 +20,26 @@ public class Utils {
 	}
 
 	public static void applyActionBarCooldown(User user, int seconds) {
-		if (seconds == 0 || user.getCooldown("king") > 0) return;
+		if (seconds == 0) return;
 
 		Player player = user.getPlayer();
+		boolean showOnRejoin = plugin.getOption(ConfigPreferences.Option.SHOW_COOLDOWN_ON_REJOIN);
 
 		new BukkitRunnable() {
+
 			int ticks = 0;
 
 			@Override
 			public void run() {
 				final var arena = user.getArena();
 
+				user.setCooldown("king", seconds - Math.ceil(ticks / 20D));
+
 				if (arena == null || !arena.getPlayers().contains(player)) {
-					cancel();
+					if (!showOnRejoin) {
+						cancel();
+					}
+
 					return;
 				}
 
