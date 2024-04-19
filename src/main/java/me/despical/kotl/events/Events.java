@@ -144,6 +144,8 @@ public class Events extends ListenerAdapter {
 	@EventHandler
 	public void onFoodLevelChange(FoodLevelChangeEvent event) {
 		if (event.getEntity() instanceof Player && plugin.getArenaRegistry().isInArena((Player) event.getEntity())) {
+			if (!plugin.getOption(ConfigPreferences.Option.UPDATE_HUNGER)) return;
+
 			event.setFoodLevel(20);
 			event.setCancelled(true);
 		}
