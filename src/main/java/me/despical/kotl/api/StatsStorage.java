@@ -79,7 +79,10 @@ public class StatsStorage {
 	}
 
 	public enum StatisticType {
-		TOURS_PLAYED("toursplayed"), SCORE("score");
+
+		TOURS_PLAYED("toursplayed"),
+		SCORE("score"),
+		LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
 
 		final String name;
 		final boolean persistent;

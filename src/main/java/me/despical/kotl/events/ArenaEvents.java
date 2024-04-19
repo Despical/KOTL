@@ -38,6 +38,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashSet;
+
 /**
  * @author Despical
  * <p>
@@ -87,6 +89,13 @@ public class ArenaEvents extends ListenerAdapter {
 			plugin.getServer().getPluginManager().callEvent(kingEvent);
 
 			arena.setKing(player.getName());
+
+			if (plugin.getOption(ConfigPreferences.Option.RESET_COOLDOWNS_ON_NEW_KING)) {
+				var players = new HashSet<>(arena.getPlayers());
+				players.remove(player);
+
+				players.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 1));
+			}
 
 			chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 

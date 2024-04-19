@@ -2,6 +2,7 @@ package me.despical.kotl.util;
 
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +32,14 @@ public class Utils {
 
 			@Override
 			public void run() {
+				if (user.getStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN) == 1) {
+					cancel();
+
+					user.setCooldown("king", 0);
+					user.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 0);
+					return;
+				}
+
 				final var arena = user.getArena();
 
 				user.setCooldown("king", seconds - Math.ceil(ticks / 20D));
