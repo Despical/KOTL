@@ -82,6 +82,7 @@ public class StatsStorage {
 
 		TOURS_PLAYED("toursplayed"),
 		SCORE("score"),
+		LOCAL_COOLDOWN("local_cooldown", false),
 		LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
 
 		final String name;

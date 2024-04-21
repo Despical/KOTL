@@ -48,6 +48,9 @@ King-Settings:
   # Should we apply an action bar message that displays current cooldown of player?
   Cooldown-Bar: true
 
+  # Should we count the cooldown if player is not in an arena and the option above is true?
+  Count-Cooldown-Bar-Outside: false
+
   # Should we apply the cooldown to the king when there is only one player in the arena?
   Cooldown-When-Alone: false
 

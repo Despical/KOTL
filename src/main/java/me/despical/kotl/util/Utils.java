@@ -25,6 +25,11 @@ public class Utils {
 
 		Player player = user.getPlayer();
 		boolean showOnRejoin = plugin.getOption(ConfigPreferences.Option.SHOW_COOLDOWN_ON_REJOIN);
+		boolean count = plugin.getOption(ConfigPreferences.Option.COUNT_COOLDOWN_OUTSIDE);
+
+		if (!count) {
+			user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 1);
+		}
 
 		new BukkitRunnable() {
 
@@ -37,16 +42,27 @@ public class Utils {
 
 					user.setCooldown("king", 0);
 					user.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 0);
+					user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
 					return;
 				}
 
 				final var arena = user.getArena();
 
-				user.setCooldown("king", seconds - Math.ceil(ticks / 20D));
+				if (!count) {
+					user.setCooldown("king", seconds - Math.ceil(ticks / 20D));
+				} else if (ticks >= 20 * seconds) {
+					cancel();
+				}
 
 				if (arena == null || !arena.getPlayers().contains(player)) {
 					if (!showOnRejoin) {
 						cancel();
+
+						user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
+					}
+
+					if (count) {
+						ticks += 2;
 					}
 
 					return;
@@ -57,6 +73,8 @@ public class Utils {
 
 				if (ticks >= seconds * 20) {
 					cancel();
+
+					user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
 					return;
 				}
 

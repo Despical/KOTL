@@ -68,7 +68,7 @@ public class ArenaEvents extends ListenerAdapter {
 			int cooldown = plugin.getConfig().getInt("King-Settings.Cooldown");
 			User user = plugin.getUserManager().getUser(player);
 
-			if (user.getCooldown("king") > 0) {
+			if (user.getCooldown("king") > 0 || user.getStat(StatsStorage.StatisticType.LOCAL_COOLDOWN) == 1) {
 				return;
 			}
 
