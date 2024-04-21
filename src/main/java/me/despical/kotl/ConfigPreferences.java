@@ -87,7 +87,7 @@ public class ConfigPreferences {
 		COOLDOWN_WHEN_ALONE("King-Settings.Cooldown-When-Alone", false),
 		SHOW_COOLDOWN_ON_REJOIN("King-Settings.Show-Cooldown-If-Rejoin"),
 		RESET_COOLDOWNS_ON_NEW_KING("King-Settings.Reset-Cooldowns-On-New-King"),
-		APPLY_KING_DELAY_BAR("King-Settings.Apply-Cooldown-Bar"),
+		APPLY_KING_DELAY_BAR("King-Settings.Cooldown-Bar"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
 		UPDATE_NOTIFIER_ENABLED(false);
