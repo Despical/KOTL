@@ -31,6 +31,7 @@ import me.despical.kotl.commands.AbstractCommand;
 import me.despical.kotl.events.ListenerAdapter;
 import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.PlaceholderManager;
+import me.despical.kotl.handlers.cooldown.CooldownManager;
 import me.despical.kotl.handlers.language.LanguageManager;
 import me.despical.kotl.handlers.rewards.RewardsFactory;
 import me.despical.kotl.kits.KitManager;
@@ -64,6 +65,7 @@ public class Main extends JavaPlugin {
 	private ArenaRegistry arenaRegistry;
 	private KitManager kitManager;
 	private ArenaManager arenaManager;
+	private CooldownManager cooldownManager;
 
 	@Override
 	public void onEnable() {
@@ -116,6 +118,7 @@ public class Main extends JavaPlugin {
 		arenaRegistry = new ArenaRegistry(this);
 		kitManager = new KitManager(this);
 		arenaManager = new ArenaManager(this);
+		cooldownManager = new CooldownManager(this);
 
 		ListenerAdapter.registerEvents(this);
 		AbstractCommand.registerCommands(this);
@@ -196,6 +199,11 @@ public class Main extends JavaPlugin {
 	@NotNull
 	public ArenaManager getArenaManager() {
 		return arenaManager;
+	}
+
+	@NotNull
+	public CooldownManager getCooldownManager() {
+		return cooldownManager;
 	}
 
 	public boolean getOption(ConfigPreferences.Option option) {

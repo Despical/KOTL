@@ -18,6 +18,7 @@
 
 package me.despical.kotl.user;
 
+import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
@@ -44,6 +45,7 @@ public class User {
 
 	private final UUID uuid;
 	private final Map<String, Double> cooldowns;
+	private final Map<String, Boolean> variables;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	private Scoreboard cachedScoreboard;
@@ -51,6 +53,7 @@ public class User {
 	public User(UUID uuid) {
 		this.uuid = uuid;
 		this.cooldowns = new HashMap<>();
+		this.variables = new HashMap<>();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
 	}
 
@@ -111,5 +114,17 @@ public class User {
 
 	public static void cooldownHandlerTask() {
 		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+	}
+
+	public boolean get(String string) {
+		return variables.computeIfAbsent(string, val -> false);
+	}
+
+	public void set(String string, boolean value) {
+		if ("king".equals(string) && plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS)) {
+			string = getArena().getId() + "king";
+		}
+
+		variables.put(string, value);
 	}
 }

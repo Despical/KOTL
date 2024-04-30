@@ -323,7 +323,7 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.REMOVE_COOLDOWN_ON_JOIN)) {
-			user.setCooldown("king", 0);
+			plugin.getCooldownManager().setCooldown(user, (plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? id : "") + "king", 0);
 		}
 
 		user.giveKit();
@@ -363,7 +363,7 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.REMOVE_COOLDOWN_ON_LEAVE)) {
-			user.setCooldown("king", 0);
+			plugin.getCooldownManager().setCooldown(user, "king", 0);
 		}
 
 		doBarAction(player, 0);

@@ -23,12 +23,15 @@ public class Utils {
 	public static void applyActionBarCooldown(User user, int seconds) {
 		if (seconds == 0) return;
 
-		Player player = user.getPlayer();
 		boolean showOnRejoin = plugin.getOption(ConfigPreferences.Option.SHOW_COOLDOWN_ON_REJOIN);
 		boolean count = plugin.getOption(ConfigPreferences.Option.COUNT_COOLDOWN_OUTSIDE);
+		boolean separateCooldowns = plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS);
+		String arenaId = user.getArena().getId();
+		String cooldownName = (separateCooldowns ? arenaId : "") + "king";
+		String localCooldownName = (separateCooldowns ? arenaId : "") + "local_cooldown";
 
 		if (!count) {
-			user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 1);
+			user.set(localCooldownName, true);
 		}
 
 		new BukkitRunnable() {
@@ -37,19 +40,26 @@ public class Utils {
 
 			@Override
 			public void run() {
+				Player player = user.getPlayer();
+
 				if (user.getStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN) == 1) {
 					cancel();
 
-					user.setCooldown("king", 0);
+					plugin.getCooldownManager().setCooldown(user, cooldownName, 0);
+
+					user.set(localCooldownName, false);
 					user.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 0);
-					user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
 					return;
 				}
 
 				final var arena = user.getArena();
 
+				if (separateCooldowns && arena != null && !arenaId.equals(arena.getId())) {
+					return;
+				}
+
 				if (!count) {
-					user.setCooldown("king", seconds - Math.ceil(ticks / 20D));
+					plugin.getCooldownManager().setCooldown(user, cooldownName, seconds - Math.ceil(ticks / 20D));
 				} else if (ticks >= 20 * seconds) {
 					cancel();
 				}
@@ -58,7 +68,7 @@ public class Utils {
 					if (!showOnRejoin) {
 						cancel();
 
-						user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
+						user.set(localCooldownName, false);
 					}
 
 					if (count) {
@@ -74,7 +84,7 @@ public class Utils {
 				if (ticks >= seconds * 20) {
 					cancel();
 
-					user.setStat(StatsStorage.StatisticType.LOCAL_COOLDOWN, 0);
+					user.set(localCooldownName, false);
 					return;
 				}
 

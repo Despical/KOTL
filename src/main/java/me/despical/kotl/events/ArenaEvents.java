@@ -68,7 +68,7 @@ public class ArenaEvents extends ListenerAdapter {
 			int cooldown = plugin.getConfig().getInt("King-Settings.Cooldown");
 			User user = plugin.getUserManager().getUser(player);
 
-			if (user.getCooldown("king") > 0 || user.getStat(StatsStorage.StatisticType.LOCAL_COOLDOWN) == 1) {
+			if (plugin.getCooldownManager().getCooldown(user, (plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "king") > 0 || user.get((plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "local_cooldown")) {
 				return;
 			}
 
@@ -82,7 +82,7 @@ public class ArenaEvents extends ListenerAdapter {
 					Utils.applyActionBarCooldown(user, cooldown);
 				}
 
-				user.setCooldown("king", cooldown);
+				plugin.getCooldownManager().setCooldown(user, "king", cooldown);
 			}
 
 			var kingEvent = new KOTLNewKingEvent(arena, player, isSameKing);

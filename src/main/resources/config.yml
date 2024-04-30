@@ -60,6 +60,9 @@ King-Settings:
   # Should we reset players' cooldown, other than new king, when someone becomes king?
   Reset-Cooldowns-On-New-King: true
 
+  # Should players have different cooldowns for each arena they join?
+  Separate-Cooldowns: true
+
   Remove-Cooldown-On:
     # Should we remove player's becoming king cooldown when they join an arena, if they have?
     Join: false

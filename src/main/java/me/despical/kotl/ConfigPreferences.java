@@ -89,6 +89,7 @@ public class ConfigPreferences {
 		RESET_COOLDOWNS_ON_NEW_KING("King-Settings.Reset-Cooldowns-On-New-King"),
 		APPLY_KING_DELAY_BAR("King-Settings.Cooldown-Bar"),
 		COUNT_COOLDOWN_OUTSIDE("King-Settings.Count-Cooldown-Bar-Outside", false),
+		SEPARATE_COOLDOWNS("King-Settings.Separate-Cooldowns"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
 		UPDATE_NOTIFIER_ENABLED(false);
