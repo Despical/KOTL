@@ -25,10 +25,15 @@ public class CooldownManager {
 	}
 
 	public void setCooldown(User user, String name, double seconds) {
-		if (seconds == 0) {
-			var cooldownOpt = cooldowns.stream().filter(cooldown -> cooldown.uuid.equals(user.getUniqueId()) && cooldown.name.equals(name)).findFirst();
+		var cooldownOpt = cooldowns.stream().filter(cooldown -> cooldown.uuid.equals(user.getUniqueId()) && cooldown.name.equals(name)).findFirst();
 
+		if (seconds == 0) {
 			cooldownOpt.ifPresent(cooldowns::remove);
+			return;
+		}
+
+		if (cooldownOpt.isPresent() && cooldowns.contains(cooldownOpt.get())) {
+			cooldownOpt.get().seconds = seconds + cooldownCounter;
 			return;
 		}
 
@@ -45,9 +50,20 @@ public class CooldownManager {
 			return 0;
 		}
 
-		return 0;
+		return cooldownOptional.get().seconds - cooldownCounter;
 	}
 
-	private record Cooldown(UUID uuid, String name, double seconds) {
+	private static class Cooldown {
+
+		double seconds;
+
+		final UUID uuid;
+		final String name;
+
+		Cooldown(UUID uuid, String name, double seconds) {
+			this.uuid = uuid;
+			this.name = name;
+			this.seconds = seconds;
+		}
 	}
 }

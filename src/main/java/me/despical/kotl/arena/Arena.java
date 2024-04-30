@@ -30,6 +30,8 @@ import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.rewards.Reward;
+import me.despical.particle.ParticleBuilder;
+import me.despical.particle.ParticleEffect;
 import org.apache.commons.lang.math.IntRange;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -40,8 +42,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import me.despical.particle.ParticleBuilder;
-import me.despical.particle.ParticleEffect;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -363,7 +363,7 @@ public class Arena {
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.REMOVE_COOLDOWN_ON_LEAVE)) {
-			plugin.getCooldownManager().setCooldown(user, "king", 0);
+			plugin.getCooldownManager().setCooldown(user, (plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? id : "") + "king", 0);
 		}
 
 		doBarAction(player, 0);
