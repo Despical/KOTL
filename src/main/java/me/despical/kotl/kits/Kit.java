@@ -18,10 +18,10 @@
 
 package me.despical.kotl.kits;
 
-import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
+import me.despical.commons.reflection.XReflection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -52,7 +52,7 @@ public class Kit {
 			var array = item.split(":");
 			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase()));
 
-			if (ReflectionUtils.supports(9))
+			if (XReflection.supports(9))
 				builder = builder.unbreakable(true);
 
 			if (array.length == 4) {

@@ -1,5 +1,6 @@
 package me.despical.kotl.util;
 
+import me.despical.commons.reflection.minecraft.MinecraftConnection;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
@@ -11,7 +12,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Objects;
 
-import static me.despical.commons.ReflectionUtils.*;
+import static me.despical.commons.reflection.XReflection.*;
 
 /**
  * @author Despical
@@ -82,7 +83,7 @@ public final class ActionBar {
 		try {
 			Object component = CHAT_COMPONENT_TEXT.invoke("{\"text\":\"" + message.replace("\\", "\\\\").replace("\"", "\\\"") + "\"}");
 			Object packet = PACKET_PLAY_OUT_CHAT.invoke(component, CHAT_MESSAGE_TYPE);
-			sendPacket(player, packet);
+			MinecraftConnection.sendPacket(player, packet);
 		} catch (Throwable throwable) {
 			throwable.printStackTrace();
 		}

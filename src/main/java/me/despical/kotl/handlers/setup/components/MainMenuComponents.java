@@ -18,10 +18,10 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.reflection.XReflection;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.kotl.Main;
@@ -150,7 +150,7 @@ public class MainMenuComponents extends AbstractComponent {
 			setup.getPaginatedPane().setPage(2);
 
 			final var gui = setup.getGui();
-			gui.setRows(ReflectionUtils.supports(13) ? 6 : 3);
+			gui.setRows(XReflection.supports(13) ? 6 : 3);
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);

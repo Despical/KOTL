@@ -18,10 +18,10 @@
 
 package me.despical.kotl.handlers.setup.components;
 
-import me.despical.commons.ReflectionUtils;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
+import me.despical.commons.reflection.XReflection;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.string.StringUtils;
 import me.despical.inventoryframework.GuiItem;
@@ -55,7 +55,7 @@ public class PressurePlateComponents extends AbstractComponent {
 		final var path = "instances.%s.".formatted(arena.getId());
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
 
-		final var pressurePlatesPane = new StaticPane(9, ReflectionUtils.supports(13) ? 6 : 3);
+		final var pressurePlatesPane = new StaticPane(9, XReflection.supports(13) ? 6 : 3);
 		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateName(arena.getArenaPlate())).build());
 
 		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
@@ -66,7 +66,7 @@ public class PressurePlateComponents extends AbstractComponent {
 			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
 			add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
 
-			if (ReflectionUtils.supports(13)) {
+			if (XReflection.supports(13)) {
 				add(XMaterial.ACACIA_PRESSURE_PLATE);
 				add(XMaterial.BIRCH_PRESSURE_PLATE);
 				add(XMaterial.SPRUCE_PRESSURE_PLATE);
@@ -74,13 +74,13 @@ public class PressurePlateComponents extends AbstractComponent {
 				add(XMaterial.JUNGLE_PRESSURE_PLATE); // 1.13
 			}
 
-			if (ReflectionUtils.supports(16)) {
+			if (XReflection.supports(16)) {
 				add(XMaterial.CRIMSON_PRESSURE_PLATE);
 				add(XMaterial.POLISHED_BLACKSTONE_PRESSURE_PLATE);
 				add(XMaterial.WARPED_PRESSURE_PLATE); // 1.16
 			}
 
-			if (ReflectionUtils.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
+			if (XReflection.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
 		}};
 
 		final var slots = getSlots(pressurePlates.size());
@@ -123,7 +123,7 @@ public class PressurePlateComponents extends AbstractComponent {
 		} else {
 			slots.add(20);
 
-			if (ReflectionUtils.supports(20)) {
+			if (XReflection.supports(20)) {
 				slots.add(22);
 			}
 
