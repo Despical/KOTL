@@ -120,7 +120,6 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-					<outputDirectory>C:\Users\berke\OneDrive\Masaüstü\1.21 Server\plugins</outputDirectory>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
