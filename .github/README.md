@@ -37,7 +37,7 @@ If you still didn't find an answer see documentation section below.
 <dependency>
     <groupId>com.github.Despical</groupId>
     <artifactId>KOTL</artifactId>
-    <version>2.9.8</version>
+    <version>VERSION</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -54,7 +54,7 @@ repositories {
 ```
 ```gradle
 dependencies {
-    compileOnly 'com.github.Despical:KOTL:2.9.8';
+    compileOnly 'com.github.Despical:KOTL:VERSION';
 }
 ```
 </details>

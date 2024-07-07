@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>2.9.8</version>
+	<version>2.9.9</version>
 
 	<name>King of the Ladder</name>
 	<inceptionYear>2020</inceptionYear>
@@ -33,7 +33,7 @@
 
 	<issueManagement>
 		<system>GitHub Issue Tracker</system>
-		<url>https://github.com/Despical/KOTL/issues</url>
+		<url>https://github.com/Despical/KOTL/issues/</url>
 	</issueManagement>
 
 	<repositories>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons</artifactId>
-			<version>1.7.7</version>
+			<version>1.7.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
