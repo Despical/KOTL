@@ -123,11 +123,6 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Deletes arena with the current configuration",
 		min = 1
 	)
-	@Confirmation(
-		message = "§c§lAre you sure you want to do this action? " +
-			"Type the command again §6§lwithin 10 seconds §c§lto confirm!",
-		expireAfter = 10
-	)
 	public void deleteCommand(CommandArguments arguments) {
 		final var sender = arguments.getSender();
 		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
