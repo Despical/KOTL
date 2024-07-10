@@ -82,4 +82,4 @@ mvn clean package -Dmaven.javadoc.skip=true
 ```
 
 > [!IMPORTANT]  
-> Don't forget to install Maven before building.
+> **[Maven](https://maven.apache.org/)** must be installed to build KOTL.
