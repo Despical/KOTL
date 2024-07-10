@@ -231,7 +231,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void helpCommand(CommandArguments arguments) {
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3&l---- King of the Ladder Commands ----");
+		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3&l---- King of the Ladder ----");
 		arguments.sendMessage("");
 
 		final CommandSender sender = arguments.getSender();

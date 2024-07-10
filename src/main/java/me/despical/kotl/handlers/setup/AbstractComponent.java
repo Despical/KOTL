@@ -39,7 +39,7 @@ public abstract class AbstractComponent {
 	protected final ChatManager chatManager;
 
 	static {
-		mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn KOTL Menu").lore("&7Click to return last page!").build();
+		mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn Main Menu").build();
 	}
 
 	public AbstractComponent(Main plugin) {

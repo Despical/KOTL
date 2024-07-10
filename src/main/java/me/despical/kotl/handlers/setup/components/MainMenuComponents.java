@@ -52,16 +52,14 @@ public class MainMenuComponents extends AbstractComponent {
 		final var arena = setup.getArena();
 		final var path = "instances.%s.".formatted(arena.getId());
 		final var pane = setup.getPane();
-		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.").enchantment(Enchantment.DAMAGE_ALL).flag(ItemFlag.HIDE_ENCHANTS);
+		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.");
 
 		pane.addItem(GuiItem.of(optionsItem.build(), event -> setup.setPage("   Set Additional Arena Options", 3, 3)), 4, 2);
 
 		pane.addItem(new GuiItem(new ItemBuilder(XMaterial.REDSTONE_BLOCK)
-			.name("&e&l       Set Ending Location       ")
-			.lore("&7Click to set ending location on")
+			.name("&e&l      Set Ending Location")
+			.lore("&7Click to set the ending location on")
 			.lore("&7the place where you are standing.")
-			.lore("&8(location where players will be")
-			.lore("&8teleported after the reloading)")
 			.lore("", isOptionDoneBool(config, path + "endLocation"))
 			.build(), e -> {
 
@@ -77,11 +75,10 @@ public class MainMenuComponents extends AbstractComponent {
 		}), 1, 1);
 		
 		pane.addItem(GuiItem.of(new ItemBuilder(arena.getArenaPlate())
-			.name("&e&l        Set Plate Location        ")
-			.lore("&7Click to set plate location on")
-			.lore("&7the place where you are standing.")
-			.lore("&8(location where players will try to")
-			.lore("&8reach)")
+			.name("&e&l         Set Plate Location")
+			.lore("&7Click to set plate location on the place")
+			.lore("&7           where you are standing.")
+
 			.lore("", isOptionDoneBool(config, path + "plateLocation"))
 			.build(), e -> {
 
@@ -89,7 +86,6 @@ public class MainMenuComponents extends AbstractComponent {
 
 			final var plateMaterial = arena.getArenaPlate().parseMaterial();
 
-			// Remove the old one if present.
 			Optional.ofNullable(arena.getPlateLocation()).ifPresent(location -> {
 				var block = location.getBlock();
 
@@ -109,10 +105,9 @@ public class MainMenuComponents extends AbstractComponent {
 		}), 5, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.BLAZE_ROD.parseItem())
-			.name("&e&l         Set Arena Region         ")
+			.name("&e&l        Set Arena Region")
 			.lore("&7Click to set arena's region with the")
-			.lore("&7cuboid selector.")
-			.lore("&8(area where the game will be playing)")
+			.lore("&7            cuboid selector.")
 			.lore("", isOptionDoneBool(config, path + "areaMax"))
 			.build(), e -> {
 
@@ -142,9 +137,8 @@ public class MainMenuComponents extends AbstractComponent {
 		}), 3, 1);
 
 		pane.addItem(GuiItem.of(new ItemBuilder(XMaterial.ENCHANTED_BOOK)
-			.name("&e&l       Change Arena Plate    ")
+			.name("&e&l     Change Arena Plate")
 			.lore("&7Click here to change arena plate.")
-			.lore("&8(opens arena plate changer menu)")
 			.build(), e -> {
 
 			setup.getPaginatedPane().setPage(2);
@@ -155,23 +149,23 @@ public class MainMenuComponents extends AbstractComponent {
 			gui.update();
 		}), 7, 1);
 
-		final ItemBuilder registeredItem;
+		final ItemBuilder registerItem;
 
-		if (!arena.isReady()) {
-			registeredItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
-				.name("&e&l     Register Arena - Finish Setup")
-				.lore("&7Click this when you're done with configuration.")
-				.lore("&7It will validate and register arena.");
-		} else {
-			registeredItem = new ItemBuilder(Material.BARRIER)
-				.name("&a&lArena Registered - Congratulations")
-				.lore("&7This arena is already registered!")
+		if (arena.isReady()) {
+			registerItem = new ItemBuilder(XMaterial.BARRIER)
+				.name("&a&l           Arena Registered")
 				.lore("&7Good job, you went through whole setup!")
-				.enchantment(Enchantment.ARROW_DAMAGE)
+				.lore("&7      You can play on this arena now!")
+				.enchantment(Enchantment.DURABILITY)
 				.flag(ItemFlag.HIDE_ENCHANTS);
+		} else {
+			registerItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
+				.name("       &e&lFinish Arena Setup")
+				.lore("&7  Click this when you are done.")
+				.lore("&7You'll still be able to edit arena.");
 		}
 
-		pane.addItem(GuiItem.of(registeredItem.build(), e -> {
+		pane.addItem(GuiItem.of(registerItem.build(), e -> {
 			setup.closeInventory();
 
 			if (config.getBoolean(path + "isdone")) {
