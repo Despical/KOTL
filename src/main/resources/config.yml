@@ -140,6 +140,9 @@ Damage-Enabled: true
 # When players click these blocks should we remove them from the game?
 Death-Blocks-Enabled: true
 
+# Should players can be able to pick up items in-game?
+Pick-Up-Items: false
+
 # Blocks which you should not click in game, remove all of them to disable.
 # If player interacts with a death block they will be kicked from the game.
 Death-Blocks:

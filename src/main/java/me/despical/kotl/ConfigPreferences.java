@@ -92,7 +92,8 @@ public class ConfigPreferences {
 		SEPARATE_COOLDOWNS("King-Settings.Separate-Cooldowns"),
 		UPDATE_GAME_MODE((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("game-mode")),
 		UPDATE_HUNGER((config) -> !config.getStringList("Inventory-Manager.Do-Not-Restore").contains("hunger")),
-		UPDATE_NOTIFIER_ENABLED(false);
+		UPDATE_NOTIFIER_ENABLED(false),
+		PICK_UP_ITEMS(false);
 
 		private final String path;
 		private final boolean def;

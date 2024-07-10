@@ -178,7 +178,11 @@ public class Events extends ListenerAdapter {
 	
 	@EventHandler
 	public void onPickUpItem(PlayerPickupItemEvent event) {
-		if (plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+		if (!plugin.getArenaRegistry().isInArena(event.getPlayer())) {
+			return;
+		}
+
+		if (!plugin.getOption(ConfigPreferences.Option.PICK_UP_ITEMS)) {
 			event.setCancelled(true);
 			event.getItem().remove();
 		}
