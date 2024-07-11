@@ -24,6 +24,7 @@ import me.despical.commons.number.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class Kit {
 
 		for (final var item : config.getStringList(path + "items")) {
 			var array = item.split(":");
-			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true);
+			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true).flag(ItemFlag.HIDE_UNBREAKABLE);
 
 			if (array.length == 4) {
 				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
