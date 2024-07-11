@@ -21,7 +21,6 @@ package me.despical.kotl.kits;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
-import me.despical.commons.reflection.XReflection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -50,10 +49,7 @@ public class Kit {
 
 		for (final var item : config.getStringList(path + "items")) {
 			var array = item.split(":");
-			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase()));
-
-			if (XReflection.supports(9))
-				builder = builder.unbreakable(true);
+			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true);
 
 			if (array.length == 4) {
 				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
