@@ -333,7 +333,7 @@ public class AdminCommands extends AbstractCommand {
 			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return completions;
 
 			if (arg.equalsIgnoreCase("top")) {
-				return List.of("tours_played", "score");
+				return StringUtil.copyPartialMatches(args[1], List.of("tours_played", "score", "kills", "deaths"), completions);
 			}
 
 			if (arg.equalsIgnoreCase("stats") || arg.equalsIgnoreCase("kick")) {
