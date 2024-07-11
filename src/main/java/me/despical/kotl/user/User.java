@@ -44,14 +44,16 @@ public class User {
 	private static long cooldownCounter = 0;
 
 	private final UUID uuid;
+	private final String name;
 	private final Map<String, Double> cooldowns;
 	private final Map<String, Boolean> variables;
 	private final Map<StatsStorage.StatisticType, Integer> stats;
 
 	private Scoreboard cachedScoreboard;
 
-	public User(UUID uuid) {
-		this.uuid = uuid;
+	public User(Player player) {
+		this.uuid = player.getUniqueId();
+		this.name = player.getName();
 		this.cooldowns = new HashMap<>();
 		this.variables = new HashMap<>();
 		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
@@ -67,6 +69,10 @@ public class User {
 
 	public UUID getUniqueId() {
 		return uuid;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public int getStat(StatsStorage.StatisticType statisticType) {

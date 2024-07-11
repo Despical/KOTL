@@ -90,7 +90,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString(), name = user.getPlayer().getName();
+		final String uuid = user.getUniqueId().toString(), name = user.getName();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try (final var connection = database.getConnection()) {

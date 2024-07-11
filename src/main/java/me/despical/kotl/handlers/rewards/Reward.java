@@ -107,7 +107,9 @@ public class Reward {
 		WIN("Win"),
 		LOSE("Lose"),
 		JOIN("Join"),
-		LEAVE("Leave");
+		LEAVE("Leave"),
+		KILL("Kill"),
+		DEATH("Death");
 
 		final String path;
 

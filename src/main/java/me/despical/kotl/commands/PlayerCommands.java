@@ -93,7 +93,7 @@ public class PlayerCommands extends AbstractCommand {
 				return;
 			}
 
-			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", label));
+			arguments.sendMessage(chatManager.prefixedMessage("commands.did_you_mean").replace("%command%", '/' + label));
 		}
 	}
 
@@ -104,25 +104,30 @@ public class PlayerCommands extends AbstractCommand {
 		senderType = Command.SenderType.PLAYER
 	)
 	public void statsCommand(CommandArguments arguments) {
-		final Player sender = arguments.getSender(), player = !arguments.isArgumentsEmpty() ? plugin.getServer().getPlayer(arguments.getArgument(0)) : sender;
+		final Player sender = arguments.getSender();
+		final var user = plugin.getUserManager().getUser(sender);
 
-		if (player == null) {
-			arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found"));
+		if (arguments.isArgumentsEmpty()) {
+			chatManager.getStringList("commands.stats-command.messages").stream().map(message -> formatStats(message, true, user)).forEach(arguments::sendMessage);
 			return;
 		}
 
-		final User user = plugin.getUserManager().getUser(player);
-		final String path = "commands.stats_command.";
+		arguments.getPlayer(0).ifPresentOrElse(player -> {
+			final var targetUser = plugin.getUserManager().getUser(player);
+			final var self = sender.equals(player);
 
-		if (player.equals(sender)) {
-			arguments.sendMessage(chatManager.message(path + "header", player));
-		} else {
-			arguments.sendMessage(chatManager.message(path + "header_other", player));
-		}
+			chatManager.getStringList("commands.stats-command.messages").stream().map(message -> formatStats(message, self, targetUser)).forEach(arguments::sendMessage);
+		}, () -> arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found")));
+	}
 
-		sender.sendMessage(chatManager.message(path + "tours_played", player) + user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-		sender.sendMessage(chatManager.message(path + "score", player) + user.getStat(StatsStorage.StatisticType.SCORE));
-		sender.sendMessage(chatManager.message(path + "footer", player));
+	private String formatStats(String message, boolean self, User user) {
+		message = message.replace("%header%", chatManager.message("commands.stats-command.header" + (self ? "" : "-other")));
+		message = message.replace("%player%", user.getName());
+		message = message.replace("%tours_played%", StatsStorage.StatisticType.TOURS_PLAYED.from(user));
+		message = message.replace("%score%", StatsStorage.StatisticType.SCORE.from(user));
+		message = message.replace("%kills%", StatsStorage.StatisticType.KILLS.from(user));
+		message = message.replace("%deaths%", StatsStorage.StatisticType.DEATHS.from(user));
+		return chatManager.coloredRawMessage(message);
 	}
 
 	@Command(

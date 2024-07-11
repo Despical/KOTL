@@ -29,9 +29,13 @@ Commands:
   Stats-Command:
     Header: "&l[-----YOUR STATS-----]"  
     Header-Other: "&l[-----STATS FOR %player%-----]"
-    Footer: "&l[--------------------]"
-    Score: "&aScore: &e"
-    Tours-Played: "&aTours played: &e"
+    Messages:
+      - "%header%"
+      - "&8 * &fScore &a%score%"
+      - "&8 * &fTours Played &a%tours_played%"
+      - "&8 * &fKills &a%kills%"
+      - "&8 * &fDeaths &a%deaths%"
+      - "&l[--------------------]"
   List-Command:
     No-Arenas-Created: "&cThere aren't any arena to show!"
     Format: "&aExisting arenas: &7%list%"

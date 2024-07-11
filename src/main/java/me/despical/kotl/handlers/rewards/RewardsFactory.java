@@ -73,7 +73,7 @@ public class RewardsFactory {
 		var formatted = reward.getExecutableCode();
 
 		formatted = formatted.replace("%arena%", arena.getId());
-		formatted = formatted.replace("%player%", user.getPlayer().getName());
+		formatted = formatted.replace("%player%", user.getName());
 		formatted = formatted.replace("%players%", Integer.toString(arena.getPlayers().size()));
 		return formatted;
 	}

@@ -44,3 +44,9 @@ Rewards:
 
   # This reward will be executed after player left the arena.
   Leave: []
+
+  # This reward will be executed when player gets a kill.
+  Kill: []
+
+  # This reward will be executed if player dies.
+  Death: []

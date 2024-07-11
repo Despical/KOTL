@@ -176,9 +176,16 @@ public class ArenaEvents extends ListenerAdapter {
 		plugin.getServer().getScheduler().runTaskLater(plugin, () -> deadPlayer.spigot().respawn(), 5);
 		plugin.getUserManager().getUser(deadPlayer).setCooldown("death", 2);
 
-		final var killerFound = deadPlayer.getKiller() != null;
+		final var killer = deadPlayer.getKiller();
+		final var killerFound = killer != null;
 
-		arena.broadcastMessage(chatManager.prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? deadPlayer.getKiller().getName() : "").replace("%victim%", deadPlayer.getName()));
+		arena.broadcastMessage(chatManager.prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? killer.getName() : "").replace("%victim%", deadPlayer.getName()));
+
+		if (killerFound) {
+			var killerUser = plugin.getUserManager().getUser(killer);
+			killerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
+			killerUser.performReward(Reward.RewardType.KILL, arena);
+		}
 	}
 
 	@EventHandler
@@ -190,6 +197,10 @@ public class ArenaEvents extends ListenerAdapter {
 
 		arena.removePlayer(player);
 		event.setRespawnLocation(arena.getEndLocation());
+
+		final var user = plugin.getUserManager().getUser(player);
+		user.performReward(Reward.RewardType.DEATH, arena);
+		user.addStat(StatsStorage.StatisticType.DEATHS, 1);
 	}
 
 	private void spawnFireworks(Arena arena, Player player) {

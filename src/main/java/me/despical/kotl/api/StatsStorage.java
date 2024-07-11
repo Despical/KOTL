@@ -21,6 +21,7 @@ package me.despical.kotl.api;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.Main;
+import me.despical.kotl.user.User;
 import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -82,6 +83,8 @@ public class StatsStorage {
 
 		TOURS_PLAYED("toursplayed"),
 		SCORE("score"),
+		KILLS("kill"),
+		DEATHS("death"),
 		LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
 
 		final String name;
@@ -102,6 +105,10 @@ public class StatsStorage {
 
 		public boolean isPersistent() {
 			return persistent;
+		}
+
+		public String from(User user) {
+			return Integer.toString(user.getStat(this));
 		}
 	}
 }

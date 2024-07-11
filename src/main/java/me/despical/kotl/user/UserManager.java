@@ -56,7 +56,7 @@ public class UserManager {
 			}
 		}
 
-		final var user = new User(uuid);
+		final var user = new User(player);
 		users.add(user);
 
 		database.loadStatistics(user);
