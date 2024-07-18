@@ -23,7 +23,7 @@ import me.despical.kotl.Main;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handlers.rewards.Reward;
+import me.despical.kotl.handlers.rewards.Reward.RewardType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -89,7 +89,7 @@ public class User {
 		setStat(stat, getStat(stat) + value);
 	}
 
-	public void performReward(Reward.RewardType rewardType, Arena arena) {
+	public void performReward(RewardType rewardType, Arena arena) {
 		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType, arena));
 	}
 

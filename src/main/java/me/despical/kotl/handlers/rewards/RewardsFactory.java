@@ -22,6 +22,7 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
+import me.despical.kotl.handlers.rewards.Reward.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class RewardsFactory {
 		registerRewards();
 	}
 
-	public void performReward(User user, Reward.RewardType type, Arena arena) {
+	public void performReward(User user, RewardType type, Arena arena) {
 		final var rewardList = rewards.stream().filter(rew -> rew.getType() == type).toList();
 
 		if (rewardList.isEmpty()) return;
@@ -69,7 +70,7 @@ public class RewardsFactory {
 		}
 	}
 
-	private String formatCommandPlaceholders(final Reward.SubReward reward, User user, Arena arena) {
+	private String formatCommandPlaceholders(final SubReward reward, User user, Arena arena) {
 		var formatted = reward.getExecutableCode();
 
 		formatted = formatted.replace("%arena%", arena.getId());

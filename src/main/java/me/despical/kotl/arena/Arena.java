@@ -29,7 +29,7 @@ import me.despical.kotl.api.events.player.KOTLPlayerLeaveArenaEvent;
 import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.ChatManager;
-import me.despical.kotl.handlers.rewards.Reward;
+import me.despical.kotl.handlers.rewards.Reward.RewardType;
 import me.despical.particle.ParticleBuilder;
 import me.despical.particle.ParticleEffect;
 import org.apache.commons.lang.math.IntRange;
@@ -327,7 +327,7 @@ public class Arena {
 		}
 
 		user.giveKit();
-		user.performReward(Reward.RewardType.JOIN, this);
+		user.performReward(RewardType.JOIN, this);
 
 		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerEnterArenaEvent(this, player)));
 	}
@@ -336,7 +336,7 @@ public class Arena {
 		if (player == null) return;
 
 		final var user = plugin.getUserManager().getUser(player);
-		user.performReward(Reward.RewardType.LEAVE, this);
+		user.performReward(RewardType.LEAVE, this);
 
 		players.remove(player);
 

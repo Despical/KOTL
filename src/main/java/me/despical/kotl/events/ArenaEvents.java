@@ -25,7 +25,7 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.arena.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
-import me.despical.kotl.handlers.rewards.Reward;
+import me.despical.kotl.handlers.rewards.Reward.RewardType;
 import me.despical.kotl.user.User;
 import me.despical.kotl.util.Utils;
 import org.bukkit.Material;
@@ -102,7 +102,7 @@ public class ArenaEvents extends ListenerAdapter {
 
 			user.addStat(StatsStorage.StatisticType.SCORE, 1);
 			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-			user.performReward(Reward.RewardType.WIN, arena);
+			user.performReward(RewardType.WIN, arena);
 
 			var players = arena.getPlayers();
 			players.remove(player);
@@ -112,7 +112,7 @@ public class ArenaEvents extends ListenerAdapter {
 			for (var p : players) {
 				final var u = plugin.getUserManager().getUser(p);
 				u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-				u.performReward(Reward.RewardType.LOSE, arena);
+				u.performReward(RewardType.LOSE, arena);
 
 				spawnFireworks(arena, p);
 			}
@@ -140,7 +140,7 @@ public class ArenaEvents extends ListenerAdapter {
 					arena.removePlayer(player);
 					arena.teleportToEndLocation(player);
 
-					user.performReward(Reward.RewardType.LOSE, arena);
+					user.performReward(RewardType.LOSE, arena);
 					return;
 				}
 			}
@@ -184,7 +184,7 @@ public class ArenaEvents extends ListenerAdapter {
 		if (killerFound) {
 			var killerUser = plugin.getUserManager().getUser(killer);
 			killerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
-			killerUser.performReward(Reward.RewardType.KILL, arena);
+			killerUser.performReward(RewardType.KILL, arena);
 		}
 	}
 
@@ -199,7 +199,7 @@ public class ArenaEvents extends ListenerAdapter {
 		event.setRespawnLocation(arena.getEndLocation());
 
 		final var user = plugin.getUserManager().getUser(player);
-		user.performReward(Reward.RewardType.DEATH, arena);
+		user.performReward(RewardType.DEATH, arena);
 		user.addStat(StatsStorage.StatisticType.DEATHS, 1);
 	}
 
