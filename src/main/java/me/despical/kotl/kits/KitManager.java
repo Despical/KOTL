@@ -35,7 +35,6 @@ public class KitManager {
 	public KitManager(final Main plugin) {
 		this.plugin = plugin;
 		this.kits = new HashSet<>();
-
 		this.loadKits();
 	}
 

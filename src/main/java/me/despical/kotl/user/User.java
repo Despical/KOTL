@@ -41,7 +41,7 @@ import java.util.UUID;
 public class User {
 
 	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static long cooldownCounter = 0;
+	private static long cooldownCounter;
 
 	private final UUID uuid;
 	private final String name;
