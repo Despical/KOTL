@@ -19,6 +19,9 @@
 package me.despical.kotl.commands;
 
 import me.despical.commandframework.*;
+import me.despical.commandframework.annotations.Command;
+import me.despical.commandframework.annotations.Completer;
+import me.despical.commandframework.annotations.Cooldown;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -40,8 +43,6 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static me.despical.commandframework.Command.SenderType.PLAYER;
 
 /**
  * @author Despical
@@ -173,7 +174,7 @@ public class AdminCommands extends AbstractCommand {
 		usage = "/kotl edit <arena>",
 		desc = "Opens the arena editor",
 		min = 1,
-		senderType = PLAYER
+		senderType = Command.SenderType.PLAYER
 	)
 	public void editCommand(CommandArguments arguments) {
 		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
