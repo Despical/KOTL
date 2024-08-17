@@ -27,6 +27,7 @@ import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.serializer.LocationSerializer;
+import me.despical.commons.util.Strings;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
 import me.despical.kotl.arena.Arena;
@@ -98,7 +99,7 @@ public class AdminCommands extends AbstractCommand {
 	private void setupDefaultConfiguration(String id) {
 		final String path = "instances." + id + ".", def = LocationSerializer.SERIALIZED_LOCATION;
 		final var config = ConfigUtils.getConfig(plugin, "arenas");
-		
+
 		config.set(path + "endLocation", def);
 		config.set(path + "areaMin", def);
 		config.set(path + "areaMax", def);
@@ -232,7 +233,8 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void helpCommand(CommandArguments arguments) {
 		arguments.sendMessage("");
-		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3&l---- King of the Ladder ----");
+		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3&lKing of the Ladder");
+		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
 		final CommandSender sender = arguments.getSender();
@@ -244,14 +246,15 @@ public class AdminCommands extends AbstractCommand {
 			if (usage.isEmpty() || desc.isEmpty()) continue;
 
 			if (isPlayer) {
-				((Player) sender).spigot().sendMessage(new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
-					.append(usage)
-					.color(ChatColor.AQUA)
-					.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
-					.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
-					.create());
+				((Player) sender).spigot().sendMessage(
+					new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
+						.append(formatCommandUsage("&3" + usage))
+						.color(ChatColor.AQUA)
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
+						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
+						.create());
 			} else {
-				sender.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
+				arguments.sendMessage(" &8• &b" + formatCommandUsage("&3" + usage) + " &3- &b" + desc);
 			}
 		}
 
@@ -347,5 +350,19 @@ public class AdminCommands extends AbstractCommand {
 		}
 
 		return completions;
+	}
+
+	private String formatCommandUsage(String usage) {
+		final var array = usage.toCharArray();
+		final var buffer = new StringBuilder(usage);
+
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == '[' || array[i] == '<') {
+				buffer.insert(i, "&b");
+				return Strings.format(buffer.toString());
+			}
+		}
+
+		return Strings.format(usage);
 	}
 }
