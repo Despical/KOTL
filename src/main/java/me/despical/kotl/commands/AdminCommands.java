@@ -229,6 +229,7 @@ public class AdminCommands extends AbstractCommand {
 	@Command(
 		name = "kotl.help",
 		usage = "/kotl help",
+		desc = "Displays a list of available commands along with their descriptions.",
 		permission = "kotl.admin.help"
 	)
 	public void helpCommand(CommandArguments arguments) {
@@ -241,20 +242,20 @@ public class AdminCommands extends AbstractCommand {
 		final boolean isPlayer = arguments.isSenderPlayer();
 
 		for (final var command : plugin.getCommandFramework().getSubCommands()) {
-			final String usage = command.usage(), desc = command.desc();
+			final String usage = formatCommandUsage(command.usage()), desc = command.desc();
 
 			if (usage.isEmpty() || desc.isEmpty()) continue;
 
 			if (isPlayer) {
 				((Player) sender).spigot().sendMessage(
 					new ComponentBuilder(ChatColor.DARK_GRAY + " • ")
-						.append(formatCommandUsage("&3" + usage))
+						.append(usage)
 						.color(ChatColor.AQUA)
-						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, usage))
+						.event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command.usage()))
 						.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(desc)))
 						.create());
 			} else {
-				arguments.sendMessage(" &8• &b" + formatCommandUsage("&3" + usage) + " &3- &b" + desc);
+				arguments.sendMessage(" &8• &b" + usage + " &3- &b" + desc);
 			}
 		}
 
@@ -353,6 +354,8 @@ public class AdminCommands extends AbstractCommand {
 	}
 
 	private String formatCommandUsage(String usage) {
+		usage = "&3" + usage;
+
 		final var array = usage.toCharArray();
 		final var buffer = new StringBuilder(usage);
 
