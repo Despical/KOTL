@@ -56,8 +56,8 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl",
-		desc = "Main command of the plugin.",
-		usage = "/kotl help"
+		usage = "/kotl help",
+		desc = "Main command of the plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
@@ -149,8 +149,8 @@ public class PlayerCommands extends AbstractCommand {
 	private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
 		sender.sendMessage(chatManager.message("commands.statistics.header"));
 
-		final Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
-		final String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
+		Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
+		String statistic = StringUtils.capitalize(statisticType.name().toLowerCase(java.util.Locale.ENGLISH).replace("_", " "));
 
 		for (int i = 0; i < 10; i++) {
 			try {
@@ -163,7 +163,7 @@ public class PlayerCommands extends AbstractCommand {
 				UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
 				if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
-					try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+					try (Connection connection = mysqlManager.getDatabase().getConnection()) {
 						Statement statement = connection.createStatement();
 						ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mysqlManager.getTable(), current.toString()));
 

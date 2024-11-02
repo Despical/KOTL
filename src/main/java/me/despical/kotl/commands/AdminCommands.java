@@ -21,7 +21,6 @@ package me.despical.kotl.commands;
 import me.despical.commandframework.*;
 import me.despical.commandframework.annotations.Command;
 import me.despical.commandframework.annotations.Completer;
-import me.despical.commandframework.annotations.Cooldown;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.miscellaneous.MiscUtils;
@@ -127,7 +126,7 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void deleteCommand(CommandArguments arguments) {
 		final var sender = arguments.getSender();
-		final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+		Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
 
 		if (arena == null) {
 			sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -137,7 +136,7 @@ public class AdminCommands extends AbstractCommand {
 		if (!arena.getPlayers().isEmpty()) {
 			arena.getScoreboardManager().stopAllScoreboards();
 
-			for (final var player : arena.getPlayers()) {
+			for (Player player : arena.getPlayers()) {
 				player.setFlySpeed(.1F);
 				player.setWalkSpeed(.2F);
 				player.getInventory().clear();
@@ -193,10 +192,6 @@ public class AdminCommands extends AbstractCommand {
 		permission = "kotl.admin.reload",
 		usage = "/kotl reload",
 		desc = "Reloads all configuration and stops arenas"
-	)
-	@Cooldown(
-		cooldown = 5,
-		bypassPerm = "kotl.admin.cooldown"
 	)
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
@@ -260,8 +255,7 @@ public class AdminCommands extends AbstractCommand {
 		}
 
 		if (isPlayer) {
-			final Player player = arguments.getSender();
-
+			Player player = arguments.getSender();
 			player.sendMessage("");
 			player.spigot().sendMessage(new ComponentBuilder("TIP:").color(ChatColor.YELLOW).bold(true)
 				.append(" Try to ", ComponentBuilder.FormatRetention.NONE).color(ChatColor.GRAY)

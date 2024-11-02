@@ -48,7 +48,7 @@ public class StatsStorage {
 	@NotNull
 	public static Map<UUID, Integer> getStats(StatisticType stat) {
 		if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
-			try (Connection connection = plugin.getMysqlDatabase().getConnection()) {
+			try (Connection connection = mysqlManager.getDatabase().getConnection()) {
 				final Statement statement = connection.createStatement();
 				final ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.name, mysqlManager.getTable(), stat.name));
 

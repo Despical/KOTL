@@ -35,16 +35,14 @@ import java.sql.SQLException;
 public non-sealed class MysqlManager extends IUserDatabase {
 
 	private final String table;
-
-	private MysqlDatabase database;
+	private final MysqlDatabase database;
 
 	public MysqlManager(Main plugin) {
 		super(plugin);
 		this.table = ConfigUtils.getConfig(plugin, "mysql").getString("table", "kotl_stats");
+		this.database = new MysqlDatabase(plugin, "mysql");
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			this.database = plugin.getMysqlDatabase();
-
 			try (final var connection = database.getConnection()) {
 				final var statement = connection.createStatement();
 
@@ -126,5 +124,10 @@ public non-sealed class MysqlManager extends IUserDatabase {
 	@NotNull
 	public String getTable() {
 		return table;
+	}
+
+	@Override
+	public void shutdown() {
+		this.database.shutdownConnPool();
 	}
 }

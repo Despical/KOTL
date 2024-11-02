@@ -2,9 +2,12 @@ name: KOTL
 main: me.despical.kotl.Main
 author: Despical
 version: ${project.version}
+
 api-version: 1.13
-softdepend: [ PlaceholderAPI, Multiverse-Core, WorldGuard ]
-website: https://spigotmc.org/resources/80686
+softdepend:
+  - PlaceholderAPI
+  - Multiverse-Core
+  - WorldGuard
 
 permissions:
   kotl.admin.*:

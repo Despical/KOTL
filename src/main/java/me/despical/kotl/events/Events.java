@@ -19,9 +19,9 @@
 package me.despical.kotl.events;
 
 import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.ConfigPreferences;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Firework;
@@ -49,30 +49,19 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
-		var player = event.getPlayer();
+		Player player = event.getPlayer();
 
-		plugin.getUserManager().loadStatistics(player);
+		plugin.getUserManager().addUser(player);
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
-
-		if (!plugin.getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) || !player.hasPermission("kotl.updatenotify")) {
-			return;
-		}
-
-		UpdateChecker.init(plugin, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (result.requiresUpdate()) {
-				player.sendMessage(chatManager.coloredRawMessage("&3[KOTL] &bFound an update: v" + result.getNewestVersion()));
-				player.sendMessage(chatManager.coloredRawMessage("&3>> &bhttps://spigotmc.org/resources/80686"));
-			}
-		});
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		var player = event.getPlayer();
-		var arena = plugin.getArenaRegistry().getArena(player);
+		Player player = event.getPlayer();
+		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
@@ -85,7 +74,7 @@ public class Events extends ListenerAdapter {
 
 	@EventHandler
 	public void onCommandExecute(PlayerCommandPreprocessEvent event) {
-		var player = event.getPlayer();
+		Player player = event.getPlayer();
 
 		if (!plugin.getArenaRegistry().isInArena(player)) {
 			return;

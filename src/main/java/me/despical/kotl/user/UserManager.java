@@ -26,8 +26,7 @@ import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Despical
@@ -36,39 +35,37 @@ import java.util.Set;
  */
 public class UserManager {
 
-	private final Set<User> users;
+	private final Map<UUID, User> users;
 	private final IUserDatabase database;
 
 	public UserManager(Main plugin) {
-		this.users = new HashSet<>();
+		this.users = new HashMap<>();
 		this.database = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStats(plugin);
 
-		plugin.getServer().getOnlinePlayers().forEach(this::loadStatistics);
+		plugin.getServer().getOnlinePlayers().forEach(this::addUser);
 	}
 
-	@NotNull
-	public User getUser(Player player) {
-		final var uuid = player.getUniqueId();
-
-		for (var user : users) {
-			if (user.getUniqueId().equals(uuid)) {
-				return user;
-			}
-		}
-
-		final var user = new User(player);
-		users.add(user);
+	public User addUser(Player player) {
+		User user = new User(player);
+		users.put(player.getUniqueId(), user);
 
 		database.loadStatistics(user);
 		return user;
 	}
 
-	public void loadStatistics(Player player) {
-		database.loadStatistics(getUser(player));
+	@NotNull
+	public User getUser(Player player) {
+		User user = users.get(player.getUniqueId());
+
+		if (user != null) {
+			return user;
+		}
+
+		return this.addUser(player);
 	}
 
 	public void removeUser(Player player) {
-		users.remove(getUser(player));
+		users.remove(player.getUniqueId());
 	}
 
 	@NotNull

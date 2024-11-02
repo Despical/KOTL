@@ -42,4 +42,7 @@ public abstract sealed class IUserDatabase permits FileStats, MysqlManager {
 	public abstract void saveStatistics(final @NotNull User user);
 
 	public abstract void loadStatistics(final @NotNull User user);
+
+	public void shutdown() {
+	}
 }
