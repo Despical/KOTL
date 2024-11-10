@@ -17,6 +17,7 @@ kits:
       - "LEATHER_HELMET"
 
     # slot:item
+    # slot:item:amount
     # slot:item:enchantment:level (optional)
     items:
       - "0:STONE_SWORD:DAMAGE_ALL:1"

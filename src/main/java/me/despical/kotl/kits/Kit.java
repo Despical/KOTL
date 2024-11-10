@@ -24,7 +24,6 @@ import me.despical.commons.number.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -41,16 +40,23 @@ public class Kit {
 	public Kit(FileConfiguration config, String path) {
 		this.armors = new LinkedHashSet<>();
 		this.items = new HashMap<>();
-
 		this.permission = config.getString(path + "permission");
 
-		for (var armor : config.getStringList(path + "armors")) {
-			armors.add(XMaterial.valueOf(armor).parseItem());
+		for (String armor : config.getStringList(path + "armors")) {
+			armors.add(XMaterial.matchXMaterial(armor).orElseThrow().parseItem());
 		}
 
-		for (final var item : config.getStringList(path + "items")) {
-			var array = item.split(":");
-			var builder = new ItemBuilder(XMaterial.valueOf(array[1].toUpperCase())).unbreakable(true).flag(ItemFlag.HIDE_UNBREAKABLE);
+		for (String item : config.getStringList(path + "items")) {
+			String[] array = item.split(":");
+			ItemBuilder builder = new ItemBuilder(XMaterial.matchXMaterial(array[1].toUpperCase()))
+				.unbreakable(true)
+				.hideTooltip();
+
+			if (array.length == 3) {
+				int amount = NumberUtils.getInt(array[2], 1);
+
+				builder.amount(amount);
+			}
 
 			if (array.length == 4) {
 				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
@@ -61,7 +67,7 @@ public class Kit {
 	}
 
 	public void giveKit(Player player) {
-		final var inventory = player.getInventory();
+		var inventory = player.getInventory();
 
 		inventory.setArmorContents(armors.toArray(new ItemStack[0]));
 		this.items.forEach(inventory::setItem);
