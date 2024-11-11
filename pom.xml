@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>3.0.7</version>
+	<version>3.0.8</version>
 
 	<name>King of the Ladder</name>
 	<inceptionYear>2020</inceptionYear>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>com.github.Despical</groupId>
 			<artifactId>Commons</artifactId>
-			<version>1.8.81</version>
+			<version>1.8.83</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.Despical</groupId>
