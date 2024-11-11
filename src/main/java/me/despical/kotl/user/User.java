@@ -82,7 +82,7 @@ public class User {
 	public void setStat(StatsStorage.StatisticType stat, int value) {
 		stats.put(stat, value);
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value)));
+		plugin.callEvent(() -> new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
 	}
 
 	public void addStat(StatsStorage.StatisticType stat, int value) {

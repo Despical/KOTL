@@ -86,8 +86,7 @@ public class ArenaEvents extends ListenerAdapter {
 				plugin.getCooldownManager().setCooldown(user, cooldownName, cooldown);
 			}
 
-			var kingEvent = new KOTLNewKingEvent(arena, player, isSameKing);
-			plugin.getServer().getPluginManager().callEvent(kingEvent);
+			plugin.callEvent(new KOTLNewKingEvent(arena, player, isSameKing));
 
 			arena.setKing(player.getName());
 

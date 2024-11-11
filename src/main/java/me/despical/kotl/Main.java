@@ -24,6 +24,7 @@ import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
 import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
 import me.despical.kotl.arena.managers.ArenaManager;
@@ -47,6 +48,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -67,6 +69,7 @@ public class Main extends JavaPlugin {
 	private KitManager kitManager;
 	private ArenaManager arenaManager;
 	private CooldownManager cooldownManager;
+	private boolean initializeFinished;
 
 	@Override
 	public void onEnable() {
@@ -133,16 +136,16 @@ public class Main extends JavaPlugin {
 		metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getPluginLocale().prefix()));
 		metrics.addCustomChart(new SimplePie("database_enabled", () -> getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
 		metrics.addCustomChart(new SimplePie("update_notifier", () -> getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
+
+		this.initializeFinished = true;
 	}
 
 	private void checkUpdate() {
-		if (!getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) return;
+		if (!getOption(ConfigPreferences.Option.UPDATE_NOTIFIER_ENABLED)) {
+			return;
+		}
 
-		UpdateChecker.init(this, 80686).requestUpdateCheck().whenComplete((result, exception) -> {
-			if (result.requiresUpdate()) {
-				getLogger().info("Found a new version available: v" + result.getNewestVersion());
-			}
-		});
+		UpdateChecker.init(this, 80686).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
 	}
 
 	private void setupConfigurationFiles() {
@@ -208,10 +211,18 @@ public class Main extends JavaPlugin {
 		configPreferences.loadOptions();
 	}
 
-	private void saveAllUserStatistics() {
-		for (Player player : getServer().getOnlinePlayers()) {
-			User user = userManager.getUser(player);
+	public void callEvent(KOTLEvent event) {
+		this.callEvent(() -> event);
+	}
 
+	public void callEvent(Supplier<KOTLEvent> eventSupplier) {
+		if (initializeFinished && isEnabled()) {
+			getServer().getScheduler().runTask(this, () -> getServer().getPluginManager().callEvent(eventSupplier.get()));
+		}
+	}
+
+	private void saveAllUserStatistics() {
+		for (User user : userManager.getUsers()) {
 			if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
 				StringBuilder update = new StringBuilder(" SET ");
 

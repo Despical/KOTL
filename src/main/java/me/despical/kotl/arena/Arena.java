@@ -334,7 +334,7 @@ public class Arena {
 		user.giveKit();
 		user.performReward(RewardType.JOIN, this);
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerEnterArenaEvent(this, player)));
+		plugin.callEvent(new KOTLPlayerEnterArenaEvent(this, player));
 	}
 
 	public void removePlayer(Player player) {
@@ -385,7 +385,7 @@ public class Arena {
 
 		AttributeUtils.resetAttackCooldown(player);
 
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().getPluginManager().callEvent(new KOTLPlayerLeaveArenaEvent(this, player)));
+		plugin.callEvent(new KOTLPlayerLeaveArenaEvent(this, player));
 	}
 
 	public void teleportToEndLocation(Player player) {

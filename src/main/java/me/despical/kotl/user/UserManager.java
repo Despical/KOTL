@@ -72,4 +72,8 @@ public class UserManager {
 	public IUserDatabase getDatabase() {
 		return database;
 	}
+
+	public Set<User> getUsers() {
+		return Set.copyOf(users.values());
+	}
 }
