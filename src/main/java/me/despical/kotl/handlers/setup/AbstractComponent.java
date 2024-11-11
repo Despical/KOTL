@@ -23,7 +23,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.kotl.Main;
 import me.despical.kotl.handlers.ChatManager;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -33,14 +33,10 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class AbstractComponent {
 
-	protected static final ItemStack mainMenuItem;
+	protected static final ItemStack mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn Main Menu").build();
 
 	protected final Main plugin;
 	protected final ChatManager chatManager;
-
-	static {
-		mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn Main Menu").build();
-	}
 
 	public AbstractComponent(Main plugin) {
 		this.plugin = plugin;
@@ -49,7 +45,7 @@ public abstract class AbstractComponent {
 
 	public abstract void injectComponents(SetupInventory inventory);
 
-	protected final String isOptionDoneBool(FileConfiguration config, String path) {
-		return config.isSet(path) ? LocationSerializer.isDefaultLocation(config.getString(path)) ? "&c&l✘ Not Completed" : "&a&l✔ Completed" : "&c&l✘ Not Completed";
+	protected final String isLocationSet(Location location) {
+		return LocationSerializer.isDefaultLocation(location) ? "&c&l✘ Not Completed" : "&a&l✔ Completed";
 	}
 }

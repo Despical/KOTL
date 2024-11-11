@@ -27,6 +27,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -34,6 +35,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -43,30 +47,49 @@ import java.util.regex.Pattern;
  */
 public class Events extends ListenerAdapter {
 
+	private final Map<UUID, Arena> teleportToEnd;
+
 	public Events(Main plugin) {
 		super(plugin);
+		this.teleportToEnd = new HashMap<>();
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
 		plugin.getUserManager().addUser(player);
+
+		Arena arena = teleportToEnd.get(player.getUniqueId());
+
+		if (arena != null) {
+			arena.teleportToEndLocation(player);
+		}
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
 			InventorySerializer.loadInventory(plugin, player);
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onQuit(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
+		this.handleQuit(event.getPlayer());
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onKick(PlayerKickEvent event) {
+		this.handleQuit(event.getPlayer());
+	}
+
+	private void handleQuit(Player player) {
 		Arena arena = plugin.getArenaRegistry().getArena(player);
 
 		if (arena != null) {
 			chatManager.broadcastAction(arena, player, ChatManager.ActionType.LEAVE);
 
-			arena.removePlayer(player);
+			arena.quitPlayer(player);
+
+			teleportToEnd.put(player.getUniqueId(), arena);
 		}
 
 		plugin.getUserManager().removeUser(player);

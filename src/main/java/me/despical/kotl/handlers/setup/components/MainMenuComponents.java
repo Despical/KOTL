@@ -25,12 +25,12 @@ import me.despical.commons.reflection.XReflection;
 import me.despical.commons.serializer.LocationSerializer;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.kotl.Main;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 
 import java.util.Optional;
 
@@ -47,12 +47,12 @@ public class MainMenuComponents extends AbstractComponent {
 
 	@Override
 	public void injectComponents(SetupInventory setup) {
-		final var player = setup.getPlayer();
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
-		final var arena = setup.getArena();
-		final var path = "instances.%s.".formatted(arena.getId());
-		final var pane = setup.getPane();
-		final var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.");
+		var player = setup.getPlayer();
+		var config = ConfigUtils.getConfig(plugin, "arenas");
+		var arena = setup.getArena();
+		var path = "instances.%s.".formatted(arena.getId());
+		var pane = setup.getPane();
+		var optionsItem = new ItemBuilder(XMaterial.CLOCK).name("&e&l        Additional Options").lore("&7Click to open additional options menu.");
 
 		pane.addItem(GuiItem.of(optionsItem.build(), event -> setup.setPage("   Set Additional Arena Options", 3, 3)), 4, 2);
 
@@ -60,7 +60,7 @@ public class MainMenuComponents extends AbstractComponent {
 			.name("&e&l      Set Ending Location")
 			.lore("&7Click to set the ending location on")
 			.lore("&7the place where you are standing.")
-			.lore("", isOptionDoneBool(config, path + "endLocation"))
+			.lore("", isLocationSet(arena.getEndLocation()))
 			.build(), e -> {
 
 			setup.closeInventory();
@@ -78,13 +78,12 @@ public class MainMenuComponents extends AbstractComponent {
 			.name("&e&l         Set Plate Location")
 			.lore("&7Click to set plate location on the place")
 			.lore("&7           where you are standing.")
-
-			.lore("", isOptionDoneBool(config, path + "plateLocation"))
+			.lore("", isLocationSet(arena.getPlateLocation()))
 			.build(), e -> {
 
 			setup.closeInventory();
 
-			final var plateMaterial = arena.getArenaPlate().parseMaterial();
+			var plateMaterial = arena.getArenaPlate().parseMaterial();
 
 			Optional.ofNullable(arena.getPlateLocation()).ifPresent(location -> {
 				var block = location.getBlock();
@@ -94,7 +93,7 @@ public class MainMenuComponents extends AbstractComponent {
 				}
 			});
 
-			final var location = player.getLocation();
+			var location = player.getLocation();
 			location.getBlock().setType(plateMaterial);
 
 			arena.setPlateLocation(location);
@@ -108,13 +107,13 @@ public class MainMenuComponents extends AbstractComponent {
 			.name("&e&l        Set Arena Region")
 			.lore("&7Click to set arena's region with the")
 			.lore("&7            cuboid selector.")
-			.lore("", isOptionDoneBool(config, path + "areaMax"))
+			.lore("", isLocationSet(arena.getMaxCorner()))
 			.build(), e -> {
 
 			setup.closeInventory();
 
-			final var selector =  plugin.getCuboidSelector();
-			final var selection = selector.getSelection(player);
+			var selector =  plugin.getCuboidSelector();
+			var selection = selector.getSelection(player);
 
 			if (selector.giveSelectorWand(player)) return;
 
@@ -143,13 +142,13 @@ public class MainMenuComponents extends AbstractComponent {
 
 			setup.getPaginatedPane().setPage(2);
 
-			final var gui = setup.getGui();
+			var gui = setup.getGui();
 			gui.setRows(XReflection.supports(13) ? 6 : 3);
 			gui.setTitle("         Arena Plate Editor");
 			gui.update();
 		}), 7, 1);
 
-		final ItemBuilder registerItem;
+		ItemBuilder registerItem;
 
 		if (arena.isReady()) {
 			registerItem = new ItemBuilder(XMaterial.BARRIER)
@@ -157,37 +156,31 @@ public class MainMenuComponents extends AbstractComponent {
 				.lore("&7Good job, you went through whole setup!")
 				.lore("&7      You can play on this arena now!")
 				.enchantment(Enchantment.DURABILITY)
-				.flag(ItemFlag.HIDE_ENCHANTS);
+				.hideTooltip();
 		} else {
 			registerItem = new ItemBuilder(XMaterial.FIREWORK_ROCKET)
 				.name("       &e&lFinish Arena Setup")
 				.lore("&7  Click this when you are done.")
-				.lore("&7You'll still be able to edit arena.");
+				.lore("&7You'll still be able to edit arena.")
+				.hideTooltip();
 		}
 
 		pane.addItem(GuiItem.of(registerItem.build(), e -> {
 			setup.closeInventory();
 
-			if (config.getBoolean(path + "isdone")) {
+			if (arena.isReady()) {
 				player.sendMessage(chatManager.coloredRawMessage("&a&l✔ &aThis arena was already validated and is ready to use!"));
 				return;
 			}
 
-			String[] locations = {"plateLocation", "endLocation", "areaMin", "areaMax"};
-
-			for (var loc : locations) {
-				if (!config.isSet(path + loc) || LocationSerializer.isDefaultLocation(config.getString(path + loc))) {
-					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: %s (cannot be world spawn location)".formatted(loc)));
+			for (var gameLocation : Arena.GameLocation.values()) {
+				if (LocationSerializer.isDefaultLocation(arena.getLocation(gameLocation))) {
+					player.sendMessage(chatManager.coloredRawMessage("&c&l✘ &cArena validation failed! Please configure following spawn properly: %s (cannot be world spawn location)".formatted(gameLocation)));
 					return;
 				}
 			}
 
 			arena.setReady(true);
-			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
-			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
-			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
-			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
 
 			var scheduler = plugin.getArenaManager().getArenaScheduler();
 

@@ -30,6 +30,7 @@ import me.despical.kotl.arena.managers.BossBarManager;
 import me.despical.kotl.arena.managers.ScoreboardManager;
 import me.despical.kotl.handlers.ChatManager;
 import me.despical.kotl.handlers.rewards.Reward.RewardType;
+import me.despical.kotl.user.User;
 import me.despical.particle.ParticleBuilder;
 import me.despical.particle.ParticleEffect;
 import org.apache.commons.lang.math.IntRange;
@@ -222,6 +223,10 @@ public class Arena {
 		gameLocations.put(GameLocation.MAX, maxCorner);
 	}
 
+	public Location getLocation(GameLocation gameLocation) {
+		return gameLocations.get(gameLocation);
+	}
+
 	public void setKing(String king) {
 		this.king = king;
 	}
@@ -333,9 +338,17 @@ public class Arena {
 	}
 
 	public void removePlayer(Player player) {
+		this.removePlayer(player, false);
+	}
+
+	public void quitPlayer(Player player) {
+		this.removePlayer(player, true);
+	}
+
+	private void removePlayer(Player player, boolean quit) {
 		if (player == null) return;
 
-		final var user = plugin.getUserManager().getUser(player);
+		User user = plugin.getUserManager().getUser(player);
 		user.performReward(RewardType.LEAVE, this);
 
 		players.remove(player);
@@ -348,7 +361,7 @@ public class Arena {
 			plugin.getServer().getScheduler().runTask(plugin, () -> player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType())));
 		}
 
-		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
+		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED) && !quit) {
 			plugin.getServer().getScheduler().runTask(plugin, () -> InventorySerializer.loadInventory(plugin, player));
 		}
 
@@ -401,6 +414,6 @@ public class Arena {
 	}
 
 	public enum GameLocation {
-		MIN, MAX, END, PLATE
+		MIN, MAX, END, PLATE;
 	}
 }

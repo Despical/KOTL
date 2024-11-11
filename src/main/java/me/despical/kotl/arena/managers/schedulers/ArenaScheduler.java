@@ -40,14 +40,14 @@ public enum ArenaScheduler {
 			var scheduler = plugin.getServer().getScheduler();
 
 			if (options.async()) {
-				scheduler.scheduleAsyncRepeatingTask(plugin, this::run, 1L, options.interval());
+				scheduler.runTaskTimerAsynchronously(plugin, this::run, 1L, options.interval());
 			} else {
-				scheduler.scheduleSyncRepeatingTask(plugin, this::run, 1L, options.interval());
+				scheduler.runTaskTimer(plugin, this::run, 1L, options.interval());
 			}
 		}
 
 		private void run() {
-			for (var arena : plugin.getArenaRegistry().getArenas()) {
+			for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 				generalSearchForPlayers(arena);
 			}
 		}
@@ -59,11 +59,11 @@ public enum ArenaScheduler {
 		public void register(SchedulerOptions options) {
 			var scheduler = plugin.getServer().getScheduler();
 
-			for (final var arena : plugin.getArenaRegistry().getArenas()) {
+			for (Arena arena : plugin.getArenaRegistry().getArenas()) {
 				if (options.async()) {
-					scheduler.scheduleAsyncRepeatingTask(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
+					scheduler.runTaskTimerAsynchronously(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
 				} else {
-					scheduler.scheduleSyncRepeatingTask(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
+					scheduler.runTaskTimer(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
 				}
 			}
 		}
@@ -77,10 +77,10 @@ public enum ArenaScheduler {
 
 				@EventHandler
 				public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
-					var player = event.getPlayer();
-					var arena = isInArea(player);
-					var playerArena = plugin.getArenaRegistry().getArena(player);
-					var isInArena = playerArena != null;
+					Player player = event.getPlayer();
+					Arena arena = isInArea(player);
+					Arena playerArena = plugin.getArenaRegistry().getArena(player);
+					boolean isInArena = playerArena != null;
 
 					if (!isInArena && arena != null) {
 						arena.addPlayer(player);
@@ -92,10 +92,12 @@ public enum ArenaScheduler {
 				}
 
 				private Arena isInArea(final Player player) {
-					for (var arena : plugin.getArenaRegistry().getArenas()) {
-						final var target = arena.isInArea(player);
+					for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+						Arena target = arena.isInArea(player);
 
-						if (target != null) return target;
+						if (target != null) {
+							return target;
+						}
 					}
 
 					return null;
@@ -109,9 +111,9 @@ public enum ArenaScheduler {
 	public abstract void register(SchedulerOptions options);
 
 	protected void generalSearchForPlayers(Arena arena) {
-		for (var player : plugin.getServer().getOnlinePlayers()) {
-			final var target = arena.isInArea(player);
-			final var current = plugin.getArenaRegistry().getArena(player);
+		for (Player player : plugin.getServer().getOnlinePlayers()) {
+			Arena target = arena.isInArea(player);
+			Arena current = plugin.getArenaRegistry().getArena(player);
 
 			if (current == null && target != null && !arena.getPlayers().contains(player)) {
 				arena.addPlayer(player);

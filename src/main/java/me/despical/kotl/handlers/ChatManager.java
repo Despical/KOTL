@@ -70,39 +70,34 @@ public class ChatManager {
 	}
 
 	public String message(String path, Player player) {
-		String returnString = message(path);
-		returnString = returnString.replace("%player%", player.getName());
-		returnString = formatMessage(returnString, player);
+		String message = message(path);
+		message = message.replace("%player%", player.getName());
+		message = formatMessage(message, player);
 
-		return returnString;
+		return message;
 	}
 
 	public String formatMessage(String message, Player player) {
-		String returnString = message;
-
 		if (papiEnabled) {
-			returnString = PlaceholderAPI.setPlaceholders(player, returnString);
+			return PlaceholderAPI.setPlaceholders(player, message);
 		}
 
-		return returnString;
+		return message;
 	}
 
 	private String formatMessage(Arena arena, String message, Player player) {
-		String returnString = message;
-		returnString = returnString.replace("%player%", player.getName());
-		returnString = formatMessage(returnString, arena);
-		returnString = formatMessage(returnString, player);
+		message = message.replace("%player%", player.getName());
+		message = formatMessage(message, arena);
+		message = formatMessage(message, player);
 
-		return coloredRawMessage(returnString);
+		return coloredRawMessage(message);
 	}
 
 	private String formatMessage(String message, Arena arena) {
-		String returnString = message;
-
-		returnString = returnString.replace("%arena%", arena.getId());
-		returnString = returnString.replace("%players%", Integer.toString(arena.getPlayers().size()));
-		returnString = returnString.replace("%king%", arena.getKingName());
-		return returnString;
+		message = message.replace("%arena%", arena.getId());
+		message = message.replace("%players%", Integer.toString(arena.getPlayers().size()));
+		message = message.replace("%king%", arena.getKingName());
+		return message;
 	}
 
 	public List<String> getStringList(String path) {
@@ -111,16 +106,11 @@ public class ChatManager {
 	}
 
 	public void broadcastAction(Arena arena, Player player, ActionType action) {
-		String path;
-
-		switch (action) {
-			case JOIN -> path = "join";
-			case LEAVE -> path = "leave";
-			case NEW_KING -> path = "new_king";
-			default -> {
-				return;
-			}
-		}
+		String path = switch (action) {
+			case JOIN -> "join";
+			case LEAVE -> "leave";
+			default -> "new_king";
+		};
 
 		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
 	}
