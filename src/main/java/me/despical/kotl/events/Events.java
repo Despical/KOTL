@@ -63,7 +63,11 @@ public class Events extends ListenerAdapter {
 		Arena arena = teleportToEnd.get(player.getUniqueId());
 
 		if (arena != null) {
-			arena.teleportToEndLocation(player);
+			plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+				arena.teleportToEndLocation(player);
+
+				teleportToEnd.remove(player.getUniqueId());
+			}, 1);
 		}
 
 		if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
