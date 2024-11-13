@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.despical</groupId>
 	<artifactId>king-of-the-ladder</artifactId>
-	<version>3.0.8</version>
+	<version>3.0.9</version>
 
 	<name>King of the Ladder</name>
 	<inceptionYear>2020</inceptionYear>
