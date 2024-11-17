@@ -21,5 +21,6 @@ permissions:
       kotl.admin.help: true
       kotl.admin.reload: true
       kotl.admin.kick: true
+      kotl.admin.version: true
       kotl.command.override: true
       kotl.admin.cooldown: true
