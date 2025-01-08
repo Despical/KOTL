@@ -51,6 +51,7 @@ public non-sealed class MysqlManager extends IUserDatabase {
 						  `UUID` char(36) NOT NULL PRIMARY KEY,
 						  `name` varchar(32) NOT NULL,
 						  `toursplayed` int(11) NOT NULL DEFAULT '0',
+						  `kill` int(11) NOT NULL DEFAULT '0',
 						  `score` int(11) NOT NULL DEFAULT '0'
 						);""".formatted(table));
 			} catch (SQLException exception) {
