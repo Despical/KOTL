@@ -103,7 +103,7 @@ public class ArenaRegistry {
 			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
 			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
 			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
-			arena.setArenaPlate(XMaterial.valueOf(config.getString(path + "arenaPlate")));
+			arena.setArenaPlate(XMaterial.matchXMaterial(config.getString(path + "arenaPlate")).orElse(XMaterial.OAK_PRESSURE_PLATE));
 			arena.setShowOutlines(config.getBoolean(path + "showOutlines"));
 
 			if (arena.isReady() && arena.getPlateLocation().getBlock().getType() != arena.getArenaPlate().parseMaterial()) {

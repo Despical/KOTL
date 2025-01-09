@@ -34,6 +34,7 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -86,6 +87,8 @@ public class StatsStorage {
 		KILLS("kill"),
 		DEATHS("death"),
 		LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
+
+		public static final StatisticType[] PERSISTENT_STATS = Stream.of(values()).filter(StatisticType::isPersistent).toArray(StatisticType[]::new);
 
 		final String name;
 		final boolean persistent;

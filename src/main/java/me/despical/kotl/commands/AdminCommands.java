@@ -42,6 +42,7 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -196,8 +197,8 @@ public class AdminCommands extends AbstractCommand {
 	public void reloadCommand(CommandArguments arguments) {
 		plugin.reload();
 
-		for (final var arena : plugin.getArenaRegistry().getArenas()) {
-			for (final var player : arena.getPlayers()) {
+		for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+			for (Player player : arena.getPlayers()) {
 				player.setWalkSpeed(.2F);
 
 				if (plugin.getOption(ConfigPreferences.Option.INVENTORY_MANAGER_ENABLED)) {
@@ -233,11 +234,11 @@ public class AdminCommands extends AbstractCommand {
 		MiscUtils.sendCenteredMessage(arguments.getSender(), "&3[&boptional argument&3] &b- &3<&brequired argument&3>");
 		arguments.sendMessage("");
 
-		final CommandSender sender = arguments.getSender();
-		final boolean isPlayer = arguments.isSenderPlayer();
+		CommandSender sender = arguments.getSender();
+		boolean isPlayer = arguments.isSenderPlayer();
 
-		for (final var command : plugin.getCommandFramework().getSubCommands()) {
-			final String usage = formatCommandUsage(command.usage()), desc = command.desc();
+		for (Command command : plugin.getCommandFramework().getSubCommands()) {
+			String usage = formatCommandUsage(command.usage()), desc = command.desc();
 
 			if (usage.isEmpty() || desc.isEmpty()) continue;
 
@@ -276,14 +277,14 @@ public class AdminCommands extends AbstractCommand {
 		desc = "Shows all of the existing arenas"
 	)
 	public void listCommand(CommandArguments arguments) {
-		final var arenas = plugin.getArenaRegistry().getArenas();
+		Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
 
 		if (arenas.isEmpty()) {
 			arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
 			return;
 		}
 
-		var list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
+		String list = arenas.stream().map(Arena::getId).collect(Collectors.joining(", "));
 		arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.format").replace("%list%", list));
 	}
 
@@ -296,7 +297,8 @@ public class AdminCommands extends AbstractCommand {
 	)
 	public void kickCommand(CommandArguments arguments) {
 		arguments.getPlayer(0).ifPresentOrElse(player -> {
-			final var arena = plugin.getArenaRegistry().getArena(player);
+			Arena arena = plugin.getArenaRegistry().getArena(player);
+
 			if (arena == null) {
 				arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
 				return;
@@ -340,8 +342,8 @@ public class AdminCommands extends AbstractCommand {
 		name = "kotl"
 	)
 	public List<String> onTabComplete(CommandArguments arguments) {
-		final List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-		final String[] args = arguments.getArguments();
+		List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
+		String[] args = arguments.getArguments();
 
 		if (args.length > 0) {
 			if (List.of("create", "list", "help", "reload", "version").contains(args[0])) {
@@ -353,7 +355,7 @@ public class AdminCommands extends AbstractCommand {
 			return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("kotl.admin") ? commands : List.of("top", "stats"), completions);
 		}
 
-		final String arg = args[0];
+		String arg = args[0];
 
 		if (args.length == 2) {
 			if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return completions;
@@ -366,8 +368,7 @@ public class AdminCommands extends AbstractCommand {
 				return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
 			}
 
-			final var arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).collect(Collectors.toList());
-
+			List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).toList();
 			return StringUtil.copyPartialMatches(args[1], arenas, completions);
 		}
 
@@ -377,8 +378,8 @@ public class AdminCommands extends AbstractCommand {
 	private String formatCommandUsage(String usage) {
 		usage = "&3" + usage;
 
-		final var array = usage.toCharArray();
-		final var buffer = new StringBuilder(usage);
+		char[] array = usage.toCharArray();
+		StringBuilder buffer = new StringBuilder(usage);
 
 		for (int i = 0; i < array.length; i++) {
 			if (array[i] == '[' || array[i] == '<') {

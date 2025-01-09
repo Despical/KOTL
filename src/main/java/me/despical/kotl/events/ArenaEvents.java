@@ -132,7 +132,7 @@ public class ArenaEvents extends ListenerAdapter {
 		if (arena == null) return;
 
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			for (final var material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
+			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
 				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
 					arena.doBarAction(player, 0);
 					arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));

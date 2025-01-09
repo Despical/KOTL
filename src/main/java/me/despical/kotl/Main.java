@@ -226,17 +226,15 @@ public class Main extends JavaPlugin {
 			if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
 				StringBuilder update = new StringBuilder(" SET ");
 
-				for (var stat : StatsStorage.StatisticType.values()) {
-					if (!stat.isPersistent()) continue;
-
-					int val = user.getStat(stat);
+				for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+					int value = user.getStat(stat);
 					String statName = stat.getName();
 
 					if (update.toString().equalsIgnoreCase(" SET ")) {
-						update.append(statName).append("=").append(val);
+						update.append(statName).append("=").append(value);
 					}
 
-					update.append(", ").append(statName).append("=").append(val);
+					update.append(", ").append(statName).append("=").append(value);
 				}
 
 				String finalUpdate = update.toString();

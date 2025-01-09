@@ -56,15 +56,16 @@ public class PlayerCommands extends AbstractCommand {
 
 	@Command(
 		name = "kotl",
+		fallbackPrefix = "kingoftheladder",
 		usage = "/kotl help",
 		desc = "Main command of the plugin."
 	)
 	public void mainCommand(CommandArguments arguments) {
 		if (arguments.isArgumentsEmpty()) {
-			arguments.sendMessage("&3This server is running &bKing of the Ladder v" + plugin.getDescription().getVersion() + " &3by &bDespical&3!");
+			arguments.sendMessage("&3This server is running &bKing of the Ladder v{0} &3by &bDespical&3.", plugin.getDescription().getVersion());
 
 			if (arguments.hasPermission("kotl.admin")) {
-				arguments.sendMessage("&3Commands: &b/" + arguments.getLabel() + " help");
+				arguments.sendMessage("&3Commands: &b/{0} help", arguments.getLabel());
 			}
 
 			return;
