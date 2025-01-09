@@ -25,7 +25,10 @@ import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import org.jetbrains.annotations.NotNull;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Despical
@@ -43,16 +46,17 @@ public non-sealed class MysqlManager extends IUserDatabase {
 		this.database = new MysqlDatabase(plugin, "mysql");
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (final var connection = database.getConnection()) {
-				final var statement = connection.createStatement();
+			try (Connection connection = database.getConnection()) {
+				Statement statement = connection.createStatement();
 
 				statement.executeUpdate("""
 						CREATE TABLE IF NOT EXISTS `%s` (
 						  `UUID` char(36) NOT NULL PRIMARY KEY,
 						  `name` varchar(32) NOT NULL,
-						  `toursplayed` int(11) NOT NULL DEFAULT '0',
-						  `kill` int(11) NOT NULL DEFAULT '0',
-						  `score` int(11) NOT NULL DEFAULT '0'
+						  `toursplayed` int(11) NOT NULL DEFAULT 0,
+						  `kill` int(11) NOT NULL DEFAULT 0,
+						  `death` int(11) NOT NULL DEFAULT 0,
+						  `score` int(11) NOT NULL DEFAULT 0
 						);""".formatted(table));
 			} catch (SQLException exception) {
 				exception.printStackTrace();
@@ -67,13 +71,11 @@ public non-sealed class MysqlManager extends IUserDatabase {
 
 	@Override
 	public void saveStatistics(@NotNull User user) {
-		final var update = new StringBuilder(" SET ");
+		StringBuilder update = new StringBuilder(" SET ");
 
-		for (final var stat : StatsStorage.StatisticType.values()) {
-			if (!stat.isPersistent()) continue;
-
-			final var value = user.getStat(stat);
-			final var name = stat.getName();
+		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+			int value = user.getStat(stat);
+			String name = stat.getName();
 
 			if (update.toString().equalsIgnoreCase(" SET ")) {
 				update.append(name).append("=").append(value);
@@ -82,32 +84,26 @@ public non-sealed class MysqlManager extends IUserDatabase {
 			update.append(", ").append(name).append("=").append(value);
 		}
 
-		final var finalUpdate = update.toString();
-
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(table, finalUpdate, user.getUniqueId().toString())));
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> database.executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(table, update.toString(), user.getUniqueId().toString())));
 	}
 
 	@Override
 	public void loadStatistics(@NotNull User user) {
-		final String uuid = user.getUniqueId().toString(), name = user.getName();
+		String uuid = user.getUniqueId().toString(), name = user.getName();
 
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			try (final var connection = database.getConnection()) {
-				final var statement = connection.createStatement();
-				final var rs = statement.executeQuery("SELECT * from %s WHERE UUID='%s';".formatted(table, uuid));
+			try (Connection connection = database.getConnection()) {
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * from %s WHERE UUID='%s';".formatted(table, uuid));
 
-				if (rs.next()) {
-					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.values()) {
-						if (!stat.isPersistent()) continue;
-
-						user.setStat(stat, rs.getInt(stat.getName()));
+				if (resultSet.next()) {
+					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+						user.setStat(stat, resultSet.getInt(stat.getName()));
 					}
 				} else {
 					statement.executeUpdate("INSERT INTO %s (UUID,name) VALUES ('%s','%s');".formatted(table, uuid, name));
 
-					for (final var stat : StatsStorage.StatisticType.values()) {
-						if (!stat.isPersistent()) continue;
-
+					for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
 						user.setStat(stat, 0);
 					}
 				}
