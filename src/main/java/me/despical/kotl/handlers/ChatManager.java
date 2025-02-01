@@ -19,14 +19,16 @@
 package me.despical.kotl.handlers;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.despical.commandframework.Message;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.util.Strings;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.arena.Arena;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -35,96 +37,100 @@ import java.util.List;
  */
 public class ChatManager {
 
-	private String prefix;
-	private FileConfiguration config;
+    private final KOTL plugin;
+    private final boolean papiEnabled;
+    private String prefix;
+    private FileConfiguration config;
 
-	private final Main plugin;
-	private final boolean papiEnabled;
+    public ChatManager(KOTL plugin) {
+        this.plugin = plugin;
+        this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+        this.config = ConfigUtils.getConfig(plugin, "messages");
+        this.prefix = message("in_game.plugin_prefix");
+    }
 
-	public ChatManager(Main plugin) {
-		this.plugin = plugin;
-		this.papiEnabled = plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
-		this.config = ConfigUtils.getConfig(plugin, "messages");
-		this.prefix = message("in_game.plugin_prefix");
-	}
+    public String coloredRawMessage(String message) {
+        return Strings.format(message);
+    }
 
-	public String coloredRawMessage(String message) {
-		return Strings.format(message);
-	}
+    public String prefixedRawMessage(String message) {
+        return prefix + coloredRawMessage(message);
+    }
 
-	public String prefixedRawMessage(String message) {
-		return prefix + coloredRawMessage(message);
-	}
+    public String message(String path) {
+        path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+        return coloredRawMessage(config.getString(path));
+    }
 
-	public String message(String path) {
-		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
-		return coloredRawMessage(config.getString(path));
-	}
+    public String prefixedMessage(String path) {
+        return prefix + message(path);
+    }
 
-	public String prefixedMessage(String path) {
-		return prefix + message(path);
-	}
+    public boolean isPapiEnabled() {
+        return papiEnabled;
+    }
 
-	public boolean isPapiEnabled() {
-		return papiEnabled;
-	}
+    public String message(String path, Player player) {
+        String message = message(path);
+        message = message.replace("%player%", player.getName());
+        message = formatMessage(message, player);
 
-	public String message(String path, Player player) {
-		String message = message(path);
-		message = message.replace("%player%", player.getName());
-		message = formatMessage(message, player);
+        return message;
+    }
 
-		return message;
-	}
+    public String formatMessage(String message, Player player) {
+        if (papiEnabled) {
+            message = PlaceholderAPI.setPlaceholders(player, message);
+        }
 
-	public String formatMessage(String message, Player player) {
-		if (papiEnabled) {
-			return PlaceholderAPI.setPlaceholders(player, message);
-		}
+        return message;
+    }
 
-		return message;
-	}
+    private String formatMessage(Arena arena, String message, Player player) {
+        message = message.replace("%player%", player.getName());
+        message = formatMessage(message, arena);
+        message = formatMessage(message, player);
 
-	private String formatMessage(Arena arena, String message, Player player) {
-		message = message.replace("%player%", player.getName());
-		message = formatMessage(message, arena);
-		message = formatMessage(message, player);
+        return coloredRawMessage(message);
+    }
 
-		return coloredRawMessage(message);
-	}
+    private String formatMessage(String message, Arena arena) {
+        message = message.replace("%arena%", arena.getId());
+        message = message.replace("%players%", Integer.toString(arena.getPlayers().size()));
+        message = message.replace("%king%", arena.getKingName());
+        return message;
+    }
 
-	private String formatMessage(String message, Arena arena) {
-		message = message.replace("%arena%", arena.getId());
-		message = message.replace("%players%", Integer.toString(arena.getPlayers().size()));
-		message = message.replace("%king%", arena.getKingName());
-		return message;
-	}
+    public List<String> getStringList(String path) {
+        path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
+        return config.getStringList(path);
+    }
 
-	public List<String> getStringList(String path) {
-		path = me.despical.commons.string.StringUtils.capitalize(path.replace('_', '-'), '-', '.');
-		return config.getStringList(path);
-	}
+    public void broadcastAction(Arena arena, Player player, ActionType action) {
+        String path = switch (action) {
+            case JOIN -> "join";
+            case LEAVE -> "leave";
+            default -> "new_king";
+        };
 
-	public void broadcastAction(Arena arena, Player player, ActionType action) {
-		String path = switch (action) {
-			case JOIN -> "join";
-			case LEAVE -> "leave";
-			default -> "new_king";
-		};
+        arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
+    }
 
-		arena.broadcastMessage(prefix + formatMessage(arena, message("in_game." + path), player));
-	}
+    public String getPrefix() {
+        return prefix;
+    }
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public void reload() {
+        config = ConfigUtils.getConfig(plugin, "messages");
+        prefix = message("in_game.plugin_prefix");
 
-	public void reload() {
-		config = ConfigUtils.getConfig(plugin, "messages");
-		prefix = message("in_game.plugin_prefix");
-	}
+        Stream.of(Message.SHORT_ARG_SIZE, Message.LONG_ARG_SIZE).forEach(message -> message.setMessage((command, arguments) -> {
+            arguments.sendMessage(prefixedMessage("commands.correct_usage").replace("%usage%", command.usage()));
+            return true;
+        }));
+    }
 
-	public enum ActionType {
-		JOIN, LEAVE, NEW_KING
-	}
+    public enum ActionType {
+        JOIN, LEAVE, NEW_KING
+    }
 }

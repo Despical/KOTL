@@ -18,7 +18,7 @@
 
 package me.despical.kotl.handlers.rewards;
 
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,91 +30,91 @@ import java.util.List;
  */
 public class Reward {
 
-	private final RewardType type;
-	private final List<SubReward> rewards;
+    private final RewardType type;
+    private final List<SubReward> rewards;
 
-	public Reward(final Main plugin, final RewardType type, final List<String> rawCodes) {
-		this.type = type;
-		this.rewards = new ArrayList<>();
+    public Reward(KOTL plugin, RewardType type, List<String> rawCodes) {
+        this.type = type;
+        this.rewards = new ArrayList<>();
 
-		for (final var rawCode : rawCodes) {
-			this.rewards.add(new SubReward(plugin, rawCode));
-		}
-	}
+        for (final var rawCode : rawCodes) {
+            this.rewards.add(new SubReward(plugin, rawCode));
+        }
+    }
 
-	public List<SubReward> getRewards() {
-		return rewards;
-	}
+    public List<SubReward> getRewards() {
+        return rewards;
+    }
 
-	public RewardType getType() {
-		return type;
-	}
+    public RewardType getType() {
+        return type;
+    }
 
-	public static final class SubReward {
+    public enum RewardType {
 
-		private String executableCode;
-		private final int chance, executor;
+        WIN("Win"),
+        LOSE("Lose"),
+        JOIN("Join"),
+        LEAVE("Leave"),
+        KILL("Kill"),
+        DEATH("Death");
 
-		public SubReward(Main plugin, String rawCode) {
-			var processedCode = rawCode;
+        final String path;
 
-			if (rawCode.startsWith("p:")) {
-				this.executor = 2;
+        RewardType(String path) {
+            this.path = "Rewards." + path;
+        }
+    }
 
-				processedCode = processedCode.replace("p:", "");
-			} else {
-				this.executor = 1;
-			}
+    public static final class SubReward {
 
-			if (processedCode.contains("chance(")) {
-				var loc = processedCode.indexOf(")");
+        private final int chance, executor;
+        private String executableCode;
 
-				if (loc == -1) {
-					plugin.getLogger().warning("Second '')'' is not found in chance condition! Command: %s".formatted(rawCode));
+        public SubReward(KOTL plugin, String rawCode) {
+            var processedCode = rawCode;
 
-					this.chance = -1;
-					return;
-				}
+            if (rawCode.startsWith("p:")) {
+                this.executor = 2;
 
-				var chanceStr = processedCode;
-				chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
+                processedCode = processedCode.replace("p:", "");
+            } else {
+                this.executor = 1;
+            }
 
-				processedCode = processedCode.replace("chance(%s):".formatted(chanceStr), "");
+            if (processedCode.contains("chance(")) {
+                var loc = processedCode.indexOf(")");
 
-				this.chance = Integer.parseInt(chanceStr);
-			} else {
-				this.chance = -1;
-			}
+                if (loc == -1) {
+                    plugin.getLogger().warning("Second '')'' is not found in chance condition! Command: %s".formatted(rawCode));
 
-			this.executableCode = processedCode;
-		}
+                    this.chance = -1;
+                    return;
+                }
 
-		public String getExecutableCode() {
-			return executableCode;
-		}
+                var chanceStr = processedCode;
+                chanceStr = chanceStr.substring(0, loc).replaceAll("[^0-9]+", "");
 
-		public int getExecutor() {
-			return executor;
-		}
+                processedCode = processedCode.replace("chance(%s):".formatted(chanceStr), "");
 
-		public int getChance() {
-			return chance;
-		}
-	}
+                this.chance = Integer.parseInt(chanceStr);
+            } else {
+                this.chance = -1;
+            }
 
-	public enum RewardType {
+            this.executableCode = processedCode;
+        }
 
-		WIN("Win"),
-		LOSE("Lose"),
-		JOIN("Join"),
-		LEAVE("Leave"),
-		KILL("Kill"),
-		DEATH("Death");
+        public String getExecutableCode() {
+            return executableCode;
+        }
 
-		final String path;
+        public int getExecutor() {
+            return executor;
+        }
 
-		RewardType(String path) {
-			this.path = "Rewards." + path;
-		}
-	}
+        public int getChance() {
+            return chance;
+        }
+    }
 }

@@ -18,15 +18,14 @@
 
 package me.despical.kotl.user;
 
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.rewards.Reward.RewardType;
+import me.despical.kotl.options.Option;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -40,97 +39,84 @@ import java.util.UUID;
  */
 public class User {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
-	private static long cooldownCounter;
+    private static final KOTL plugin = JavaPlugin.getPlugin(KOTL.class);
+    private static long cooldownCounter;
 
-	private final UUID uuid;
-	private final String name;
-	private final Map<String, Double> cooldowns;
-	private final Map<String, Boolean> variables;
-	private final Map<StatsStorage.StatisticType, Integer> stats;
+    private final UUID uuid;
+    private final String name;
+    private final Map<String, Double> cooldowns;
+    private final Map<String, Boolean> variables;
+    private final Map<StatsStorage.StatisticType, Integer> stats;
 
-	private Scoreboard cachedScoreboard;
+    public User(Player player) {
+        this.uuid = player.getUniqueId();
+        this.name = player.getName();
+        this.cooldowns = new HashMap<>();
+        this.variables = new HashMap<>();
+        this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
+    }
 
-	public User(Player player) {
-		this.uuid = player.getUniqueId();
-		this.name = player.getName();
-		this.cooldowns = new HashMap<>();
-		this.variables = new HashMap<>();
-		this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
-	}
+    public static void cooldownHandlerTask() {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+    }
 
-	public Arena getArena() {
-		return plugin.getArenaRegistry().getArena(getPlayer());
-	}
+    public Arena getArena() {
+        return plugin.getArenaRegistry().getArena(getPlayer());
+    }
 
-	public Player getPlayer() {
-		return plugin.getServer().getPlayer(uuid);
-	}
+    public Player getPlayer() {
+        return plugin.getServer().getPlayer(uuid);
+    }
 
-	public UUID getUniqueId() {
-		return uuid;
-	}
+    public UUID getUniqueId() {
+        return uuid;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public int getStat(StatsStorage.StatisticType statisticType) {
-		return stats.computeIfAbsent(statisticType, stat -> 0);
-	}
+    public int getStat(StatsStorage.StatisticType statisticType) {
+        return stats.computeIfAbsent(statisticType, stat -> 0);
+    }
 
-	public void setStat(StatsStorage.StatisticType stat, int value) {
-		stats.put(stat, value);
+    public void setStat(StatsStorage.StatisticType stat, int value) {
+        stats.put(stat, value);
 
-		plugin.callEvent(() -> new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
-	}
+        plugin.callEvent(() -> new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
+    }
 
-	public void addStat(StatsStorage.StatisticType stat, int value) {
-		setStat(stat, getStat(stat) + value);
-	}
+    public void addStat(StatsStorage.StatisticType stat, int value) {
+        setStat(stat, getStat(stat) + value);
+    }
 
-	public void performReward(RewardType rewardType, Arena arena) {
-		plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType, arena));
-	}
+    public void performReward(RewardType rewardType, Arena arena) {
+        plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType, arena));
+    }
 
-	public void giveKit() {
-		plugin.getKitManager().giveKit(getPlayer());
-	}
+    public void giveKit() {
+        plugin.getKitManager().giveKit(getPlayer());
+    }
 
-	public void cacheScoreboard() {
-		this.cachedScoreboard = getPlayer().getScoreboard();
-	}
+    public void setCooldown(String s, double seconds) {
+        cooldowns.put(s, seconds + cooldownCounter);
+    }
 
-	public void removeScoreboard() {
-		if (this.cachedScoreboard == null) return;
+    public double getCooldown(String s) {
+        final var cooldown = cooldowns.get(s);
 
-		this.getPlayer().setScoreboard(this.cachedScoreboard);
-		this.cachedScoreboard = null;
-	}
+        return (cooldown == null || cooldown <= cooldownCounter) ? 0 : cooldown - cooldownCounter;
+    }
 
-	public void setCooldown(String s, double seconds) {
-		cooldowns.put(s, seconds + cooldownCounter);
-	}
+    public boolean get(String string) {
+        return variables.computeIfAbsent(string, value -> false);
+    }
 
-	public double getCooldown(String s) {
-		final var cooldown = cooldowns.get(s);
+    public void set(String string, boolean value) {
+        if ("king".equals(string) && plugin.getConfigOptions().isEnabled(Option.SEPARATE_COOLDOWNS)) {
+            string = getArena().getId() + "king";
+        }
 
-		return (cooldown == null || cooldown <= cooldownCounter) ? 0 : cooldown - cooldownCounter;
-	}
-
-	public static void cooldownHandlerTask() {
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
-	}
-
-	public boolean get(String string) {
-		return variables.computeIfAbsent(string, val -> false);
-	}
-
-	public void set(String string, boolean value) {
-		if ("king".equals(string) && plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS)) {
-			string = getArena().getId() + "king";
-		}
-
-		variables.put(string, value);
-	}
+        variables.put(string, value);
+    }
 }

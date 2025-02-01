@@ -16,38 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.handlers.language;
+package me.despical.kotl.events;
 
-import me.despical.kotl.handlers.language.LanguageManager.Locale;
-
-import java.util.HashSet;
-import java.util.Set;
+import me.despical.kotl.KOTL;
+import me.despical.kotl.handlers.ChatManager;
+import org.bukkit.event.Listener;
 
 /**
  * @author Despical
  * <p>
- * Created at 01.11.2020
+ * Created at 12.07.2022
  */
-public class LocaleRegistry {
+public sealed class EventListener implements Listener permits Events, ArenaEvents {
 
-	private static final Set<LanguageManager.Locale> registeredLocales = new HashSet<>();
+    protected final KOTL plugin;
+    protected final ChatManager chatManager;
 
-	public static void registerLocale(Locale locale) {
-		registeredLocales.removeIf(l -> l.prefix().equals(locale.prefix()));
-		registeredLocales.add(locale);
-	}
-
-	public static Set<Locale> getRegisteredLocales() {
-		return Set.copyOf(registeredLocales);
-	}
-
-	public static Locale getByName(String name) {
-		for (final var locale : registeredLocales) {
-			if (locale.name().equals(name)) {
-				return locale;
-			}
-		}
-
-		return null;
-	}
+    public EventListener(KOTL plugin) {
+        this.plugin = plugin;
+        this.chatManager = plugin.getChatManager();
+        this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 }

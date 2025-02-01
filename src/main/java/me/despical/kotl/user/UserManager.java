@@ -18,15 +18,18 @@
 
 package me.despical.kotl.user;
 
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
+import me.despical.kotl.options.Option;
 import me.despical.kotl.user.data.FileStats;
-import me.despical.kotl.user.data.IUserDatabase;
 import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.user.data.UserDatabase;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -35,45 +38,43 @@ import java.util.*;
  */
 public class UserManager {
 
-	private final Map<UUID, User> users;
-	private final IUserDatabase database;
+    private final UserDatabase database;
+    private final Map<UUID, User> users;
 
-	public UserManager(Main plugin) {
-		this.users = new HashMap<>();
-		this.database = plugin.getOption(ConfigPreferences.Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStats(plugin);
+    public UserManager(KOTL plugin) {
+        this.database = plugin.getConfigOptions().isEnabled(Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStats(plugin);
+        this.users = new HashMap<>();
+    }
 
-		plugin.getServer().getOnlinePlayers().forEach(this::addUser);
-	}
+    public User addUser(Player player) {
+        User user = new User(player);
+        users.put(player.getUniqueId(), user);
 
-	public User addUser(Player player) {
-		User user = new User(player);
-		users.put(player.getUniqueId(), user);
+        database.loadStatistics(user);
+        return user;
+    }
 
-		database.loadStatistics(user);
-		return user;
-	}
+    @NotNull
+    public User getUser(Player player) {
+        User user = users.get(player.getUniqueId());
 
-	@NotNull
-	public User getUser(Player player) {
-		User user = users.get(player.getUniqueId());
+        if (user != null) {
+            return user;
+        }
 
-		if (user != null) {
-			return user;
-		}
+        return this.addUser(player);
+    }
 
-		return this.addUser(player);
-	}
+    public void removeUser(Player player) {
+        users.remove(player.getUniqueId());
+    }
 
-	public void removeUser(Player player) {
-		users.remove(player.getUniqueId());
-	}
+    @NotNull
+    public UserDatabase getDatabase() {
+        return database;
+    }
 
-	@NotNull
-	public IUserDatabase getDatabase() {
-		return database;
-	}
-
-	public Set<User> getUsers() {
-		return Set.copyOf(users.values());
-	}
+    public Set<User> getUsers() {
+        return Set.copyOf(users.values());
+    }
 }

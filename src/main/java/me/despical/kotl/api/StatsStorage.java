@@ -20,7 +20,7 @@ package me.despical.kotl.api;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.data.MysqlManager;
 import org.bukkit.entity.Player;
@@ -44,74 +44,74 @@ import java.util.stream.Stream;
  */
 public class StatsStorage {
 
-	private static final Main plugin = JavaPlugin.getPlugin(Main.class);
+    private static final KOTL plugin = JavaPlugin.getPlugin(KOTL.class);
 
-	@NotNull
-	public static Map<UUID, Integer> getStats(StatisticType stat) {
-		if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
-			try (Connection connection = mysqlManager.getDatabase().getConnection()) {
-				final Statement statement = connection.createStatement();
-				final ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.name, mysqlManager.getTable(), stat.name));
+    @NotNull
+    public static Map<UUID, Integer> getStats(StatisticType stat) {
+        if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
+            try (Connection connection = mysqlManager.getDatabase().getConnection()) {
+                final Statement statement = connection.createStatement();
+                final ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.name, mysqlManager.getTable(), stat.name));
 
-				final var column = new LinkedHashMap<UUID, Integer>();
+                final var column = new LinkedHashMap<UUID, Integer>();
 
-				while (set.next()) {
-					column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
-				}
+                while (set.next()) {
+                    column.put(UUID.fromString(set.getString("UUID")), set.getInt(stat.getName()));
+                }
 
-				return column;
-			} catch (SQLException e) {
-				plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
-				return new LinkedHashMap<>();
-			}
-		}
+                return column;
+            } catch (SQLException e) {
+                plugin.getLogger().warning("SQLException occurred during getting statistics from database!");
+                return new LinkedHashMap<>();
+            }
+        }
 
-		final var config = ConfigUtils.getConfig(plugin, "stats");
-		final var stats = new LinkedHashMap<UUID, Integer>();
+        final var config = ConfigUtils.getConfig(plugin, "stats");
+        final var stats = new LinkedHashMap<UUID, Integer>();
 
-		for (final var string : config.getKeys(false)) {
-			stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
-		}
+        for (final var string : config.getKeys(false)) {
+            stats.put(UUID.fromString(string), config.getInt(string + "." + stat.getName()));
+        }
 
-		return SortUtils.sortByValue(stats);
-	}
+        return SortUtils.sortByValue(stats);
+    }
 
-	public static int getUserStats(Player player, StatisticType statisticType) {
-		return plugin.getUserManager().getUser(player).getStat(statisticType);
-	}
+    public static int getUserStats(Player player, StatisticType statisticType) {
+        return plugin.getUserManager().getUser(player).getStat(statisticType);
+    }
 
-	public enum StatisticType {
+    public enum StatisticType {
 
-		TOURS_PLAYED("toursplayed"),
-		SCORE("score"),
-		KILLS("kill"),
-		DEATHS("death"),
-		LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
+        TOURS_PLAYED("toursplayed"),
+        SCORE("score"),
+        KILLS("kill"),
+        DEATHS("death"),
+        LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
 
-		public static final StatisticType[] PERSISTENT_STATS = Stream.of(values()).filter(StatisticType::isPersistent).toArray(StatisticType[]::new);
+        public static final StatisticType[] PERSISTENT_STATS = Stream.of(values()).filter(StatisticType::isPersistent).toArray(StatisticType[]::new);
 
-		final String name;
-		final boolean persistent;
+        final String name;
+        final boolean persistent;
 
-		StatisticType(String name) {
-			this (name, true);
-		}
+        StatisticType(String name) {
+            this(name, true);
+        }
 
-		StatisticType(String name, boolean persistent) {
-			this.name = name;
-			this.persistent = persistent;
-		}
+        StatisticType(String name, boolean persistent) {
+            this.name = name;
+            this.persistent = persistent;
+        }
 
-		public String getName() {
-			return name;
-		}
+        public String getName() {
+            return name;
+        }
 
-		public boolean isPersistent() {
-			return persistent;
-		}
+        public boolean isPersistent() {
+            return persistent;
+        }
 
-		public String from(User user) {
-			return Integer.toString(user.getStat(this));
-		}
-	}
+        public String from(User user) {
+            return Integer.toString(user.getStat(this));
+        }
+    }
 }

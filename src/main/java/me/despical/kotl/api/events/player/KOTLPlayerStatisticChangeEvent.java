@@ -33,36 +33,36 @@ import org.jetbrains.annotations.NotNull;
  */
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
-	private static final HandlerList handlers = new HandlerList();
-	private final Player player;
-	private final StatsStorage.StatisticType statisticType;
-	private final int number;
+    private static final HandlerList handlers = new HandlerList();
+    private final Player player;
+    private final StatsStorage.StatisticType statisticType;
+    private final int number;
 
-	public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
-		super(eventArena);
-		this.player = player;
-		this.statisticType = statisticType;
-		this.number = number;
-	}
+    public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
+        super(eventArena);
+        this.player = player;
+        this.statisticType = statisticType;
+        this.number = number;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	@Override
-	public @NotNull HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public StatsStorage.StatisticType getStatisticType() {
-		return statisticType;
-	}
+    public StatsStorage.StatisticType getStatisticType() {
+        return statisticType;
+    }
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 }

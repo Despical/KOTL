@@ -18,89 +18,100 @@
 
 package me.despical.kotl.util;
 
+import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.item.ItemUtils;
-import me.despical.kotl.Main;
-import me.despical.kotl.events.ListenerAdapter;
+import me.despical.kotl.KOTL;
+import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author Despical
  * <p>
  * Created at 24.06.2020
  */
-public class CuboidSelector extends ListenerAdapter {
+public class CuboidSelector {
 
-	private final ItemStack wandItem;
-	private final Map<Player, Selection> selections;
+    private final KOTL plugin;
+    private final ItemStack wandItem;
+    private final Map<UUID, Selection> selections;
 
-	public CuboidSelector(Main plugin) {
-		super(plugin);
-		this.wandItem = new ItemBuilder(Material.BLAZE_ROD).name("&6&lArea selector").lore("&eLEFT CLICK to select first corner.", "&eRIGHT CLICK to select second corner.").build();
-		this.selections = new HashMap<>();
-	}
+    public CuboidSelector(KOTL plugin) {
+        this.plugin = plugin;
+        this.wandItem = new ItemBuilder(XMaterial.BLAZE_ROD)
+            .name("&6&lArea selector")
+            .lore("&eLEFT CLICK to select first corner.")
+            .lore("&eRIGHT CLICK to select second corner.")
+            .build();
+        this.selections = new HashMap<>();
 
-	public boolean giveSelectorWand(Player player) {
-		final var selection = selections.get(player);
+        plugin.getServer().getPluginManager().registerEvents(new SelectorEvents(), plugin);
+    }
 
-		if (selection == null || !player.getInventory().contains(wandItem)) {
-			player.getInventory().addItem(wandItem);
+    public void giveSelectorWand(Player player) {
+        Inventory inventory = player.getInventory();
+        inventory.addItem(wandItem);
+    }
 
-			player.sendMessage(chatManager.prefixedRawMessage("&eYou received area selector wand!"));
-			player.sendMessage(chatManager.prefixedRawMessage("&eSelect bottom corner using left click!"));
-			return true;
-		}
+    public Selection getSelection(Player player) {
+        return selections.get(player.getUniqueId());
+    }
 
-		return false;
-	}
+    public void removeSelection(Player player) {
+        selections.remove(player.getUniqueId());
+    }
 
-	public Selection getSelection(Player player) {
-		return selections.get(player);
-	}
+    public record Selection(Location firstPos, Location secondPos) {
+    }
 
-	public void removeSelection(Player player) {
-		selections.remove(player);
-	}
+    private class SelectorEvents implements Listener {
 
-	@EventHandler
-	public void onWandUse(PlayerInteractEvent event) {
-		if (!ItemUtils.isNamed(event.getItem()) || !event.getItem().getItemMeta().getDisplayName().equals(chatManager.coloredRawMessage("&6&lArea selector"))) {
-			return;
-		}
+        @EventHandler
+        public void onUsingWand(PlayerInteractEvent event) {
+            ItemStack item = event.getItem();
 
-		event.setCancelled(true);
+            if (!ItemUtils.isNamed(item) || !Objects.equals(item.getItemMeta().getDisplayName(), wandItem.getItemMeta().getDisplayName())) {
+                return;
+            }
 
-		final var player = event.getPlayer();
+            event.setCancelled(true);
 
-		switch (event.getAction()) {
-			case LEFT_CLICK_BLOCK -> {
-				selections.put(player, new Selection(event.getClickedBlock().getLocation(), null));
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow select top corner using right click!"));
-			}
+            Player player = event.getPlayer();
+            UUID uuid = player.getUniqueId();
+            ChatManager chatManager = plugin.getChatManager();
 
-			case RIGHT_CLICK_BLOCK -> {
-				if (!selections.containsKey(player)) {
-					player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select bottom corner using left click first!"));
-					break;
-				}
+            switch (event.getAction()) {
+                case LEFT_CLICK_BLOCK -> {
+                    selections.put(uuid, new Selection(event.getClickedBlock().getLocation(), null));
 
-				selections.replace(player, new Selection(selections.get(player).firstPos, event.getClickedBlock().getLocation()));
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
-			}
+                    player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow select the other corner using right click!"));
+                }
 
-			case LEFT_CLICK_AIR, RIGHT_CLICK_AIR ->
-				player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select solid block, not air!"));
-		}
-	}
+                case RIGHT_CLICK_BLOCK -> {
+                    if (!selections.containsKey(uuid)) {
+                        player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select a corner using the left click first!"));
+                        return;
+                    }
 
-	public record Selection(Location firstPos, Location secondPos) {
-	}
+                    selections.replace(uuid, new Selection(selections.get(uuid).firstPos, event.getClickedBlock().getLocation()));
+
+                    player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
+                }
+
+                default ->
+                    player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select solid block, not air!"));
+            }
+        }
+    }
 }

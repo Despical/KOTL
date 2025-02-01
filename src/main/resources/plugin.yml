@@ -1,9 +1,10 @@
 name: KOTL
-main: me.despical.kotl.Main
+main: me.despical.kotl.KOTL
 author: Despical
 version: ${project.version}
-
 api-version: 1.13
+description: An old, fun, classical Minecraft minigame.
+website: https://spigotmc.org/resources/80686/
 softdepend:
   - PlaceholderAPI
   - Multiverse-Core

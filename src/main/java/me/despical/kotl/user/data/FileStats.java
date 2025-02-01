@@ -19,7 +19,7 @@
 package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -30,39 +30,39 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2020
  */
-public non-sealed class FileStats extends IUserDatabase {
+public non-sealed class FileStats extends UserDatabase {
 
-	private final FileConfiguration config;
+    private final FileConfiguration config;
 
-	public FileStats(Main plugin) {
-		super(plugin);
-		this.config = ConfigUtils.getConfig(plugin, "stats");
-	}
+    public FileStats(KOTL plugin) {
+        super(plugin);
+        this.config = ConfigUtils.getConfig(plugin, "stats");
+    }
 
-	@Override
-	public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
-		config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
+    @Override
+    public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
+        config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
 
-		ConfigUtils.saveConfig(plugin, config, "stats");
-	}
+        ConfigUtils.saveConfig(plugin, config, "stats");
+    }
 
-	@Override
-	public void saveStatistics(@NotNull User user) {
-		String uuid = user.getUniqueId().toString();
+    @Override
+    public void saveStatistics(@NotNull User user) {
+        String uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
-			config.set(uuid + "." + stat.getName(), user.getStat(stat));
-		}
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+            config.set(uuid + "." + stat.getName(), user.getStat(stat));
+        }
 
-		ConfigUtils.saveConfig(plugin, config, "stats");
-	}
+        ConfigUtils.saveConfig(plugin, config, "stats");
+    }
 
-	@Override
-	public void loadStatistics(@NotNull User user) {
-		String uuid = user.getUniqueId().toString();
+    @Override
+    public void loadStatistics(@NotNull User user) {
+        String uuid = user.getUniqueId().toString();
 
-		for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
-			user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
-		}
-	}
+        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+            user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
+        }
+    }
 }

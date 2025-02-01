@@ -32,42 +32,42 @@ import org.jetbrains.annotations.NotNull;
  */
 public class KOTLNewKingEvent extends KOTLEvent {
 
-	private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-	private final Player king;
-	private final boolean sameKing;
+    private final Player king;
+    private final boolean sameKing;
 
-	public KOTLNewKingEvent(Arena eventArena, Player king, boolean sameKing) {
-		super(eventArena);
-		this.king = king;
-		this.sameKing = sameKing;
-	}
+    public KOTLNewKingEvent(Arena eventArena, Player king, boolean sameKing) {
+        super(eventArena);
+        this.king = king;
+        this.sameKing = sameKing;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	@Override
-	public @NotNull HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
 
-	/**
-	 * Current king of the arena.
-	 *
-	 * @return current king player.
-	 */
-	public Player getKing() {
-		return king;
-	}
+    /**
+     * Current king of the arena.
+     *
+     * @return current king player.
+     */
+    public Player getKing() {
+        return king;
+    }
 
-	/**
-	 * Returns last king equals to new king.
-	 *
-	 * @return true if last king equals to
-	 *         new king, otherwise false.
-	 */
-	public boolean isSameKing() {
-		return sameKing;
-	}
+    /**
+     * Returns last king equals to new king.
+     *
+     * @return true if last king equals to
+     * new king, otherwise false.
+     */
+    public boolean isSameKing() {
+        return sameKing;
+    }
 }

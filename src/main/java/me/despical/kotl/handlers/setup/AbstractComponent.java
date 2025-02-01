@@ -21,7 +21,7 @@ package me.despical.kotl.handlers.setup;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -33,19 +33,19 @@ import org.bukkit.inventory.ItemStack;
  */
 public abstract class AbstractComponent {
 
-	protected static final ItemStack mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn Main Menu").build();
+    protected static final ItemStack mainMenuItem = new ItemBuilder(XMaterial.REDSTONE).name("&c&lReturn Main Menu").build();
 
-	protected final Main plugin;
-	protected final ChatManager chatManager;
+    protected final KOTL plugin;
+    protected final ChatManager chatManager;
 
-	public AbstractComponent(Main plugin) {
-		this.plugin = plugin;
-		this.chatManager = plugin.getChatManager();
-	}
+    public AbstractComponent(KOTL plugin) {
+        this.plugin = plugin;
+        this.chatManager = plugin.getChatManager();
+    }
 
-	public abstract void injectComponents(SetupInventory inventory);
+    public abstract void injectComponents(SetupInventory inventory);
 
-	protected final String isLocationSet(Location location) {
-		return LocationSerializer.isDefaultLocation(location) ? "&c&l✘ Not Completed" : "&a&l✔ Completed";
-	}
+    protected final String isLocationSet(Location location) {
+        return LocationSerializer.isDefaultLocation(location) ? "&c&l✘ Not Completed" : "&a&l✔ Completed";
+    }
 }

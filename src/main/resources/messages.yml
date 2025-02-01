@@ -70,13 +70,12 @@ Boss-Bar:
     - "&e&lTHANK YOU FOR &b&lSUPPORTING &e&lUS!"
     - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
 
-# In game scoreboard messages.
-# Don't use more than 48 characters if you use old versions of Minecraft!
-# Can be used up to 144 characters in 1.14 and higher versions.
+# Minecraft 1.8.x - 1.13.x: supports up to 48 characters.
+# Minecraft 1.14.x - 1.21.x supports up to 144 characters.
+# Minecraft 1.16.x+ supports RGB/Hex colors: <#rrggbb>
 Scoreboard:
   Title: "&e&lKOTL"
   Content:
-    # Can be found more information about placeholders on our wiki.
     Playing:
       - ""
       - "Arena: &a%arena%"
@@ -89,6 +88,5 @@ Scoreboard:
       - ""
       - "&epatreon.com/Despical"
 
-# If you change the value the file will be replaced with default yaml
-# So you shouldn't edit here. Be careful to make changes here!
+# Do not change this value manually.
 Language: default

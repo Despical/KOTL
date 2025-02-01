@@ -32,24 +32,24 @@ import org.jetbrains.annotations.NotNull;
  */
 public class KOTLPlayerEnterArenaEvent extends KOTLEvent {
 
-	private static final HandlerList handlers = new HandlerList();
-	private final Player player;
+    private static final HandlerList handlers = new HandlerList();
+    private final Player player;
 
-	public KOTLPlayerEnterArenaEvent(Arena eventArena, Player player) {
-		super(eventArena);
-		this.player = player;
-	}
+    public KOTLPlayerEnterArenaEvent(Arena eventArena, Player player) {
+        super(eventArena);
+        this.player = player;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	@Override
-	public @NotNull HandlerList getHandlers() {
-		return handlers;
-	}
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 }

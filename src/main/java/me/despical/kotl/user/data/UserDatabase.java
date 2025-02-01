@@ -16,30 +16,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.events;
+package me.despical.kotl.user.data;
 
-import me.despical.kotl.Main;
-import me.despical.kotl.handlers.ChatManager;
-import org.bukkit.event.Listener;
+import me.despical.kotl.KOTL;
+import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.user.User;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
  * <p>
- * Created at 12.07.2022
+ * Created at 20.06.2020
  */
-public abstract class ListenerAdapter implements Listener {
+public abstract sealed class UserDatabase permits FileStats, MysqlManager {
 
-	protected final Main plugin;
-	protected final ChatManager chatManager;
+    @NotNull
+    protected final KOTL plugin;
 
-	public ListenerAdapter(Main plugin) {
-		this.plugin = plugin;
-		this.chatManager = plugin.getChatManager();
-		this.plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
+    public UserDatabase(final @NotNull KOTL plugin) {
+        this.plugin = plugin;
+    }
 
-	public static void registerEvents(Main plugin) {
-		new Events(plugin);
-		new ArenaEvents(plugin);
-	}
+    public abstract void saveStatistic(final @NotNull User user, final StatsStorage.StatisticType statisticType);
+
+    public abstract void saveStatistics(final @NotNull User user);
+
+    public abstract void loadStatistics(final @NotNull User user);
+
+    public void shutdown() {
+    }
 }

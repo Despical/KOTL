@@ -19,7 +19,9 @@
 package me.despical.kotl.kits;
 
 import me.despical.commons.configuration.ConfigUtils;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -27,43 +29,42 @@ import java.util.Set;
 
 public class KitManager {
 
-	private boolean isEnabled;
+    private final KOTL plugin;
+    private final Set<Kit> kits;
 
-	private final Main plugin;
-	private final Set<Kit> kits;
+    public KitManager(final KOTL plugin) {
+        this.plugin = plugin;
+        this.kits = new HashSet<>();
 
-	public KitManager(final Main plugin) {
-		this.plugin = plugin;
-		this.kits = new HashSet<>();
-		this.loadKits();
-	}
+        loadKits();
+    }
 
-	public void loadKits() {
-		this.kits.clear();
+    public void loadKits() {
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "kits");
+        boolean isEnabled = config.getBoolean("kits-enabled");
 
-		final var config = ConfigUtils.getConfig(plugin, "kits");
+        if (!isEnabled) {
+            return;
+        }
 
-		this.isEnabled = config.getBoolean("kits-enabled");
+        kits.clear();
 
-		final var section = config.getConfigurationSection("kits");
+        ConfigurationSection section = config.getConfigurationSection("kits");
 
-		if (section == null) {
-			plugin.getLogger().warning("Section ''kits'' not found in kits.yml!");
-			return;
-		}
+        if (section == null) {
+            plugin.getLogger().warning("Section ''kits'' not found in kits.yml!");
+            return;
+        }
 
-		for (final var path : section.getKeys(false)) {
-			this.kits.add(new Kit(config, "kits." + path + "."));
-		}
-	}
+        for (String key : section.getKeys(false)) {
+            kits.add(new Kit(config, "kits." + key + "."));
+        }
+    }
 
-	public void giveKit(final Player player) {
-		if (!isEnabled) return;
-
-		final var kit = kits.stream().filter(k -> k.hasPermission(player)).findFirst().orElse(null);
-
-		if (kit == null) return;
-
-		kit.giveKit(player);
-	}
+    public void giveKit(Player player) {
+        kits.stream()
+            .filter(kit -> kit.hasPermission(player))
+            .findFirst()
+            .ifPresent(kit -> kit.giveKit(player));
+    }
 }

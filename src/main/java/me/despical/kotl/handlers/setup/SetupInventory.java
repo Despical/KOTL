@@ -23,7 +23,7 @@ import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.Gui;
 import me.despical.inventoryframework.pane.PaginatedPane;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.setup.components.ArenaOptionComponents;
 import me.despical.kotl.handlers.setup.components.MainMenuComponents;
@@ -39,78 +39,77 @@ import java.util.stream.Stream;
  */
 public class SetupInventory {
 
-	private Gui gui;
-	private final Main plugin;
-	private final Arena arena;
-	private final Player player;
+    private final KOTL plugin;
+    private final Arena arena;
+    private final Player player;
+    private Gui gui;
+    private PaginatedPane paginatedPane;
+    private StaticPane pane;
 
-	private PaginatedPane paginatedPane;
-	private StaticPane pane;
+    public SetupInventory(KOTL plugin, Arena arena, Player player) {
+        this.plugin = plugin;
+        this.arena = arena;
+        this.player = player;
 
-	public SetupInventory(Main plugin, Arena arena, Player player) {
-		this.plugin = plugin;
-		this.arena = arena;
-		this.player = player;
+        prepareGui();
+    }
 
-		prepareGui();
-	}
+    private void prepareGui() {
+        this.gui = new Gui(plugin, 4, "         KOTL Arena Editor");
+        this.gui.setOnGlobalClick(e -> e.setCancelled(true));
+        this.gui.setOnDrag(e -> e.setCancelled(true));
+        this.paginatedPane = new PaginatedPane(9, 4);
 
-	private void prepareGui() {
-		this.gui = new Gui(plugin, 4, "         KOTL Arena Editor");
-		this.gui.setOnGlobalClick(e -> e.setCancelled(true));
-		this.gui.setOnDrag(e -> e.setCancelled(true));
-		this.paginatedPane = new PaginatedPane(9, 4);
+        this.pane = new StaticPane(9, 4);
+        final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
+        pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
 
-		this.pane = new StaticPane(9, 4);
-		final ItemBuilder registeredItem = new ItemBuilder(XMaterial.GREEN_STAINED_GLASS_PANE).name("&aArena Validation Successful"), notRegisteredItem = new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&cArena Validation Not Finished Yet");
-		pane.fillWith(arena.isReady() ? registeredItem.build() : notRegisteredItem.build());
+        paginatedPane.addPane(0, pane);
+        this.gui.addPane(paginatedPane);
 
-		paginatedPane.addPane(0, pane);
-		this.gui.addPane(paginatedPane);
+        Stream.of(new MainMenuComponents(plugin), new PressurePlateComponents(plugin), new ArenaOptionComponents(plugin)).forEach(component -> component.injectComponents(this));
+    }
 
-		Stream.of(new MainMenuComponents(plugin), new PressurePlateComponents(plugin), new ArenaOptionComponents(plugin)).forEach(component -> component.injectComponents(this));
-	}
+    public void openInventory() {
+        gui.show(player);
+    }
 
-	public void openInventory() {
-		gui.show(player);
-	}
+    public KOTL getPlugin() {
+        return plugin;
+    }
 
-	public Main getPlugin() {
-		return plugin;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Gui getGui() {
+        return gui;
+    }
 
-	public Gui getGui() {
-		return gui;
-	}
+    public PaginatedPane getPaginatedPane() {
+        return paginatedPane;
+    }
 
-	public PaginatedPane getPaginatedPane() {
-		return paginatedPane;
-	}
+    public StaticPane getPane() {
+        return pane;
+    }
 
-	public StaticPane getPane() {
-		return pane;
-	}
+    public void closeInventory() {
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 1L);
+    }
 
-	public void closeInventory() {
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 1L);
-	}
+    public void setPage(String title, int rows, int page) {
+        this.gui.setTitle(title != null ? title : this.gui.getTitle());
+        this.gui.setRows(rows);
+        this.paginatedPane.setPage(page);
+        this.gui.update();
+    }
 
-	public void setPage(String title, int rows, int page) {
-		this.gui.setTitle(title != null ? title : this.gui.getTitle());
-		this.gui.setRows(rows);
-		this.paginatedPane.setPage(page);
-		this.gui.update();
-	}
-
-	public void restorePage() {
-		this.setPage("         KOTL Arena Editor", 4, 0);
-	}
+    public void restorePage() {
+        this.setPage("         KOTL Arena Editor", 4, 0);
+    }
 }

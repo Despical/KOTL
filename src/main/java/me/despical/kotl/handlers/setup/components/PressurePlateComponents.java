@@ -26,7 +26,7 @@ import me.despical.commons.serializer.LocationSerializer;
 import me.despical.commons.string.StringUtils;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
 import org.bukkit.enchantments.Enchantment;
@@ -44,96 +44,96 @@ import java.util.Locale;
  */
 public class PressurePlateComponents extends AbstractComponent {
 
-	public PressurePlateComponents(Main plugin) {
-		super(plugin);
-	}
+    public PressurePlateComponents(KOTL plugin) {
+        super(plugin);
+    }
 
-	@Override
-	public void injectComponents(SetupInventory setup) {
-		final var player = setup.getPlayer();
-		final var arena = setup.getArena();
-		final var path = "instances.%s.".formatted(arena.getId());
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
+    @Override
+    public void injectComponents(SetupInventory setup) {
+        var player = setup.getPlayer();
+        var arena = setup.getArena();
+        var path = "instances.%s.".formatted(arena.getId());
+        var config = ConfigUtils.getConfig(plugin, "arenas");
 
-		final var pressurePlatesPane = new StaticPane(9, XReflection.supports(13) ? 6 : 3);
-		pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateName(arena.getArenaPlate())).build());
+        var pressurePlatesPane = new StaticPane(9, XReflection.supports(13) ? 6 : 3);
+        pressurePlatesPane.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7Current plate: &a" + formatPlateName(arena.getArenaPlate())).build());
 
-		setup.getPaginatedPane().addPane(2, pressurePlatesPane);
+        setup.getPaginatedPane().addPane(2, pressurePlatesPane);
 
-		final var pressurePlates = new ArrayList<XMaterial>() {{
-			add(XMaterial.OAK_PRESSURE_PLATE);
-			add(XMaterial.STONE_PRESSURE_PLATE);
-			add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
-			add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
+        var pressurePlates = new ArrayList<XMaterial>() {{
+            add(XMaterial.OAK_PRESSURE_PLATE);
+            add(XMaterial.STONE_PRESSURE_PLATE);
+            add(XMaterial.LIGHT_WEIGHTED_PRESSURE_PLATE);
+            add(XMaterial.HEAVY_WEIGHTED_PRESSURE_PLATE); // 1.8
 
-			if (XReflection.supports(13)) {
-				add(XMaterial.ACACIA_PRESSURE_PLATE);
-				add(XMaterial.BIRCH_PRESSURE_PLATE);
-				add(XMaterial.SPRUCE_PRESSURE_PLATE);
-				add(XMaterial.DARK_OAK_PRESSURE_PLATE);
-				add(XMaterial.JUNGLE_PRESSURE_PLATE); // 1.13
-			}
+            if (XReflection.supports(13)) {
+                add(XMaterial.ACACIA_PRESSURE_PLATE);
+                add(XMaterial.BIRCH_PRESSURE_PLATE);
+                add(XMaterial.SPRUCE_PRESSURE_PLATE);
+                add(XMaterial.DARK_OAK_PRESSURE_PLATE);
+                add(XMaterial.JUNGLE_PRESSURE_PLATE); // 1.13
+            }
 
-			if (XReflection.supports(16)) {
-				add(XMaterial.CRIMSON_PRESSURE_PLATE);
-				add(XMaterial.POLISHED_BLACKSTONE_PRESSURE_PLATE);
-				add(XMaterial.WARPED_PRESSURE_PLATE); // 1.16
-			}
+            if (XReflection.supports(16)) {
+                add(XMaterial.CRIMSON_PRESSURE_PLATE);
+                add(XMaterial.POLISHED_BLACKSTONE_PRESSURE_PLATE);
+                add(XMaterial.WARPED_PRESSURE_PLATE); // 1.16
+            }
 
-			if (XReflection.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
-		}};
+            if (XReflection.supports(20)) add(XMaterial.BAMBOO_PRESSURE_PLATE);
+        }};
 
-		final var slots = getSlots(pressurePlates.size());
+        var slots = getSlots(pressurePlates.size());
 
-		for (int i = 0; i < pressurePlates.size(); i++) {
-			final int slot = slots.get(i);
-			final var plate = pressurePlates.get(i);
-			final var itemBuilder = new ItemBuilder(plate);
+        for (int i = 0; i < pressurePlates.size(); i++) {
+            int slot = slots.get(i);
+            var plate = pressurePlates.get(i);
+            var itemBuilder = new ItemBuilder(plate);
 
-			if (arena.getArenaPlate().equals(plate)) {
-				itemBuilder.name("&7This plate is the current arena plate.").enchantment(Enchantment.ARROW_DAMAGE).flag(ItemFlag.HIDE_ENCHANTS);
-			} else {
-				itemBuilder.name("&7Click to change plate!");
-			}
+            if (arena.getArenaPlate().equals(plate)) {
+                itemBuilder.name("&7This plate is the current arena plate.").enchantment(Enchantment.ARROW_DAMAGE).flag(ItemFlag.HIDE_ENCHANTS);
+            } else {
+                itemBuilder.name("&7Click to change plate!");
+            }
 
-			pressurePlatesPane.addItem(GuiItem.of(itemBuilder.build(), inventoryClickEvent -> {
-				setup.closeInventory();
+            pressurePlatesPane.addItem(GuiItem.of(itemBuilder.build(), inventoryClickEvent -> {
+                setup.closeInventory();
 
-				config.set(path + "arenaPlate", plate.name());
-				ConfigUtils.saveConfig(plugin, config, "arenas");
+                config.set(path + "arenaPlate", plate.name());
+                ConfigUtils.saveConfig(plugin, config, "arenas");
 
-				player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + formatPlateName(plate)));
+                player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aArena plate for arena &e" + arena.getId() + " &achanged to &e" + formatPlateName(plate)));
 
-				arena.setArenaPlate(plate);
+                arena.setArenaPlate(plate);
 
-				final var plateLoc = arena.getPlateLocation();
+                var plateLoc = arena.getPlateLocation();
 
-				if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().setType(plate.parseMaterial());
-			}), slot % 9, slot / 9);
-		}
+                if (!LocationSerializer.isDefaultLocation(plateLoc)) plateLoc.getBlock().setType(plate.parseMaterial());
+            }), slot % 9, slot / 9);
+        }
 
-		pressurePlatesPane.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 5);
-	}
+        pressurePlatesPane.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 5);
+    }
 
-	private List<Integer> getSlots(int size) {
-		final var slots = me.despical.commons.util.Collections.listOf(10, 12, 14, 16);
+    private List<Integer> getSlots(int size) {
+        var slots = me.despical.commons.util.Collections.listOf(10, 12, 14, 16);
 
-		if (size == 9) {
-			slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
-		} else {
-			slots.add(20);
+        if (size == 9) {
+            slots.addAll(Arrays.asList(28, 30, 32, 34, 40));
+        } else {
+            slots.add(20);
 
-			if (XReflection.supports(20)) {
-				slots.add(22);
-			}
+            if (XReflection.supports(20)) {
+                slots.add(22);
+            }
 
-			slots.addAll(Arrays.asList(24, 28, 30, 32, 34, 38, 42, 44));
-		}
+            slots.addAll(Arrays.asList(24, 28, 30, 32, 34, 38, 42, 44));
+        }
 
-		return slots;
-	}
+        return slots;
+    }
 
-	private String formatPlateName(XMaterial plate) {
-		return StringUtils.capitalize(plate.name().toLowerCase(Locale.ENGLISH).replace("_", " "), ' ');
-	}
+    private String formatPlateName(XMaterial plate) {
+        return StringUtils.capitalize(plate.name().toLowerCase(Locale.ENGLISH).replace("_", " "), ' ');
+    }
 }

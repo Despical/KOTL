@@ -19,13 +19,14 @@
 package me.despical.kotl.events;
 
 import me.despical.commons.miscellaneous.MiscUtils;
-import me.despical.kotl.ConfigPreferences;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.api.events.arena.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
 import me.despical.kotl.handlers.rewards.Reward.RewardType;
+import me.despical.kotl.options.ConfigOptions;
+import me.despical.kotl.options.Option;
 import me.despical.kotl.user.User;
 import me.despical.kotl.util.Utils;
 import org.bukkit.Material;
@@ -39,184 +40,190 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Despical
  * <p>
  * Created at 22.06.2020
  */
-public class ArenaEvents extends ListenerAdapter {
+public non-sealed class ArenaEvents extends EventListener {
 
-	public ArenaEvents(Main plugin) {
-		super(plugin);
-	}
+    public ArenaEvents(KOTL plugin) {
+        super(plugin);
+    }
 
-	@EventHandler
-	public void onInteractWithPlate(PlayerInteractEvent event) {
-		var player = event.getPlayer();
-		var arena = plugin.getArenaRegistry().getArena(player);
+    @EventHandler
+    public void onInteractWithPlate(PlayerInteractEvent event) {
+        if (event.getAction() != Action.PHYSICAL) return;
 
-		if (arena == null || event.getAction() != Action.PHYSICAL) return;
+        Player player = event.getPlayer();
+        Arena arena = plugin.getArenaRegistry().getArena(player);
 
-		if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
-			int size = arena.getPlayers().size();
-			boolean isSameKing = arena.getKing() != null && arena.getKing().equals(player.getName());
+        if (arena == null) return;
 
-			if (isSameKing && (size == 1 || !plugin.getOption(ConfigPreferences.Option.BECOME_KING_IN_A_ROW)))
-				return;
+        if (event.getClickedBlock().getType() == arena.getArenaPlate().parseMaterial()) {
+            ConfigOptions options = plugin.getConfigOptions();
+            int size = arena.getPlayers().size();
+            boolean isSameKing = arena.getKing() != null && arena.getKing().equals(player.getName());
 
-			int cooldown = plugin.getConfig().getInt("King-Settings.Cooldown");
-			String cooldownName = (plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "king";
-			User user = plugin.getUserManager().getUser(player);
+            if (isSameKing && (size == 1 || !options.isEnabled(Option.BECOME_KING_IN_A_ROW)))
+                return;
 
-			if (plugin.getCooldownManager().getCooldown(user, cooldownName) > 0 || user.get((plugin.getOption(ConfigPreferences.Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "local_cooldown")) {
-				return;
-			}
+            int cooldown = options.getValue(Option.COOLDOWN);
+            String cooldownName = (options.isEnabled(Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "king";
+            User user = plugin.getUserManager().getUser(player);
 
-			cooldown_perm_check:
-			if (size > 1 || (size == 1 && plugin.getOption(ConfigPreferences.Option.COOLDOWN_WHEN_ALONE))) {
-				String permission = plugin.getConfig().getString("King-Settings.Cooldown-Override-Perm", "");
+            if (plugin.getCooldownManager().getCooldown(user, cooldownName) > 0 || user.get((options.isEnabled(Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "local_cooldown")) {
+                return;
+            }
 
-				if (!permission.isEmpty() && player.hasPermission(permission)) break cooldown_perm_check;
+            cooldown_perm_check:
+            if (size > 1 || (size == 1 && options.isEnabled(Option.COOLDOWN_WHEN_ALONE))) {
+                String permission = plugin.getConfig().getString("King-Settings.Cooldown-Override-Perm", "");
 
-				if (plugin.getOption(ConfigPreferences.Option.APPLY_KING_DELAY_BAR)) {
-					Utils.applyActionBarCooldown(user, cooldown);
-				}
+                if (!permission.isEmpty() && player.hasPermission(permission)) {
+                    break cooldown_perm_check;
+                }
 
-				plugin.getCooldownManager().setCooldown(user, cooldownName, cooldown);
-			}
+                if (options.isEnabled(Option.APPLY_KING_DELAY_BAR)) {
+                    Utils.applyActionBarCooldown(user, cooldown);
+                }
 
-			plugin.callEvent(new KOTLNewKingEvent(arena, player, isSameKing));
+                plugin.getCooldownManager().setCooldown(user, cooldownName, cooldown);
+            }
 
-			arena.setKing(player.getName());
+            plugin.callEvent(new KOTLNewKingEvent(arena, player, isSameKing));
 
-			if (plugin.getOption(ConfigPreferences.Option.RESET_COOLDOWNS_ON_NEW_KING)) {
-				var players = new HashSet<>(arena.getPlayers());
-				players.remove(player);
+            arena.setKing(player.getName());
 
-				players.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 1));
-			}
+            if (options.isEnabled(Option.RESET_COOLDOWNS_ON_NEW_KING)) {
+                var players = new HashSet<>(arena.getPlayers());
+                players.remove(player);
 
-			chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
+                players.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 1));
+            }
 
-			user.addStat(StatsStorage.StatisticType.SCORE, 1);
-			user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-			user.performReward(RewardType.WIN, arena);
+            chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 
-			var players = arena.getPlayers();
-			players.remove(player);
+            user.addStat(StatsStorage.StatisticType.SCORE, 1);
+            user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+            user.performReward(RewardType.WIN, arena);
 
-			spawnFireworks(arena, player);
+            Set<Player> players = arena.getPlayers();
+            players.remove(player);
 
-			for (var p : players) {
-				final var u = plugin.getUserManager().getUser(p);
-				u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
-				u.performReward(RewardType.LOSE, arena);
+            spawnFireworks(arena, player);
 
-				spawnFireworks(arena, p);
-			}
-		}
-	}
+            for (Player p : players) {
+                User u = plugin.getUserManager().getUser(p);
+                u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+                u.performReward(RewardType.LOSE, arena);
 
-	@EventHandler
-	public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
-		var player = event.getPlayer();
+                spawnFireworks(arena, p);
+            }
+        }
+    }
 
-		if (!plugin.getOption(ConfigPreferences.Option.DEATH_BLOCKS_ENABLED)) {
-			return;
-		}
+    @EventHandler
+    public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
+        var player = event.getPlayer();
 
-		var user = plugin.getUserManager().getUser(player);
-		var arena = user.getArena();
+        if (!plugin.getConfigOptions().isEnabled(Option.DEATH_BLOCKS_ENABLED)) {
+            return;
+        }
 
-		if (arena == null) return;
+        User user = plugin.getUserManager().getUser(player);
+        Arena arena = user.getArena();
 
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-			for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
-				if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
-					arena.doBarAction(player, 0);
-					arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
-					arena.removePlayer(player);
-					arena.teleportToEndLocation(player);
+        if (arena == null) return;
 
-					user.performReward(RewardType.LOSE, arena);
-					return;
-				}
-			}
-		}
-	}
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
+                if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
+                    arena.doBarAction(player, 0);
+                    arena.broadcastMessage(chatManager.prefixedMessage("in_game.clicked_death_block").replace("%player%", player.getName()));
+                    arena.removePlayer(player);
+                    arena.teleportToEndLocation(player);
 
-	@EventHandler
-	public void onDamage(EntityDamageByEntityEvent event) {
-		if (!(event.getEntity() instanceof Player entity && event.getDamager() instanceof Player damager)) {
-			return;
-		}
+                    user.performReward(RewardType.LOSE, arena);
+                    return;
+                }
+            }
+        }
+    }
 
-		if (plugin.getArenaRegistry().isInArena(entity) && plugin.getArenaRegistry().isInArena(damager)) {
-			if (!plugin.getOption(ConfigPreferences.Option.DAMAGE_ENABLED)) {
-				event.setCancelled(false);
-				event.setDamage(0d);
-			}
-		}
-	}
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player entity && event.getDamager() instanceof Player damager)) {
+            return;
+        }
 
-	@EventHandler
-	public void onDeath(PlayerDeathEvent event) {
-		final var deadPlayer = event.getEntity();
-		final var arena = plugin.getArenaRegistry().getArena(deadPlayer);
+        if (plugin.getArenaRegistry().isInArena(entity) && plugin.getArenaRegistry().isInArena(damager)) {
+            if (!plugin.getConfigOptions().isEnabled(Option.DAMAGE_ENABLED)) {
+                event.setCancelled(false);
+                event.setDamage(0d);
+            }
+        }
+    }
 
-		if (arena == null) return;
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Player deadPlayer = event.getEntity();
+        Arena arena = plugin.getArenaRegistry().getArena(deadPlayer);
 
-		event.getDrops().clear();
-		event.setDroppedExp(0);
-		event.setKeepLevel(true);
-		event.setDeathMessage("");
+        if (arena == null) return;
 
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> deadPlayer.spigot().respawn(), 5);
-		plugin.getUserManager().getUser(deadPlayer).setCooldown("death", 2);
+        event.getDrops().clear();
+        event.setDroppedExp(0);
+        event.setKeepLevel(true);
+        event.setDeathMessage("");
 
-		final var killer = deadPlayer.getKiller();
-		final var killerFound = killer != null;
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> deadPlayer.spigot().respawn(), 5);
+        plugin.getUserManager().getUser(deadPlayer).setCooldown("death", 2);
 
-		arena.broadcastMessage(chatManager.prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? killer.getName() : "").replace("%victim%", deadPlayer.getName()));
+        Player killer = deadPlayer.getKiller();
+        boolean killerFound = killer != null;
 
-		if (killerFound) {
-			var killerUser = plugin.getUserManager().getUser(killer);
-			killerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
-			killerUser.performReward(RewardType.KILL, arena);
-		}
-	}
+        arena.broadcastMessage(chatManager.prefixedMessage("in_game." + (killerFound ? "killed_player" : "kill_command")).replace("%player%", killerFound ? killer.getName() : "").replace("%victim%", deadPlayer.getName()));
 
-	@EventHandler
-	public void onRespawn(PlayerRespawnEvent event) {
-		final var player = event.getPlayer();
-		final var arena = plugin.getArenaRegistry().getArena(player);
+        if (killerFound) {
+            User killerUser = plugin.getUserManager().getUser(killer);
+            killerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
+            killerUser.performReward(RewardType.KILL, arena);
+        }
+    }
 
-		if (arena == null) return;
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Arena arena = plugin.getArenaRegistry().getArena(player);
 
-		arena.removePlayer(player);
-		event.setRespawnLocation(arena.getEndLocation());
+        if (arena == null) return;
 
-		final var user = plugin.getUserManager().getUser(player);
-		user.performReward(RewardType.DEATH, arena);
-		user.addStat(StatsStorage.StatisticType.DEATHS, 1);
-	}
+        arena.removePlayer(player);
+        event.setRespawnLocation(arena.getEndLocation());
 
-	private void spawnFireworks(Arena arena, Player player) {
-		if (!plugin.getOption(ConfigPreferences.Option.FIREWORKS_ON_NEW_KING)) return;
+        User user = plugin.getUserManager().getUser(player);
+        user.performReward(RewardType.DEATH, arena);
+        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+    }
 
-		new BukkitRunnable() {
+    private void spawnFireworks(Arena arena, Player player) {
+        if (!plugin.getConfigOptions().isEnabled(Option.FIREWORKS_ON_NEW_KING)) return;
 
-			private int i = 0;
+        new BukkitRunnable() {
 
-			public void run() {
-				if (i == 2 || !arena.getPlayers().contains(player)) {
-					cancel();
-				}
+            private int i = 0;
 
-				MiscUtils.spawnRandomFirework(player.getLocation());
-				i++;
-			}
-		}.runTaskTimer(plugin, 10, 20);
-	}
+            public void run() {
+                if (i == 2 || !arena.getPlayers().contains(player)) {
+                    cancel();
+                }
+
+                MiscUtils.spawnRandomFirework(player.getLocation());
+                i++;
+            }
+        }.runTaskTimer(plugin, 10, 20);
+    }
 }

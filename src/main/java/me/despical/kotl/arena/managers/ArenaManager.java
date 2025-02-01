@@ -18,37 +18,37 @@
 
 package me.despical.kotl.arena.managers;
 
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import me.despical.kotl.arena.managers.schedulers.SchedulerOptions;
 
 public class ArenaManager {
 
-	private final SchedulerOptions options;
-	private final ArenaScheduler arenaScheduler;
+    private final SchedulerOptions options;
+    private final ArenaScheduler arenaScheduler;
 
-	public ArenaManager(Main plugin) {
-		final var config = plugin.getConfig();
+    public ArenaManager(KOTL plugin) {
+        final var config = plugin.getConfig();
 
-		this.arenaScheduler = switch (config.getInt("Arena-Schedulers.Type")) {
-			case 1 -> ArenaScheduler.GENERAL;
-			case 2 -> ArenaScheduler.PER_ARENA;
-			default -> ArenaScheduler.EVENT;
-		};
+        this.arenaScheduler = switch (config.getInt("Arena-Schedulers.Type")) {
+            case 1 -> ArenaScheduler.GENERAL;
+            case 2 -> ArenaScheduler.PER_ARENA;
+            default -> ArenaScheduler.EVENT;
+        };
 
-		final int interval = config.getInt("Arena-Schedulers.Interval");
-		final boolean async = config.getBoolean("Arena-Schedulers.Async");
+        final int interval = config.getInt("Arena-Schedulers.Interval");
+        final boolean async = config.getBoolean("Arena-Schedulers.Async");
 
-		this.options = new SchedulerOptions(async, interval);
+        this.options = new SchedulerOptions(async, interval);
 
-		arenaScheduler.register(options);
-	}
+        arenaScheduler.register(options);
+    }
 
-	public ArenaScheduler getArenaScheduler() {
-		return arenaScheduler;
-	}
+    public ArenaScheduler getArenaScheduler() {
+        return arenaScheduler;
+    }
 
-	public SchedulerOptions getOptions() {
-		return options;
-	}
+    public SchedulerOptions getOptions() {
+        return options;
+    }
 }

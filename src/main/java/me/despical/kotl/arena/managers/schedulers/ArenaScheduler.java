@@ -18,7 +18,7 @@
 
 package me.despical.kotl.arena.managers.schedulers;
 
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.arena.Arena;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,96 +33,93 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public enum ArenaScheduler {
 
-	GENERAL {
+    GENERAL {
+        @Override
+        public void register(SchedulerOptions options) {
+            var scheduler = plugin.getServer().getScheduler();
 
-		@Override
-		public void register(SchedulerOptions options) {
-			var scheduler = plugin.getServer().getScheduler();
+            if (options.async()) {
+                scheduler.runTaskTimerAsynchronously(plugin, this::run, 1L, options.interval());
+            } else {
+                scheduler.runTaskTimer(plugin, this::run, 1L, options.interval());
+            }
+        }
 
-			if (options.async()) {
-				scheduler.runTaskTimerAsynchronously(plugin, this::run, 1L, options.interval());
-			} else {
-				scheduler.runTaskTimer(plugin, this::run, 1L, options.interval());
-			}
-		}
+        private void run() {
+            for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+                generalSearchForPlayers(arena);
+            }
+        }
+    },
 
-		private void run() {
-			for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-				generalSearchForPlayers(arena);
-			}
-		}
-	},
+    PER_ARENA {
+        @Override
+        public void register(SchedulerOptions options) {
+            var scheduler = plugin.getServer().getScheduler();
 
-	PER_ARENA {
+            for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+                if (options.async()) {
+                    scheduler.runTaskTimerAsynchronously(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
+                } else {
+                    scheduler.runTaskTimer(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
+                }
+            }
+        }
+    },
 
-		@Override
-		public void register(SchedulerOptions options) {
-			var scheduler = plugin.getServer().getScheduler();
+    EVENT {
+        @Override
+        public void register(SchedulerOptions options) {
+            plugin.getServer().getPluginManager().registerEvents(new Listener() {
 
-			for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-				if (options.async()) {
-					scheduler.runTaskTimerAsynchronously(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
-				} else {
-					scheduler.runTaskTimer(plugin, () -> generalSearchForPlayers(arena), 1L, options.interval());
-				}
-			}
-		}
-	},
+                @EventHandler
+                public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
+                    Player player = event.getPlayer();
+                    Arena arena = isInArea(player);
+                    Arena playerArena = plugin.getArenaRegistry().getArena(player);
+                    boolean isInArena = playerArena != null;
 
-	EVENT {
+                    if (!isInArena && arena != null) {
+                        arena.addPlayer(player);
+                    }
 
-		@Override
-		public void register(SchedulerOptions options) {
-			plugin.getServer().getPluginManager().registerEvents(new Listener() {
+                    if (isInArena && arena == null) {
+                        playerArena.removePlayer(player);
+                    }
+                }
 
-				@EventHandler
-				public void onEnterAndLeaveGameArea(PlayerMoveEvent event) {
-					Player player = event.getPlayer();
-					Arena arena = isInArea(player);
-					Arena playerArena = plugin.getArenaRegistry().getArena(player);
-					boolean isInArena = playerArena != null;
+                private Arena isInArea(final Player player) {
+                    for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+                        Arena target = arena.isInArea(player);
 
-					if (!isInArena && arena != null) {
-						arena.addPlayer(player);
-					}
+                        if (target != null) {
+                            return target;
+                        }
+                    }
 
-					if (isInArena && arena == null) {
-						playerArena.removePlayer(player);
-					}
-				}
+                    return null;
+                }
+            }, plugin);
+        }
+    };
 
-				private Arena isInArea(final Player player) {
-					for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-						Arena target = arena.isInArea(player);
+    protected final KOTL plugin = JavaPlugin.getPlugin(KOTL.class);
 
-						if (target != null) {
-							return target;
-						}
-					}
+    public abstract void register(SchedulerOptions options);
 
-					return null;
-				}
-			}, plugin);
-		}
-	};
+    protected void generalSearchForPlayers(Arena arena) {
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            Arena target = arena.isInArea(player);
+            Arena current = plugin.getArenaRegistry().getArena(player);
 
-	protected final Main plugin = JavaPlugin.getPlugin(Main.class);
+            if (current == null && target != null && !arena.getPlayers().contains(player)) {
+                arena.addPlayer(player);
+                continue;
+            }
 
-	public abstract void register(SchedulerOptions options);
-
-	protected void generalSearchForPlayers(Arena arena) {
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			Arena target = arena.isInArea(player);
-			Arena current = plugin.getArenaRegistry().getArena(player);
-
-			if (current == null && target != null && !arena.getPlayers().contains(player)) {
-				arena.addPlayer(player);
-				continue;
-			}
-
-			if (arena.equals(current) && target == null && arena.getPlayers().contains(player)) {
-				current.removePlayer(player);
-			}
-		}
-	}
+            if (arena.equals(current) && target == null && arena.getPlayers().contains(player)) {
+                current.removePlayer(player);
+            }
+        }
+    }
 }

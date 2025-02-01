@@ -24,18 +24,18 @@ import org.bukkit.event.Event;
 /**
  * @author Despical
  * @since 1.0.0
- * <p> 
+ * <p>
  * Created at 20.06.2020
  */
 public abstract class KOTLEvent extends Event {
 
-	protected Arena arena;
+    protected Arena arena;
 
-	public KOTLEvent(Arena eventArena) {
-		arena = eventArena;
-	}
+    public KOTLEvent(Arena eventArena) {
+        arena = eventArena;
+    }
 
-	public Arena getArena() {
-		return arena;
-	}
+    public Arena getArena() {
+        return arena;
+    }
 }

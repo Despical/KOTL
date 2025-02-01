@@ -19,10 +19,14 @@
 package me.despical.kotl.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.arena.Arena;
+import me.despical.kotl.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * @author Despical
@@ -30,64 +34,65 @@ import org.jetbrains.annotations.NotNull;
  * Created at 22.06.2020
  */
 public class PlaceholderManager extends PlaceholderExpansion {
-	
-	private final Main plugin;
 
-	public PlaceholderManager(Main plugin) {
-		this.plugin = plugin;
-		super.register();
-	}
-	
-	@Override
-	public boolean persist() {
-		return true;
-	}
+    private final KOTL plugin;
 
-	@NotNull
-	@Override
-	public String getIdentifier() {
-		return "kotl";
-	}
+    public PlaceholderManager(KOTL plugin) {
+        this.plugin = plugin;
 
-	@NotNull
-	@Override
-	public String getAuthor() {
-		return "Despical";
-	}
+        register();
+    }
 
-	@NotNull
-	@Override
-	public String getVersion() {
-		return plugin.getDescription().getVersion();
-	}
+    @Override
+    public boolean persist() {
+        return true;
+    }
 
-	public String onPlaceholderRequest(Player player, @NotNull String id) {
-		if (player == null) return null;
+    @NotNull
+    @Override
+    public String getIdentifier() {
+        return "kotl";
+    }
 
-		final var user = plugin.getUserManager().getUser(player);
+    @NotNull
+    @Override
+    public String getAuthor() {
+        return "Despical";
+    }
 
-		return switch (id.toLowerCase()) {
-			case "score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
-			case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
-			case "arena" -> {
-				var arena = user.getArena();
+    @NotNull
+    @Override
+    public String getVersion() {
+        return plugin.getDescription().getVersion();
+    }
 
-				yield arena != null ? arena.getId() : plugin.getChatManager().message("placeholders.player_not_playing");
-			}
-			default -> handleArenaPlaceholderRequest(id);
-		};
-	}
+    public String onPlaceholderRequest(Player player, @NotNull String id) {
+        if (player == null) return null;
 
-	private String handleArenaPlaceholderRequest(String id) {
-		final var data = id.split(":");
-		final var arena = plugin.getArenaRegistry().getArena(data[0]);
+        User user = plugin.getUserManager().getUser(player);
 
-		if (arena == null) return null;
+        return switch (id.toLowerCase()) {
+            case "score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
+            case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+            case "arena" -> Optional.ofNullable(user.getArena())
+                .map(Arena::getId)
+                .orElseGet(() -> plugin.getChatManager().message("Placeholders.Player-Not-Playing"));
+            default -> handleArenaPlaceholderRequest(id);
+        };
+    }
 
-		return switch (data[1].toLowerCase()) {
-			case "players" -> Integer.toString(arena.getPlayers().size());
-			case "king" -> arena.getKingName();
-			default -> null;
-		};
-	}
+    private String handleArenaPlaceholderRequest(String id) {
+        String[] data = id.split(":");
+        Arena arena = plugin.getArenaRegistry().getArena(data[0]);
+
+        if (arena == null) {
+            return "No arena with this ID";
+        }
+
+        return switch (data[1].toLowerCase()) {
+            case "players" -> Integer.toString(arena.getPlayers().size());
+            case "king" -> arena.getKingName();
+            default -> null;
+        };
+    }
 }

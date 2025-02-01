@@ -25,6 +25,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -33,47 +34,48 @@ import java.util.Set;
 
 public class Kit {
 
-	private final String permission;
-	private final Set<ItemStack> armors;
-	private final Map<Integer, ItemStack> items;
+    private final String permission;
+    private final Set<ItemStack> armors;
+    private final Map<Integer, ItemStack> items;
 
-	public Kit(FileConfiguration config, String path) {
-		this.armors = new LinkedHashSet<>();
-		this.items = new HashMap<>();
-		this.permission = config.getString(path + "permission");
+    public Kit(FileConfiguration config, String path) {
+        this.armors = new LinkedHashSet<>();
+        this.items = new HashMap<>();
+        this.permission = config.getString(path + "permission");
 
-		for (String armor : config.getStringList(path + "armors")) {
-			armors.add(XMaterial.matchXMaterial(armor).orElseThrow().parseItem());
-		}
+        for (String armorName : config.getStringList(path + "armors")) {
+            armors.add(XMaterial.matchXMaterial(armorName).orElseThrow().parseItem());
+        }
 
-		for (String item : config.getStringList(path + "items")) {
-			String[] array = item.split(":");
-			ItemBuilder builder = new ItemBuilder(XMaterial.matchXMaterial(array[1].toUpperCase()))
-				.unbreakable(true)
-				.hideTooltip();
+        for (String item : config.getStringList(path + "items")) {
+            String[] attributes = item.split(":");
+            ItemBuilder builder = new ItemBuilder(XMaterial.matchXMaterial(attributes[1].toUpperCase()))
+                .unbreakable(true)
+                .hideTooltip();
 
-			if (array.length == 3) {
-				int amount = NumberUtils.getInt(array[2], 1);
+            if (attributes.length == 3) {
+                int amount = NumberUtils.getInt(attributes[2], 1);
 
-				builder.amount(amount);
-			}
+                builder.amount(amount);
+            }
 
-			if (array.length == 4) {
-				builder.enchantment(Enchantment.getByName(array[2].toUpperCase()), NumberUtils.getInt(array[3], 1));
-			}
+            if (attributes.length == 4) {
+                builder.enchantment(Enchantment.getByName(attributes[2].toUpperCase()), NumberUtils.getInt(attributes[3], 1));
+            }
 
-			items.put(NumberUtils.getInt(array[0]), builder.build());
-		}
-	}
+            int slot = NumberUtils.getInt(attributes[0]);
+            items.put(slot, builder.build());
+        }
+    }
 
-	public void giveKit(Player player) {
-		var inventory = player.getInventory();
+    public void giveKit(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        inventory.setArmorContents(armors.toArray(ItemStack[]::new));
 
-		inventory.setArmorContents(armors.toArray(new ItemStack[0]));
-		this.items.forEach(inventory::setItem);
-	}
+        items.forEach(inventory::setItem);
+    }
 
-	public boolean hasPermission(Player player) {
-		return permission.isEmpty() || player.hasPermission(permission);
-	}
+    public boolean hasPermission(Player player) {
+        return permission.isEmpty() || player.hasPermission(permission);
+    }
 }

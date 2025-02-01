@@ -19,7 +19,7 @@
 package me.despical.kotl.arena.managers;
 
 import me.despical.commons.number.NumberUtils;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -35,33 +35,33 @@ import java.util.List;
  */
 public class BossBarManager extends BukkitRunnable {
 
-	private final Main plugin;
-	private final BossBar bossBar;
-	private final List<String> messages;
+    private final KOTL plugin;
+    private final BossBar bossBar;
+    private final List<String> messages;
 
-	private int queue = 0;
+    private int queue = 0;
 
-	public BossBarManager(Main plugin) {
-		this.plugin = plugin;
-		this.bossBar = plugin.getServer().createBossBar("", BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
-		this.messages = plugin.getChatManager().getStringList("boss_bar.messages");
+    public BossBarManager(KOTL plugin) {
+        this.plugin = plugin;
+        this.bossBar = plugin.getServer().createBossBar("", BarColor.valueOf(plugin.getChatManager().message("boss_bar.color")), BarStyle.valueOf(plugin.getChatManager().message("boss_bar.style")));
+        this.messages = plugin.getChatManager().getStringList("boss_bar.messages");
 
-		this.runTaskTimer(plugin, 20, NumberUtils.getInt(plugin.getChatManager().message("boss_bar.interval"), 300));
-	}
+        this.runTaskTimer(plugin, 20, NumberUtils.getInt(plugin.getChatManager().message("boss_bar.interval"), 300));
+    }
 
-	public void addPlayer(Player player) {
-		this.bossBar.addPlayer(player);
-	}
+    public void addPlayer(Player player) {
+        this.bossBar.addPlayer(player);
+    }
 
-	public void removePlayer(Player player) {
-		this.bossBar.removePlayer(player);
-	}
+    public void removePlayer(Player player) {
+        this.bossBar.removePlayer(player);
+    }
 
-	@Override
-	public void run() {
-		if (queue + 1 > messages.size()) queue = 0;
+    @Override
+    public void run() {
+        if (queue + 1 > messages.size()) queue = 0;
 
-		this.bossBar.setTitle(plugin.getChatManager().coloredRawMessage(messages.get(queue++)));
-		this.bossBar.setVisible(!this.bossBar.getTitle().isEmpty());
-	}
+        this.bossBar.setTitle(plugin.getChatManager().coloredRawMessage(messages.get(queue++)));
+        this.bossBar.setVisible(!this.bossBar.getTitle().isEmpty());
+    }
 }

@@ -18,91 +18,87 @@
 
 package me.despical.kotl.arena.managers;
 
+import me.despical.commons.scoreboard.Scoreboard;
+import me.despical.commons.scoreboard.ScoreboardHandler;
 import me.despical.commons.scoreboard.ScoreboardLib;
+import me.despical.commons.scoreboard.common.Entry;
 import me.despical.commons.scoreboard.common.EntryBuilder;
-import me.despical.commons.scoreboard.type.Entry;
-import me.despical.commons.scoreboard.type.Scoreboard;
-import me.despical.commons.scoreboard.type.ScoreboardHandler;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.UUID;
 
 public class ScoreboardManager {
 
-	private final Main plugin;
-	private final Arena arena;
-	private final ChatManager chatManager;
-	private final Set<Scoreboard> scoreboards;
+    private final KOTL plugin;
+    private final Arena arena;
+    private final ChatManager chatManager;
+    private final Map<UUID, Scoreboard> scoreboards;
 
-	public ScoreboardManager(Main plugin, Arena arena) {
-		this.plugin = plugin;
-		this.arena = arena;
-		this.chatManager = plugin.getChatManager();
-		this.scoreboards = new HashSet<>();
-	}
+    public ScoreboardManager(KOTL plugin, Arena arena) {
+        this.plugin = plugin;
+        this.arena = arena;
+        this.chatManager = plugin.getChatManager();
+        this.scoreboards = new HashMap<>();
+    }
 
-	public void createScoreboard(Player player) {
-		var scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
+    public void createScoreboard(Player player) {
+        Scoreboard scoreboard = ScoreboardLib.createScoreboard(player).setHandler(new ScoreboardHandler() {
 
-			@Override
-			public String getTitle(Player player) {
-				return chatManager.message("scoreboard.title");
-			}
+            @Override
+            public String getTitle(Player player) {
+                return chatManager.message("scoreboard.title");
+            }
 
-			@Override
-			public List<Entry> getEntries(Player player) {
-				return formatScoreboard(player);
-			}
-		});
+            @Override
+            public List<Entry> getEntries(Player player) {
+                return formatScoreboard(player);
+            }
+        });
 
-		scoreboard.activate();
-		scoreboards.add(scoreboard);
-	}
+        scoreboard.activate();
+        scoreboards.put(player.getUniqueId(), scoreboard);
+    }
 
-	public void removeScoreboard(Player player) {
-		for (var board : scoreboards) {
-			if (board.getHolder().equals(player)) {
-				board.deactivate();
-				scoreboards.remove(board);
-				return;
-			}
-		}
+    public void removeScoreboard(Player player) {
+        Scoreboard scoreboard = scoreboards.remove(player.getUniqueId());
 
-	}
+        if (scoreboard != null) {
+            scoreboard.deactivate();
+        }
+    }
 
-	public void stopAllScoreboards() {
-		scoreboards.forEach(Scoreboard::deactivate);
-		scoreboards.clear();
-	}
+    public void stopAllScoreboards() {
+        scoreboards.values().forEach(Scoreboard::deactivate);
+        scoreboards.clear();
+    }
 
-	private List<Entry> formatScoreboard(Player player) {
-		final var builder = new EntryBuilder();
+    private List<Entry> formatScoreboard(Player player) {
+        EntryBuilder builder = new EntryBuilder();
 
-		for (var line : chatManager.getStringList("scoreboard.content.playing")) {
-			builder.next(formatScoreboardLine(line, player));
-		}
+        for (String line : chatManager.getStringList("scoreboard.content.playing")) {
+            builder.next(formatScoreboardLine(line, player));
+        }
 
-		return builder.build();
-	}
+        return builder.build();
+    }
 
-	private String formatScoreboardLine(String line, Player player) {
-		String formattedLine = line;
+    private String formatScoreboardLine(String line, Player player) {
+        line = line.replace("%arena%", arena.getId());
+        line = line.replace("%players%", Integer.toString(arena.getPlayers().size()));
+        line = line.replace("%king%", arena.getKingName());
 
-		formattedLine = formattedLine.replace("%arena%", arena.getId());
-		formattedLine = formattedLine.replace("%players%", Integer.toString(arena.getPlayers().size()));
-		formattedLine = formattedLine.replace("%king%", arena.getKingName());
+        var user = plugin.getUserManager().getUser(player);
 
-		var user = plugin.getUserManager().getUser(player);
-
-		formattedLine = formattedLine.replace("%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
-		formattedLine = formattedLine.replace("%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
-		formattedLine = chatManager.formatMessage(formattedLine, player);
-		return chatManager.coloredRawMessage(formattedLine);
-	}
+        line = line.replace("%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
+        line = line.replace("%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
+        line = chatManager.formatMessage(line, player);
+        return line;
+    }
 }

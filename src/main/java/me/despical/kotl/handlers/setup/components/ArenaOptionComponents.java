@@ -23,9 +23,11 @@ import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.inventoryframework.GuiItem;
 import me.despical.inventoryframework.pane.StaticPane;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
+import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.setup.AbstractComponent;
 import me.despical.kotl.handlers.setup.SetupInventory;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  * @author Despical
@@ -34,29 +36,29 @@ import me.despical.kotl.handlers.setup.SetupInventory;
  */
 public class ArenaOptionComponents extends AbstractComponent {
 
-	public ArenaOptionComponents(Main plugin) {
-		super(plugin);
-	}
+    public ArenaOptionComponents(KOTL plugin) {
+        super(plugin);
+    }
 
-	@Override
-	public void injectComponents(SetupInventory setup) {
-		final var arena = setup.getArena();
-		final var config = ConfigUtils.getConfig(plugin, "arenas");
-		final var path = "instances.%s.".formatted(arena.getId());
-		final var arenaOptions = new StaticPane(9, 3);
-		final var outlineItem = new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_PEARL : XMaterial.ENDER_EYE).name("         " + (arena.isShowOutlines() ? "&c&l Disable" : "&e&l  Enable") + " Outline Particles").lore("&7You can create particles around the arena.");
+    @Override
+    public void injectComponents(SetupInventory setup) {
+        Arena arena = setup.getArena();
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        String path = "instances.%s.".formatted(arena.getId());
+        StaticPane arenaOptions = new StaticPane(9, 3);
+        ItemBuilder outlineItem = new ItemBuilder(arena.isShowOutlines() ? XMaterial.ENDER_PEARL : XMaterial.ENDER_EYE).name("         " + (arena.isShowOutlines() ? "&c&l Disable" : "&e&l  Enable") + " Outline Particles").lore("&7You can create particles around the arena.");
 
-		arenaOptions.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7You can edit additional arena options here.").build());
-		arenaOptions.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 2);
-		arenaOptions.addItem(GuiItem.of(outlineItem.build(), e -> {
-			arena.setShowOutlines(!arena.isShowOutlines());
+        arenaOptions.fillWith(new ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE).name("&7You can edit additional arena options here.").build());
+        arenaOptions.addItem(GuiItem.of(mainMenuItem, event -> setup.restorePage()), 8, 2);
+        arenaOptions.addItem(GuiItem.of(outlineItem.build(), e -> {
+            arena.setShowOutlines(!arena.isShowOutlines());
 
-			config.set(path + "showOutlines", arena.isShowOutlines());
-			ConfigUtils.saveConfig(plugin, config, "arenas");
+            config.set(path + "showOutlines", arena.isShowOutlines());
+            ConfigUtils.saveConfig(plugin, config, "arenas");
 
-			setup.closeInventory();
-		}), 4, 1);
+            setup.closeInventory();
+        }), 4, 1);
 
-		setup.getPaginatedPane().addPane(3, arenaOptions);
-	}
+        setup.getPaginatedPane().addPane(3, arenaOptions);
+    }
 }

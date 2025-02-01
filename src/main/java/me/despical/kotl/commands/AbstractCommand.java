@@ -18,7 +18,7 @@
 
 package me.despical.kotl.commands;
 
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import me.despical.kotl.handlers.ChatManager;
 
 /**
@@ -28,12 +28,12 @@ import me.despical.kotl.handlers.ChatManager;
  */
 public abstract class AbstractCommand {
 
-	protected final Main plugin;
-	protected final ChatManager chatManager;
+    protected final KOTL plugin;
+    protected final ChatManager chatManager;
 
-	public AbstractCommand(Main plugin) {
-		this.plugin = plugin;
-		this.chatManager = plugin.getChatManager();
-		this.plugin.getCommandFramework().registerCommands(this);
-	}
+    public AbstractCommand(KOTL plugin) {
+        this.plugin = plugin;
+        this.chatManager = plugin.getChatManager();
+        this.plugin.getCommandFramework().registerCommands(this);
+    }
 }

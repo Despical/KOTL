@@ -21,7 +21,7 @@ package me.despical.kotl.arena;
 import me.despical.commons.compat.XMaterial;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.serializer.LocationSerializer;
-import me.despical.kotl.Main;
+import me.despical.kotl.KOTL;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -37,87 +37,87 @@ import java.util.logging.Level;
  */
 public class ArenaRegistry {
 
-	private final Main plugin;
-	private final Set<Arena> arenas;
+    private final KOTL plugin;
+    private final Set<Arena> arenas;
 
-	public ArenaRegistry(Main plugin) {
-		this.plugin = plugin;
-		this.arenas = new HashSet<>();
+    public ArenaRegistry(KOTL plugin) {
+        this.plugin = plugin;
+        this.arenas = new HashSet<>();
 
-		this.registerArenas();
-	}
+        this.registerArenas();
+    }
 
-	public void registerArena(Arena arena) {
-		this.arenas.add(arena);
-	}
+    public void registerArena(Arena arena) {
+        this.arenas.add(arena);
+    }
 
-	public void unregisterArena(Arena arena) {
-		this.arenas.remove(arena);
-	}
+    public void unregisterArena(Arena arena) {
+        this.arenas.remove(arena);
+    }
 
-	public Set<Arena> getArenas() {
-		return Set.copyOf(arenas);
-	}
+    public Set<Arena> getArenas() {
+        return Set.copyOf(arenas);
+    }
 
-	public Arena getArena(String id) {
-		if (id == null) return null;
+    public Arena getArena(String id) {
+        if (id == null) return null;
 
-		return this.arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
-	}
+        return this.arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
+    }
 
-	public Arena getArena(Player player) {
-		if (player == null) return null;
+    public Arena getArena(Player player) {
+        if (player == null) return null;
 
-		return arenas.stream().filter(arena -> arena.getPlayers().contains(player)).findFirst().orElse(null);
-	}
+        return arenas.stream().filter(arena -> arena.getPlayers().contains(player)).findFirst().orElse(null);
+    }
 
-	public boolean isArena(String arenaId) {
-		return arenaId != null && getArena(arenaId) != null;
-	}
+    public boolean isArena(String arenaId) {
+        return arenaId != null && getArena(arenaId) != null;
+    }
 
-	public boolean isInArena(Player player) {
-		return this.getArena(player) != null;
-	}
+    public boolean isInArena(Player player) {
+        return this.getArena(player) != null;
+    }
 
-	public void registerArenas() {
-		arenas.clear();
+    public void registerArenas() {
+        arenas.clear();
 
-		FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-		ConfigurationSection section = config.getConfigurationSection("instances");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
+        ConfigurationSection section = config.getConfigurationSection("instances");
 
-		if (section == null) {
-			plugin.getLogger().warning("Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
-			return;
-		}
+        if (section == null) {
+            plugin.getLogger().warning("Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
+            return;
+        }
 
-		for (String id : section.getKeys(false)) {
-			if (id.equals("default")) continue;
+        for (String id : section.getKeys(false)) {
+            if (id.equals("default")) continue;
 
-			String path = "instances." + id + ".";
-			Arena arena = new Arena(id);
+            String path = "instances." + id + ".";
+            Arena arena = new Arena(id);
 
-			arenas.add(arena);
+            arenas.add(arena);
 
-			arena.setReady(config.getBoolean(path + "isdone"));
-			arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-			arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
-			arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
-			arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
-			arena.setArenaPlate(XMaterial.matchXMaterial(config.getString(path + "arenaPlate")).orElse(XMaterial.OAK_PRESSURE_PLATE));
-			arena.setShowOutlines(config.getBoolean(path + "showOutlines"));
+            arena.setReady(config.getBoolean(path + "isdone"));
+            arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
+            arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
+            arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
+            arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
+            arena.setArenaPlate(XMaterial.matchXMaterial(config.getString(path + "arenaPlate")).orElse(XMaterial.OAK_PRESSURE_PLATE));
+            arena.setShowOutlines(config.getBoolean(path + "showOutlines"));
 
-			if (arena.isReady() && arena.getPlateLocation().getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
-				arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
-				arena.setReady(false);
+            if (arena.isReady() && arena.getPlateLocation().getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
+                arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
+                arena.setReady(false);
 
-				plugin.getLogger().log(Level.WARNING, "The pressure plate material is not the same type as you set on setup for the arena ''{0}''!", id);
-				continue;
-			}
+                plugin.getLogger().log(Level.WARNING, "The pressure plate material is not the same type as you set on setup for the arena ''{0}''!", id);
+                continue;
+            }
 
-			if (!arena.isReady()) {
-				plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
-				return;
-			}
-		}
-	}
+            if (!arena.isReady()) {
+                plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
+                return;
+            }
+        }
+    }
 }
