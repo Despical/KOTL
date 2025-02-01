@@ -1,6 +1,6 @@
 /*
  * KOTL - Don't let others climb to top of the ladders!
- * Copyright (C) 2024  Berke Akçen
+ * Copyright (C) 2025  Berke Akçen
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
