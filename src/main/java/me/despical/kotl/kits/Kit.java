@@ -18,7 +18,7 @@
 
 package me.despical.kotl.kits;
 
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;

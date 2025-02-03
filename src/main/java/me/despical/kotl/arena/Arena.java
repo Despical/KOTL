@@ -18,7 +18,7 @@
 
 package me.despical.kotl.arena;
 
-import me.despical.commons.compat.XMaterial;
+import me.despical.commons.XMaterial;
 import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.reflection.XReflection;
 import me.despical.commons.serializer.InventorySerializer;
