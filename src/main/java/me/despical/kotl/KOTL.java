@@ -127,7 +127,6 @@ public class KOTL extends JavaPlugin {
         cooldownManager = new CooldownManager(this);
 
         ScoreboardLib.setPluginInstance(this);
-        User.cooldownHandlerTask();
 
         new Events(this);
         new ArenaEvents(this);

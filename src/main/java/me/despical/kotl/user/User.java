@@ -42,6 +42,10 @@ public class User {
     private static final KOTL plugin = JavaPlugin.getPlugin(KOTL.class);
     private static long cooldownCounter;
 
+    static {
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
+    }
+
     private final UUID uuid;
     private final String name;
     private final Map<String, Double> cooldowns;
@@ -54,10 +58,6 @@ public class User {
         this.cooldowns = new HashMap<>();
         this.variables = new HashMap<>();
         this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
-    }
-
-    public static void cooldownHandlerTask() {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
     }
 
     public Arena getArena() {

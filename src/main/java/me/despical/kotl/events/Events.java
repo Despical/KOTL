@@ -79,15 +79,7 @@ public non-sealed class Events extends EventListener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent event) {
-        this.handleQuit(event.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onKick(PlayerKickEvent event) {
-        this.handleQuit(event.getPlayer());
-    }
-
-    private void handleQuit(Player player) {
+        Player player = event.getPlayer();
         Arena arena = plugin.getArenaRegistry().getArena(player);
 
         if (arena != null) {
