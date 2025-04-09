@@ -52,6 +52,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -157,7 +158,10 @@ public class KOTL extends JavaPlugin {
     private void setupConfigurationFiles() {
         saveDefaultConfig();
 
-        Stream.of("arenas", "rewards", "stats", "mysql", "messages", "kits").filter(name -> !new File(getDataFolder(), name + ".yml").exists()).forEach(name -> saveResource(name + ".yml", false));
+        Stream.of("arenas", "rewards", "stats", "mysql", "messages", "kits")
+            .map(fileName -> new File(getDataFolder(), fileName + ".yml"))
+            .filter(Predicate.not(File::exists))
+            .forEach(file -> saveResource(file.getName(), false));
     }
 
     @NotNull
@@ -243,9 +247,7 @@ public class KOTL extends JavaPlugin {
                     update.append(", ").append(statName).append("=").append(value);
                 }
 
-                String finalUpdate = update.toString();
-
-                mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), finalUpdate, user.getUniqueId().toString()));
+                mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), update.toString(), user.getUniqueId().toString()));
                 continue;
             }
 

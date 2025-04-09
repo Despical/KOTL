@@ -99,7 +99,7 @@ public class SetupInventory {
     }
 
     public void closeInventory() {
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.player.closeInventory(), 1L);
+        plugin.getServer().getScheduler().runTask(plugin, () -> player.closeInventory());
     }
 
     public void setPage(String title, int rows, int page) {

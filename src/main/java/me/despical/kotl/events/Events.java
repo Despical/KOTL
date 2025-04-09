@@ -65,11 +65,11 @@ public non-sealed class Events extends EventListener {
         Arena arena = teleportToEnd.get(player.getUniqueId());
 
         if (arena != null) {
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
                 arena.teleportToEndLocation(player);
 
                 teleportToEnd.remove(player.getUniqueId());
-            }, 1);
+            });
         }
 
         if (plugin.getConfigOptions().isEnabled(Option.INVENTORY_MANAGER_ENABLED)) {
