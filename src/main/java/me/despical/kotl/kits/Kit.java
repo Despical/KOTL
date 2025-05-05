@@ -45,16 +45,17 @@ public class Kit {
         this.permission = config.getString(path + "permission");
 
         for (String armor : config.getStringList(path + "armors")) {
-            armors.add(XMaterial.matchXMaterial(armor).orElseThrow().parseItem());
-
             String[] attributes = armor.split(":");
+
             ItemBuilder builder = new ItemBuilder(XMaterial.matchXMaterial(attributes[0].toUpperCase()))
                 .unbreakable(true)
                 .hideTooltip();
 
             if (attributes.length == 3) {
-                builder.enchantment(Enchantment.getByName(attributes[1].toUpperCase()), NumberUtils.getInt(attributes[2], 1));
+                builder.enchantment(XEnchantment.of(attributes[1].toUpperCase()).orElseThrow().get(), NumberUtils.getInt(attributes[2], 1));
             }
+
+            armors.add(builder.build());
         }
 
         for (String item : config.getStringList(path + "items")) {
