@@ -20,7 +20,7 @@ package me.despical.kotl.user.data;
 
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2020
  */
-public non-sealed class FileStats extends UserDatabase {
+public final class FileStats extends UserDatabase {
 
     private final FileConfiguration config;
 
@@ -40,7 +40,7 @@ public non-sealed class FileStats extends UserDatabase {
     }
 
     @Override
-    public void saveStatistic(@NotNull User user, StatsStorage.StatisticType statisticType) {
+    public void saveStatistic(@NotNull User user, StatisticType statisticType) {
         config.set(user.getUniqueId().toString() + "." + statisticType.getName(), user.getStat(statisticType));
 
         ConfigUtils.saveConfig(plugin, config, "stats");
@@ -50,7 +50,7 @@ public non-sealed class FileStats extends UserDatabase {
     public void saveStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
 
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+        for (StatisticType stat : StatisticType.getPersistentStats()) {
             config.set(uuid + "." + stat.getName(), user.getStat(stat));
         }
 
@@ -61,7 +61,7 @@ public non-sealed class FileStats extends UserDatabase {
     public void loadStatistics(@NotNull User user) {
         String uuid = user.getUniqueId().toString();
 
-        for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+        for (StatisticType stat : StatisticType.getPersistentStats()) {
             user.setStat(stat, config.getInt(uuid + "." + stat.getName()));
         }
     }
