@@ -23,6 +23,7 @@ import me.despical.kotl.KOTL;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -43,17 +44,17 @@ public class LanguageManager {
     }
 
     private void downloadLocaleFile() {
-        String currentLocale = plugin.getChatManager().message("Language");
-        boolean isSameLocale = this.currentLocale.isSameWith(currentLocale);
+        String language = plugin.getChatManager().message("Language");
 
-        if (isSameLocale) {
+        if (currentLocale.isSameWith(language)) {
             return;
         }
 
         try {
-            FileUtils.copyURLToFile(new URL("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/%s.yml".formatted(this.currentLocale.getPrefix())), new File(plugin.getDataFolder(), "messages.yml"));
+            URL fileURL = URI.create("https://raw.githubusercontent.com/Despical/LocaleStorage/main/Minecraft/KOTL/%s.yml".formatted(currentLocale.getPrefix())).toURL();
+            FileUtils.copyURLToFile(fileURL, new File(plugin.getDataFolder(), "messages.yml"));
         } catch (IOException exception) {
-            plugin.getLogger().warning("Error while connecting to internet!");
+            plugin.getLogger().warning("An exception occurred while downloading the language content!");
         }
     }
 
