@@ -8,7 +8,7 @@
 [![](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-lime.svg?logo=BuyMeACoffee)](https://www.buymeacoffee.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
-out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others to climb and
+out of the ladders to be the king. The king tries to stand on the top of the ladders while not letting others climb and
 punching them out of the way! If you have any problem with this plugin check out our [wiki](https://github.com/Despical/KOTL/wiki).
 If you still didn't find an answer see documentation section below.
 
