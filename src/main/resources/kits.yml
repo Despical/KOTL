@@ -10,11 +10,13 @@ kits:
     # Leave permission blank to make this kit available for all players.
     permission: ""
 
+    # armor_item
+    # armor_item:enchantment:level (optional)
     armors:
       - "LEATHER_BOOTS"
       - "LEATHER_LEGGINGS"
       - "LEATHER_CHESTPLATE"
-      - "LEATHER_HELMET"
+      - "LEATHER_HELMET:PROTECTION:1"
 
     # slot:item
     # slot:item:amount

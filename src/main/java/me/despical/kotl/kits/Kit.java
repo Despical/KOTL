@@ -18,6 +18,7 @@
 
 package me.despical.kotl.kits;
 
+import com.cryptomorin.xseries.XEnchantment;
 import me.despical.commons.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
@@ -43,8 +44,17 @@ public class Kit {
         this.items = new HashMap<>();
         this.permission = config.getString(path + "permission");
 
-        for (String armorName : config.getStringList(path + "armors")) {
-            armors.add(XMaterial.matchXMaterial(armorName).orElseThrow().parseItem());
+        for (String armor : config.getStringList(path + "armors")) {
+            armors.add(XMaterial.matchXMaterial(armor).orElseThrow().parseItem());
+
+            String[] attributes = armor.split(":");
+            ItemBuilder builder = new ItemBuilder(XMaterial.matchXMaterial(attributes[0].toUpperCase()))
+                .unbreakable(true)
+                .hideTooltip();
+
+            if (attributes.length == 3) {
+                builder.enchantment(Enchantment.getByName(attributes[1].toUpperCase()), NumberUtils.getInt(attributes[2], 1));
+            }
         }
 
         for (String item : config.getStringList(path + "items")) {
@@ -60,7 +70,7 @@ public class Kit {
             }
 
             if (attributes.length == 4) {
-                builder.enchantment(Enchantment.getByName(attributes[2].toUpperCase()), NumberUtils.getInt(attributes[3], 1));
+                builder.enchantment(XEnchantment.of(attributes[2].toUpperCase()).orElseThrow().get(), NumberUtils.getInt(attributes[3], 1));
             }
 
             int slot = NumberUtils.getInt(attributes[0]);
