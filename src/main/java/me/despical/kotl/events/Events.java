@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  * <p>
  * Created at 22.06.2020
  */
-public non-sealed class Events extends EventListener {
+public final class Events extends EventListener {
 
     private final Map<UUID, Arena> teleportToEnd;
 

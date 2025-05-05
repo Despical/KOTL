@@ -20,7 +20,7 @@ package me.despical.kotl.events;
 
 import me.despical.commons.miscellaneous.MiscUtils;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.api.events.arena.KOTLNewKingEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager.ActionType;
@@ -47,7 +47,7 @@ import java.util.Set;
  * <p>
  * Created at 22.06.2020
  */
-public non-sealed class ArenaEvents extends EventListener {
+public final class ArenaEvents extends EventListener {
 
     public ArenaEvents(KOTL plugin) {
         super(plugin);
@@ -101,13 +101,13 @@ public non-sealed class ArenaEvents extends EventListener {
                 var players = new HashSet<>(arena.getPlayers());
                 players.remove(player);
 
-                players.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 1));
+                players.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStat(StatisticType.LOCAL_RESET_COOLDOWN, 1));
             }
 
             chatManager.broadcastAction(arena, player, ActionType.NEW_KING);
 
-            user.addStat(StatsStorage.StatisticType.SCORE, 1);
-            user.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+            user.addStat(StatisticType.SCORE, 1);
+            user.addStat(StatisticType.TOURS_PLAYED, 1);
             user.performReward(RewardType.WIN, arena);
 
             Set<Player> players = arena.getPlayers();
@@ -117,7 +117,7 @@ public non-sealed class ArenaEvents extends EventListener {
 
             for (Player p : players) {
                 User u = plugin.getUserManager().getUser(p);
-                u.addStat(StatsStorage.StatisticType.TOURS_PLAYED, 1);
+                u.addStat(StatisticType.TOURS_PLAYED, 1);
                 u.performReward(RewardType.LOSE, arena);
 
                 spawnFireworks(arena, p);
@@ -189,7 +189,7 @@ public non-sealed class ArenaEvents extends EventListener {
 
         if (killerFound) {
             User killerUser = plugin.getUserManager().getUser(killer);
-            killerUser.addStat(StatsStorage.StatisticType.KILLS, 1);
+            killerUser.addStat(StatisticType.KILLS, 1);
             killerUser.performReward(RewardType.KILL, arena);
         }
     }
@@ -206,7 +206,7 @@ public non-sealed class ArenaEvents extends EventListener {
 
         User user = plugin.getUserManager().getUser(player);
         user.performReward(RewardType.DEATH, arena);
-        user.addStat(StatsStorage.StatisticType.DEATHS, 1);
+        user.addStat(StatisticType.DEATHS, 1);
     }
 
     private void spawnFireworks(Arena arena, Player player) {
