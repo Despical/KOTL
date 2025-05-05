@@ -23,7 +23,7 @@ import me.despical.commons.miscellaneous.AttributeUtils;
 import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.serializer.InventorySerializer;
 import me.despical.commons.util.UpdateChecker;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.arena.ArenaRegistry;
@@ -42,7 +42,7 @@ import me.despical.kotl.options.ConfigOptions;
 import me.despical.kotl.options.Option;
 import me.despical.kotl.user.User;
 import me.despical.kotl.user.UserManager;
-import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.user.data.MySQLStatistics;
 import me.despical.kotl.util.CuboidSelector;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -233,10 +233,10 @@ public class KOTL extends JavaPlugin {
 
     private void saveAllUserStatistics() {
         for (User user : userManager.getUsers()) {
-            if (userManager.getDatabase() instanceof MysqlManager mysqlManager) {
+            if (userManager.getDatabase() instanceof MySQLStatistics mySQLStatistics) {
                 StringBuilder update = new StringBuilder(" SET ");
 
-                for (StatsStorage.StatisticType stat : StatsStorage.StatisticType.PERSISTENT_STATS) {
+                for (StatisticType stat : StatisticType.getPersistentStats()) {
                     int value = user.getStat(stat);
                     String statName = stat.getName();
 
@@ -247,7 +247,7 @@ public class KOTL extends JavaPlugin {
                     update.append(", ").append(statName).append("=").append(value);
                 }
 
-                mysqlManager.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mysqlManager.getTable(), update.toString(), user.getUniqueId().toString()));
+                mySQLStatistics.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mySQLStatistics.getTable(), update.toString(), user.getUniqueId().toString()));
                 continue;
             }
 

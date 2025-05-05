@@ -21,9 +21,10 @@ package me.despical.kotl.commands;
 import me.despical.commandframework.CommandArguments;
 import me.despical.commandframework.annotations.Command;
 import me.despical.kotl.KOTL;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.api.StatsStorage;
 import me.despical.kotl.user.User;
-import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.user.data.MySQLStatistics;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -92,10 +93,10 @@ public class PlayerCommands extends AbstractCommand {
     private String formatStats(String message, boolean self, User user) {
         message = message.replace("%header%", chatManager.message("commands.stats-command.header" + (self ? "" : "-other")));
         message = message.replace("%player%", user.getName());
-        message = message.replace("%tours_played%", StatsStorage.StatisticType.TOURS_PLAYED.from(user));
-        message = message.replace("%score%", StatsStorage.StatisticType.SCORE.from(user));
-        message = message.replace("%kills%", StatsStorage.StatisticType.KILLS.from(user));
-        message = message.replace("%deaths%", StatsStorage.StatisticType.DEATHS.from(user));
+        message = message.replace("%tours_played%", StatisticType.TOURS_PLAYED.from(user));
+        message = message.replace("%score%", StatisticType.SCORE.from(user));
+        message = message.replace("%kills%", StatisticType.KILLS.from(user));
+        message = message.replace("%deaths%", StatisticType.DEATHS.from(user));
         return chatManager.coloredRawMessage(message);
     }
 
@@ -111,13 +112,13 @@ public class PlayerCommands extends AbstractCommand {
         }
 
         try {
-            printLeaderboard(arguments.getSender(), StatsStorage.StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
+            printLeaderboard(arguments.getSender(), StatisticType.valueOf(arguments.getArgument(0).toUpperCase(java.util.Locale.ENGLISH)));
         } catch (IllegalArgumentException exception) {
             arguments.sendMessage(chatManager.prefixedMessage("Commands.statistics.invalid_name"));
         }
     }
 
-    private void printLeaderboard(CommandSender sender, StatsStorage.StatisticType statisticType) {
+    private void printLeaderboard(CommandSender sender, StatisticType statisticType) {
         sender.sendMessage(chatManager.message("commands.statistics.header"));
 
         Map<UUID, Integer> stats = StatsStorage.getStats(statisticType);
@@ -133,10 +134,10 @@ public class PlayerCommands extends AbstractCommand {
             } catch (NullPointerException ex) {
                 UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
-                if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
-                    try (Connection connection = mysqlManager.getDatabase().getConnection()) {
+                if (plugin.getUserManager().getDatabase() instanceof MySQLStatistics mySQLStatistics) {
+                    try (Connection connection = mySQLStatistics.getDatabase().getConnection()) {
                         Statement statement = connection.createStatement();
-                        ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mysqlManager.getTable(), current.toString()));
+                        ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mySQLStatistics.getTable(), current.toString()));
 
                         if (set.next()) {
                             sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));

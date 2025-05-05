@@ -18,7 +18,7 @@
 
 package me.despical.kotl.api.events.player;
 
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.api.events.KOTLEvent;
 import me.despical.kotl.arena.Arena;
 import org.bukkit.entity.Player;
@@ -34,23 +34,25 @@ import org.jetbrains.annotations.NotNull;
 public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
 
     private static final HandlerList handlers = new HandlerList();
-    private final Player player;
-    private final StatsStorage.StatisticType statisticType;
-    private final int number;
 
-    public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatsStorage.StatisticType statisticType, int number) {
+    private final Player player;
+    private final StatisticType statisticType;
+    private final int value;
+
+    public KOTLPlayerStatisticChangeEvent(Arena eventArena, Player player, StatisticType statisticType, int value) {
         super(eventArena);
         this.player = player;
         this.statisticType = statisticType;
-        this.number = number;
+        this.value = value;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
     }
 
+    @NotNull
     @Override
-    public @NotNull HandlerList getHandlers() {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
@@ -58,11 +60,11 @@ public class KOTLPlayerStatisticChangeEvent extends KOTLEvent {
         return player;
     }
 
-    public StatsStorage.StatisticType getStatisticType() {
+    public StatisticType getStatisticType() {
         return statisticType;
     }
 
-    public int getNumber() {
-        return number;
+    public int getNewValue() {
+        return value;
     }
 }

@@ -19,7 +19,7 @@
 package me.despical.kotl.user;
 
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.rewards.Reward.RewardType;
@@ -50,14 +50,14 @@ public class User {
     private final String name;
     private final Map<String, Double> cooldowns;
     private final Map<String, Boolean> variables;
-    private final Map<StatsStorage.StatisticType, Integer> stats;
+    private final Map<StatisticType, Integer> stats;
 
     public User(Player player) {
         this.uuid = player.getUniqueId();
         this.name = player.getName();
         this.cooldowns = new HashMap<>();
         this.variables = new HashMap<>();
-        this.stats = new EnumMap<>(StatsStorage.StatisticType.class);
+        this.stats = new EnumMap<>(StatisticType.class);
     }
 
     public Arena getArena() {
@@ -76,17 +76,17 @@ public class User {
         return name;
     }
 
-    public int getStat(StatsStorage.StatisticType statisticType) {
+    public int getStat(StatisticType statisticType) {
         return stats.computeIfAbsent(statisticType, stat -> 0);
     }
 
-    public void setStat(StatsStorage.StatisticType stat, int value) {
+    public void setStat(StatisticType stat, int value) {
         stats.put(stat, value);
 
         plugin.callEvent(() -> new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
     }
 
-    public void addStat(StatsStorage.StatisticType stat, int value) {
+    public void addStat(StatisticType stat, int value) {
         setStat(stat, getStat(stat) + value);
     }
 

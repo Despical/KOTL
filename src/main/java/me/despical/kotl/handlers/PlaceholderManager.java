@@ -20,7 +20,7 @@ package me.despical.kotl.handlers;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.user.User;
 import org.bukkit.entity.Player;
@@ -72,8 +72,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
         User user = plugin.getUserManager().getUser(player);
 
         return switch (id.toLowerCase()) {
-            case "score" -> Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE));
-            case "tours_played" -> Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED));
+            case "score" -> Integer.toString(user.getStat(StatisticType.SCORE));
+            case "tours_played" -> Integer.toString(user.getStat(StatisticType.TOURS_PLAYED));
             case "arena" -> Optional.ofNullable(user.getArena())
                 .map(Arena::getId)
                 .orElseGet(() -> plugin.getChatManager().message("Placeholders.Player-Not-Playing"));

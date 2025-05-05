@@ -21,8 +21,8 @@ package me.despical.kotl.api;
 import me.despical.commons.configuration.ConfigUtils;
 import me.despical.commons.sorter.SortUtils;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.user.User;
-import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.user.data.MySQLStatistics;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,6 @@ import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -48,10 +47,11 @@ public class StatsStorage {
 
     @NotNull
     public static Map<UUID, Integer> getStats(StatisticType stat) {
-        if (plugin.getUserManager().getDatabase() instanceof MysqlManager mysqlManager) {
-            try (Connection connection = mysqlManager.getDatabase().getConnection()) {
-                final Statement statement = connection.createStatement();
-                final ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.name, mysqlManager.getTable(), stat.name));
+        if (plugin.getUserManager().getDatabase() instanceof MySQLStatistics mySQLStatistics) {
+            try (Connection connection = mySQLStatistics.getDatabase().getConnection();
+                 Statement statement = connection.createStatement()
+            ) {
+                ResultSet set = statement.executeQuery("SELECT UUID, %s FROM %s ORDER BY %s".formatted(stat.getName(), mySQLStatistics.getTable(), stat.getName()));
 
                 final var column = new LinkedHashMap<UUID, Integer>();
 
@@ -66,7 +66,7 @@ public class StatsStorage {
             }
         }
 
-        final var config = ConfigUtils.getConfig(plugin, "stats");
+        FileConfiguration config = ConfigUtils.getConfig(plugin, "stats");
         final var stats = new LinkedHashMap<UUID, Integer>();
 
         for (final var string : config.getKeys(false)) {
@@ -78,40 +78,5 @@ public class StatsStorage {
 
     public static int getUserStats(Player player, StatisticType statisticType) {
         return plugin.getUserManager().getUser(player).getStat(statisticType);
-    }
-
-    public enum StatisticType {
-
-        TOURS_PLAYED("toursplayed"),
-        SCORE("score"),
-        KILLS("kill"),
-        DEATHS("death"),
-        LOCAL_RESET_COOLDOWN("local_reset_cooldown", false);
-
-        public static final StatisticType[] PERSISTENT_STATS = Stream.of(values()).filter(StatisticType::isPersistent).toArray(StatisticType[]::new);
-
-        final String name;
-        final boolean persistent;
-
-        StatisticType(String name) {
-            this(name, true);
-        }
-
-        StatisticType(String name, boolean persistent) {
-            this.name = name;
-            this.persistent = persistent;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isPersistent() {
-            return persistent;
-        }
-
-        public String from(User user) {
-            return Integer.toString(user.getStat(this));
-        }
     }
 }

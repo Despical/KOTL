@@ -19,7 +19,7 @@
 package me.despical.kotl.user.data;
 
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.user.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,20 +28,20 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 20.06.2020
  */
-public abstract sealed class UserDatabase permits FileStats, MysqlManager {
+public abstract sealed class UserDatabase permits FileStats, MySQLStatistics {
 
     @NotNull
     protected final KOTL plugin;
 
-    public UserDatabase(final @NotNull KOTL plugin) {
+    public UserDatabase(@NotNull KOTL plugin) {
         this.plugin = plugin;
     }
 
-    public abstract void saveStatistic(final @NotNull User user, final StatsStorage.StatisticType statisticType);
+    public abstract void saveStatistic(@NotNull User user, StatisticType statisticType);
 
-    public abstract void saveStatistics(final @NotNull User user);
+    public abstract void saveStatistics(@NotNull User user);
 
-    public abstract void loadStatistics(final @NotNull User user);
+    public abstract void loadStatistics(@NotNull User user);
 
     public void shutdown() {
     }

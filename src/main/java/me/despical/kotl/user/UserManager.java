@@ -21,7 +21,7 @@ package me.despical.kotl.user;
 import me.despical.kotl.KOTL;
 import me.despical.kotl.options.Option;
 import me.despical.kotl.user.data.FileStats;
-import me.despical.kotl.user.data.MysqlManager;
+import me.despical.kotl.user.data.MySQLStatistics;
 import me.despical.kotl.user.data.UserDatabase;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public class UserManager {
     private final Map<UUID, User> users;
 
     public UserManager(KOTL plugin) {
-        this.database = plugin.getConfigOptions().isEnabled(Option.DATABASE_ENABLED) ? new MysqlManager(plugin) : new FileStats(plugin);
+        this.database = plugin.getConfigOptions().isEnabled(Option.DATABASE_ENABLED) ? new MySQLStatistics(plugin) : new FileStats(plugin);
         this.users = new HashMap<>();
     }
 

@@ -24,7 +24,7 @@ import me.despical.commons.scoreboard.ScoreboardLib;
 import me.despical.commons.scoreboard.common.Entry;
 import me.despical.commons.scoreboard.common.EntryBuilder;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.handlers.ChatManager;
 import org.bukkit.entity.Player;
@@ -96,8 +96,8 @@ public class ScoreboardManager {
 
         var user = plugin.getUserManager().getUser(player);
 
-        line = line.replace("%score%", Integer.toString(user.getStat(StatsStorage.StatisticType.SCORE)));
-        line = line.replace("%tours_played%", Integer.toString(user.getStat(StatsStorage.StatisticType.TOURS_PLAYED)));
+        line = line.replace("%score%", Integer.toString(user.getStat(StatisticType.SCORE)));
+        line = line.replace("%tours_played%", Integer.toString(user.getStat(StatisticType.TOURS_PLAYED)));
         line = chatManager.formatMessage(line, player);
         return line;
     }

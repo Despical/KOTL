@@ -20,7 +20,7 @@ package me.despical.kotl.util;
 
 import me.despical.commons.messages.ActionBar;
 import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatsStorage;
+import me.despical.kotl.api.StatisticType;
 import me.despical.kotl.arena.Arena;
 import me.despical.kotl.options.Option;
 import me.despical.kotl.user.User;
@@ -64,13 +64,13 @@ public class Utils {
             public void run() {
                 Player player = user.getPlayer();
 
-                if (user.getStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN) == 1) {
+                if (user.getStat(StatisticType.LOCAL_RESET_COOLDOWN) == 1) {
                     cancel();
 
                     plugin.getCooldownManager().setCooldown(user, cooldownName, 0);
 
                     user.set(localCooldownName, false);
-                    user.setStat(StatsStorage.StatisticType.LOCAL_RESET_COOLDOWN, 0);
+                    user.setStat(StatisticType.LOCAL_RESET_COOLDOWN, 0);
                     return;
                 }
 
