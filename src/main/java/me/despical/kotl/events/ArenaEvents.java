@@ -67,8 +67,7 @@ public final class ArenaEvents extends EventListener {
             int size = arena.getPlayers().size();
             boolean isSameKing = arena.getKing() != null && arena.getKing().equals(player.getName());
 
-            if (isSameKing && (size == 1 || !options.isEnabled(Option.BECOME_KING_IN_A_ROW)))
-                return;
+            if (isSameKing && size == 1 && !options.isEnabled(Option.BECOME_KING_IN_A_ROW)) return;
 
             int cooldown = options.getValue(Option.COOLDOWN);
             String cooldownName = (options.isEnabled(Option.SEPARATE_COOLDOWNS) ? arena.getId() : "") + "king";
