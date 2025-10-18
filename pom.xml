@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.despical</groupId>
     <artifactId>king-of-the-ladder</artifactId>
-    <version>3.1.6</version>
+    <version>3.1.7</version>
 
     <name>King of the Ladder</name>
     <inceptionYear>2020</inceptionYear>
@@ -63,19 +63,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.Despical</groupId>
-            <artifactId>Commons</artifactId>
-            <version>1.9.5</version>
+            <groupId>com.github.despical</groupId>
+            <artifactId>commons</artifactId>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Despical</groupId>
-            <artifactId>InventoryFramework</artifactId>
-            <version>2.3.8</version>
+            <groupId>com.github.despical</groupId>
+            <artifactId>inventory-framework</artifactId>
+            <version>2.4.1</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Despical</groupId>
-            <artifactId>CommandFramework</artifactId>
-            <version>1.5.13</version>
+            <groupId>com.github.despical</groupId>
+            <artifactId>command-framework</artifactId>
+            <version>1.5.3</version>
         </dependency>
         <dependency>
             <groupId>com.github.Despical</groupId>
@@ -96,12 +96,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -128,7 +122,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -162,5 +156,11 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
