@@ -85,7 +85,7 @@ public final class MySQLStatistics extends UserDatabase {
     @Override
     public void saveStatistics(@NotNull User user) {
         executor.submit(() -> {
-            StringBuilder update = new StringBuilder(" SET ");
+            StringBuilder update = new StringBuilder();
 
             for (StatisticType stat : StatisticType.getPersistentStats()) {
                 update
@@ -99,7 +99,8 @@ public final class MySQLStatistics extends UserDatabase {
 
             update.deleteCharAt(update.length() - 1);
 
-            database.executeUpdate("UPDATE `%s` SET %s WHERE UUID='%s';".formatted(table, update.toString(), user.getUniqueId().toString()));
+            String query = "UPDATE `%s` SET %s WHERE UUID='%s';".formatted(table, update.toString(), user.getUniqueId().toString());
+            database.executeUpdate(query);
         });
     }
 
