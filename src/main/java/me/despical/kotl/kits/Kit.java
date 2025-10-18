@@ -23,7 +23,6 @@ import me.despical.commons.XMaterial;
 import me.despical.commons.item.ItemBuilder;
 import me.despical.commons.number.NumberUtils;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
