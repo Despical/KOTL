@@ -4,7 +4,7 @@
 
 [![](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
 [![](https://jitpack.io/v/Despical/KOTL.svg)](https://jitpack.io/#Despical/KOTL)
-[![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
+[![](https://img.shields.io/badge/JavaDocs-latest-lime.svg)](https://despical.github.io/KOTL/)
 [![](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-lime.svg?logo=BuyMeACoffee)](https://www.buymeacoffee.com/despical)
 
 King of the Ladder is an old Minecraft minigame that supports almost every version. Each player have to kick other players
@@ -16,7 +16,7 @@ If you still didn't find an answer see documentation section below.
 
 ## Documentation
 - [Wiki](https://github.com/Despical/KOTL/wiki)
-- [JavaDocs](https://javadoc.jitpack.io/com/github/Despical/KOTL/latest/javadoc/index.html)
+- [JavaDocs](https://despical.github.io/KOTL/)
 - [Tutorial Video](https://www.youtube.com/watch?v=O_vkf_J4OgY)
 
 ## Donations
@@ -82,4 +82,4 @@ mvn clean package -Dmaven.javadoc.skip=true
 ```
 
 > [!IMPORTANT]  
-> **[Maven](https://maven.apache.org/)** must be installed to build KOTL.
+> **[Maven](https://maven.apache.org/)** must be installed to build this project.
