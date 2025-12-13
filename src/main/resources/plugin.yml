@@ -1,8 +1,8 @@
 name: KOTL
-main: me.despical.kotl.KOTL
 author: Despical
-version: ${project.version}
+version: ${version}
 api-version: 1.13
+main: dev.despical.kotl.KOTL
 description: An old, fun, classical Minecraft minigame.
 website: https://spigotmc.org/resources/80686/
 softdepend:

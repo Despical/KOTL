@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '9.3.0'
+}
+
+group = 'dev.despical'
+version = '3.1.8'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public' }
+    maven { url = 'https://repo.extendedclip.com/releases' }
+    maven { url = 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.7'
+
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
+    implementation 'dev.despical:commons:2.0.6'
+    implementation 'dev.despical:command-framework:1.5.6'
+    implementation 'dev.despical:inventory-framework:2.4.2'
+    implementation 'com.github.Despical:ParticleLib:1.0.7'
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+
+tasks.processResources {
+    def props = [version: version]
+    inputs.properties props
+
+    filteringCharset = 'UTF-8'
+
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks.jar {
+    enabled = false
+}
+
+tasks.shadowJar {
+    minimize()
+
+    relocate 'dev.despical.commons', 'dev.despical.kotl.commons'
+    relocate 'dev.despical.commandframework', 'dev.despical.kotl.command'
+    relocate 'dev.despical.inventoryframework', 'dev.despical.kotl.gui'
+    relocate 'me.despical.particle', 'dev.despical.kotl.particlelib'
+    relocate 'org.bstats', 'dev.despical.eastereggs.util'
+
+    exclude 'META-INF/**'
+    exclude 'fonts/**'
+
+    archiveFileName = "king-of-the-ladder-${version}.jar"
+}
