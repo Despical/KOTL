@@ -78,8 +78,8 @@ You can learn more about contributing via GitHub in [contribution guidelines](..
 To build this project from source code, run the following from Git Bash:
 ```
 git clone https://www.github.com/Despical/KOTL.git && cd KOTL
-mvn clean package -Dmaven.javadoc.skip=true
+./gradlew shadowJar
 ```
 
 > [!IMPORTANT]  
-> **[Maven](https://maven.apache.org/)** must be installed to build this project.
+> **[Gradle](https://gradle.org/)** is required to build this project.
