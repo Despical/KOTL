@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.arena.managers.schedulers;
+package dev.despical.kotl.arena.managers.schedulers;
 
 /**
  * @author Despical
