@@ -16,33 +16,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.user.data;
+package dev.despical.kotl.database;
 
-import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatisticType;
-import me.despical.kotl.user.User;
-import org.jetbrains.annotations.NotNull;
+import dev.despical.kotl.KOTL;
+import dev.despical.kotl.user.User;
 
 /**
  * @author Despical
  * <p>
  * Created at 20.06.2020
  */
-public abstract sealed class UserDatabase permits FileStats, MySQLStatistics {
+public sealed abstract class Database permits FlatFileStorage, MySQLStorage {
 
-    @NotNull
-    protected final KOTL plugin;
+    protected static final KOTL plugin = KOTL.getInstance();
 
-    public UserDatabase(@NotNull KOTL plugin) {
-        this.plugin = plugin;
-    }
+    public abstract void loadData(User user);
 
-    public abstract void saveStatistic(@NotNull User user, StatisticType statisticType);
+    public abstract void saveData(User user);
 
-    public abstract void saveStatistics(@NotNull User user);
-
-    public abstract void loadStatistics(@NotNull User user);
-
-    public void shutdown() {
-    }
+    public abstract void shutdown();
 }

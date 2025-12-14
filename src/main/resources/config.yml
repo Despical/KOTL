@@ -16,14 +16,25 @@
 #    tr - Türkçe
 locale: default
 
+# -----------------------------------------------------------------------------
+# STORAGE SETTINGS
+# -----------------------------------------------------------------------------
+#
+# Define the storage method for player statistics and game data.
+#
+# Available Types:
+#   - flat_file: Saves data in local files (YAML). Best for small servers.
+#   - mysql:     Saves data to an external database. Best for networks/bungeecord.
+#
+# [!] WARNING: There is currently no migration support between storage types.
+# Switching this on an active server will result in previous data being ignored.
+Database: flat_file
+
 Arena-Schedulers:
   # Type 1: Creates a general task that loops all arenas and players to check
   # if they are inside any arena, if they are they'll be put in the game.
   #
-  # Type 2: Creates tasks for every arena which means every arena will look for
-  # all online players in their own task.
-  #
-  # Type 3 (Slowest for big networks): Registers a PlayerMoveEvent and checks in
+  # Type 2 (Slowest for big networks): Registers a PlayerMoveEvent and checks in
   # the event if player is inside any arena.
   Type: 1
 
@@ -73,11 +84,6 @@ Boss-Bar-Enabled: true
 
 # Enable scoreboard support?
 Scoreboard-Enabled: true
-
-# Enable this option when you're using MySQL, otherwise it won't work.
-# Be careful when changing this because there is NO migrator between
-# flat file and MySQL for player stats.
-Database-Enabled: false
 
 # Enable Inventory Manager for your games? (Very useful feature for MULTI ARENA)
 # This saves inventory of players and restores it after player leaves arena.

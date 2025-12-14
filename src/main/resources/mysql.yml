@@ -2,18 +2,34 @@
 #                                                             #
 #                     MySQL Configuration                     #
 #                                                             #
-#    Enable MySQL from config.yml before editing this file    #
+#    Before modifying these settings, make sure MySQL is      #
+#    enabled in your config.yml file.                         #
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Replace <databaseName> with your database address.
-address: jdbc:mysql://localhost:3306/<databaseName>?useSSL=false&autoReConnect=true
+# The full JDBC URL for the database connection.
+# Format: jdbc:mysql://<host>:<port>/<database_name>?<parameters>
+#
+# You must replace '<database_name>' with the actual name of your database.
+# Example: jdbc:mysql://127.0.0.1:3306/my_server
+#
+# The extra parameters (?useSSL=false&autoReConnect=true&createDatabaseIfNotExist=true)
+# are recommended for connection stability and convenience.
+address: jdbc:mysql://localhost:3306/<database_name>?useSSL=false&autoReConnect=true&createDatabaseIfNotExist=true
 
-# Replace <user> with your MySQL username.
-user: <user>
+# The username for the MySQL database.
+user: root
 
-# Replace <password> with your MySQL password.
-password: <password>
+# The password for the specified MySQL user.
+# Please replace '<your_password>' with your database password.
+password: <your_password>
 
-# MySQL table name.
+# The name of the table used to store plugin-specific data.
+# It is not recommended to change this value after the initial setup
+# unless you are performing a data migration.
 table: kotl_stats
+
+# If true, the plugin will attempt to connect to the database during server startup.
+# This allows for immediate validation of the credentials and configuration.
+# If the connection fails, a detailed error will be logged.
+test-on-startup: true
