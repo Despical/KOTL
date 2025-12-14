@@ -16,17 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.arena;
+package dev.despical.kotl.arena;
 
-import me.despical.commons.XMaterial;
-import me.despical.commons.configuration.ConfigUtils;
-import me.despical.commons.serializer.LocationSerializer;
-import me.despical.kotl.KOTL;
+import dev.despical.commons.XMaterial;
+import dev.despical.commons.configuration.ConfigUtils;
+import dev.despical.commons.serializer.LocationSerializer;
+import dev.despical.kotl.KOTL;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -38,45 +39,50 @@ import java.util.logging.Level;
 public class ArenaRegistry {
 
     private final KOTL plugin;
-    private final Set<Arena> arenas;
+    private final Map<String, Arena> arenas;
 
     public ArenaRegistry(KOTL plugin) {
         this.plugin = plugin;
-        this.arenas = new HashSet<>();
-
+        this.arenas = new HashMap<>();
         this.registerArenas();
     }
 
     public void registerArena(Arena arena) {
-        this.arenas.add(arena);
+        arenas.put(arena.getId(), arena);
     }
 
     public void unregisterArena(Arena arena) {
-        this.arenas.remove(arena);
+        arenas.remove(arena.getId());
     }
 
     public Set<Arena> getArenas() {
-        return Set.copyOf(arenas);
+        return Set.copyOf(arenas.values());
+    }
+
+    public Set<String> getArenaNames() {
+        return arenas.keySet();
     }
 
     public Arena getArena(String id) {
-        if (id == null) return null;
-
-        return this.arenas.stream().filter(arena -> arena.getId().equals(id)).findFirst().orElse(null);
+        return arenas.get(id);
     }
 
     public Arena getArena(Player player) {
         if (player == null) return null;
 
-        return arenas.stream().filter(arena -> arena.getPlayers().contains(player)).findFirst().orElse(null);
+        return arenas.values()
+            .stream()
+            .filter(arena -> arena.getPlayers().contains(player))
+            .findFirst()
+            .orElse(null);
     }
 
     public boolean isArena(String arenaId) {
-        return arenaId != null && getArena(arenaId) != null;
+        return getArena(arenaId) != null;
     }
 
     public boolean isInArena(Player player) {
-        return this.getArena(player) != null;
+        return getArena(player) != null;
     }
 
     public void registerArenas() {
@@ -86,7 +92,6 @@ public class ArenaRegistry {
         ConfigurationSection section = config.getConfigurationSection("instances");
 
         if (section == null) {
-            plugin.getLogger().warning("Couldn't find 'instances' section in arena.yml, delete the file to regenerate it!");
             return;
         }
 
@@ -96,7 +101,7 @@ public class ArenaRegistry {
             String path = "instances." + id + ".";
             Arena arena = new Arena(id);
 
-            arenas.add(arena);
+            arenas.put(id, arena);
 
             arena.setReady(config.getBoolean(path + "isdone"));
             arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
