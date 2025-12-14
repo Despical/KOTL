@@ -1,0 +1,7 @@
+items:
+  area-selector:
+    material: BLAZE_ROD
+    name: "&6&lArea selector"
+    lore:
+      - "&eLEFT CLICK to select first corner."
+      - "&eRIGHT CLICK to select second corner."

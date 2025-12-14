@@ -16,42 +16,47 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl;
+package dev.despical.kotl;
 
-import me.despical.commandframework.CommandFramework;
-import me.despical.commons.miscellaneous.AttributeUtils;
-import me.despical.commons.scoreboard.ScoreboardLib;
-import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.util.UpdateChecker;
-import me.despical.kotl.api.StatisticType;
-import me.despical.kotl.api.events.KOTLEvent;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.arena.ArenaRegistry;
-import me.despical.kotl.arena.managers.ArenaManager;
-import me.despical.kotl.commands.AdminCommands;
-import me.despical.kotl.commands.PlayerCommands;
-import me.despical.kotl.events.ArenaEvents;
-import me.despical.kotl.events.Events;
-import me.despical.kotl.handlers.ChatManager;
-import me.despical.kotl.handlers.PlaceholderManager;
-import me.despical.kotl.handlers.cooldown.CooldownManager;
-import me.despical.kotl.handlers.rewards.RewardsFactory;
-import me.despical.kotl.kits.KitManager;
-import me.despical.kotl.language.LanguageManager;
-import me.despical.kotl.options.ConfigOptions;
-import me.despical.kotl.options.Option;
-import me.despical.kotl.user.User;
-import me.despical.kotl.user.UserManager;
-import me.despical.kotl.user.data.MySQLStatistics;
-import me.despical.kotl.util.CuboidSelector;
+import dev.despical.commandframework.CommandFramework;
+import dev.despical.commons.miscellaneous.AttributeUtils;
+import dev.despical.commons.scoreboard.ScoreboardLib;
+import dev.despical.commons.serializer.InventorySerializer;
+import dev.despical.commons.util.UpdateChecker;
+import dev.despical.fileitems.ItemManager;
+import dev.despical.kotl.api.StatisticType;
+import dev.despical.kotl.api.events.KOTLEvent;
+import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.arena.ArenaRegistry;
+import dev.despical.kotl.arena.managers.ArenaManager;
+import dev.despical.kotl.commands.AdminCommands;
+import dev.despical.kotl.commands.PlayerCommands;
+import dev.despical.kotl.commands.TabCompleters;
+import dev.despical.kotl.database.Database;
+import dev.despical.kotl.database.DatabaseType;
+import dev.despical.kotl.database.FlatFileStorage;
+import dev.despical.kotl.database.MySQLStorage;
+import dev.despical.kotl.events.ArenaEvents;
+import dev.despical.kotl.events.Events;
+import dev.despical.kotl.handlers.ChatManager;
+import dev.despical.kotl.handlers.PlaceholderManager;
+import dev.despical.kotl.handlers.cooldown.CooldownManager;
+import dev.despical.kotl.handlers.rewards.RewardsFactory;
+import dev.despical.kotl.kits.KitManager;
+import dev.despical.kotl.language.LanguageManager;
+import dev.despical.kotl.options.ConfigOptions;
+import dev.despical.kotl.options.Option;
+import dev.despical.kotl.user.User;
+import dev.despical.kotl.user.UserManager;
+import dev.despical.kotl.util.CuboidSelector;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -61,10 +66,15 @@ import java.util.stream.Stream;
  * <p>
  * Created at 20.06.2020
  */
+@Getter
 public class KOTL extends JavaPlugin {
+
+    @Getter
+    private static KOTL instance;
 
     private ConfigOptions configOptions;
     private UserManager userManager;
+    private Database database;
     private CommandFramework commandFramework;
     private CuboidSelector cuboidSelector;
     private ChatManager chatManager;
@@ -74,6 +84,9 @@ public class KOTL extends JavaPlugin {
     private KitManager kitManager;
     private ArenaManager arenaManager;
     private CooldownManager cooldownManager;
+    private ItemManager itemManager;
+
+    @Getter(AccessLevel.NONE)
     private boolean initializeFinished;
 
     @Override
@@ -111,15 +124,16 @@ public class KOTL extends JavaPlugin {
     }
 
     private void initializeClasses() {
-        Locale.setDefault(Locale.ENGLISH);
+        instance = this;
 
         this.setupConfigurationFiles();
+        this.initializeItemManager();
 
         configOptions = new ConfigOptions(this);
         chatManager = new ChatManager(this);
         languageManager = new LanguageManager(this);
         userManager = new UserManager(this);
-        commandFramework = new CommandFramework(this);
+        database = this.createDatabase();
         cuboidSelector = new CuboidSelector(this);
         rewardsFactory = new RewardsFactory(this);
         arenaRegistry = new ArenaRegistry(this);
@@ -129,21 +143,14 @@ public class KOTL extends JavaPlugin {
 
         ScoreboardLib.setPluginInstance(this);
 
-        new Events(this);
-        new ArenaEvents(this);
-
-        new PlayerCommands(this);
-        new AdminCommands(this);
+        this.registerCommands();
+        this.registerEvents();
 
         if (chatManager.isPapiEnabled()) {
             new PlaceholderManager(this);
         }
 
-        Metrics metrics = new Metrics(this, 7938);
-        metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getCurrentLocale().getPrefix()));
-        metrics.addCustomChart(new SimplePie("database_enabled", () -> configOptions.isEnabled(Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-        metrics.addCustomChart(new SimplePie("update_notifier", () -> configOptions.isEnabled(Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
-
+        this.initializeMetrics();
         this.initializeFinished = true;
     }
 
@@ -164,53 +171,42 @@ public class KOTL extends JavaPlugin {
             .forEach(file -> saveResource(file.getName(), false));
     }
 
-    @NotNull
-    public CommandFramework getCommandFramework() {
-        return commandFramework;
+    private void initializeItemManager() {
+        itemManager = new ItemManager(this);
+        itemManager.registerItems("items", "items");
     }
 
-    @NotNull
-    public CuboidSelector getCuboidSelector() {
-        return cuboidSelector;
+    private void initializeMetrics() {
+        Metrics metrics = new Metrics(this, 7938);
+        metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getCurrentLocale().getPrefix()));
+        metrics.addCustomChart(new SimplePie("database_enabled", () -> configOptions.isEnabled(Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
+        metrics.addCustomChart(new SimplePie("update_notifier", () -> configOptions.isEnabled(Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
     }
 
-    @NotNull
-    public ChatManager getChatManager() {
-        return chatManager;
+    private Database createDatabase() {
+        String databaseName = getConfig().getString("Database");
+
+        return switch (DatabaseType.getByName(databaseName)) {
+            case FLAT_FILE -> new FlatFileStorage();
+            case MYSQL -> new MySQLStorage();
+            case null -> {
+                getLogger().warning("Invalid database type. Using flat file storage.");
+                yield new FlatFileStorage();
+            }
+        };
     }
 
-    @NotNull
-    public RewardsFactory getRewardsFactory() {
-        return rewardsFactory;
+    private void registerCommands() {
+        commandFramework = new CommandFramework(this);
+
+        new PlayerCommands();
+        new AdminCommands();
+        new TabCompleters(this);
     }
 
-    @NotNull
-    public UserManager getUserManager() {
-        return userManager;
-    }
-
-    @NotNull
-    public ArenaRegistry getArenaRegistry() {
-        return arenaRegistry;
-    }
-
-    @NotNull
-    public KitManager getKitManager() {
-        return kitManager;
-    }
-
-    @NotNull
-    public ArenaManager getArenaManager() {
-        return arenaManager;
-    }
-
-    @NotNull
-    public CooldownManager getCooldownManager() {
-        return cooldownManager;
-    }
-
-    public ConfigOptions getConfigOptions() {
-        return configOptions;
+    private void registerEvents() {
+        new Events(this);
+        new ArenaEvents(this);
     }
 
     public void reload() {
@@ -232,8 +228,8 @@ public class KOTL extends JavaPlugin {
     }
 
     private void saveAllUserStatistics() {
-        for (User user : userManager.getUsers()) {
-            if (userManager.getDatabase() instanceof MySQLStatistics mySQLStatistics) {
+        if (database instanceof MySQLStorage mySQLStorage) {
+            for (User user : userManager.getUsers()) {
                 StringBuilder update = new StringBuilder(" SET ");
 
                 for (StatisticType stat : StatisticType.getPersistentStats()) {
@@ -247,13 +243,10 @@ public class KOTL extends JavaPlugin {
                     update.append(", ").append(statName).append("=").append(value);
                 }
 
-                mySQLStatistics.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mySQLStatistics.getTable(), update.toString(), user.getUniqueId().toString()));
-                continue;
+                mySQLStorage.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mySQLStorage.getStatsTable(), update.toString(), user.getUniqueId().toString()));
             }
-
-            userManager.getDatabase().saveStatistics(user);
         }
 
-        userManager.getDatabase().shutdown();
+        database.shutdown();
     }
 }
