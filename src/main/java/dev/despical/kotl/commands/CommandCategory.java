@@ -16,24 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.commands;
+package dev.despical.kotl.commands;
 
-import me.despical.kotl.KOTL;
-import me.despical.kotl.handlers.ChatManager;
+import dev.despical.kotl.KOTL;
+import dev.despical.kotl.arena.ArenaRegistry;
+import dev.despical.kotl.handlers.ChatManager;
 
 /**
  * @author Despical
  * <p>
  * Created at 18.02.2023
  */
-public abstract class AbstractCommand {
+public sealed abstract class CommandCategory permits AdminCommands, PlayerCommands {
 
-    protected final KOTL plugin;
-    protected final ChatManager chatManager;
+    protected static final KOTL plugin = KOTL.getInstance();
+    protected static final ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
+    protected static final ChatManager chatManager = plugin.getChatManager();
 
-    public AbstractCommand(KOTL plugin) {
-        this.plugin = plugin;
-        this.chatManager = plugin.getChatManager();
-        this.plugin.getCommandFramework().registerCommands(this);
+    public CommandCategory() {
+        plugin.getCommandFramework().registerCommands(this);
     }
 }

@@ -16,21 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.commands;
+package dev.despical.kotl.commands;
 
-import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.annotations.Command;
-import me.despical.commandframework.annotations.Completer;
-import me.despical.commons.configuration.ConfigUtils;
-import me.despical.commons.miscellaneous.AttributeUtils;
-import me.despical.commons.miscellaneous.MiscUtils;
-import me.despical.commons.serializer.InventorySerializer;
-import me.despical.commons.serializer.LocationSerializer;
-import me.despical.commons.util.Strings;
-import me.despical.kotl.KOTL;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handlers.setup.SetupInventory;
-import me.despical.kotl.options.Option;
+import dev.despical.commandframework.CommandArguments;
+import dev.despical.commandframework.annotations.Command;
+import dev.despical.commons.configuration.ConfigUtils;
+import dev.despical.commons.miscellaneous.AttributeUtils;
+import dev.despical.commons.miscellaneous.MiscUtils;
+import dev.despical.commons.serializer.InventorySerializer;
+import dev.despical.commons.serializer.LocationSerializer;
+import dev.despical.commons.util.Strings;
+import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.handlers.setup.SetupInventory;
+import dev.despical.kotl.options.Option;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -39,10 +37,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,11 +46,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created at 24.07.2022
  */
-public class AdminCommands extends AbstractCommand {
-
-    public AdminCommands(KOTL plugin) {
-        super(plugin);
-    }
+public final class AdminCommands extends CommandCategory {
 
     @Command(
         name = "kotl.create",
@@ -74,12 +65,7 @@ public class AdminCommands extends AbstractCommand {
         final var arg = arguments.getArgument(0);
         final Player player = arguments.getSender();
 
-        if ("default".equals(arg)) {
-            player.sendMessage(chatManager.prefixedRawMessage("&cYou can not create an arena named default!"));
-            return;
-        }
-
-        if (plugin.getArenaRegistry().isArena(arg)) {
+        if (arenaRegistry.isArena(arg)) {
             player.sendMessage(chatManager.prefixedRawMessage("&cArena with that ID already contains!"));
             player.sendMessage(chatManager.prefixedRawMessage("&cTo check existing arenas use: /kotl list"));
             return;
@@ -118,7 +104,7 @@ public class AdminCommands extends AbstractCommand {
         arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
         arena.setReady(false);
 
-        plugin.getArenaRegistry().registerArena(arena);
+        arenaRegistry.registerArena(arena);
     }
 
     @Command(
@@ -130,7 +116,7 @@ public class AdminCommands extends AbstractCommand {
     )
     public void deleteCommand(CommandArguments arguments) {
         final var sender = arguments.getSender();
-        Arena arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+        Arena arena = arenaRegistry.getArena(arguments.getArgument(0));
 
         if (arena == null) {
             sender.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -162,7 +148,7 @@ public class AdminCommands extends AbstractCommand {
 
         arena.setShowOutlines(false);
 
-        plugin.getArenaRegistry().unregisterArena(arena);
+        arenaRegistry.unregisterArena(arena);
 
         final var config = ConfigUtils.getConfig(plugin, "arenas");
 
@@ -181,7 +167,7 @@ public class AdminCommands extends AbstractCommand {
         senderType = Command.SenderType.PLAYER
     )
     public void editCommand(CommandArguments arguments) {
-        final var arena = plugin.getArenaRegistry().getArena(arguments.getArgument(0));
+        final var arena = arenaRegistry.getArena(arguments.getArgument(0));
 
         if (arena == null) {
             arguments.sendMessage(chatManager.prefixedMessage("commands.no_arena_like_that"));
@@ -200,7 +186,7 @@ public class AdminCommands extends AbstractCommand {
     public void reloadCommand(CommandArguments arguments) {
         plugin.reload();
 
-        for (Arena arena : plugin.getArenaRegistry().getArenas()) {
+        for (Arena arena : arenaRegistry.getArenas()) {
             for (Player player : arena.getPlayers()) {
                 player.setWalkSpeed(.2F);
 
@@ -221,7 +207,7 @@ public class AdminCommands extends AbstractCommand {
             arena.getPlayers().clear();
         }
 
-        plugin.getArenaRegistry().registerArenas();
+        arenaRegistry.registerArenas();
         arguments.sendMessage(chatManager.prefixedMessage("commands.success_reload"));
     }
 
@@ -280,7 +266,7 @@ public class AdminCommands extends AbstractCommand {
         desc = "Shows all of the existing arenas"
     )
     public void listCommand(CommandArguments arguments) {
-        Set<Arena> arenas = plugin.getArenaRegistry().getArenas();
+        Set<Arena> arenas = arenaRegistry.getArenas();
 
         if (arenas.isEmpty()) {
             arguments.sendMessage(chatManager.prefixedMessage("commands.list_command.no_arenas_created"));
@@ -300,7 +286,7 @@ public class AdminCommands extends AbstractCommand {
     )
     public void kickCommand(CommandArguments arguments) {
         arguments.getPlayer(0).ifPresentOrElse(player -> {
-            Arena arena = plugin.getArenaRegistry().getArena(player);
+            Arena arena = arenaRegistry.getArena(player);
 
             if (arena == null) {
                 arguments.sendMessage(chatManager.prefixedMessage("commands.not_playing"));
@@ -339,43 +325,6 @@ public class AdminCommands extends AbstractCommand {
         arguments.sendMessage("");
         arguments.sendMessage(" &8• &3OS Name: &b{0} ({1})", System.getProperty("os.name"), System.getProperty("os.arch"));
         arguments.sendMessage("");
-    }
-
-    @Completer(
-        name = "kotl"
-    )
-    public List<String> onTabComplete(CommandArguments arguments) {
-        List<String> completions = new ArrayList<>(), commands = plugin.getCommandFramework().getSubCommands().stream().map(cmd -> cmd.name().replace(arguments.getLabel() + '.', "")).collect(Collectors.toList());
-        String[] args = arguments.getArguments();
-
-        if (args.length > 0) {
-            if (List.of("create", "list", "help", "reload", "version").contains(args[0])) {
-                return completions;
-            }
-        }
-
-        if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], arguments.hasPermission("kotl.admin") ? commands : List.of("top", "stats"), completions);
-        }
-
-        String arg = args[0];
-
-        if (args.length == 2) {
-            if (!List.of("delete", "edit", "help", "kick", "stats", "top").contains(arg)) return completions;
-
-            if (arg.equalsIgnoreCase("top")) {
-                return StringUtil.copyPartialMatches(args[1], List.of("tours_played", "score", "kills", "deaths"), completions);
-            }
-
-            if (arg.equalsIgnoreCase("stats") || arg.equalsIgnoreCase("kick")) {
-                return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
-            }
-
-            List<String> arenas = plugin.getArenaRegistry().getArenas().stream().map(Arena::getId).toList();
-            return StringUtil.copyPartialMatches(args[1], arenas, completions);
-        }
-
-        return completions;
     }
 
     private String formatCommandUsage(String usage) {

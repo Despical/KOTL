@@ -16,15 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.commands;
+package dev.despical.kotl.commands;
 
-import me.despical.commandframework.CommandArguments;
-import me.despical.commandframework.annotations.Command;
-import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatisticType;
-import me.despical.kotl.api.StatsStorage;
-import me.despical.kotl.user.User;
-import me.despical.kotl.user.data.MySQLStatistics;
+import dev.despical.commandframework.CommandArguments;
+import dev.despical.commandframework.annotations.Command;
+import dev.despical.kotl.api.StatisticType;
+import dev.despical.kotl.api.StatsStorage;
+import dev.despical.kotl.user.User;
+import dev.despical.kotl.database.MySQLStorage;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,11 +40,7 @@ import java.util.UUID;
  * <p>
  * Created at 24.07.2022
  */
-public class PlayerCommands extends AbstractCommand {
-
-    public PlayerCommands(KOTL plugin) {
-        super(plugin);
-    }
+public final class PlayerCommands extends CommandCategory {
 
     @Command(
         name = "kotl",
@@ -64,7 +59,7 @@ public class PlayerCommands extends AbstractCommand {
             return;
         }
 
-        arguments.sendMessage("&cUnrecognized arguments: /{0} {1}", arguments.getLabel(), arguments.getLabel());
+        arguments.sendMessage("&cUnrecognized arguments: /{0} {1}", arguments.getLabel(), arguments.concatArguments());
     }
 
     @Command(
@@ -74,8 +69,8 @@ public class PlayerCommands extends AbstractCommand {
         senderType = Command.SenderType.PLAYER
     )
     public void statsCommand(CommandArguments arguments) {
-        final Player sender = arguments.getSender();
-        final var user = plugin.getUserManager().getUser(sender);
+        Player sender = arguments.getSender();
+        var user = plugin.getUserManager().getUser(sender);
 
         if (arguments.isArgumentsEmpty()) {
             chatManager.getStringList("commands.stats-command.messages").stream().map(message -> formatStats(message, true, user)).forEach(arguments::sendMessage);
@@ -83,8 +78,8 @@ public class PlayerCommands extends AbstractCommand {
         }
 
         arguments.getPlayer(0).ifPresentOrElse(player -> {
-            final var targetUser = plugin.getUserManager().getUser(player);
-            final var self = sender.equals(player);
+            var targetUser = plugin.getUserManager().getUser(player);
+            var self = sender.equals(player);
 
             chatManager.getStringList("commands.stats-command.messages").stream().map(message -> formatStats(message, self, targetUser)).forEach(arguments::sendMessage);
         }, () -> arguments.sendMessage(chatManager.prefixedMessage("commands.player_not_found")));
@@ -134,10 +129,10 @@ public class PlayerCommands extends AbstractCommand {
             } catch (NullPointerException ex) {
                 UUID current = (UUID) stats.keySet().toArray()[stats.keySet().toArray().length - 1];
 
-                if (plugin.getUserManager().getDatabase() instanceof MySQLStatistics mySQLStatistics) {
-                    try (Connection connection = mySQLStatistics.getDatabase().getConnection()) {
+                if (plugin.getDatabase() instanceof MySQLStorage mySQLStorage) {
+                    try (Connection connection = mySQLStorage.getDatabase().getConnection()) {
                         Statement statement = connection.createStatement();
-                        ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mySQLStatistics.getTable(), current.toString()));
+                        ResultSet set = statement.executeQuery("SELECT name FROM %s WHERE UUID='%s'".formatted(mySQLStorage.getStatsTable(), current.toString()));
 
                         if (set.next()) {
                             sender.sendMessage(formatMessage(statistic, set.getString(1), i + 1, stats.get(current)));
