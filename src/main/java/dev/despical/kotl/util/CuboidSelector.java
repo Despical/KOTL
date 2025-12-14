@@ -16,24 +16,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.util;
+package dev.despical.kotl.util;
 
-import me.despical.commons.XMaterial;
-import me.despical.commons.item.ItemBuilder;
-import me.despical.commons.item.ItemUtils;
-import me.despical.kotl.KOTL;
-import me.despical.kotl.handlers.ChatManager;
+import dev.despical.commons.reflection.XReflection;
+import dev.despical.fileitems.SpecialItem;
+import dev.despical.kotl.KOTL;
+import dev.despical.kotl.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -44,24 +45,20 @@ import java.util.UUID;
 public class CuboidSelector {
 
     private final KOTL plugin;
-    private final ItemStack wandItem;
+    private final SpecialItem wandItem;
     private final Map<UUID, Selection> selections;
 
     public CuboidSelector(KOTL plugin) {
         this.plugin = plugin;
-        this.wandItem = new ItemBuilder(XMaterial.BLAZE_ROD)
-            .name("&6&lArea selector")
-            .lore("&eLEFT CLICK to select first corner.")
-            .lore("&eRIGHT CLICK to select second corner.")
-            .build();
+        this.wandItem = plugin.getItemManager().getItem("area-selector");
         this.selections = new HashMap<>();
 
-        plugin.getServer().getPluginManager().registerEvents(new SelectorEvents(), plugin);
+        Bukkit.getPluginManager().registerEvents(new SelectorEvents(), plugin);
     }
 
     public void giveSelectorWand(Player player) {
         Inventory inventory = player.getInventory();
-        inventory.addItem(wandItem);
+        inventory.addItem(wandItem.getOriginalItemStack());
     }
 
     public Selection getSelection(Player player) {
@@ -79,39 +76,54 @@ public class CuboidSelector {
 
         @EventHandler
         public void onUsingWand(PlayerInteractEvent event) {
+            if (!isMainHand(event)) {
+                return;
+            }
+
             ItemStack item = event.getItem();
 
-            if (!ItemUtils.isNamed(item) || !Objects.equals(item.getItemMeta().getDisplayName(), wandItem.getItemMeta().getDisplayName())) {
+            if (!wandItem.equals(item)) {
                 return;
             }
 
             event.setCancelled(true);
 
-            Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
-            ChatManager chatManager = plugin.getChatManager();
+            User user = plugin.getUserManager().getUser(event.getPlayer());
+            UUID uuid = user.getUniqueId();
 
             switch (event.getAction()) {
                 case LEFT_CLICK_BLOCK -> {
                     selections.put(uuid, new Selection(event.getClickedBlock().getLocation(), null));
 
-                    player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow select the other corner using right click!"));
+                    user.sendRawMessage("&a&l✔ &7First position set. &eRight-click &7to select the second position.");
                 }
 
                 case RIGHT_CLICK_BLOCK -> {
-                    if (!selections.containsKey(uuid)) {
-                        player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select a corner using the left click first!"));
+                    Selection currentSelection = selections.get(uuid);
+
+                    if (currentSelection == null || currentSelection.firstPos() == null) {
+                        user.sendRawMessage("&c&l✖ &cYou must set the first position using &eleft-click&c.");
                         return;
                     }
 
-                    selections.replace(uuid, new Selection(selections.get(uuid).firstPos, event.getClickedBlock().getLocation()));
+                    selections.put(uuid, new Selection(currentSelection.firstPos(), event.getClickedBlock().getLocation()));
 
-                    player.sendMessage(chatManager.coloredRawMessage("&e✔ Completed | &aNow you can set the area via setup menu!"));
+                    user.sendRawMessage("&a&l✔ &7Selection complete. &aNow you can set the area via setup menu!");
                 }
-
-                default ->
-                    player.sendMessage(chatManager.coloredRawMessage("&c&l✖ &cWarning | Please select solid block, not air!"));
             }
+        }
+
+        @EventHandler
+        public void onQuit(PlayerQuitEvent event) {
+            selections.remove(event.getPlayer().getUniqueId());
+        }
+
+        private boolean isMainHand(PlayerInteractEvent event) {
+            if (XReflection.supports(9)) {
+                return event.getHand() == EquipmentSlot.HAND;
+            }
+
+            return true;
         }
     }
 }
