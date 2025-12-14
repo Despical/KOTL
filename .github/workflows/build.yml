@@ -18,13 +18,19 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          cache: gradle
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
 
       - name: Build
-        run: mvn -B compile --file pom.xml
+        run: ./gradlew build
 
       - name: Run Tests
-        run: mvn -B test --file pom.xml
+        run: ./gradlew test
+
+      - name: Generate Javadoc
+        run: ./gradlew javadoc
 
       - name: Deploy Javadoc to GitHub Pages
         uses: MathieuSoysal/Javadoc-publisher.yml@v3.0.2
@@ -32,4 +38,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: javadoc
           java-version: 21
-          project: maven
+          project: gradle
