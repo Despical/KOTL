@@ -1,9 +1,1 @@
-instances:
-  default:
-    endLocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
-    areaMin: world, -994.000, 4.000, 853.000, 0.000, 0.000
-    areaMax: world, -994.000, 4.000, 853.000, 0.000, 0.000
-    isdone: false
-    showOutlines: true
-    plateLocation: world, -994.000, 4.000, 853.000, 0.000, 0.000
-    arenaPlate: OAK_PRESSURE_PLATE
+instances: []
