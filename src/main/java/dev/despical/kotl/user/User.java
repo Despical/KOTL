@@ -16,14 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.user;
+package dev.despical.kotl.user;
 
-import me.despical.kotl.KOTL;
-import me.despical.kotl.api.StatisticType;
-import me.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
-import me.despical.kotl.arena.Arena;
-import me.despical.kotl.handlers.rewards.Reward.RewardType;
-import me.despical.kotl.options.Option;
+import dev.despical.kotl.KOTL;
+import dev.despical.kotl.api.StatisticType;
+import dev.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
+import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.handlers.rewards.Reward.RewardType;
+import dev.despical.kotl.options.Option;
+import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,6 +49,8 @@ public class User {
     }
 
     private final UUID uuid;
+
+    @Getter
     private final String name;
     private final Map<String, Double> cooldowns;
     private final Map<String, Boolean> variables;
@@ -65,15 +69,19 @@ public class User {
     }
 
     public Player getPlayer() {
-        return plugin.getServer().getPlayer(uuid);
+        return Bukkit.getPlayer(uuid);
     }
 
     public UUID getUniqueId() {
         return uuid;
     }
 
-    public String getName() {
-        return name;
+    public void sendRawMessage(String message) {
+        Player player = getPlayer();
+
+        message = plugin.getChatManager().formatMessage(message, player);
+
+        player.sendMessage(message);
     }
 
     public int getStat(StatisticType statisticType) {

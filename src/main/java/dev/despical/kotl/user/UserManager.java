@@ -16,15 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.despical.kotl.user;
+package dev.despical.kotl.user;
 
-import me.despical.kotl.KOTL;
-import me.despical.kotl.options.Option;
-import me.despical.kotl.user.data.FileStats;
-import me.despical.kotl.user.data.MySQLStatistics;
-import me.despical.kotl.user.data.UserDatabase;
+import dev.despical.kotl.KOTL;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,23 +33,14 @@ import java.util.UUID;
  */
 public class UserManager {
 
-    private final UserDatabase database;
+    private final KOTL plugin;
     private final Map<UUID, User> users;
 
     public UserManager(KOTL plugin) {
-        this.database = plugin.getConfigOptions().isEnabled(Option.DATABASE_ENABLED) ? new MySQLStatistics(plugin) : new FileStats(plugin);
+        this.plugin = plugin;
         this.users = new HashMap<>();
     }
 
-    public User addUser(Player player) {
-        User user = new User(player);
-        users.put(player.getUniqueId(), user);
-
-        database.loadStatistics(user);
-        return user;
-    }
-
-    @NotNull
     public User getUser(Player player) {
         User user = users.get(player.getUniqueId());
 
@@ -62,19 +48,22 @@ public class UserManager {
             return user;
         }
 
-        return this.addUser(player);
+        return createNewUser(player);
     }
 
-    public void removeUser(Player player) {
-        users.remove(player.getUniqueId());
-    }
-
-    @NotNull
-    public UserDatabase getDatabase() {
-        return database;
+    public void removeUser(UUID uuid) {
+        users.remove(uuid);
     }
 
     public Set<User> getUsers() {
         return Set.copyOf(users.values());
+    }
+
+    private User createNewUser(Player player) {
+        User user = new User(player);
+        plugin.getDatabase().loadData(user);
+
+        users.put(player.getUniqueId(), user);
+        return user;
     }
 }
