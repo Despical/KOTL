@@ -84,7 +84,6 @@ public final class MySQLStorage extends Database {
     public void loadData(User user) {
         executor.submit(() -> {
             try (Connection connection = database.getConnection()) {
-
                 String selectSql = "SELECT * FROM `%s` WHERE `uuid` = ?;".formatted(statsTable);
 
                 try (var selectStatement = connection.prepareStatement(selectSql)) {
@@ -92,10 +91,11 @@ public final class MySQLStorage extends Database {
 
                     try (ResultSet result = selectStatement.executeQuery()) {
                         if (!result.next()) {
-                            String insertSql = "INSERT INTO `%s` (`uuid`) VALUES (?);".formatted(statsTable);
+                            String insertSql = "INSERT INTO `%s` (`uuid`, `name`) VALUES (?, ?);".formatted(statsTable);
 
                             try (var insertStatement = connection.prepareStatement(insertSql)) {
                                 insertStatement.setString(1, user.getUniqueId().toString());
+                                insertStatement.setString(2, user.getName());
                                 insertStatement.executeUpdate();
                             }
 
