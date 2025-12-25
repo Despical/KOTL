@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.despical'
-version = '3.1.8'
+version = '3.1.9'
 
 java {
     toolchain {
@@ -26,8 +26,8 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:3.1.0'
     implementation 'dev.despical:commons:2.0.6'
     implementation 'dev.despical:command-framework:1.5.6'
-    implementation 'dev.despical:inventory-framework:2.4.2'
-    implementation 'dev.despical:file-items:1.2.0'
+    implementation 'dev.despical:inventory-framework:2.4.5'
+    implementation 'dev.despical:file-items:1.2.1'
     implementation 'com.github.Despical:ParticleLib:1.0.7'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
