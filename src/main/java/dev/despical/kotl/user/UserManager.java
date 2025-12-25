@@ -59,7 +59,7 @@ public class UserManager {
         return Set.copyOf(users.values());
     }
 
-    private User createNewUser(Player player) {
+    public User createNewUser(Player player) {
         User user = new User(player);
         plugin.getDatabase().loadData(user);
 

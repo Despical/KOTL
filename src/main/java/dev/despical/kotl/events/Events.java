@@ -61,6 +61,8 @@ public final class Events extends EventListener {
         Player player = event.getPlayer();
         Arena arena = teleportToEnd.get(player.getUniqueId());
 
+        plugin.getUserManager().createNewUser(player);
+
         if (arena != null) {
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 arena.teleportToEndLocation(player);
