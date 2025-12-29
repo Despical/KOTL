@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.despical'
-version = '3.1.9'
+version = '3.2.0'
 
 java {
     toolchain {
@@ -22,18 +22,19 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.7'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
 
-    implementation 'org.bstats:bstats-bukkit:3.1.0'
-    implementation 'dev.despical:commons:2.0.6'
-    implementation 'dev.despical:command-framework:1.5.6'
+    implementation('dev.despical:commons:2.0.6') {
+        exclude group: 'org.slf4j'
+    }
+    implementation 'dev.despical:command-framework:1.5.7'
     implementation 'dev.despical:inventory-framework:2.4.5'
     implementation 'dev.despical:file-items:1.2.1'
     implementation 'com.github.Despical:ParticleLib:1.0.7'
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
 
-    compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
-
 
 tasks.processResources {
     def props = [version: version]
@@ -53,12 +54,12 @@ tasks.jar {
 tasks.shadowJar {
     minimize()
 
-    relocate 'dev.despical.commons', 'dev.despical.kotl.commons'
-    relocate 'dev.despical.commandframework', 'dev.despical.kotl.command'
-    relocate 'dev.despical.inventoryframework', 'dev.despical.kotl.gui'
-    relocate 'dev.despical.fileitems', 'dev.despical.kotl.item'
-    relocate 'me.despical.particle', 'dev.despical.kotl.particlelib'
-    relocate 'org.bstats', 'dev.despical.eastereggs.util'
+    relocate 'dev.despical.commons', 'dev.despical.kotl.lib.commons'
+    relocate 'dev.despical.commandframework', 'dev.despical.kotl.lib.commandframework'
+    relocate 'dev.despical.inventoryframework', 'dev.despical.kotl.lib.inventoryframework'
+    relocate 'dev.despical.fileitems', 'dev.despical.kotl.lib.fileitems'
+    relocate 'me.despical.particle', 'dev.despical.kotl.lib.particlelib'
+    relocate 'org.bstats', 'dev.despical.kotl.lib.bstats'
 
     exclude 'META-INF/**'
     exclude 'fonts/**'
