@@ -1,30 +1,50 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via [issue](https://github.com/Despical/KOTL/issues/new) 
-with the owner of this repository before making a change.
+When contributing to this repository, please first discuss the change you wish
+to make via [issue](https://github.com/Despical/KOTL/issues/new) with the
+owner of this repository before making a change.
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+Please note we have a code of conduct. Follow it in all interactions with the
+project.
 
 ## Pull Request Process
-If you want to help this project and don't know where to start, check out the [currently opened issues](https://github.com/Despical/KOTL/issues)
-before creating any PRs. Because there are people that could can use your help.
 
-* Ensure you didn't use tabs! Please use spaces for indentation.
-* Respect the code style.
-* Do not increase the version numbers in any examples files and the README.md to the
-  new version that this Pull Request would represent.
-* Create minimal diffs - disable on save actions like reformat source code or organize imports.
-  If you feel the source code should be reformatted create a separate PR for this change.
+If you want to help this project and do not know where to start, check the
+[currently opened issues](https://github.com/Despical/KOTL/issues) before
+creating a PR.
+
+* Ensure you did not use tabs. Please use spaces for indentation.
+* Respect the existing code style and package structure.
+* Keep changes focused. Avoid unrelated refactors inside feature or bug-fix PRs.
+* Do not increase version numbers in example files or README content unless the
+  PR is specifically a release/version update.
+* Create minimal diffs. Disable on-save actions like full-file reformatting or
+  organize-imports on untouched files.
+* Run a successful build before opening a PR:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```bat
+gradlew.bat build
+```
 
 ## Issue Process
-When you submit an issue, there will be shown a template for that. Please do not discard except if you
-aren't reporting a bug, but rather suggesting code improvements, pointing out spelling mistakes etc,
-you can discard the template.
 
-* Ensure your issue is not a duplicate of any other.
-* Please keep the issues section for actual bugs or code problems, not for support.
-* Make sure you're using the latest version, chances are that the problem has already been solved.
-* Don't post your issue in other issues, please keep everything nicely organized and make a separate one.
+When submitting an issue, please use the provided template. If you are suggesting
+an improvement, documentation fix, or small cleanup, you may open a regular
+issue instead.
+
+* Ensure your issue is not a duplicate.
+* Keep the issue tracker for bugs and project improvements, not general Discord
+  hosting support.
+* Make sure you are using the latest version.
+* Include logs, reproduction steps, Java version, operating system, and the
+  command that triggered the problem when relevant.
+* Do not post private tokens, `.env` files, or Discord server-sensitive data.
 
 ## Additional Resources
 
