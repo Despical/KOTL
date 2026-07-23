@@ -1,0 +1,24 @@
+# =================================================================
+#             King of the Ladder - Scoreboard Configuration
+# =================================================================
+# Supported placeholders:
+#   %player%, %date%, %arena%, %players%, %king%, %last_king%
+#   %top_king%, %top_king_score%, %score%, %arena_score%
+#   %tours_played%, %kills%, %deaths%
+# =================================================================
+
+title: "<#FFC800><bold>KING OF THE LADDER"
+lines:
+  - "<#B0C4DE>%date%"
+  - ""
+  - "<#EEF2F7>Arena: <#00FF95>%arena%"
+  - "<#EEF2F7>Players: <#00FF95>%players%"
+  - ""
+  - "<#EEF2F7>King: <#FFD54F>%king%"
+  - "<#CFE8FF>Last King: <#29B6F6>%last_king%"
+  - "<#F3DDFF>Top King: <#E040FB>%top_king% <gray>(%top_king_score%)"
+  - ""
+  - "<#EEF2F7>Total Score: <#00E676>%score%"
+  - "<#DFF8E8>Arena Score: <#00E676>%arena_score%"
+  - ""
+  - "<#FFC800>docs.despical.dev"
