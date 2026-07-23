@@ -1,0 +1,121 @@
+rows: 6
+title: "<dark_gray>➜ <gradient:#00E676:#2979FF><bold>Statistics</bold></gradient>"
+
+items:
+  background_fill:
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 28, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]
+    decoration-only: true
+    material: GRAY_STAINED_GLASS_PANE
+    amount: 1
+
+  decoration_borders:
+    slots: [10, 11, 12, 14, 15, 16]
+    decoration-only: true
+    material: RED_STAINED_GLASS_PANE
+    amount: 1
+
+  player_head:
+    slot: 13
+    name: "<!i><#00e5ff><bold>%target%'s Profile"
+    material: PLAYER_HEAD
+    skull: "%target%"
+    lore: []
+
+  games_played:
+    slot: 29
+    name: "<!i><white><bold>▶ TOURS PLAYED"
+    material: LEATHER_BOOTS
+    lore:
+      - "<!i><#B0BEC5>The total number of rounds/tours"
+      - "<!i><#B0BEC5>played by this player."
+      - ""
+      - "<!i> <white>● <gray>Count: <white>%games_played%"
+    item-flags:
+      - HIDE_ATTRIBUTES
+
+  score:
+    slot: 30
+    name: "<!i><light_purple><bold>★ KINGS BECOME"
+    material: NETHER_STAR
+    glow: true
+    lore:
+      - "<!i><#B0BEC5>The total number of times this"
+      - "<!i><#B0BEC5>player successfully climbed and"
+      - "<!i><#B0BEC5>became the King of the Ladder."
+      - ""
+      - "<!i> <white>● <gray>Count: <light_purple>%score%"
+
+  kills:
+    slot: 31
+    name: "<!i><gradient:#ff4d4d:#c0392b><bold>⚔ KILLS</bold></gradient>"
+    material: IRON_SWORD
+    lore:
+      - "<!i><#B0BEC5>The total number of opponents"
+      - "<!i><#B0BEC5>knocked down/defeated by this player."
+      - ""
+      - "<!i> <white>● <gray>Count: <red>%kill%"
+
+  deaths:
+    slot: 32
+    name: "<!i><gradient:#42f56c:#2ecc71><bold>☠ DEATHS</bold></gradient>"
+    material: SKELETON_SKULL
+    lore:
+      - "<!i><#B0BEC5>The total number of times this"
+      - "<!i><#B0BEC5>player fell or was defeated."
+      - ""
+      - "<!i> <white>● <gray>Count: <green>%death%"
+
+  view_arenas:
+    slot: 22
+    action: "open_arenas"
+    material: COMPASS
+    name: "<!i><#00E676><bold>🗺 View Arena Records"
+    lore:
+      - "<!i><#B0BEC5>Click to view your detailed"
+      - "<!i><#B0BEC5>personal records and leaderboard"
+      - "<!i><#B0BEC5>standings for each arena."
+      - ""
+      - "<!i><#00E676><bold>→ Click to explore"
+
+  back_button:
+    slot: 49
+    action: "back"
+    material: DARK_OAK_DOOR
+    name: "<!i><b><#FF5252>← Go Back"
+    lore:
+      - "<!i><gray>Return to the previous menu"
+
+  previous_page:
+    slot: 45
+    action: "previous_page"
+    material: ARROW
+    name: "<!i><b><#FFCA28>← Previous Page"
+    lore:
+      - "<!i><gray>View previous arenas"
+
+  next_page:
+    slot: 53
+    action: "next_page"
+    material: ARROW
+    name: "<!i><b><#FFCA28>Next Page →"
+    lore:
+      - "<!i><gray>View more arenas"
+
+  arena_template:
+    material: MAP
+    name: "<!i><#29B6F6><bold>✦ %arena%"
+    lore:
+      - "<!i><dark_gray><st>───────────────"
+      - "<!i> <#B0BEC5>Your Top Score:"
+      - "<!i> <#00E676><bold>%score%"
+      - ""
+      - "<!i> <#FFD700><bold>⭐ LEADERBOARD TOP 3"
+      - "<!i><dark_gray><st>───────────────"
+    no-record: "<#FF5252>No record"
+    empty-leaderboard: "<!i><#B0BEC5>No leaderboard entries yet."
+    leaderboard-entry: "<!i>%color%#%rank% <white>%player% <gray>- <#FFCA28>%record_score%"
+    leaderboard-separator: "<!i><dark_gray><st>─────────────────"
+    leaderboard-player-entry: "<!i><#00E676>#%rank% <white>%player% <gray>- <#FFCA28>%record_score%"
+    color-1: "<#FFD700>"
+    color-2: "<#E0E0E0>"
+    color-3: "<#CD7F32>"
