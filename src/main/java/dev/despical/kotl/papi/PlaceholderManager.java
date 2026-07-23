@@ -187,7 +187,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "top_king_score", "top-king-score" -> Integer.toString(arena.getOption(ArenaKeys.TOP_KING_SCORE));
 //            case "state" -> game != null ? game.getCurrentState().name().toLowerCase(Locale.ROOT) : "disabled";
 //            case "checkpoint_count", "checkpoints" -> Integer.toString(arena.getOption(ArenaKeys.CHECKPOINTS).size());
-            case "gamemode" -> nullableString(arena.getOption(ArenaKeys.ARENA_GAMEMODE));
+            case "gamemode" -> arena.getOption(ArenaKeys.ARENA_GAMEMODE).name();
             case "scoreboard_enabled" -> Boolean.toString(arena.getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED));
             case "bossbar_enabled" -> Boolean.toString(arena.getOption(ArenaKeys.ARENA_BOSSBAR_ENABLED));
 //            case "potion_effects_count" -> Integer.toString(arena.getOption(ArenaKeys.ARENA_POTION_EFFECTS).size());

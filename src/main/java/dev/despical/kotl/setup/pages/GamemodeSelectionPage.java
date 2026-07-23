@@ -7,6 +7,7 @@ import dev.despical.inventoryframework.Gui;
 import dev.despical.inventoryframework.GuiItem;
 import dev.despical.inventoryframework.pane.PaginatedPane;
 import dev.despical.inventoryframework.pane.StaticPane;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,7 @@ import java.util.Locale;
 
 public class GamemodeSelectionPage extends SetupPage {
 
-    private static final String[] GAMEMODES = {"survival", "creative", "adventure"};
+    private static final GameMode[] GAMEMODES = {GameMode.SURVIVAL, GameMode.CREATIVE, GameMode.ADVENTURE};
 
     public GamemodeSelectionPage(SetupMenu menu) {
         super(menu);
@@ -31,8 +32,8 @@ public class GamemodeSelectionPage extends SetupPage {
         StaticPane pane = new StaticPane(9, 4);
         paginatedPane.addPane(0, pane);
 
-        for (String gamemode : GAMEMODES) {
-            var itemConfig = itemManager.getItem("gamemode-" + gamemode.toLowerCase(Locale.ENGLISH));
+        for (GameMode gamemode : GAMEMODES) {
+            var itemConfig = itemManager.getItem("gamemode-" + gamemode.name().toLowerCase(Locale.ENGLISH));
             int slot = itemConfig.getCustomKey("slot");
             pane.addItem(createGamemodeItem(gamemode), slot);
         }
@@ -43,8 +44,8 @@ public class GamemodeSelectionPage extends SetupPage {
         pane.addItem(createPlayerSettingsBackItem(), 8, 3);
     }
 
-    private GuiItem createGamemodeItem(String gamemode) {
-        ItemStack item = itemManager.getItem("gamemode-" + gamemode.toLowerCase(Locale.ENGLISH)).getItemStack();
+    private GuiItem createGamemodeItem(GameMode gamemode) {
+        ItemStack item = itemManager.getItem("gamemode-" + gamemode.name().toLowerCase(Locale.ENGLISH)).getItemStack();
 
         return GuiItem.of(item, event -> {
             Player player = (Player) event.getWhoClicked();

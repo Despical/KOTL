@@ -19,10 +19,12 @@
 package dev.despical.kotl.arena.options;
 
 import dev.despical.commons.serializer.LocationSerializer;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Despical
@@ -108,11 +110,20 @@ public final class ArenaKeys {
         }
     };
 
-    public static final ArenaOption<String> ARENA_GAMEMODE = new ArenaOption<>("arena-gamemode", null, String.class) {
+    public static final ArenaOption<GameMode> ARENA_GAMEMODE = new ArenaOption<>("arena-gamemode", GameMode.SURVIVAL, GameMode.class) {
 
         @Override
-        protected String parse(String value) {
-            return value;
+        public Object serialize(GameMode value) {
+            return value.name();
+        }
+
+        @Override
+        protected GameMode parse(String value) {
+            try {
+                return GameMode.valueOf(value.trim().toUpperCase(Locale.ENGLISH));
+            } catch (IllegalArgumentException ignored) {
+                return GameMode.SURVIVAL;
+            }
         }
     };
 

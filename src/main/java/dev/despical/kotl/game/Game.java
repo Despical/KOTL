@@ -90,10 +90,10 @@ public class Game {
         }
 
         Schedulers.runInTheNextTick(() -> {
-            String gamemode = arena.getOption(ArenaKeys.ARENA_GAMEMODE);
+            GameMode gamemode = arena.getOption(ArenaKeys.ARENA_GAMEMODE);
 
-            if (gamemode != null && !gamemode.isEmpty()) {
-                player.setGameMode(GameMode.valueOf(gamemode.toUpperCase()));
+            if (gamemode != null) {
+                player.setGameMode(gamemode);
             }
 
             player.setFoodLevel(20);

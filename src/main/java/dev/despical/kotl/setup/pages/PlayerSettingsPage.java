@@ -45,7 +45,7 @@ public class PlayerSettingsPage extends SetupPage {
 
     private GuiItem createGamemodeSelectorItem() {
         SpecialItem specialItem = itemManager.getItem("gamemode-selector");
-        ItemStack item = replaceLore(specialItem.getItemStack().clone(), Var.of("%current_gamemode%", arena.getOption(ArenaKeys.ARENA_GAMEMODE) == null ? "<#FFC107>Not Set" : arena.getOption(ArenaKeys.ARENA_GAMEMODE).toUpperCase()));
+        ItemStack item = replaceLore(specialItem.getItemStack().clone(), Var.of("%current_gamemode%", arena.getOption(ArenaKeys.ARENA_GAMEMODE).name()));
 
         return GuiItem.of(item, event -> {
             Player player = (Player) event.getWhoClicked();
