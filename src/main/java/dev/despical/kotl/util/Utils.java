@@ -18,15 +18,18 @@
 
 package dev.despical.kotl.util;
 
-import dev.despical.commons.messages.ActionBar;
+import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
-import dev.despical.kotl.api.StatisticType;
 import dev.despical.kotl.arena.Arena;
-import dev.despical.kotl.options.Option;
+import dev.despical.kotl.option.BooleanOption;
+import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.List;
 
 /**
  * @author Despical
@@ -43,17 +46,16 @@ public final class Utils {
     public static void applyActionBarCooldown(User user, int seconds) {
         if (seconds == 0) return;
 
-        var options = plugin.getConfigOptions();
-        boolean showCooldownOnRejoin = options.isEnabled(Option.SHOW_COOLDOWN_ON_REJOIN);
-        boolean outsideCooldownCount = options.isEnabled(Option.COUNT_COOLDOWN_OUTSIDE);
-        boolean separateCooldowns = options.isEnabled(Option.SEPARATE_COOLDOWNS);
+        var options = plugin.getOptions();
+        boolean showCooldownOnRejoin = BooleanOption.SHOW_COOLDOWN_ON_REJOIN.value();
+        boolean outsideCooldownCount = BooleanOption.COUNT_COOLDOWN_OUTSIDE.value();
+        boolean separateCooldowns = BooleanOption.SEPARATE_COOLDOWNS.value();
 
         String arenaId = user.getArena().getId();
         String cooldownName = (separateCooldowns ? arenaId : "") + "king";
-        String localCooldownName = (separateCooldowns ? arenaId : "") + "local_cooldown";
 
         if (!outsideCooldownCount) {
-            user.set(localCooldownName, true);
+            user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 1);
         }
 
         new BukkitRunnable() {
@@ -64,13 +66,12 @@ public final class Utils {
             public void run() {
                 Player player = user.getPlayer();
 
-                if (user.getStat(StatisticType.LOCAL_RESET_COOLDOWN) == 1) {
+                if (user.getStatistic(Statistics.LOCAL_RESET_COOLDOWN) == 1) {
                     cancel();
 
                     plugin.getCooldownManager().setCooldown(user, cooldownName, 0);
 
-                    user.set(localCooldownName, false);
-                    user.setStat(StatisticType.LOCAL_RESET_COOLDOWN, 0);
+                    user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
                     return;
                 }
 
@@ -86,11 +87,11 @@ public final class Utils {
                     cancel();
                 }
 
-                if (arena == null || !arena.getPlayers().contains(player)) {
+                if (arena == null || !arena.getGame().getPlayers().contains(player)) {
                     if (!showCooldownOnRejoin) {
                         cancel();
 
-                        user.set(localCooldownName, false);
+                        user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
                     }
 
                     if (outsideCooldownCount) {
@@ -101,14 +102,17 @@ public final class Utils {
                 }
 
                 String progress = getProgressBar(ticks, seconds * 20);
-                ActionBar.sendActionBar(player, plugin.getChatManager().message("In-Game.Cooldown-Format", player)
-                    .replace("%progress%", progress)
-                    .replace("%time%", Double.toString(((seconds * 20) - ticks) / 20D)));
+                Var[] vars = {
+                    Var.of("%progress%", progress),
+                    Var.of("%time%", Double.toString(((seconds * 20) - ticks) / 20D))
+                };
+
+                plugin.getChatManager().sendActionBar(user, "In-Game.Cooldown-Format", vars);
 
                 if (ticks >= seconds * 20) {
                     cancel();
 
-                    user.set(localCooldownName, false);
+                    user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
                     return;
                 }
 
@@ -125,5 +129,84 @@ public final class Utils {
             "■".repeat(Math.max(0, progressBars)) +
             "§c" +
             "■".repeat(Math.max(0, leftOver));
+    }
+
+    public static String NONE = getMessage("none");
+
+    public static String getRawString(String string) {
+        return plugin.getConfig().getString(string, "&cThe value inside the path is null. (path: " + string + ")");
+    }
+
+    public static String getRawString(FileConfiguration config, String string) {
+        return config.getString(string);
+    }
+
+    public static List<String> getStringList(String path) {
+        return plugin.getConfig().getStringList(path);
+    }
+
+    public static String format(String string, Var... variables) {
+        for (Var variable : variables) {
+            string = string.replace(variable.name, variable.value.toString());
+        }
+
+        return string;
+    }
+
+    public static String getString(String path) {
+        if (plugin.getConfig().isList(path)) {
+            return getListAsString(path);
+        }
+
+        return getRawString(path);
+    }
+
+    public static String getString(FileConfiguration file, String path) {
+        if (file.isList(path)) {
+            return getListAsString(file, path);
+        }
+
+        return getRawString(file, path);
+    }
+
+    public static String getMessage(String path, Var... variables) {
+        return plugin.getChatManager().getRawString(path, variables);
+    }
+
+    public static List<String> getStringList(FileConfiguration config, String string) {
+        return config.getStringList(string);
+    }
+
+    public static String getMessage(FileConfiguration config, String path) {
+        String message = getString(config, path);
+
+        return message
+            .replace("%prefix%", getString("prefix"))
+            .replace("%prefix-2%", getString("prefix-2"));
+    }
+
+    public static String getListAsString(String path) {
+        return listToString(getStringList(path));
+    }
+
+    public static String getListAsString(FileConfiguration file, String path) {
+        return listToString(getStringList(file, path));
+    }
+
+    public static String listToString(List<String> list) {
+        return String.join("\n", list);
+    }
+
+    public static void restoreSavedPlayerState(Player player) {
+        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+        InventorySerializer.loadInventory(plugin, player);
+    }
+
+    public static String formatTime(long millis) {
+        long minutes = (millis / 1000) / 60;
+        long seconds = (millis / 1000) % 60;
+        long ms = millis % 1000;
+
+        return String.format("%02d:%02d.%03d", minutes, seconds, ms);
     }
 }
