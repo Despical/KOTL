@@ -19,6 +19,7 @@
 package dev.despical.kotl.user;
 
 import dev.despical.kotl.KOTL;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -39,6 +40,12 @@ public class UserManager {
     public UserManager(KOTL plugin) {
         this.plugin = plugin;
         this.users = new HashMap<>();
+        this.loadDataOfOnlinePlayers();
+    }
+
+    public User getUser(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        return player == null ? null : this.getUser(player);
     }
 
     public User getUser(Player player) {
@@ -51,8 +58,8 @@ public class UserManager {
         return createNewUser(player);
     }
 
-    public void removeUser(UUID uuid) {
-        users.remove(uuid);
+    public void removeUser(User user) {
+        users.remove(user.getUUID());
     }
 
     public Set<User> getUsers() {
@@ -61,9 +68,13 @@ public class UserManager {
 
     public User createNewUser(Player player) {
         User user = new User(player);
-        plugin.getDatabase().loadData(user);
-
         users.put(player.getUniqueId(), user);
+
+        plugin.getDatabase().loadData(user);
         return user;
+    }
+
+    private void loadDataOfOnlinePlayers() {
+        plugin.getServer().getOnlinePlayers().forEach(this::createNewUser);
     }
 }
