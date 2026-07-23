@@ -1,19 +1,11 @@
 /*
  * KOTL - Don't let others climb to top of the ladders!
- * Copyright (C) 2026  Berke Akçen
+ * Copyright (C) 2026  Berke Akcen
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package dev.despical.kotl.util;
@@ -21,17 +13,22 @@ package dev.despical.kotl.util;
 import dev.despical.commons.reflection.XReflection;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.arena.ArenaDataSaver;
+import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,19 +43,28 @@ public class CuboidSelector {
 
     private final KOTL plugin;
     private final SpecialItem wandItem;
+    private final NamespacedKey arenaKey;
     private final Map<UUID, Selection> selections;
 
     public CuboidSelector(KOTL plugin) {
         this.plugin = plugin;
         this.wandItem = plugin.getItemManager().getItem("area-selector");
+        this.arenaKey = new NamespacedKey(plugin, "setup_area_selector");
         this.selections = new HashMap<>();
 
         Bukkit.getPluginManager().registerEvents(new SelectorEvents(), plugin);
     }
 
-    public void giveSelectorWand(Player player) {
-        Inventory inventory = player.getInventory();
-        inventory.addItem(wandItem.getOriginalItemStack());
+    public void giveSelectorWand(Player player, Arena arena) {
+        ItemStack item = wandItem.getOriginalItemStack().clone();
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(arenaKey, PersistentDataType.STRING, arena.getId());
+            item.setItemMeta(meta);
+        }
+
+        player.getInventory().setItemInMainHand(item);
     }
 
     public Selection getSelection(Player player) {
@@ -82,7 +88,8 @@ public class CuboidSelector {
 
             ItemStack item = event.getItem();
 
-            if (!wandItem.equals(item)) {
+            String arenaId = getArenaId(item);
+            if (arenaId == null) {
                 return;
             }
 
@@ -93,22 +100,37 @@ public class CuboidSelector {
 
             switch (event.getAction()) {
                 case LEFT_CLICK_BLOCK -> {
-                    selections.put(uuid, new Selection(event.getClickedBlock().getLocation(), null));
-
-                    user.sendRawMessage("&a&l✔ &7First position set. &eRight-click &7to select the second position.");
+                    Location first = event.getClickedBlock().getLocation();
+                    selections.put(uuid, new Selection(first, null));
+                    plugin.getChatManager().sendMessage(event.getPlayer(), "setup.area-first-position-set", locationVars("%first", first));
                 }
 
                 case RIGHT_CLICK_BLOCK -> {
                     Selection currentSelection = selections.get(uuid);
 
                     if (currentSelection == null || currentSelection.firstPos() == null) {
-                        user.sendRawMessage("&c&l✖ &cYou must set the first position using &eleft-click&c.");
+                        plugin.getChatManager().sendMessage(event.getPlayer(), "setup.area-first-position-required");
                         return;
                     }
 
-                    selections.put(uuid, new Selection(currentSelection.firstPos(), event.getClickedBlock().getLocation()));
+                    Location second = event.getClickedBlock().getLocation();
+                    Selection selection = new Selection(currentSelection.firstPos(), second);
+                    selections.put(uuid, selection);
 
-                    user.sendRawMessage("&a&l✔ &7Selection complete. &aNow you can set the area via setup menu!");
+                    Arena arena = plugin.getArenaRegistry().getArena(arenaId);
+                    if (arena == null) {
+                        return;
+                    }
+
+                    arena.setOption(ArenaKeys.MIN_CORNER, selection.firstPos());
+                    arena.setOption(ArenaKeys.MAX_CORNER, selection.secondPos());
+                    new ArenaDataSaver(plugin).saveAllArenas();
+
+                    plugin.getChatManager().sendMessage(event.getPlayer(), "setup.area-selection-complete",
+                        locationVars("%first", selection.firstPos()),
+                        locationVars("%second", selection.secondPos()),
+                        Var.of("%blocks%", countBlocks(selection))
+                    );
                 }
             }
         }
@@ -124,6 +146,34 @@ public class CuboidSelector {
             }
 
             return true;
+        }
+
+        private String getArenaId(ItemStack item) {
+            if (item == null) {
+                return null;
+            }
+
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) {
+                return null;
+            }
+
+            return meta.getPersistentDataContainer().get(arenaKey, PersistentDataType.STRING);
+        }
+
+        private Var locationVars(String prefix, Location location) {
+            return Var.of(prefix + "_xyz%", "%d, %d, %d".formatted(location.getBlockX(), location.getBlockY(), location.getBlockZ()));
+        }
+
+        private long countBlocks(Selection selection) {
+            Location first = selection.firstPos();
+            Location second = selection.secondPos();
+
+            long x = Math.abs(first.getBlockX() - second.getBlockX()) + 1L;
+            long y = Math.abs(first.getBlockY() - second.getBlockY()) + 1L;
+            long z = Math.abs(first.getBlockZ() - second.getBlockZ()) + 1L;
+
+            return x * y * z;
         }
     }
 }
