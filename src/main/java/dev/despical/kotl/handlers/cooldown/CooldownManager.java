@@ -18,8 +18,8 @@
 
 package dev.despical.kotl.handlers.cooldown;
 
-import dev.despical.kotl.KOTL;
 import dev.despical.kotl.user.User;
+import dev.despical.kotl.util.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +32,18 @@ import java.util.UUID;
  */
 public class CooldownManager {
 
-    private final List<Cooldown> cooldowns;
     private double cooldownCounter = 0;
 
-    public CooldownManager(KOTL plugin) {
-        this.cooldowns = new ArrayList<>();
+    private final List<Cooldown> cooldowns;
 
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter += .5, 20, 10);
+    public CooldownManager() {
+        this.cooldowns = new ArrayList<>();
+        this.initializeCooldownTask();
+    }
+
+    private void initializeCooldownTask() {
+        Schedulers.runTaskTimerAsynchronously(() -> cooldownCounter += .5, 20, 10);
+
     }
 
     public void setCooldown(User user, String name, double seconds) {
@@ -60,7 +65,9 @@ public class CooldownManager {
     public double getCooldown(User user, String name) {
         var cooldownOptional = cooldowns.stream().filter(cooldown -> cooldown.uuid.equals(user.getUniqueId()) && cooldown.name.equals(name)).findFirst();
 
-        if (cooldownOptional.isEmpty() || cooldownOptional.get().seconds <= cooldownCounter) return 0;
+        if (cooldownOptional.isEmpty() || cooldownOptional.get().seconds <= cooldownCounter) {
+            return 0;
+        }
 
         if (cooldownOptional.get().seconds < cooldownCounter) {
             cooldowns.remove(cooldownOptional.get());
@@ -72,9 +79,10 @@ public class CooldownManager {
 
     private static class Cooldown {
 
+        double seconds;
+
         final UUID uuid;
         final String name;
-        double seconds;
 
         Cooldown(UUID uuid, String name, double seconds) {
             this.uuid = uuid;
