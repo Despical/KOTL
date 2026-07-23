@@ -18,8 +18,9 @@
 
 package dev.despical.kotl.api.events;
 
-import dev.despical.kotl.arena.Arena;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Despical
@@ -29,13 +30,15 @@ import org.bukkit.event.Event;
  */
 public abstract class KOTLEvent extends Event {
 
-    protected Arena arena;
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    public KOTLEvent(Arena eventArena) {
-        arena = eventArena;
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
+        return HANDLER_LIST;
     }
 
-    public Arena getArena() {
-        return arena;
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
     }
 }
