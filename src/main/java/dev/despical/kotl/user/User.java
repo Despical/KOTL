@@ -19,17 +19,14 @@
 package dev.despical.kotl.user;
 
 import dev.despical.kotl.KOTL;
-import dev.despical.kotl.api.StatisticType;
-import dev.despical.kotl.api.events.player.KOTLPlayerStatisticChangeEvent;
+import dev.despical.kotl.api.events.player.PlayerStatisticChangeEvent;
 import dev.despical.kotl.arena.Arena;
-import dev.despical.kotl.handlers.rewards.Reward.RewardType;
-import dev.despical.kotl.options.Option;
+import dev.despical.kotl.stats.StatisticType;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -42,26 +39,17 @@ import java.util.UUID;
 public class User {
 
     private static final KOTL plugin = JavaPlugin.getPlugin(KOTL.class);
-    private static long cooldownCounter;
-
-    static {
-        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> cooldownCounter++, 20, 20);
-    }
 
     private final UUID uuid;
 
     @Getter
     private final String name;
-    private final Map<String, Double> cooldowns;
-    private final Map<String, Boolean> variables;
-    private final Map<StatisticType, Integer> stats;
+    private final Map<StatisticType<?>, Object> stats;
 
     public User(Player player) {
         this.uuid = player.getUniqueId();
         this.name = player.getName();
-        this.cooldowns = new HashMap<>();
-        this.variables = new HashMap<>();
-        this.stats = new EnumMap<>(StatisticType.class);
+        this.stats = new HashMap<>();
     }
 
     public Arena getArena() {
@@ -76,55 +64,94 @@ public class User {
         return uuid;
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
     public void sendRawMessage(String message) {
         Player player = getPlayer();
-
-        message = plugin.getChatManager().formatMessage(message, player);
-
         player.sendMessage(message);
     }
 
-    public int getStat(StatisticType statisticType) {
-        return stats.computeIfAbsent(statisticType, stat -> 0);
+    @SuppressWarnings("unchecked")
+    public <T> T getStatistic(StatisticType<T> type) {
+        return (T) stats.computeIfAbsent(type, stat -> {
+            if (stat.getDefaultValue() instanceof Map) {
+                return new HashMap<>();
+            }
+
+            return stat.getDefaultValue();
+        });
     }
 
-    public void setStat(StatisticType stat, int value) {
-        stats.put(stat, value);
-
-        plugin.callEvent(() -> new KOTLPlayerStatisticChangeEvent(getArena(), getPlayer(), stat, value));
+    public <T> void setStatistic(StatisticType<T> type, T newValue) {
+        setStatisticInternal(type, newValue, true);
     }
 
-    public void addStat(StatisticType stat, int value) {
-        setStat(stat, getStat(stat) + value);
+    public <T> void loadStatistic(StatisticType<T> type, T newValue) {
+        setStatisticInternal(type, newValue, false);
     }
 
-    public void performReward(RewardType rewardType, Arena arena) {
-        plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getRewardsFactory().performReward(this, rewardType, arena));
-    }
-
-    public void giveKit() {
-        plugin.getKitManager().giveKit(getPlayer());
-    }
-
-    public void setCooldown(String s, double seconds) {
-        cooldowns.put(s, seconds + cooldownCounter);
-    }
-
-    public double getCooldown(String s) {
-        final var cooldown = cooldowns.get(s);
-
-        return (cooldown == null || cooldown <= cooldownCounter) ? 0 : cooldown - cooldownCounter;
-    }
-
-    public boolean get(String string) {
-        return variables.computeIfAbsent(string, value -> false);
-    }
-
-    public void set(String string, boolean value) {
-        if ("king".equals(string) && plugin.getConfigOptions().isEnabled(Option.SEPARATE_COOLDOWNS)) {
-            string = getArena().getId() + "king";
+    private <T> void setStatisticInternal(StatisticType<T> type, T newValue, boolean callEvent) {
+        T oldValue = getStatistic(type);
+        if (oldValue != null && oldValue.equals(newValue)) {
+            return;
         }
 
-        variables.put(string, value);
+        T finalValue = newValue;
+
+        if (callEvent) {
+            PlayerStatisticChangeEvent<T> event =
+                plugin.getEventManager().statChange(getPlayer(), type, oldValue, newValue);
+
+            if (event.isCancelled()) {
+                return;
+            }
+
+            finalValue = event.getNewValue();
+        }
+
+        if (oldValue != null && oldValue.equals(finalValue)) {
+            return;
+        }
+
+        stats.put(type, finalValue);
+    }
+
+    public void addStat(StatisticType<Integer> type, int amount) {
+        setStatistic(type, getStatistic(type) + amount);
+    }
+
+    @SafeVarargs
+    public final void addStat(StatisticType<Integer> type, StatisticType<Integer>... types) {
+        addStat(type, 1);
+
+        for (StatisticType<Integer> statisticType : types) {
+            addStat(statisticType, 1);
+        }
+    }
+
+    public void setStatisticIfHigher(StatisticType<Integer> type, int amount) {
+        setStatistic(type, Math.max(getStatistic(type), amount));
+    }
+
+    public int getArenaScore(String arenaId) {
+        Map<String, Integer> arenaScores = getStatistic(dev.despical.kotl.stats.Statistics.ARENA_SCORES);
+        return arenaScores.getOrDefault(arenaId, 0);
+    }
+
+    public void addArenaScore(String arenaId, int amount) {
+        Map<String, Integer> arenaScores = new HashMap<>(getStatistic(dev.despical.kotl.stats.Statistics.ARENA_SCORES));
+        arenaScores.put(arenaId, arenaScores.getOrDefault(arenaId, 0) + amount);
+
+        setStatistic(dev.despical.kotl.stats.Statistics.ARENA_SCORES, arenaScores);
+    }
+
+    public void resetArenaStats(String arenaId) {
+        Map<String, Integer> arenaScores = new HashMap<>(getStatistic(dev.despical.kotl.stats.Statistics.ARENA_SCORES));
+
+        if (arenaScores.remove(arenaId) != null) {
+            setStatistic(dev.despical.kotl.stats.Statistics.ARENA_SCORES, arenaScores);
+        }
     }
 }
