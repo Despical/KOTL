@@ -127,16 +127,23 @@ Arena-Outlines:
 # The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
 Hit-Cooldown-Delay: 16
 
-# Commands which can be used in game, remove all of them to disable
-Whitelisted-Commands:
-  - me
-  - help
+command-settings:
+  # When enabled, players who are actively in a KOTL arena can only use commands listed below.
+  disable-commands-while-playing: true
+
+  # Commands players may still use while playing.
+  # Use command roots such as "msg" to allow all arguments, or subcommands such as "kotl leave".
+  allowed-commands:
+    - "kotl leave"
+    - "kotl stats"
+    - "kotl top"
+    - "kotl"
+    - "kingoftheladder"
+    - "me"
+    - "help"
 
 # Should we spawn some cool fireworks around the game area when someone becomes king?
 Fireworks-On-New-King: true
-
-# Should we block every not King of the Ladder associated commands in game?
-Block-Commands: true
 
 # Should we enable damage?
 # This option may be helpful if you enabled the kits.
