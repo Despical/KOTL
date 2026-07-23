@@ -20,6 +20,8 @@ package dev.despical.kotl.arena.managers.schedulers;
 
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.user.User;
+import dev.despical.kotl.util.Schedulers;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -38,7 +40,7 @@ public enum ArenaScheduler {
     GENERAL {
         @Override
         public void register(SchedulerOptions options) {
-            Bukkit.getScheduler().runTaskTimer(plugin, this::run, 1L, options.interval());
+            Schedulers.runTaskTimer(this::run, 1L, options.interval());
         }
 
         private void run() {
@@ -81,29 +83,25 @@ public enum ArenaScheduler {
     public abstract void register(SchedulerOptions options);
 
     protected void handleArenaTransition(Player player, Arena current, Arena target) {
-        if (current == null && target != null && !target.getPlayers().contains(player)) {
-            target.addPlayer(player);
+        User user = plugin.getUserManager().getUser(player);
+
+        if (current == null && target != null && !target.getGame().getPlayers().contains(player)) {
+            plugin.getArenaManager().joinAttempt(user, target);
             return;
         }
 
-        if (current != null && target == null && current.getPlayers().contains(player)) {
-            current.removePlayer(player);
+        if (current != null && target == null && current.getGame().getPlayers().contains(player)) {
+            plugin.getArenaManager().leaveAttempt(user);
             return;
         }
 
         if (current != null && target != null && !current.equals(target)) {
-            current.removePlayer(player);
-            target.addPlayer(player);
+            plugin.getArenaManager().leaveAttempt(user);
+            plugin.getArenaManager().joinAttempt(user, target);
         }
     }
 
     protected Arena findTargetArena(Player player) {
-        for (Arena arena : plugin.getArenaRegistry().getArenas()) {
-            if (arena.isInArea(player) != null) {
-                return arena;
-            }
-        }
-
-        return null;
+        return plugin.getArenaRegistry().findTargetArena(player);
     }
 }
