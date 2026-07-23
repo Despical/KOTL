@@ -72,7 +72,7 @@ I accept Pull Requests via GitHub. There are some guidelines which will make app
 + Do not increase the version numbers in any examples files and the README.md to the new version that this Pull Request would represent.
 + Create minimal diffs - disable on save actions like reformat source code or organize imports. If you feel the source code should be reformatted create a separate PR for this change.
 
-You can learn more about contributing via GitHub in [contribution guidelines](../CONTRIBUTING.md).
+You can learn more about contributing via GitHub in [contribution guidelines](CONTRIBUTING.md).
 
 ## Building from source
 To build this project from source code, run the following from Git Bash:
