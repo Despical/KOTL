@@ -1,0 +1,24 @@
+# ==========================================================
+#         KOTL - BossBar Configuration                     #
+# ==========================================================
+#                                                          #
+#  BAR STYLES:                                             #
+#    - PROGRESS   : Solid, undivided bar                   #
+#    - NOTCHED_6  : Divided into 6 segments                #
+#    - NOTCHED_10 : Divided into 10 segments               #
+#    - NOTCHED_12 : Divided into 12 segments               #
+#    - NOTCHED_20 : Divided into 20 segments               #
+#                                                          #
+#  BAR COLORS:                                             #
+#    - PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE       #
+#                                                          #
+# ==========================================================
+
+# Determines whether the BossBar system is enabled.
+# If set to 'false', the bar will not be displayed.
+enabled: true
+
+# BossBar uses a single line for all stages.
+text: "<yellow><bold>Playing <gradient:#ff3b3b:#ff7a7a>KING OF THE LADDER</gradient> <yellow><bold>by <aqua><bold>DESPICAL"
+overlay: PROGRESS
+color: PINK
