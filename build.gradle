@@ -28,7 +28,7 @@ dependencies {
     implementation 'org.bstats:bstats-bukkit:3.2.1'
     implementation 'fr.skytasul:glowingentities:1.4.11'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.40'
+    annotationProcessor 'org.projectlombok:lombok:1.18.46'
 }
 
 tasks.processResources {
