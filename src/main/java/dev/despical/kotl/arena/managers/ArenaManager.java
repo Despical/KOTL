@@ -19,17 +19,32 @@
 package dev.despical.kotl.arena.managers;
 
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import dev.despical.kotl.arena.managers.schedulers.SchedulerOptions;
+import dev.despical.kotl.game.Game;
+import dev.despical.kotl.game.GameManager;
+import dev.despical.kotl.game.StopReason;
+import dev.despical.kotl.user.User;
+import dev.despical.kotl.util.ShutdownDetector;
 import lombok.Getter;
 
+import java.util.Objects;
+
+/**
+ * @author Despical
+ * <p>
+ * Created at 06.06.2026
+ */
 @Getter
 public class ArenaManager {
 
+    private final KOTL plugin;
     private final SchedulerOptions options;
     private final ArenaScheduler arenaScheduler;
 
     public ArenaManager(KOTL plugin) {
+        this.plugin = plugin;
         final var config = plugin.getConfig();
 
         this.arenaScheduler = switch (config.getInt("Arena-Schedulers.Type")) {
@@ -43,5 +58,52 @@ public class ArenaManager {
         this.options = new SchedulerOptions(async, interval);
 
         arenaScheduler.register(options);
+    }
+
+    public boolean joinAttempt(User user, Arena arena) {
+        Game game = arena.getGame();
+
+        if (game == null) {
+            return false;
+        }
+
+        game.addPlayer(user.getPlayer());
+        return true;
+    }
+
+    public void leaveAttempt(User user) {
+        Arena arena = user.getArena();
+
+        if (arena == null) {
+            return;
+        }
+
+        Game game = arena.getGame();
+        game.removePlayer(user.getPlayer(), false);
+    }
+
+    public void quitPlayer(User user, Arena arena) {
+        if (arena == null) {
+            return;
+        }
+
+        Game game = arena.getGame();
+        game.removePlayer(user.getPlayer(), true);
+    }
+
+    public void handleDisable() {
+        GameManager gameManager = plugin.getGameManager();
+        StopReason reason = resolveStopReason();
+
+        plugin.getArenaRegistry().getArenas().stream()
+            .map(Arena::getGame)
+            .filter(Objects::nonNull)
+            .forEach(game -> gameManager.stopGame(game, reason));
+    }
+
+    private StopReason resolveStopReason() {
+        return ShutdownDetector.isShutdown()
+            ? StopReason.SERVER_SHUTDOWN
+            : StopReason.SERVER_RELOAD;
     }
 }
