@@ -1,0 +1,223 @@
+title: "<gradient:#FF5252:#D50000><bold>GAME SETUP</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
+
+items:
+  end:
+    name: "<#E040FB><bold>Set End Location"
+    material: END_PORTAL_FRAME
+    lore:
+      - "<#2F2F2F>• <#D500F9>CLICK <#BDBDBD>to set at <#EA80FC>your pos"
+      - "<#2F2F2F>• <#B388FF>SHIFT-CLICK <#BDBDBD>to <#F8BBD0>center block"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>The safety fallback location used"
+      - "<#B0BEC5>  on reloads or unexpected errors."
+    message: "<#E040FB>End Location <#BDBDBD>has been set successfully."
+
+  king-plate:
+    name: "<!i><#FFD700><bold>Set King Plate"
+    material: OAK_PRESSURE_PLATE
+    lore:
+      - "<!i><#2F2F2F>• <#FFCA28>LEFT  <#BDBDBD>click <#FFF8E1>→ receive the tool"
+      - "<!i><#2F2F2F>• <#FFD54F>RIGHT <#BDBDBD>click <#FFF8E1>→ place at your block"
+      - "<!i><#2F2F2F>• <#FFE082>SHIFT <#BDBDBD>click <#FFF8E1>→ select material"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Placed plate becomes the king trigger."
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  pressure-plate-material:
+    name: "<!i><#2F2F2F>• <#76FF03>%material%"
+    material: OAK_PRESSURE_PLATE
+    lore:
+      - "<!i><#2F2F2F>• <#00E676>CLICK <#BDBDBD>to select this plate"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Status: %status%"
+      - "<!i><#2F2F2F>• <#B0BEC5>Used by the king trigger tool."
+    selected-status: "<!i><#00E676><bold>SELECTED"
+    unselected-status: "<!i><#FF5252>NOT SELECTED"
+    back-slot: 44
+    slots: [ 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24 ]
+    materials:
+      - OAK_PRESSURE_PLATE
+      - SPRUCE_PRESSURE_PLATE
+      - BIRCH_PRESSURE_PLATE
+      - JUNGLE_PRESSURE_PLATE
+      - ACACIA_PRESSURE_PLATE
+      - DARK_OAK_PRESSURE_PLATE
+      - MANGROVE_PRESSURE_PLATE
+      - CHERRY_PRESSURE_PLATE
+      - BAMBOO_PRESSURE_PLATE
+      - CRIMSON_PRESSURE_PLATE
+      - WARPED_PRESSURE_PLATE
+      - STONE_PRESSURE_PLATE
+      - POLISHED_BLACKSTONE_PRESSURE_PLATE
+    item-flags:
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  platform-selector:
+    name: "<!i><#FFAB00><bold>Select Arena Area"
+    material: BLAZE_ROD
+    lore:
+      - "<!i><#2F2F2F>• <#FFCA28>LEFT  <#BDBDBD>click <#FFF8E1>→ receive the tool"
+      - "<!i><#2F2F2F>• <#FFD54F>RIGHT <#BDBDBD>click <#FFF8E1>→ toggle outline"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Left-click  the first corner,"
+      - "<!i><#2F2F2F>• <#B0BEC5>Right-click the second corner."
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Visualizer: %outline_status%"
+
+  area-selector:
+    name: "<#FFAB00><bold>Arena Area Selector"
+    material: BLAZE_ROD
+    lore:
+      - "<italic:false><#2F2F2F>• <#FFCA28>LEFT <#BDBDBD>click a block"
+      - "<italic:false><#B0BEC5>  to set the first corner."
+      - "<italic:false><#2F2F2F>• <#FFD54F>RIGHT <#BDBDBD>click a block"
+      - "<italic:false><#B0BEC5>  to set and save the second corner."
+
+  player-settings:
+    name: "<#2196F3><bold>Configure Player Settings"
+    material: BOOK
+    lore:
+      - "<#2F2F2F>• <#2196F3>CLICK <#BDBDBD>to open player settings"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Configure inventory, effects, and"
+      - "<#B0BEC5>  gamemode when players join."
+
+  arena-record-reset:
+    name: "<!i><#FF5252><bold>Reset Arena King Records"
+    material: PLAYER_HEAD
+    lore:
+      - "<!i><#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to clear loaded records"
+      - ""
+      - "<!i><#2F2F2F>• <#B0BEC5>Record Holder: <#81D4FA>%record_holder%"
+      - "<!i><#2F2F2F>• <#B0BEC5>Best Score: <#FFD54F>%record_score%"
+      - ""
+      - "<!i><#2F2F2F>• <#EF9A9A>Removes this arena's score"
+      - "<!i><#EF9A9A>  from currently loaded players."
+
+  register-arena:
+    name: "<#00E676><bold>Register the Arena"
+    material: FIREWORK_ROCKET
+    hide-tooltip: true
+    missing-option:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<#FF5252><bold>REGISTRATION FAILED"
+      - ""
+      - "<gray>The arena configuration integrity check has failed."
+      - "<gray>A mandatory configuration value is missing."
+      - ""
+      - "<gray>Missing arena option: <#FFD54F>%option%"
+      - ""
+      - "<#37474F><st>                                                                                 </st>"
+    registered-successfully:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<gradient:#00E676:#1DE9B6><bold>REGISTRATION COMPLETE</gradient>"
+      - ""
+      - "<#CFD8DC>The arena '<#00B0FF>%arena_id%<#CFD8DC>' has been successfully registered."
+      - ""
+      - "<click:run_command:%command%><hover:show_text:'<#69F0AE>Click to join instantly.'><#FFD740><bold><underlined>CLICK HERE TO JOIN & PLAY</underlined></bold></hover></click>"
+      - ""
+      - "<#37474F><st>                                                                                 </st>"
+
+  go-back:
+    name: "<#FF5252><bold>Return to Last Page"
+    material: ARROW
+
+  gamemode-selector:
+    name: "<#FFB300><bold>Set Join Gamemode"
+    material: DIAMOND_PICKAXE
+    lore:
+      - "<#2F2F2F>• <#FFB300>CLICK <#BDBDBD>to select gamemode"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Gamemode: <#FFB300>%current_gamemode%"
+    available-modes:
+      - "SURVIVAL"
+      - "CREATIVE"
+      - "ADVENTURE"
+    item-flags:
+      - HIDE_ATTRIBUTES
+
+  clear-inventory-toggle:
+    name: "<#FF5252><bold>Clear Inventory on Join"
+    material: BARREL
+    lore:
+      - "<#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to toggle setting"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %inventory_toggle_status%"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Player inventory is saved and"
+      - "<#B0BEC5>  will be restored after the game."
+
+  clear-effects-toggle:
+    name: "<#E040FB><bold>Clear Effects on Join"
+    material: POTION
+    lore:
+      - "<#2F2F2F>• <#E040FB>CLICK <#BDBDBD>to toggle setting"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %effects_toggle_status%"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Remove all potion effects from"
+      - "<#B0BEC5>  players when they join the arena."
+    item-flags:
+      - HIDE_ATTRIBUTES
+      - HIDE_ADDITIONAL_TOOLTIP
+
+  scoreboard-toggle:
+    name: "<#00BCD4><bold>Arena Scoreboard"
+    material: NAME_TAG
+    lore:
+      - "<#2F2F2F>• <#00BCD4>CLICK <#BDBDBD>to toggle setting"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %scoreboard_toggle_status%"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Show the arena scoreboard"
+      - "<#B0BEC5>  automatically when players join."
+
+  bossbar-toggle:
+    name: "<#FF7043><bold>Game BossBar"
+    material: ORANGE_DYE
+    lore:
+      - "<#2F2F2F>• <#FF7043>CLICK <#BDBDBD>to toggle setting"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Status: %bossbar_toggle_status%"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Show the BossBar for"
+      - "<#B0BEC5>  players inside this arena."
+
+  gamemode-survival:
+    name: "<#00BCD4><bold>SURVIVAL"
+    material: IRON_SWORD
+    slot: 14
+    lore:
+      - "<#2F2F2F>• <#00BCD4>LEFT <#BDBDBD>click to select"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Players will join in this mode"
+    item-flags:
+      - HIDE_ATTRIBUTES
+
+  gamemode-creative:
+    name: "<#00BCD4><bold>CREATIVE"
+    material: GRASS_BLOCK
+    slot: 12
+    lore:
+      - "<#2F2F2F>• <#00BCD4>LEFT <#BDBDBD>click to select"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Players will join in this mode"
+
+  gamemode-adventure:
+    name: "<#00BCD4><bold>ADVENTURE"
+    material: PAPER
+    slot: 16
+    lore:
+      - "<#2F2F2F>• <#00BCD4>LEFT <#BDBDBD>click to select"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Players will join in this mode"
+
+  clear-gamemode:
+    name: "<#FF5252><bold>Clear Gamemode"
+    material: BARRIER
+    slot: 10
+    lore:
+      - "<#2F2F2F>• <#EF5350>RIGHT <#BDBDBD>click to clear"
+      - ""
+      - "<#2F2F2F>• <#B0BEC5>Players will keep their gamemode"
