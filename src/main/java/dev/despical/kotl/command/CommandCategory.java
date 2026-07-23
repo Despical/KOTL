@@ -16,24 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.despical.kotl.commands;
+package dev.despical.kotl.command;
 
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.ArenaRegistry;
-import dev.despical.kotl.handlers.ChatManager;
+import dev.despical.kotl.arena.managers.ArenaManager;
+import dev.despical.kotl.chat.ChatManager;
+import dev.despical.kotl.game.GameManager;
+import dev.despical.kotl.user.UserManager;
 
 /**
  * @author Despical
  * <p>
  * Created at 18.02.2023
  */
-public sealed abstract class CommandCategory permits AdminCommands, PlayerCommands {
+public sealed abstract class CommandCategory permits ArenaCommands, AdminCommands, PlayerCommands, DebugCommands, TabCompleters {
 
     protected static final KOTL plugin = KOTL.getInstance();
     protected static final ArenaRegistry arenaRegistry = plugin.getArenaRegistry();
+    protected static final ArenaManager arenaManager = plugin.getArenaManager();
     protected static final ChatManager chatManager = plugin.getChatManager();
-
-    public CommandCategory() {
-        plugin.getCommandFramework().registerCommands(this);
-    }
+    protected static final UserManager userManager = plugin.getUserManager();
+    protected static final GameManager gameManager = plugin.getGameManager();
 }
