@@ -18,10 +18,10 @@
 
 package dev.despical.kotl.api.events.player;
 
-import dev.despical.kotl.api.events.KOTLEvent;
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.game.Game;
+import lombok.Setter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,26 +30,26 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 02.01.2024
  */
-public class KOTLPlayerLeaveArenaEvent extends KOTLEvent {
+public class PlayerLeaveArenaEvent extends PlayerEvent {
 
-    private static final HandlerList handlers = new HandlerList();
-    private final Player player;
+    @Setter
+    private boolean cancelled;
 
-    public KOTLPlayerLeaveArenaEvent(Arena eventArena, Player player) {
-        super(eventArena);
-        this.player = player;
+    private final Game game;
+
+    public PlayerLeaveArenaEvent(Player player, Game game) {
+        super(player);
+        this.game = game;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlers;
+    @NotNull
+    public Arena getArena() {
+        return game.getArena();
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public Player getPlayer() {
-        return player;
+    public String toString() {
+        return "player=%s, arena=%s, cancelled=%s"
+            .formatted(getPlayer().getName(), getArena().getId(), cancelled);
     }
 }
