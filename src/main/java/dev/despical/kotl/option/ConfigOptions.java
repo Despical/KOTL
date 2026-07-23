@@ -16,13 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.despical.kotl.options;
+package dev.despical.kotl.option;
 
 import dev.despical.kotl.KOTL;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Despical
@@ -32,35 +34,33 @@ import java.util.Map;
 public class ConfigOptions {
 
     private final KOTL plugin;
-    private final Map<Option, Object> options;
+    private final Map<ConfigOption<?>, Object> options;
 
     public ConfigOptions(KOTL plugin) {
         this.plugin = plugin;
         this.options = new HashMap<>();
+        this.loadOptions();
+    }
+
+    public <T> T get(ConfigOption<T> option) {
+        return option.getType().cast(options.computeIfAbsent(option, opt -> option.getDefaultValue()));
+    }
+
+    public boolean isEnabled(BooleanOption option) {
+        return this.<Boolean>get(option);
+    }
+
+    public void reloadOptions() {
+        plugin.reloadConfig();
 
         loadOptions();
     }
 
-    public boolean isEnabled(Option option) {
-        return (boolean) options.get(option);
-    }
-
-    public int getValue(Option option) {
-        return (int) options.get(option);
-    }
-
-    public void loadOptions() {
-        options.clear();
-
+    private void loadOptions() {
         FileConfiguration config = plugin.getConfig();
 
-        for (Option option : Option.values()) {
-            if (option.path.isEmpty()) {
-                options.put(option, option.defaultValue);
-                continue;
-            }
-
-            options.put(option, config.get(option.path, option.defaultValue));
-        }
+        Stream.of(BooleanOption.values(), IntOption.values())
+            .flatMap(Arrays::stream)
+            .forEach(option -> options.put(option, config.get(option.getPath())));
     }
 }
