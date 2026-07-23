@@ -18,18 +18,16 @@
 
 package dev.despical.kotl.arena;
 
-import dev.despical.commons.XMaterial;
 import dev.despical.commons.configuration.ConfigUtils;
-import dev.despical.commons.serializer.LocationSerializer;
 import dev.despical.kotl.KOTL;
-import org.bukkit.configuration.ConfigurationSection;
+import dev.despical.kotl.arena.options.ArenaKeys;
+import dev.despical.kotl.arena.options.ArenaOption;
+import dev.despical.kotl.user.User;
+import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
+import java.util.*;
 
 /**
  * @author Despical
@@ -39,20 +37,62 @@ import java.util.logging.Level;
 public class ArenaRegistry {
 
     private final KOTL plugin;
+    @Getter
+    private final FileConfiguration config;
     private final Map<String, Arena> arenas;
 
     public ArenaRegistry(KOTL plugin) {
         this.plugin = plugin;
+        this.config = ConfigUtils.getConfig(plugin, "arenas");
         this.arenas = new HashMap<>();
         this.registerArenas();
     }
 
-    public void registerArena(Arena arena) {
-        arenas.put(arena.getId(), arena);
+    public Arena getArena(User user) {
+        Player player = user.getPlayer();
+        if (player == null) {
+            return null;
+        }
+
+        return arenas.values()
+            .stream()
+            .filter(arena -> arena.getGame().getPlayers().contains(player))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public Arena getArena(Player player) {
+        User user = plugin.getUserManager().getUser(player);
+        return getArena(user);
+    }
+
+    public boolean isInArena(Player player) {
+        return getArena(player) != null;
+    }
+
+    public Arena getArena(String id) {
+        return findArena(id).orElse(null);
+    }
+
+    public Optional<Arena> findArena(String id) {
+        return Optional.ofNullable(arenas.get(id));
+    }
+
+    public Optional<Arena> findArena(Player player) {
+        return Optional.ofNullable(getArena(player));
+    }
+
+    public boolean isArenaExists(String id) {
+        return arenas.containsKey(id);
+    }
+
+    public void registerNewArena(String id) {
+        arenas.put(id, new Arena(id));
     }
 
     public void unregisterArena(Arena arena) {
         arenas.remove(arena.getId());
+        config.set(arena.getId(), null);
     }
 
     public Set<Arena> getArenas() {
@@ -63,66 +103,63 @@ public class ArenaRegistry {
         return arenas.keySet();
     }
 
-    public Arena getArena(String id) {
-        return arenas.get(id);
-    }
-
-    public Arena getArena(Player player) {
-        if (player == null) return null;
-
-        return arenas.values()
-            .stream()
-            .filter(arena -> arena.getPlayers().contains(player))
-            .findFirst()
-            .orElse(null);
-    }
-
-    public boolean isArena(String arenaId) {
-        return getArena(arenaId) != null;
-    }
-
-    public boolean isInArena(Player player) {
-        return getArena(player) != null;
-    }
-
     public void registerArenas() {
         arenas.clear();
 
-        FileConfiguration config = ConfigUtils.getConfig(plugin, "arenas");
-        ConfigurationSection section = config.getConfigurationSection("instances");
-
-        if (section == null) {
-            return;
-        }
-
-        for (String id : section.getKeys(false)) {
-            if (id.equals("default")) continue;
-
-            String path = "instances." + id + ".";
-            Arena arena = new Arena(id);
-
-            arenas.put(id, arena);
-
-            arena.setReady(config.getBoolean(path + "isdone"));
-            arena.setEndLocation(LocationSerializer.fromString(config.getString(path + "endLocation")));
-            arena.setPlateLocation(LocationSerializer.fromString(config.getString(path + "plateLocation")));
-            arena.setMinCorner(LocationSerializer.fromString(config.getString(path + "areaMin")));
-            arena.setMaxCorner(LocationSerializer.fromString(config.getString(path + "areaMax")));
-            arena.setArenaPlate(XMaterial.matchXMaterial(config.getString(path + "arenaPlate")).orElse(XMaterial.OAK_PRESSURE_PLATE));
-            arena.setShowOutlines(config.getBoolean(path + "showOutlines"));
-
-            if (arena.isReady() && arena.getPlateLocation().getBlock().getType() != arena.getArenaPlate().parseMaterial()) {
-                arena.setPlateLocation(LocationSerializer.DEFAULT_LOCATION);
-                arena.setReady(false);
-
-                plugin.getLogger().log(Level.WARNING, "The pressure plate material is not the same type as you set on setup for the arena ''{0}''!", id);
+        for (String id : config.getKeys(false)) {
+            if (!config.isConfigurationSection(id)) {
                 continue;
             }
 
-            if (!arena.isReady()) {
-                plugin.getLogger().log(Level.WARNING, "Setup of arena ''{0}'' is not finished yet!", id);
-                return;
+            Arena arena = new Arena(id);
+            loadOptionsFor(arena, config);
+
+            arenas.put(id, arena);
+        }
+    }
+
+    private void loadOptionsFor(Arena arena, FileConfiguration config) {
+        for (ArenaOption<?> option : ArenaKeys.getPersistentKeys()) {
+            loadSingleOption(arena, config, option);
+        }
+    }
+
+    private <T> void loadSingleOption(Arena arena, FileConfiguration config, ArenaOption<T> option) {
+        String path = "%s.%s".formatted(arena.getId(), option.getKey());
+
+        if (config.contains(path)) {
+            Object rawValue = config.get(path);
+            T value = option.deserialize(rawValue);
+
+            arena.setOption(option, value);
+        } else {
+            arena.setOption(option, option.getDefaultValue());
+        }
+    }
+
+    public Arena findTargetArena(Player player) {
+        for (Arena arena : arenas.values()) {
+            if (isInArea(arena, player)) {
+                return arena;
             }
         }
+        return null;
+    }
+
+    public boolean isInArea(Arena arena, Player player) {
+        if (!arena.getOption(ArenaKeys.READY)) return false;
+
+        Location min = arena.getOption(ArenaKeys.MIN_CORNER), max = arena.getOption(ArenaKeys.MAX_CORNER), origin = player.getLocation();
+        if (min == null || max == null || origin == null) return false;
+
+        if (!min.getWorld().equals(player.getWorld())) return false;
+
+        double minX = Math.min(min.getX(), max.getX()), maxX = Math.max(min.getX(), max.getX());
+        double minY = Math.min(min.getY(), max.getY()), maxY = Math.max(min.getY(), max.getY());
+        double minZ = Math.min(min.getZ(), max.getZ()), maxZ = Math.max(min.getZ(), max.getZ());
+
+        return origin.getX() >= minX && origin.getX() <= maxX
+            && origin.getY() >= minY && origin.getY() <= maxY
+            && origin.getZ() >= minZ && origin.getZ() <= maxZ;
     }
 }
