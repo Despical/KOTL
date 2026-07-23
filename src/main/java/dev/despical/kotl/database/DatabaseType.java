@@ -28,8 +28,8 @@ import java.util.List;
  */
 public enum DatabaseType {
 
-    FLAT_FILE("Flat File", "flat", "flat_file", "default"),
-    MYSQL("MySQL", "mysql");
+    FLAT_FILE("Flat File", "flat", "flatfile", "default"),
+    MYSQL("MySQL", "mysql", "sql");
 
     private final List<String> names;
 

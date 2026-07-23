@@ -19,7 +19,11 @@
 package dev.despical.kotl.database;
 
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.stats.offline.OfflineStats;
 import dev.despical.kotl.user.User;
+import org.bukkit.OfflinePlayer;
+
+import java.util.Set;
 
 /**
  * @author Despical
@@ -32,7 +36,13 @@ public sealed abstract class Database permits FlatFileStorage, MySQLStorage {
 
     public abstract void loadData(User user);
 
+    public abstract OfflineStats loadOfflineData(OfflinePlayer player);
+
+    public abstract Set<OfflineStats> getAllPlayers();
+
     public abstract void saveData(User user);
+
+    public abstract void saveAllData();
 
     public abstract void shutdown();
 }
