@@ -1,39 +1,34 @@
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '9.3.0'
+    id 'com.gradleup.shadow' version '9.6.0'
 }
 
 group = 'dev.despical'
-version = '3.2.1'
+version = '3.2.2'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
-}
-
-repositories {
-    mavenCentral()
-    maven { url = 'https://repo.papermc.io/repository/maven-public' }
-    maven { url = 'https://repo.extendedclip.com/releases' }
-    maven { url = 'https://jitpack.io' }
 }
 
 dependencies {
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.7'
-    compileOnly 'org.projectlombok:lombok:1.18.30'
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.12.3'
+    compileOnly 'org.projectlombok:lombok:1.18.46'
 
-    implementation('dev.despical:commons:2.0.7') {
+    implementation('dev.despical:commons:2.1.2') {
         exclude group: 'org.slf4j'
     }
-    implementation 'dev.despical:command-framework:1.5.9'
-    implementation 'dev.despical:inventory-framework:2.4.5'
-    implementation 'dev.despical:file-items:1.2.2'
-    implementation 'com.github.Despical:ParticleLib:1.0.8'
-    implementation 'org.bstats:bstats-bukkit:3.1.0'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation 'dev.despical:command-framework:1.6.5'
+    implementation 'dev.despical:inventory-framework:2.4.7'
+    implementation 'dev.despical:file-items:1.2.5'
+    implementation 'com.github.Despical:ParticleLib:1.0.9'
+    implementation 'org.bstats:bstats-bukkit:3.1.0'
+    implementation 'fr.skytasul:glowingentities:1.4.10'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.40'
 }
 
 tasks.processResources {
@@ -60,9 +55,15 @@ tasks.shadowJar {
     relocate 'dev.despical.fileitems', 'dev.despical.kotl.lib.fileitems'
     relocate 'dev.despical.particle', 'dev.despical.kotl.lib.particlelib'
     relocate 'org.bstats', 'dev.despical.kotl.lib.bstats'
+    relocate 'fr.skytasul.glowingentities', 'dev.despical.kotl.lib.glowingentities'
 
     exclude 'META-INF/**'
     exclude 'fonts/**'
 
     archiveFileName = "king-of-the-ladder-${version}.jar"
+
+    def hostName = InetAddress.getLocalHost().getHostName()
+    if (hostName == "DESKTOP-RD26J35") {
+        destinationDirectory = file("C:/Users/berke/OneDrive/Masaüstü/Paper 26.1.2/plugins")
+    }
 }
