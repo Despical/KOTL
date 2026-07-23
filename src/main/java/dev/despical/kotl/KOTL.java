@@ -18,47 +18,54 @@
 
 package dev.despical.kotl;
 
+import dev.despical.commandframework.CommandArguments;
+import dev.despical.commandframework.CommandErrorMessage;
 import dev.despical.commandframework.CommandFramework;
-import dev.despical.commons.miscellaneous.AttributeUtils;
-import dev.despical.commons.scoreboard.ScoreboardLib;
-import dev.despical.commons.serializer.InventorySerializer;
+import dev.despical.commandframework.options.FrameworkOption;
 import dev.despical.commons.util.UpdateChecker;
 import dev.despical.fileitems.ItemManager;
-import dev.despical.kotl.api.StatisticType;
-import dev.despical.kotl.api.events.KOTLEvent;
+import dev.despical.fileitems.ItemOption;
+import dev.despical.kotl.api.EventManager;
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.arena.ArenaDataSaver;
 import dev.despical.kotl.arena.ArenaRegistry;
 import dev.despical.kotl.arena.managers.ArenaManager;
-import dev.despical.kotl.commands.AdminCommands;
-import dev.despical.kotl.commands.PlayerCommands;
-import dev.despical.kotl.commands.TabCompleters;
+import dev.despical.kotl.arena.options.ArenaKeys;
+import dev.despical.kotl.chat.ChatManager;
+import dev.despical.kotl.command.PlayingCommandPolicy;
 import dev.despical.kotl.database.Database;
 import dev.despical.kotl.database.DatabaseType;
 import dev.despical.kotl.database.FlatFileStorage;
 import dev.despical.kotl.database.MySQLStorage;
-import dev.despical.kotl.events.ArenaEvents;
-import dev.despical.kotl.events.Events;
-import dev.despical.kotl.handlers.ChatManager;
-import dev.despical.kotl.handlers.PlaceholderManager;
+import dev.despical.kotl.event.ArenaEvents;
+import dev.despical.kotl.event.GeneralEvents;
+import dev.despical.kotl.event.SetupListener;
+import dev.despical.kotl.game.GameManager;
 import dev.despical.kotl.handlers.cooldown.CooldownManager;
-import dev.despical.kotl.handlers.rewards.RewardsFactory;
-import dev.despical.kotl.kits.KitManager;
-import dev.despical.kotl.language.LanguageManager;
-import dev.despical.kotl.options.ConfigOptions;
-import dev.despical.kotl.options.Option;
+import dev.despical.kotl.leaderboard.LeaderboardManager;
+import dev.despical.kotl.option.BooleanOption;
+import dev.despical.kotl.option.ConfigOptions;
+import dev.despical.kotl.papi.PlaceholderManager;
+import dev.despical.kotl.particle.OutlineManager;
+import dev.despical.kotl.scoreboard.ScoreboardManager;
+import dev.despical.kotl.stats.offline.StatsCacheManager;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.user.UserManager;
+import dev.despical.kotl.util.AutoSaveHandler;
 import dev.despical.kotl.util.CuboidSelector;
-import lombok.AccessLevel;
+import dev.despical.kotl.util.ShutdownDetector;
+import dev.despical.kotl.util.Var;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -72,27 +79,33 @@ public class KOTL extends JavaPlugin {
     @Getter
     private static KOTL instance;
 
-    private ConfigOptions configOptions;
+    private ConfigOptions options;
     private UserManager userManager;
     private Database database;
     private CommandFramework commandFramework;
     private CuboidSelector cuboidSelector;
     private ChatManager chatManager;
-    private RewardsFactory rewardsFactory;
-    private LanguageManager languageManager;
     private ArenaRegistry arenaRegistry;
-    private KitManager kitManager;
     private ArenaManager arenaManager;
+    private GameManager gameManager;
+    private OutlineManager outlineManager;
     private CooldownManager cooldownManager;
+    private LeaderboardManager leaderboardManager;
+    private EventManager eventManager;
     private ItemManager itemManager;
-
-    @Getter(AccessLevel.NONE)
-    private boolean initializeFinished;
+    private StatsCacheManager statsCacheManager;
+    private PlayingCommandPolicy playingCommandPolicy;
+    private ArenaDataSaver arenaDataSaver;
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
+        ShutdownDetector.init();
+
+        instance = this;
+
+        createConfigFiles();
         initializeClasses();
-        checkUpdate();
 
         getLogger().info("Initialization finished.");
         getLogger().info("Join our Discord server: https://discord.gg/uXVU8jmtpU");
@@ -100,93 +113,67 @@ public class KOTL extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        saveAllUserStatistics();
+        new ArenaDataSaver(this).saveAllArenas();
 
-        for (Arena arena : arenaRegistry.getArenas()) {
-            for (Player player : arena.getPlayers()) {
-                player.getInventory().clear();
-                player.getInventory().setArmorContents(null);
-                player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+        outlineManager.cancelAll();
+        arenaManager.handleDisable();
+        database.shutdown();
+        metrics.shutdown();
+    }
 
-                if (configOptions.isEnabled(Option.INVENTORY_MANAGER_ENABLED)) {
-                    InventorySerializer.loadInventory(this, player);
-                } else {
-                    AttributeUtils.healPlayer(player);
-                }
-
-                arena.teleportToEndLocation(player);
-                arena.doBarAction(player, 0);
-                arena.getScoreboardManager().removeScoreboard(player);
-
-                AttributeUtils.resetAttackCooldown(player);
-            }
-        }
+    private void createConfigFiles() {
+        saveDefaultConfig();
+        saveResourceIfMissing("mysql.yml");
     }
 
     private void initializeClasses() {
-        instance = this;
+        this.loadItemManager();
 
-        this.setupConfigurationFiles();
-        this.initializeItemManager();
-
-        configOptions = new ConfigOptions(this);
+        options = new ConfigOptions(this);
+        playingCommandPolicy = new PlayingCommandPolicy(this);
         chatManager = new ChatManager(this);
-        languageManager = new LanguageManager(this);
-        userManager = new UserManager(this);
         database = this.createDatabase();
+        userManager = new UserManager(this);
+        statsCacheManager = new StatsCacheManager(this);
         cuboidSelector = new CuboidSelector(this);
-        rewardsFactory = new RewardsFactory(this);
+        gameManager = new GameManager(this);
+        outlineManager = new OutlineManager(this);
         arenaRegistry = new ArenaRegistry(this);
-        kitManager = new KitManager(this);
         arenaManager = new ArenaManager(this);
-        cooldownManager = new CooldownManager(this);
+        cooldownManager = new CooldownManager();
+        eventManager = new EventManager(this);
+        leaderboardManager = new LeaderboardManager(this);
+        arenaDataSaver = new ArenaDataSaver(this);
 
-        ScoreboardLib.setPluginInstance(this);
+        registerCommands();
+        registerEvents();
+        registerPlaceholderManager();
+        runAutoSave();
+        initializeMetrics();
+        checkUpdates();
 
-        this.registerCommands();
-        this.registerEvents();
-
-        if (chatManager.isPapiEnabled()) {
-            new PlaceholderManager(this);
-        }
-
-        this.initializeMetrics();
-        this.initializeFinished = true;
+        getServer().getOnlinePlayers().forEach(ScoreboardManager::resetPlayerScoreboard);
     }
 
-    private void checkUpdate() {
-        if (!configOptions.isEnabled(Option.UPDATE_NOTIFIER_ENABLED)) {
-            return;
-        }
-
-        UpdateChecker.init(this, 80686).onNewUpdate(result -> getLogger().info("Found a new version available: v" + result.getNewestVersion()));
+    private void runAutoSave() {
+        new AutoSaveHandler(this).runTaskTimerAsynchronously(this, 20, 20 * 60 * 5);
     }
 
-    private void setupConfigurationFiles() {
-        saveDefaultConfig();
+    private void loadItemManager() {
+        itemManager = new ItemManager(this, _ -> ItemOption.enableOptions(ItemOption.GLOW, ItemOption.AMOUNT));
 
-        Stream.of("arenas", "rewards", "stats", "mysql", "messages", "kits")
-            .map(fileName -> new File(getDataFolder(), fileName + ".yml"))
-            .filter(Predicate.not(File::exists))
-            .forEach(file -> saveResource(file.getName(), false));
+        registerItems();
     }
 
-    private void initializeItemManager() {
-        itemManager = new ItemManager(this);
-        itemManager.registerItems("items", "items");
-    }
-
-    private void initializeMetrics() {
-        Metrics metrics = new Metrics(this, 7938);
-        metrics.addCustomChart(new SimplePie("locale_used", () -> languageManager.getCurrentLocale().getPrefix()));
-        metrics.addCustomChart(new SimplePie("database_enabled", () -> configOptions.isEnabled(Option.DATABASE_ENABLED) ? "Enabled" : "Disabled"));
-        metrics.addCustomChart(new SimplePie("update_notifier", () -> configOptions.isEnabled(Option.UPDATE_NOTIFIER_ENABLED) ? "Enabled" : "Disabled"));
+    public void registerItems() {
+        itemManager.registerItems("menu/setup-menu", "items");
+        itemManager.registerItems("stats-menu-items", "items", "menu/stats-menu");
     }
 
     private Database createDatabase() {
-        String databaseName = getConfig().getString("Database");
+        String databaseType = getConfig().getString("Database", getConfig().getString("database"));
 
-        return switch (DatabaseType.getByName(databaseName)) {
+        return switch (DatabaseType.getByName(databaseType)) {
             case FLAT_FILE -> new FlatFileStorage();
             case MYSQL -> new MySQLStorage();
             case null -> {
@@ -199,54 +186,74 @@ public class KOTL extends JavaPlugin {
     private void registerCommands() {
         commandFramework = new CommandFramework(this);
 
-        new PlayerCommands();
-        new AdminCommands();
-        new TabCompleters(this);
+        if (BooleanOption.DEBUG.value()) {
+            commandFramework.options().enableOptions(FrameworkOption.DEBUG);
+        }
+
+        commandFramework.addCustomParameter(Player.class, CommandArguments::getSender);
+        commandFramework.addCustomParameter(User.class, args -> userManager.getUser(args.<Player>getSender()));
+        commandFramework.addCustomParameter(Arena.class, args -> arenaRegistry.getArena(args.getFirst()));
+        commandFramework.registerAllInPackage("dev.despical.kotl.command");
+
+        var messages = Stream.of(CommandErrorMessage.SHORT_ARG_SIZE, CommandErrorMessage.LONG_ARG_SIZE);
+        messages.forEach(message -> message.setHandler((cmd, args) -> {
+            chatManager.sendMessage(args, "correct-usage", Var.of("%usage%", cmd.usage().replace("%label%", args.getLabel())));
+            return true;
+        }));
     }
 
     private void registerEvents() {
-        new Events(this);
-        new ArenaEvents(this);
+        new GeneralEvents();
+        new ArenaEvents();
+        new SetupListener();
     }
 
-    public void reload() {
-        reloadConfig();
-
-        kitManager.loadKits();
-        chatManager.reload();
-        configOptions.loadOptions();
-    }
-
-    public void callEvent(KOTLEvent event) {
-        this.callEvent(() -> event);
-    }
-
-    public void callEvent(Supplier<KOTLEvent> eventSupplier) {
-        if (initializeFinished && isEnabled()) {
-            getServer().getScheduler().runTask(this, () -> getServer().getPluginManager().callEvent(eventSupplier.get()));
-        }
-    }
-
-    private void saveAllUserStatistics() {
-        if (database instanceof MySQLStorage mySQLStorage) {
-            for (User user : userManager.getUsers()) {
-                StringBuilder update = new StringBuilder(" SET ");
-
-                for (StatisticType stat : StatisticType.getPersistentStats()) {
-                    int value = user.getStat(stat);
-                    String statName = stat.getName();
-
-                    if (update.toString().equalsIgnoreCase(" SET ")) {
-                        update.append(statName).append("=").append(value);
-                    }
-
-                    update.append(", ").append(statName).append("=").append(value);
-                }
-
-                mySQLStorage.getDatabase().executeUpdate("UPDATE %s%s WHERE UUID='%s';".formatted(mySQLStorage.getStatsTable(), update.toString(), user.getUniqueId().toString()));
-            }
+    private void registerPlaceholderManager() {
+        if (!isPluginEnabled("PlaceholderAPI")) {
+            return;
         }
 
-        database.shutdown();
+        PlaceholderManager manager = new PlaceholderManager(this);
+        manager.register();
+    }
+
+    private void initializeMetrics() {
+        metrics = new Metrics(this, 7938);
+        metrics.addCustomChart(new SimplePie("database_type", this::resolveMetricsDatabaseType));
+        metrics.addCustomChart(new SimplePie("placeholderapi_enabled", () -> isPluginEnabled("PlaceholderAPI") ? "yes" : "no"));
+        metrics.addCustomChart(new SingleLineChart("arenas_total", () -> arenaRegistry.getArenas().size()));
+        metrics.addCustomChart(new SingleLineChart("arenas_ready", () -> (int) arenaRegistry.getArenas().stream().filter(arena -> arena.getOption(ArenaKeys.READY)).count()));
+    }
+
+    private void checkUpdates() {
+        if (!BooleanOption.UPDATE_NOTIFIER.value()) {
+            return;
+        }
+
+        UpdateChecker.init(this, 80686).onNewUpdate(_ -> {
+            Logger logger = getLogger();
+            logger.log(Level.INFO, "An update for Kig of the Ladder ({0}) is available at:", getDescription().getVersion());
+            logger.log(Level.INFO, "https://www.spigotmc.org/resources/king-of-the-ladder.80686/");
+        });
+    }
+
+    private String resolveMetricsDatabaseType() {
+        String configured = getConfig().getString("database", "flat");
+        DatabaseType type = DatabaseType.getByName(configured);
+        return type != null ? type.name().toLowerCase(Locale.ENGLISH) : configured.toLowerCase(Locale.ENGLISH);
+    }
+
+    private boolean isPluginEnabled(String pluginName) {
+        return getServer().getPluginManager().isPluginEnabled(pluginName);
+    }
+
+    private void saveResourceIfMissing(String resourcePath) {
+        File targetFile = new File(getDataFolder(), resourcePath);
+
+        if (targetFile.exists()) {
+            return;
+        }
+
+        saveResource(resourcePath, false);
     }
 }
