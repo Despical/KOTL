@@ -20,9 +20,9 @@ package dev.despical.kotl.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import dev.despical.commons.XMaterial;
-import dev.despical.commons.reflection.XReflection;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.kotl.KOTL;
+import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -40,12 +40,12 @@ import java.util.Locale;
  * <p>
  * Created at 05.06.2026
  */
-public class ItemUtils {
+@UtilityClass
+public final class ItemUtils {
 
     public static final ItemStack[] EMPTY_ARMORS = new ItemStack[4];
 
     private static final KOTL PLUGIN = KOTL.getInstance();
-    private static final boolean SUPPORTS_1_21_5 = XReflection.of(ItemMeta.class).method("void setHideTooltip(boolean _)").exists();
 
     public static void applyPlayerProfileIfSkull(OfflinePlayer player, ItemStack item) {
         if (item.getType() == XMaterial.PLAYER_HEAD.get()) {
@@ -72,15 +72,15 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
 
         String displayName = specialItem.getCustomKey("name");
-        Component nameComponent = PLUGIN.getChatManager().parseMessage(displayName, vars);
+        Component nameComponent = PLUGIN.getChatManager().parseMessage("<!i>" + displayName, vars);
         meta.displayName(nameComponent);
 
         List<String> lore = specialItem.getCustomKey("lore");
         if (lore != null) {
-            meta.lore(lore.stream().map(line -> PLUGIN.getChatManager().parseMessage(line, vars)).toList());
+            meta.lore(lore.stream().map(line -> PLUGIN.getChatManager().parseMessage("<!i>" + line, vars)).toList());
         }
 
-        boolean decorationOnly = SUPPORTS_1_21_5 && specialItem.getCustomKey("decoration-only") != null;
+        boolean decorationOnly = specialItem.getCustomKey("decoration-only") != null;
         if (decorationOnly) {
             meta.setHideTooltip(true);
         }
