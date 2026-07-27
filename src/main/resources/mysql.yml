@@ -5,6 +5,9 @@
 #    Before modifying these settings, make sure MySQL is      #
 #    enabled in your config.yml file.                         #
 #                                                             #
+#   For more detailed information, visit:                     #
+#   https://docs.despical.dev/kotl/configuration/mysql        #
+#                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # The full JDBC URL for the database connection.
