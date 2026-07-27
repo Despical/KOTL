@@ -16,28 +16,47 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package dev.despical.kotl.handlers.cooldown;
+package dev.despical.kotl.cooldown;
 
 import dev.despical.kotl.user.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Stores named, player-specific cooldowns using wall-clock expiration times.
+ * <p>
+ * Cooldowns are kept in memory and are not persisted across plugin reloads or
+ * server restarts. A single player may have multiple independent cooldowns,
+ * identified by their names.
+ *
  * @author Despical
  * <p>
  * Created at 30.04.2024
  */
-public class CooldownManager {
+public final class CooldownManager {
 
     private final Map<CooldownKey, Long> cooldowns;
 
+    /**
+     * Creates an empty cooldown manager.
+     */
     public CooldownManager() {
         this.cooldowns = new ConcurrentHashMap<>();
     }
 
-    public void setCooldown(User user, String name, double seconds) {
+    /**
+     * Starts or replaces a named cooldown for a player.
+     * <p>
+     * Supplying a duration of {@code 0} or less removes the cooldown.
+     *
+     * @param user the user who owns the cooldown
+     * @param name the stable name of the cooldown
+     * @param seconds the cooldown duration in seconds
+     */
+    public void setCooldown(@NotNull User user, @NotNull String name, double seconds) {
         CooldownKey key = new CooldownKey(user.getUniqueId(), name);
 
         if (seconds <= 0) {
@@ -49,7 +68,16 @@ public class CooldownManager {
         cooldowns.put(key, System.currentTimeMillis() + durationMillis);
     }
 
-    public double getCooldown(User user, String name) {
+    /**
+     * Returns the remaining time for a named player cooldown.
+     * <p>
+     * Expired entries are removed lazily when queried.
+     *
+     * @param user the user who owns the cooldown
+     * @param name the stable name of the cooldown
+     * @return the remaining duration in seconds, or {@code 0} when inactive
+     */
+    public double getCooldown(@NotNull User user, @NotNull String name) {
         CooldownKey key = new CooldownKey(user.getUniqueId(), name);
         Long expiresAt = cooldowns.get(key);
 
