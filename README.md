@@ -92,7 +92,7 @@ Common files:
 
 ## API
 
-King of the Ladder exposes Bukkit events under `dev.despical.kotl.api.events` for arena entry and exit, king changes, and player statistic updates.
+King of the Ladder exposes Bukkit events under `dev.despical.kotl.api.events` for game shutdown, arena entry and exit, king changes, and player statistic updates.
 
 Maven:
 
