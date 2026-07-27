@@ -91,6 +91,7 @@ public class ArenaRegistry {
     }
 
     public void unregisterArena(Arena arena) {
+        plugin.getOutlineManager().hideOutlines(arena);
         arenas.remove(arena.getId());
         config.set(arena.getId(), null);
     }
@@ -147,12 +148,28 @@ public class ArenaRegistry {
     }
 
     public boolean isInArea(Arena arena, Player player) {
-        if (!arena.getOption(ArenaKeys.READY)) return false;
+        if (!arena.getOption(ArenaKeys.READY) || !arena.getOption(ArenaKeys.ENABLED)) return false;
 
-        Location min = arena.getOption(ArenaKeys.MIN_CORNER), max = arena.getOption(ArenaKeys.MAX_CORNER), origin = player.getLocation();
-        if (min == null || max == null || origin == null) return false;
+        return isLocationInArea(arena, player.getLocation());
+    }
 
-        if (!min.getWorld().equals(player.getWorld())) return false;
+    public boolean hasValidArea(Arena arena) {
+        Location min = arena.getOption(ArenaKeys.MIN_CORNER);
+        Location max = arena.getOption(ArenaKeys.MAX_CORNER);
+
+        return min != null
+            && max != null
+            && min.getWorld() != null
+            && min.getWorld().equals(max.getWorld());
+    }
+
+    public boolean isLocationInArea(Arena arena, Location origin) {
+        if (!hasValidArea(arena) || origin == null || origin.getWorld() == null) return false;
+
+        Location min = arena.getOption(ArenaKeys.MIN_CORNER);
+        Location max = arena.getOption(ArenaKeys.MAX_CORNER);
+
+        if (!min.getWorld().equals(origin.getWorld())) return false;
 
         double minX = Math.min(min.getX(), max.getX()), maxX = Math.max(min.getX(), max.getX());
         double minY = Math.min(min.getY(), max.getY()), maxY = Math.max(min.getY(), max.getY());

@@ -41,6 +41,14 @@ public final class ArenaKeys {
         }
     };
 
+    public static final ArenaOption<Boolean> ENABLED = new ArenaOption<>("enabled", true, Boolean.class) {
+
+        @Override
+        protected Boolean parse(String value) {
+            return Boolean.parseBoolean(value);
+        }
+    };
+
     public static final ArenaOption<Location> END_LOCATION = new ArenaOption<>("end", null, Location.class) {
 
         @Override
@@ -195,6 +203,7 @@ public final class ArenaKeys {
     public static List<ArenaOption<?>> getAllKeys() {
         return List.of(
             READY,
+            ENABLED,
             END_LOCATION,
             PLATE_LOCATION,
             MIN_CORNER,
