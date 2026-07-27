@@ -21,7 +21,6 @@ package dev.despical.kotl.api.events.player;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.api.events.KOTLEvent;
 import dev.despical.kotl.user.User;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 05.06.2026
  */
-@Getter
 public abstract class PlayerEvent extends KOTLEvent {
 
     /**
@@ -51,6 +49,16 @@ public abstract class PlayerEvent extends KOTLEvent {
      */
     protected PlayerEvent(@NotNull Player player) {
         this.player = player;
+    }
+
+    /**
+     * Returns the Bukkit player associated with this event.
+     *
+     * @return the event player
+     */
+    @NotNull
+    public final Player getPlayer() {
+        return player;
     }
 
     /**
