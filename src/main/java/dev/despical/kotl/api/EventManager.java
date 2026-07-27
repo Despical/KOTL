@@ -87,6 +87,11 @@ public final class EventManager {
         return callByType(EventType.PLAYER_BECOME_KING, () -> new PlayerBecomeKingEvent(player, game));
     }
 
+    public PlayerBecomeKingEvent playerBecomeKing(Player player, Game game, String previousKing) {
+        return callByType(EventType.PLAYER_BECOME_KING,
+            () -> new PlayerBecomeKingEvent(player, game, previousKing));
+    }
+
     public <T> PlayerStatisticChangeEvent<T> statChange(Player player, StatisticType<T> stat, T oldValue, T newValue) {
         return callByType(EventType.PLAYER_STAT_CHANGE,
             () -> new PlayerStatisticChangeEvent<>(player, stat, oldValue, newValue));

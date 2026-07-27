@@ -204,14 +204,17 @@ public class Game {
             return false;
         }
 
+        var becomeKingEvent = plugin.getEventManager().playerBecomeKing(player, this, currentKing);
+        if (becomeKingEvent.isCancelled()) {
+            return false;
+        }
+
         if (shouldApplyCooldown && !bypassCooldown) {
             plugin.getCooldownManager().setCooldown(user, cooldownName, cooldown);
             if (BooleanOption.APPLY_KING_DELAY_BAR.value()) {
                 Utils.applyActionBarCooldown(user, arena.getId(), cooldown);
             }
         }
-
-        plugin.getEventManager().playerBecomeKing(player, this);
 
         arena.setOption(ArenaKeys.KING, player.getName());
         broadcastMessage(
