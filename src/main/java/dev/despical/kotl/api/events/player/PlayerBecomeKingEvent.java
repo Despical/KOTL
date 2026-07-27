@@ -21,8 +21,6 @@ package dev.despical.kotl.api.events.player;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.game.Game;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -45,7 +43,6 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * Created at 2.02.2024
  */
-@Getter
 public class PlayerBecomeKingEvent extends PlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -53,7 +50,6 @@ public class PlayerBecomeKingEvent extends PlayerEvent implements Cancellable {
     /**
      * Whether this king change has been cancelled.
      */
-    @Setter
     private boolean cancelled;
 
     /**
@@ -94,6 +90,55 @@ public class PlayerBecomeKingEvent extends PlayerEvent implements Cancellable {
         this.game = game;
         this.previousKing = previousKing;
         this.repeatedClaim = previousKing != null && previousKing.equals(player.getName());
+    }
+
+    /**
+     * Returns whether the crown claim has been cancelled.
+     *
+     * @return {@code true} when the player must not become king
+     */
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    /**
+     * Sets whether the crown claim should be cancelled.
+     *
+     * @param cancelled {@code true} to prevent the player from becoming king
+     */
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
+     * Returns the game in which the crown claim is occurring.
+     *
+     * @return the active game
+     */
+    @NotNull
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * Returns the previous king name captured before this event.
+     *
+     * @return the previous king name, or {@code null} when absent
+     */
+    @Nullable
+    public String getPreviousKing() {
+        return previousKing;
+    }
+
+    /**
+     * Returns whether the same player is claiming the crown consecutively.
+     *
+     * @return {@code true} for a repeated crown claim
+     */
+    public boolean isRepeatedClaim() {
+        return repeatedClaim;
     }
 
     /**
