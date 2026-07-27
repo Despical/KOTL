@@ -20,7 +20,6 @@ package dev.despical.kotl.api.events.player;
 
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.game.Game;
-import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 02.01.2024
  */
-@Getter
 public class PlayerLeaveArenaEvent extends PlayerEvent {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -77,6 +75,26 @@ public class PlayerLeaveArenaEvent extends PlayerEvent {
         super(player);
         this.game = game;
         this.reason = reason;
+    }
+
+    /**
+     * Returns the game the player is leaving.
+     *
+     * @return the current game
+     */
+    @NotNull
+    public Game getGame() {
+        return game;
+    }
+
+    /**
+     * Returns why the player is being removed from the arena.
+     *
+     * @return the leave reason
+     */
+    @NotNull
+    public LeaveReason getReason() {
+        return reason;
     }
 
     /**
