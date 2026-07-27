@@ -1,184 +1,80 @@
-#
-#        You can translate KOTL messages here.
-#             Color codes (&) supported.
-#
-#              Use \n to make new line
-#
-#     Some messages support their own placeholders
-#                 like %player%
+# ==================================================================
+#         King of the Ladder - Message Configuration               #
+# ==================================================================
+#                                                                  #
+# Messages support Adventure MiniMessage tags such as:             #
+#   <green>, <#FFCA28>, <bold>, <italic>, gradients, hover events, #
+#   click events, and other MiniMessage components.                #
+#                                                                  #
+# COMMON PLACEHOLDERS:                                             #
+#   %player%           : Name of the player                        #
+#   %arena%            : Arena id                                  #
+#   %arena_id%         : Arena id used by setup messages           #
+#   %id%               : Arena id used by commands                 #
+#   %label%            : Command label used by the sender          #
+#   %king%             : Name of the current or new king           #
+#   %time%             : Remaining cooldown time                   #
+#   %progress%         : Cooldown progress bar                     #
+#                                                                  #
+# Some messages use additional placeholders documented by context. #
+#                                                                  #
+# ================================================================ #
 
-Commands:
-  Did-You-Mean: "&cDid you mean &7%command%&c?"
-  Correct-Usage: "&cCorrect usage: %usage%"
-  Are-You-Sure: "&cAre you sure you want to do this action? Type the command again &6within 10 seconds &cto confirm!"
-  Type-Arena-Name: "&cPlease type arena name!"
-  Removed-Game-Instance: "&aSuccessfully removed game instance."
-  No-Arena-Like-That: "&cThere is no arena with that ID!"
-  Only-By-Player: "&cYou can execute this command only as player!"
-  No-Permission: "&cYou don't have enough permission to use this command!"
-  Success-Reload: "&aSystem successfully reloaded all configurations and arenas!"
-  Player-Not-Found: "&cPlayer not found with that name!"
-  Not-Playing: "&cTarget player is not playing at the moment!"
-  Kicked-Player: "&aPlayer has kicked successfully from the game."
-  Statistics:
-    Type-Name: "&cPlease type statistic name to view!"
-    Invalid-Name: "&cName of statistic is invalid! Type: score or tours_played"
-    Header: "&8&m-------------------[&6 Top 10 &8&m]-------------------"
-    Format: "&e#%position% %name% - %value% &7%statistic%"
-  Stats-Command:
-    Header: "&l[-----YOUR STATS-----]"  
-    Header-Other: "&l[-----STATS FOR %player%-----]"
-    Messages:
-      - "%header%"
-      - "&8 * &fScore &a%score%"
-      - "&8 * &fTours Played &a%tours_played%"
-      - "&8 * &fKills &a%kills%"
-      - "&8 * &fDeaths &a%deaths%"
-      - "&l[--------------------]"
-  List-Command:
-    No-Arenas-Created: "&cThere aren't any arena to show!"
-    Format: "&aExisting arenas: &7%list%"
-
-In-Game:
-  Plugin-Prefix: "&8[&6KOTL&8] "
-  Join: "&7%player%&b joined the game!"
-  Leave: "&7%player%&b left the game!"
-  Chat-Format: "&7%player%: &f%message%"
-  Only-Command-Is-Leave: "&cYou have to leave the game first to perform commands."
-  New-King: "&7%king% &bis the new king!"
-  Clicked-Death-Block: "&7%player%&b clicked a death block and died!"
-  Killed-Player: "&7%victim% &bwas slain by &e%player%&b!"
-  # The message sent when a player gets killed by an external cause like the '/kill' command.
-  Kill-Command: "&7%victim% &bis killed by a magic!"
-  Cooldown-Format: "&6COOLDOWN &8&l[%progress%&8&l] &6%time%s"
-
-setup:
-  area-selector-received: "<#00E676>✔ <#BDBDBD>Area selector received. <#43A047>LEFT <#BDBDBD>click first corner, <#29B6F6>RIGHT <#BDBDBD>click second corner."
-  area-first-position-set: "<#00E676>✔ <#BDBDBD>First position set at <#FFD54F>%first_xyz%<#BDBDBD>. <#29B6F6>Right-click <#BDBDBD>to select the second position."
-  area-first-position-required: "<#FF5252>✖ <#BDBDBD>You must set the first position using <#43A047>left-click<#BDBDBD>."
-  area-selection-complete: "<#00E676>✔ <#BDBDBD>Arena area saved. <#90CAF9>First: <#FFD54F>%first_xyz% <#90CAF9>Second: <#FFD54F>%second_xyz% <#90CAF9>Blocks: <#FFD54F>%blocks%"
-  area-outline-enabled: "<#00E676>✔ <#BDBDBD>Arena outline visualizer enabled."
-  area-outline-disabled: "<#FF5252>✖ <#BDBDBD>Arena outline visualizer disabled."
-  king-plate-tool-received: "<#FFD700>✔ <#BDBDBD>King plate tool received. Place it wherever the king trigger should be."
-  king-plate-set: "<#FFD700>✔ <#BDBDBD>King plate location has been set successfully."
-  king-plate-material-selected: "<#00E676>✔ <#BDBDBD>King plate material changed to <#FFD54F>%material%<#BDBDBD>."
-
-# Has usage only when boss bar is enabled in config
-# Not compatible with the versions before Minecraft 1.9
-# Leave any section empty to hide bar until next message.
-Boss-Bar:
-  Color: "BLUE"
-  Style: "SOLID"
-  Interval: "300" # 20 ticks = 1 second
-  Messages:
-    - "&e&lPLAYING &f&lKING OF THE LADDER &e&lby &b&lDESPICAL"
-    - "&e&lTHANK YOU FOR &b&lSUPPORTING &e&lUS!"
-    - "&e&lYOU LIKE THE PLUGIN? RATE US ON SPIGOT!"
-
-# Do not change this value manually.
-Language: default
-
+# Game Messages
 game:
-  joined-parkour: "<#29B6F6>✦ <#BDBDBD>You joined the parkour. <#E0E0E0>Step on the <#FFCA28>Start Block <#E0E0E0>to begin."
-  joined-parkour-direct: "<#29B6F6>✦ <#BDBDBD>You joined the parkour. <#E0E0E0>Your run has started. <#00E676>Good luck!"
-  parkour-started: "<#00E676><bold>GO!</bold> <#BDBDBD>The timer has started. <#E0E0E0>Good luck!"
-  already-in-game: "<#FF5252>⚠ <#BDBDBD>You are already in an arena! Use the <#FFCA28>Bed Item <#BDBDBD>to leave first."
-  not-started: "<#FF5252>✖ <#BDBDBD>You must step on the <#FFCA28>Start Block <#BDBDBD>to begin the run."
-  checkpoint-reached:
-    - "<#00E676>✔ <#BDBDBD>Reached <#29B6F6><bold>Checkpoint #%index%</bold>"
-    - "<gray>   <#E0E0E0>Time: <#FFCA28>%time%   <#E0E0E0>Split: <bold>%diff%"
-  checkpoint-split: "<gray>   Split: <#E0E0E0>%split% <gray>(PB: <#E0E0E0>%pb%<gray>)"
-  checkpoint-missed: "<#FF5252>⚠ <#BDBDBD>You missed a checkpoint! Go back to <#FFCA28>#%index%<#BDBDBD>."
-  timer-reset: "<#FFCA28>↺ <#BDBDBD>Time reset! <#E0E0E0>Starting over..."
-  teleported-checkpoint: "<#29B6F6>✈ <#BDBDBD>Teleported to the last checkpoint."
-  left-game: "<#FFCA28>⬅ <#BDBDBD>Parkour challenge cancelled."
+  player-joined: "<#00E676>+ <#FFD54F>%player% <#BDBDBD>joined the arena."
+  player-left: "<#FF5252>- <#FFD54F>%player% <#BDBDBD>left the arena."
+  new-king: "<#FFD700>♛ <#FFD54F>%king% <#BDBDBD>is the new king!"
+  king-retained: "<#FFCA28>♛ <#FFD54F>%king% <#BDBDBD>kept the crown!"
   chat-disabled-in-game: "<#FF5252>✖ <#BDBDBD>You cannot send chat messages while in a game!"
+  command-disabled-in-game: "<#FF5252>✖ <#BDBDBD>You cannot use that command while playing."
+  cooldown-format: "<gradient:#FFD700:#FF8F00><bold>♛ KING COOLDOWN</bold></gradient> <dark_gray>• <reset>%progress% <dark_gray>• <#FFF8E1><bold>%time%s</bold>"
 
-# Help Messages
-help-message:
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-  - "<#29B6F6>✦ <#E0E0E0>Advanced Parkour <white>Player Commands <#29B6F6>✦"
-  - ""
-  - "<!i><#29B6F6>• <#FFCA28>/%label% help <gray>» <#BDBDBD>Show the available player commands."
-  - "<!i><#29B6F6>• <#FFCA28>/%label% join <white><arena> <gray>» <#BDBDBD>Join an arena and start from the start plate."
-  - "<!i><#29B6F6>• <#FFCA28>/%label% start <white><arena> <gray>» <#BDBDBD>Join an arena and wait on the start block."
-  - "<!i><#29B6F6>• <#FFCA28>/%label% leave <gray>» <#BDBDBD>Leave your current parkour run."
-  - "<!i><#29B6F6>• <#FFCA28>/%label% stats <white>[player] <gray>» <#BDBDBD>Open your stats or inspect another player's stats."
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+chat-format: "<gray>%sender%<dark_gray>: <white>%message%"
+not-playing: "<#FF1744>✖ <#BDBDBD>You are not playing <#FFD54F><bold>King of the Ladder</bold> <#BDBDBD>right now."
+none: "<#FF5252>None"
 
-admin-help-message:
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-  - "<#00E676>✦ <#E0E0E0>Advanced Parkour <white>Admin Commands <#00E676>✦"
-  - ""
-  - "<!i><#00E676>• <#81C784>/%label% reload <gray>» <#BDBDBD>Reload plugin configuration files."
-  - "<!i><#00E676>• <#81C784>/%label% stop <white>[arena] <gray>» <#BDBDBD>Stop your current game or a specific arena game."
-  - "<!i><#00E676>• <#81C784>/%label% kick <white><player> <gray>» <#BDBDBD>Kick a player out of their active parkour arena."
-  - "<!i><#00E676>• <#81C784>/%label% create <white><arena id> <gray>» <#BDBDBD>Create a new arena."
-  - "<!i><#00E676>• <#81C784>/%label% delete <white><arena id> <gray>» <#BDBDBD>Delete an arena, with confirm or cancel flags."
-  - "<!i><#00E676>• <#81C784>/%label% edit <white><arena id> <gray>» <#BDBDBD>Open the setup menu for an arena."
-  - "<!i><#00E676>• <#81C784>/%label% list <gray>» <#BDBDBD>List all arenas and their readiness state."
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-
-debug-help-message:
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-  - "<#FFCA28>✦ <#E0E0E0>Advanced Parkour <white>Debug Commands <#FFCA28>✦"
-  - ""
-  - "<!i><#FFCA28>• <#FFD54F>/%label% debug join <white><arena> <gray>» <#BDBDBD>Force-join an arena for debugging."
-  - "<!i><#FFCA28>• <#FFD54F>/%label% debug component <white><message> <gray>» <#BDBDBD>Parse and preview MiniMessage components."
-  - "<!i><#FFCA28>• <#FFD54F>/%label% debug dump <gray>» <#BDBDBD>Send the current timings report to the sender."
-  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
-
-# Hologram Messages
-holograms:
-  start-point:
-    - "<gradient:#00E676:#2979FF><bold>Parkour Challenge</bold></gradient>"
-    - "<#FFCA28>♔ Leader: <#BDBDBD>%record_holder%"
-    - "<#FFCA28>⏱ Best: <#BDBDBD>%record_time%"
-    - "<#00E676><b>START</b>"
-  checkpoint:
-    - "<#29B6F6><bold>Checkpoint</bold>"
-    - "<#BDBDBD>#%index%"
-  end-point:
-    - "<#E040FB><bold>Checkpoint</bold>"
-    - "<#F50540><b>END</b>"
-
-
-correct-usage: "<red>Correct usage: %usage%"
-
-# Command & System Messages
-stop-command:
-  correct-usage: "<#FF1744>✖ <#BDBDBD>Correct usage: <#FF5252>/%label% stop <arena>"
-  not-playing: "<#FF1744>✖ <#BDBDBD>The game is <#FF5252>not running <#BDBDBD>at the moment."
-  stopped: "<#00E676>✔ <#BDBDBD>The game has been <gradient:#FF1744:#D50000>forcibly stopped.</gradient>"
-
-kick-command:
-  not-playing: "<#FF1744>✖ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>is <#FF5252>not playing<#BDBDBD>."
-  kicked: "<#00E676>✔ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>has been kicked from <#00B0FF>%arena%<#BDBDBD>."
-
-reloaded-configuration: "<#00E676>✔ <#BDBDBD>Configuration files have been <#00E676>successfully reloaded<#BDBDBD>."
-
+# System Messages
 server-reload-detected:
-  - " "
+  - ""
   - "<#FF5252><bold>Game cancelled due to reload. Stats were not affected."
-  - " "
+  - ""
+
 server-shutdown-detected:
-  - " "
+  - ""
   - "<#FF5252><bold>Game cancelled due to shutdown. Stats were not affected."
-  - " "
+  - ""
+
 game-stopped-by-command:
-  - " "
+  - ""
   - "<#FF5252><bold>Game cancelled by an administrator. Stats were not affected."
-  - " "
+  - ""
 
 game-stopped-due-to-arena-deletion:
   - ""
   - "<#FF5252><bold>The arena you were playing in was deleted by an admin. Stats were not affected."
   - ""
 
-unrecognized-arguments: "<#FF1744>✖ <#BDBDBD>Unrecognized argument: <#FF5252>/%label% %arguments%"
-no-player-with-that-name: "<#FF1744>✖ <#BDBDBD>No player found with <#FF5252>that name<#BDBDBD>."
-game-instance-not-present: "<#D50000>✖ <#BDBDBD>The game instance could <#FF5252>not be found<#BDBDBD>."
-arena-not-available: "<#D50000>✖ <#BDBDBD>This arena instance is <#FF5252>not ready yet<#BDBDBD>."
+game-stopped-due-to-arena-disable:
+  - ""
+  - "<#FFCA28><bold>The arena was disabled for maintenance. Stats were not affected."
+  - ""
+
+# Arena Messages
+setup:
+  area-selector-received: "<#00E676>✔ <#BDBDBD>Area selector received. <#43A047>LEFT <#BDBDBD>click first corner, <#29B6F6>RIGHT <#BDBDBD>click second corner."
+  area-first-position-set: "<#00E676>✔ <#BDBDBD>First position set at [<#FFD54F>%first_xyz%<#BDBDBD>]. <#29B6F6>Right-click <#BDBDBD>to select the second position."
+  area-first-position-required: "<#FF5252>✖ <#BDBDBD>You must set the first position using <#43A047>left-click<#BDBDBD>."
+  area-selection-complete: "<#00E676>✔ <#BDBDBD>Game Area saved. <#90CAF9>First: <#BDBDBD>[<#FFD54F>%first_xyz%<#BDBDBD>] <#90CAF9>Second: <#BDBDBD>[<#FFD54F>%second_xyz%<#BDBDBD>] <#90CAF9>Blocks: <#FFD54F>%blocks%"
+  area-outline-enabled: "<#00E676>✔ <#BDBDBD>Game Area outline visualizer enabled."
+  area-outline-disabled: "<#FF5252>✖ <#BDBDBD>Game Area outline visualizer disabled."
+  king-plate-tool-received: "<#FFD700>✔ <#BDBDBD>King plate tool received. Place it wherever the king trigger should be."
+  king-plate-set: "<#FFD700>✔ <#BDBDBD>King plate location has been set successfully."
+  king-plate-outside-game-area: "<#FFCA28>⚠ <#BDBDBD>The King Plate is outside the Game Area. Move the plate or select the Game Area again."
+  king-plate-material-selected: "<#00E676>✔ <#BDBDBD>King plate material changed to <#FFD54F>%material%<#BDBDBD>."
+  arena-record-reset: "<#00E676>✔ <#BDBDBD>King records for <#29B6F6><bold>%arena_id%</bold> <#BDBDBD>have been reset."
+  arena-enabled: "<#00E676>✔ <#BDBDBD>Arena <#29B6F6><bold>%arena_id%</bold> <#BDBDBD>is now enabled and detecting players."
+  arena-disabled: "<#FFCA28>⚠ <#BDBDBD>Arena <#29B6F6><bold>%arena_id%</bold> <#BDBDBD>is now disabled and can be edited safely."
 
 created-arena:
   - "<#37474F><st>                                                                                 </st>"
@@ -250,19 +146,53 @@ created-arenas:
   - "<dark_gray>➥ <white>%arenas%"
   - ""
 
-can-not-unregister-now: "<#FFCA28>⚠ <#BDBDBD>Cannot unregister this arena while <#FFD54F>players are inside<#BDBDBD>."
 no-arena-found-with-that-name: "<#FF1744>✖ <#BDBDBD>No arena found with <#FF5252>that ID<#BDBDBD>."
-arena-not-ready-yet: "<#FFCA28>⚠ <#BDBDBD>This arena is <gradient:#FFA000:#FFCA28><bold>NOT READY</bold></gradient> <#BDBDBD>to be played yet."
 no-arenas-registered: "<#FFCA28>⚠ <#BDBDBD>There are <#FFD54F>no arenas <#BDBDBD>registered yet!"
-registered-arenas: "<#00E676>ℹ <#BDBDBD>Registered Arenas: <#00E676>%arenas%"
-already-playing: "<#FF1744>✖ <#BDBDBD>You are <#FF5252>already playing <#BDBDBD>Advanced Parkour!"
-not-playing: "<#FF1744>✖ <#BDBDBD>You are not playing <#D50000><bold>Advanced Parkour</bold> <#BDBDBD>right now."
-only-for-players: "<#FF1744>✖ <#BDBDBD>Only <#FF5252>players <#BDBDBD>can perform this command."
-player-not-found: "<#FF1744>✖ <#BDBDBD>That player was <#FF5252>not found<#BDBDBD>."
-cannot-join-now: "<#FF1744>✖ <#BDBDBD>You <#FF5252>cannot join <#BDBDBD>the game right now."
-chat-format: "<gray>%sender%<dark_gray>: <white>%message%"
-none: "<#FF5252>None"
 
+# Command Messages
+help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#FFD54F>♛ <#E0E0E0>King of the Ladder <white>Player Commands <#FFD54F>♛"
+  - ""
+  - "<!i><#29B6F6>• <#FFCA28>/%label% help <gray>» <#BDBDBD>Show the available player commands."
+  - "<!i><#29B6F6>• <#FFCA28>/%label% stats <white>[player] <gray>» <#BDBDBD>Open your stats or inspect another player's stats."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+admin-help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#00E676>♛ <#E0E0E0>King of the Ladder <white>Admin Commands <#00E676>♛"
+  - ""
+  - "<!i><#00E676>• <#81C784>/%label% reload <gray>» <#BDBDBD>Reload plugin configuration files."
+  - "<!i><#00E676>• <#81C784>/%label% stop <white>[arena] <gray>» <#BDBDBD>Stop your current game or a specific arena game."
+  - "<!i><#00E676>• <#81C784>/%label% kick <white><player> <gray>» <#BDBDBD>Kick a player out of their active arena."
+  - "<!i><#00E676>• <#81C784>/%label% create <white><arena id> <gray>» <#BDBDBD>Create a new arena."
+  - "<!i><#00E676>• <#81C784>/%label% delete <white><arena id> <gray>» <#BDBDBD>Delete an arena, with confirm or cancel flags."
+  - "<!i><#00E676>• <#81C784>/%label% edit <white><arena id> <gray>» <#BDBDBD>Open the setup menu for an arena."
+  - "<!i><#00E676>• <#81C784>/%label% list <gray>» <#BDBDBD>List all arenas and their readiness state."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+debug-help-message:
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+  - "<#FFCA28>♛ <#E0E0E0>King of the Ladder <white>Debug Commands <#FFCA28>♛"
+  - ""
+  - "<!i><#FFCA28>• <#FFD54F>/%label% debug component <white><message> <gray>» <#BDBDBD>Parse and preview MiniMessage components."
+  - "<!i><#FFCA28>• <#FFD54F>/%label% debug dump <gray>» <#BDBDBD>Send the current timings report to the sender."
+  - "<#424242>▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+
+correct-usage: "<red>Correct usage: %usage%"
+unrecognized-arguments: "<#FF1744>✖ <#BDBDBD>Unrecognized argument: <#FF5252>/%label% %arguments%"
+no-player-with-that-name: "<#FF1744>✖ <#BDBDBD>No player found with <#FF5252>that name<#BDBDBD>."
+reloaded-configuration: "<#00E676>✔ <#BDBDBD>Configuration files have been <#00E676>successfully reloaded<#BDBDBD>."
+
+stop-command:
+  correct-usage: "<#FF1744>✖ <#BDBDBD>Correct usage: <#FF5252>/%label% stop <arena>"
+  not-playing: "<#FF1744>✖ <#BDBDBD>The game is <#FF5252>not running <#BDBDBD>at the moment."
+  stopped: "<#00E676>✔ <#BDBDBD>The game has been <gradient:#FF1744:#D50000>forcibly stopped.</gradient>"
+
+kick-command:
+  not-playing: "<#FF1744>✖ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>is <#FF5252>not playing<#BDBDBD>."
+  kicked: "<#00E676>✔ <#BDBDBD>Player <#FF5252>%player% <#BDBDBD>has been kicked from <#00B0FF>%arena%<#BDBDBD>."
+
+# Statistics Menu Messages
 stats-menu:
-  no-arenas: "<#FF5252>✖ <gray>There are no parkour arenas available to show statistics for."
-  no-checkpoints: "<#FF5252>✖ <gray>This arena doesn't have any checkpoints recorded!"
+  no-arenas: "<#FF5252>✖ <gray>There are no King of the Ladder arenas available to show statistics for."
