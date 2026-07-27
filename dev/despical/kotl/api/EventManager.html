@@ -66,9 +66,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#callByType(dev.despical.kotl.api.EventType,java.util.function.Supplier)" tabindex="0">callByType(EventType, Supplier)</a></li>
 <li><a href="#sendTimingsReport(org.bukkit.command.CommandSender)" tabindex="0">sendTimingsReport(CommandSender)</a></li>
 <li><a href="#reload()" tabindex="0">reload()</a></li>
+<li><a href="#gameStop(dev.despical.kotl.game.Game,dev.despical.kotl.game.StopReason,java.util.List)" tabindex="0">gameStop(Game, StopReason, List)</a></li>
 <li><a href="#playerEnterArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" tabindex="0">playerEnterArena(Player, Game)</a></li>
 <li><a href="#playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" tabindex="0">playerLeaveArena(Player, Game)</a></li>
+<li><a href="#playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)" tabindex="0">playerLeaveArena(Player, Game, PlayerLeaveArenaEvent.LeaveReason)</a></li>
 <li><a href="#playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" tabindex="0">playerBecomeKing(Player, Game)</a></li>
+<li><a href="#playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game,java.lang.String)" tabindex="0">playerBecomeKing(Player, Game, String)</a></li>
 <li><a href="#statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)" tabindex="0">statChange(Player, StatisticType, T, T)</a></li>
 </ol>
 </li>
@@ -85,8 +88,15 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">EventManager</span>
+<div class="type-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public final class </span><span class="element-name type-name-label">EventManager</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Central dispatcher for KOTL custom events.
+<p>
+The manager invokes Bukkit listeners synchronously, records optional timing
+information, and validates named event factories against <a href="EventType.html" title="enum class in dev.despical.kotl.api"><code>EventType</code></a>.
+External plugins should listen to the concrete event classes rather than
+manually invoking the lifecycle factory methods in this class.</div>
 </div>
 </section>
 <section class="summary">
@@ -99,8 +109,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.despical.kotl.KOTL)" class="member-name-link">EventManager</a><wbr>(<a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.despical.kotl.KOTL)" class="member-name-link">EventManager</a><wbr>(@NotNull <a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates the event dispatcher used by the plugin runtime.</div>
+</div>
 </div>
 </section>
 </li>
@@ -117,35 +129,72 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T extends org.bukkit.event.Event&gt;<br>T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#call(T)" class="member-name-link">call</a><wbr>(T&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a Bukkit event and records its listener execution time.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T extends org.bukkit.event.Event&gt;<br>T</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#callByType(dev.despical.kotl.api.EventType,java.util.function.Supplier)" class="member-name-link">callByType</a><wbr>(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerBecomeKing</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="events/player/PlayerEnterArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerEnterArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerEnterArena</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerLeaveArena</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#callByType(dev.despical.kotl.api.EventType,java.util.function.Supplier)" class="member-name-link">callByType</a><wbr>(@NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates and dispatches an event after validating its registered type.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTimingsReport(org.bukkit.command.CommandSender)" class="member-name-link">sendTimingsReport</a><wbr>(org.bukkit.command.CommandSender&nbsp;sender)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)" class="member-name-link">statChange</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;T&gt;&nbsp;stat,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#gameStop(dev.despical.kotl.game.Game,dev.despical.kotl.game.StopReason,java.util.List)" class="member-name-link">gameStop</a><wbr>(@NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ @NotNull <a href="../game/StopReason.html" title="enum class in dev.despical.kotl.game">StopReason</a>&nbsp;reason,
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;stoppedPlayers)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a completed game stop notification.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerBecomeKing</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a crown claim using the game's current king state.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game,java.lang.String)" class="member-name-link">playerBecomeKing</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;previousKing)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a crown claim with an explicit previous king snapshot.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="events/player/PlayerEnterArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerEnterArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerEnterArena</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a player arena entry attempt.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)" class="member-name-link">playerLeaveArena</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a normal arena area-exit notification.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)" class="member-name-link">playerLeaveArena</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ <a href="events/player/PlayerLeaveArenaEvent.LeaveReason.html" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a>&nbsp;reason)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches an arena departure with an explicit reason.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reloads event profiling options from the plugin configuration.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendTimingsReport(org.bukkit.command.CommandSender)" class="member-name-link">sendTimingsReport</a><wbr>(@NotNull org.bukkit.command.CommandSender&nbsp;sender)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sends the current event timing report to a command sender.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;@NotNull <a href="events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)" class="member-name-link">statChange</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;T&gt;&nbsp;stat,
  T&nbsp;oldValue,
  T&nbsp;newValue)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dispatches a mutable player statistic change.</div>
+</div>
 </div>
 </div>
 </div>
@@ -167,7 +216,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(dev.despical.kotl.KOTL)">
 <h3>EventManager</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventManager</span><wbr><span class="parameters">(<a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventManager</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</span></div>
+<div class="block">Creates the event dispatcher used by the plugin runtime.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>plugin</code> - the owning KOTL instance</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -183,7 +238,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="call(T)">
 <h3 id="call(org.bukkit.event.Event)">call</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">call</span><wbr><span class="parameters">(T&nbsp;event)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">call</span><wbr><span class="parameters">(@NotNull
+ T&nbsp;event)</span></div>
+<div class="block">Dispatches a Bukkit event and records its listener execution time.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><span id="call(T)-type-param-T"><code>T</code> - the concrete event type</span></dd>
+<dt>Parameters:</dt>
+<dd><code>event</code> - the event to dispatch</dd>
+<dt>Returns:</dt>
+<dd>the same event instance after listeners have run</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -191,8 +257,23 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="callByType(dev.despical.kotl.api.EventType,java.util.function.Supplier)">
 <h3>callByType</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">callByType</span><wbr><span class="parameters">(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">callByType</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
+ @NotNull
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;supplier)</span></div>
+<div class="block">Creates and dispatches an event after validating its registered type.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><span id="callByType(dev.despical.kotl.api.EventType,java.util.function.Supplier)-type-param-T"><code>T</code> - the concrete event type</span></dd>
+<dt>Parameters:</dt>
+<dd><code>type</code> - the expected event type</dd>
+<dd><code>supplier</code> - the factory that creates the event</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the factory returns the wrong event class</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -200,7 +281,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sendTimingsReport(org.bukkit.command.CommandSender)">
 <h3>sendTimingsReport</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTimingsReport</span><wbr><span class="parameters">(org.bukkit.command.CommandSender&nbsp;sender)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendTimingsReport</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.command.CommandSender&nbsp;sender)</span></div>
+<div class="block">Sends the current event timing report to a command sender.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sender</code> - the report recipient</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -209,6 +296,27 @@ loadScripts(document, 'script');</script>
 <h3>reload</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span>()</div>
+<div class="block">Reloads event profiling options from the plugin configuration.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="gameStop(dev.despical.kotl.game.Game,dev.despical.kotl.game.StopReason,java.util.List)">
+<h3>gameStop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gameStop</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ @NotNull
+ @NotNull <a href="../game/StopReason.html" title="enum class in dev.despical.kotl.game">StopReason</a>&nbsp;reason,
+ @NotNull
+ @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;stoppedPlayers)</span></div>
+<div class="block">Dispatches a completed game stop notification.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - the game that was stopped</dd>
+<dd><code>reason</code> - the reason for stopping the game</dd>
+<dd><code>stoppedPlayers</code> - the player UUID snapshot captured before cleanup</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -216,8 +324,19 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playerEnterArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)">
 <h3>playerEnterArena</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="events/player/PlayerEnterArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></span>&nbsp;<span class="element-name">playerEnterArena</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerEnterArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></span>&nbsp;<span class="element-name">playerEnterArena</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="block">Dispatches a player arena entry attempt.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player attempting to enter</dd>
+<dd><code>game</code> - the target game</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -225,8 +344,42 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game)">
 <h3>playerLeaveArena</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></span>&nbsp;<span class="element-name">playerLeaveArena</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></span>&nbsp;<span class="element-name">playerLeaveArena</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="block">Dispatches a normal arena area-exit notification.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player leaving the arena</dd>
+<dd><code>game</code> - the game being left</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerLeaveArena(org.bukkit.entity.Player,dev.despical.kotl.game.Game,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)">
+<h3>playerLeaveArena</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></span>&nbsp;<span class="element-name">playerLeaveArena</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ @NotNull
+ <a href="events/player/PlayerLeaveArenaEvent.LeaveReason.html" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a>&nbsp;reason)</span></div>
+<div class="block">Dispatches an arena departure with an explicit reason.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player leaving the arena</dd>
+<dd><code>game</code> - the game being left</dd>
+<dd><code>reason</code> - the reason for the removal</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -234,8 +387,42 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game)">
 <h3>playerBecomeKing</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></span>&nbsp;<span class="element-name">playerBecomeKing</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></span>&nbsp;<span class="element-name">playerBecomeKing</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game)</span></div>
+<div class="block">Dispatches a crown claim using the game's current king state.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player attempting to become king</dd>
+<dd><code>game</code> - the active game</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerBecomeKing(org.bukkit.entity.Player,dev.despical.kotl.game.Game,java.lang.String)">
+<h3>playerBecomeKing</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></span>&nbsp;<span class="element-name">playerBecomeKing</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../game/Game.html" title="class in dev.despical.kotl.game">Game</a>&nbsp;game,
+ @Nullable
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;previousKing)</span></div>
+<div class="block">Dispatches a crown claim with an explicit previous king snapshot.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player attempting to become king</dd>
+<dd><code>game</code> - the active game</dd>
+<dd><code>previousKing</code> - the previous king name, or <code>null</code> when absent</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -243,10 +430,25 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)">
 <h3 id="statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,java.lang.Object,java.lang.Object)">statChange</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent</a>&lt;T&gt;</span>&nbsp;<span class="element-name">statChange</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;T&gt;&nbsp;stat,
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@NotNull <a href="events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent</a>&lt;T&gt;</span>&nbsp;<span class="element-name">statChange</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;T&gt;&nbsp;stat,
  T&nbsp;oldValue,
  T&nbsp;newValue)</span></div>
+<div class="block">Dispatches a mutable player statistic change.</div>
+<dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><span id="statChange(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)-type-param-T"><code>T</code> - the statistic value type</span></dd>
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player whose statistic is changing</dd>
+<dd><code>stat</code> - the statistic key being updated</dd>
+<dd><code>oldValue</code> - the value stored before the update</dd>
+<dd><code>newValue</code> - the requested new value</dd>
+<dt>Returns:</dt>
+<dd>the event after listeners have run</dd>
+</dl>
 </div>
 </section>
 </li>

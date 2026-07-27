@@ -58,6 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#enum-constant-detail" tabindex="0">Enum Constant Details</a>
 <ol class="toc-list">
+<li><a href="#GAME_STOP" tabindex="0">GAME_STOP</a></li>
 <li><a href="#PLAYER_ENTER_ARENA" tabindex="0">PLAYER_ENTER_ARENA</a></li>
 <li><a href="#PLAYER_LEAVE_ARENA" tabindex="0">PLAYER_LEAVE_ARENA</a></li>
 <li><a href="#PLAYER_BECOME_KING" tabindex="0">PLAYER_BECOME_KING</a></li>
@@ -68,6 +69,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#values()" tabindex="0">values()</a></li>
 <li><a href="#valueOf(java.lang.String)" tabindex="0">valueOf(String)</a></li>
+<li><a href="#getEventClass()" tabindex="0">getEventClass()</a></li>
 </ol>
 </li>
 </ol>
@@ -91,6 +93,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public enum </span><span class="element-name type-name-label">EventType</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&gt;</span></div>
+<div class="block">Enumerates every custom Bukkit event dispatched through the KOTL event API.
+<p>
+The enum is used by <a href="EventManager.html" title="class in dev.despical.kotl.api"><code>EventManager</code></a> to validate event factories and by
+<a href="EventRegistry.html" title="class in dev.despical.kotl.api"><code>EventRegistry</code></a> for discovery. Bukkit listeners should still register
+against the concrete event classes.</div>
 </div>
 </section>
 <section class="summary">
@@ -112,14 +119,26 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="#PLAYER_BECOME_KING" class="member-name-link">PLAYER_BECOME_KING</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PLAYER_ENTER_ARENA" class="member-name-link">PLAYER_ENTER_ARENA</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PLAYER_LEAVE_ARENA" class="member-name-link">PLAYER_LEAVE_ARENA</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PLAYER_STAT_CHANGE" class="member-name-link">PLAYER_STAT_CHANGE</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#GAME_STOP" class="member-name-link">GAME_STOP</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Fired after a game is stopped and its players are cleaned up.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#PLAYER_BECOME_KING" class="member-name-link">PLAYER_BECOME_KING</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Fired before a player becomes king.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#PLAYER_ENTER_ARENA" class="member-name-link">PLAYER_ENTER_ARENA</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Fired before a player enters an arena.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#PLAYER_LEAVE_ARENA" class="member-name-link">PLAYER_LEAVE_ARENA</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Fired before a player leaves an arena.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#PLAYER_STAT_CHANGE" class="member-name-link">PLAYER_STAT_CHANGE</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Fired before a player statistic is stored.</div>
+</div>
 </div>
 </section>
 </li>
@@ -128,20 +147,25 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a><wbr>&lt;? extends org.bukkit.event.Event&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventClass()" class="member-name-link">getEventClass</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the concrete Bukkit event class represented by this type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#values()" class="member-name-link">values</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
 </div>
@@ -166,10 +190,20 @@ the order they are declared.</div>
 <h2>Enum Constant Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="GAME_STOP">
+<h3>GAME_STOP</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></span>&nbsp;<span class="element-name">GAME_STOP</span></div>
+<div class="block">Fired after a game is stopped and its players are cleaned up.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="PLAYER_ENTER_ARENA">
 <h3>PLAYER_ENTER_ARENA</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></span>&nbsp;<span class="element-name">PLAYER_ENTER_ARENA</span></div>
+<div class="block">Fired before a player enters an arena.</div>
 </div>
 </section>
 </li>
@@ -178,6 +212,7 @@ the order they are declared.</div>
 <h3>PLAYER_LEAVE_ARENA</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></span>&nbsp;<span class="element-name">PLAYER_LEAVE_ARENA</span></div>
+<div class="block">Fired before a player leaves an arena.</div>
 </div>
 </section>
 </li>
@@ -186,6 +221,7 @@ the order they are declared.</div>
 <h3>PLAYER_BECOME_KING</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></span>&nbsp;<span class="element-name">PLAYER_BECOME_KING</span></div>
+<div class="block">Fired before a player becomes king.</div>
 </div>
 </section>
 </li>
@@ -194,6 +230,7 @@ the order they are declared.</div>
 <h3>PLAYER_STAT_CHANGE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></span>&nbsp;<span class="element-name">PLAYER_STAT_CHANGE</span></div>
+<div class="block">Fired before a player statistic is stored.</div>
 </div>
 </section>
 </li>
@@ -236,6 +273,20 @@ not permitted.)</div>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if this enum class has no constant with the specified name</dd>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if the argument is null</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEventClass()">
+<h3>getEventClass</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="element-name">getEventClass</span>()</div>
+<div class="block">Returns the concrete Bukkit event class represented by this type.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the registered event class</dd>
 </dl>
 </div>
 </section>

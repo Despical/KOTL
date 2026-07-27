@@ -76,6 +76,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">EventRegistry</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Provides read-only discovery and type checks for KOTL custom events.
+<p>
+The registry is backed by <a href="EventType.html" title="enum class in dev.despical.kotl.api"><code>EventType</code></a>; no runtime registration is
+required. It is primarily useful for diagnostics, integrations, and generic
+event tooling.</div>
 </div>
 </section>
 <section class="summary">
@@ -91,16 +96,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a><wbr>&lt;? extends org.bukkit.event.Event&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEventClass(dev.despical.kotl.api.EventType)" class="member-name-link">getEventClass</a><wbr>(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a><wbr>&lt;? extends org.bukkit.event.Event&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEventClass(dev.despical.kotl.api.EventType)" class="member-name-link">getEventClass</a><wbr>(@NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Resolves the concrete Bukkit event class for an event type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRegisteredTypes()" class="member-name-link">getRegisteredTypes</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns every event type known to this plugin version.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matches(dev.despical.kotl.api.EventType,org.bukkit.event.Event)" class="member-name-link">matches</a><wbr>(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
- org.bukkit.event.Event&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matches(dev.despical.kotl.api.EventType,org.bukkit.event.Event)" class="member-name-link">matches</a><wbr>(@NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
+ @NotNull org.bukkit.event.Event&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Tests whether an event instance matches a registered event type.</div>
+</div>
 </div>
 </div>
 </div>
@@ -122,7 +133,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getEventClass(dev.despical.kotl.api.EventType)">
 <h3>getEventClass</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="element-name">getEventClass</span><wbr><span class="parameters">(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type)</span></div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends org.bukkit.event.Event&gt;</span>&nbsp;<span class="element-name">getEventClass</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type)</span></div>
+<div class="block">Resolves the concrete Bukkit event class for an event type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - the event type to resolve</dd>
+<dt>Returns:</dt>
+<dd>the concrete event class</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -130,8 +150,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="matches(dev.despical.kotl.api.EventType,org.bukkit.event.Event)">
 <h3>matches</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">matches</span><wbr><span class="parameters">(<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
- org.bukkit.event.Event&nbsp;event)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">matches</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&nbsp;type,
+ @NotNull
+ @NotNull org.bukkit.event.Event&nbsp;event)</span></div>
+<div class="block">Tests whether an event instance matches a registered event type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - the expected event type</dd>
+<dd><code>event</code> - the event instance to inspect</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> when the event is an instance of the registered class</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -139,7 +169,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getRegisteredTypes()">
 <h3>getRegisteredTypes</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&gt;</span>&nbsp;<span class="element-name">getRegisteredTypes</span>()</div>
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="EventType.html" title="enum class in dev.despical.kotl.api">EventType</a>&gt;</span>&nbsp;<span class="element-name">getRegisteredTypes</span>()</div>
+<div class="block">Returns every event type known to this plugin version.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>an unmodifiable set in enum declaration order</dd>
+</dl>
 </div>
 </section>
 </li>

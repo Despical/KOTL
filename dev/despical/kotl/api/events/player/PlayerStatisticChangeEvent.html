@@ -52,14 +52,7 @@ loadScripts(document, 'script');</script>
 <nav role="navigation" class="toc" aria-label="Table of contents">
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
-<li><a href="#" tabindex="0">Description</a>
-<ol class="toc-list">
-<li><a href="#example-apply-a-2x-booster-heading" tabindex="0">Example: Apply a 2x booster</a></li>
-<li><a href="#example-cap-a-statistic-value-heading" tabindex="0">Example: Cap a statistic value</a></li>
-<li><a href="#example-block-suspicious-stat-increases-heading" tabindex="0">Example: Block suspicious stat increases</a></li>
-<li><a href="#example-reduce-stat-gain-in-specific-conditions-heading" tabindex="0">Example: Reduce stat gain in specific conditions</a></li>
-</ol>
-</li>
+<li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
@@ -70,6 +63,14 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getNewValue()" tabindex="0">getNewValue()</a></li>
+<li><a href="#setNewValue(T)" tabindex="0">setNewValue(T)</a></li>
+<li><a href="#isCancelled()" tabindex="0">isCancelled()</a></li>
+<li><a href="#setCancelled(boolean)" tabindex="0">setCancelled(boolean)</a></li>
+<li><a href="#getStat()" tabindex="0">getStat()</a></li>
+<li><a href="#getOldValue()" tabindex="0">getOldValue()</a></li>
+<li><a href="#getHandlers()" tabindex="0">getHandlers()</a></li>
+<li><a href="#getHandlerList()" tabindex="0">getHandlerList()</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 </ol>
 </li>
@@ -78,7 +79,7 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<h1 title="Class PlayerStatisticChangeEvent" class="title">Class PlayerStatisticChangeEvent&lt;<span id="type-param-T">T</span>&gt;</h1>
+<h1 title="Class PlayerStatisticChangeEvent" class="title">Class PlayerStatisticChangeEvent&lt;T&gt;</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">org.bukkit.event.Event
@@ -91,6 +92,10 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>Type Parameters:</dt>
+<dd><span id="type-param-T"><code>T</code> - the value type used by the statistic</span></dd>
+</dl>
+<dl class="notes">
 <dt>All Implemented Interfaces:</dt>
 <dd><code>org.bukkit.event.Cancellable</code></dd>
 </dl>
@@ -99,65 +104,19 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PlayerStatisticChangeEvent&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="PlayerEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a>
 implements org.bukkit.event.Cancellable</span></div>
-<div class="block">Called when a player's statistic is about to change.
-
-<p>This event is fired before the new value is applied, allowing listeners to:</p>
-
+<div class="block">Called before a player's statistic value is stored.
+<p>
+The event exposes the statistic key, the previous value, and a mutable new
+value. Listeners may cancel the update or replace the new value before it is
+written to the player's statistic map.
+<p>
+Common use cases:
 <ul>
-  <li>Cancel the statistic change</li>
-  <li>Modify the final value (boosters, perks, multipliers, caps)</li>
-  <li>Detect suspicious or invalid stat changes (anti-cheat)</li>
-</ul>
-
-<p>The <code>newValue</code> is mutable, meaning listeners can override the final value
-using <code>setNewValue(...)</code>.</p>
-
-<p>If the event is canceled, the statistic update will NOT be applied.</p>
-
-<h2 id="example-apply-a-2x-booster-heading">Example: Apply a 2x booster</h2>
-<pre><code>@EventHandler
-public void onStatChange(PlayerStatisticChangeEvent event) {
-    if (event.getStat() == Statistics.GAMES_PLAYED) {
-        event.setNewValue(event.getNewValue() * 2);
-    }
-}
-</code></pre>
-
-<h2 id="example-cap-a-statistic-value-heading">Example: Cap a statistic value</h2>
-<pre><code>@EventHandler
-public void onStatChange(PlayerStatisticChangeEvent event) {
-    int cap = 1000;
-
-    if (event.getNewValue() &gt; cap) {
-        event.setNewValue(cap);
-    }
-}
-</code></pre>
-
-<h2 id="example-block-suspicious-stat-increases-heading">Example: Block suspicious stat increases</h2>
-<pre><code>@EventHandler
-public void onStatChange(PlayerStatisticChangeEvent event) {
-    int diff = event.getNewValue() - event.getOldValue();
-
-    if (diff &gt; 50) {
-        event.setCancelled(true);
-    }
-}
-</code></pre>
-
-<h2 id="example-reduce-stat-gain-in-specific-conditions-heading">Example: Reduce stat gain in specific conditions</h2>
-<pre><code>@EventHandler
-public void onStatChange(PlayerStatisticChangeEvent event) {
-    Player player = event.getPlayer();
-
-    if (player.hasPermission("stats.half")) {
-        int reduced = event.getOldValue()
-            + ((event.getNewValue() - event.getOldValue()) / 2);
-
-        event.setNewValue(reduced);
-    }
-}
-</code></pre></div>
+  <li>Applying boosters or multipliers</li>
+  <li>Clamping values to a maximum or minimum</li>
+  <li>Rejecting invalid statistic changes</li>
+  <li>Mirroring statistic updates to an external service</li>
+</ul></div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>20.06.2020</dd>
@@ -183,11 +142,13 @@ public void onStatChange(PlayerStatisticChangeEvent event) {
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)" class="member-name-link">PlayerStatisticChangeEvent</a><wbr>(org.bukkit.entity.Player&nbsp;player,
- <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;&nbsp;stat,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)" class="member-name-link">PlayerStatisticChangeEvent</a><wbr>(@NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;&nbsp;stat,
  <a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;oldValue,
  <a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;newValue)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructs a new player statistic change event.</div>
+</div>
 </div>
 </section>
 </li>
@@ -196,33 +157,69 @@ public void onStatChange(PlayerStatisticChangeEvent event) {
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NotNull org.bukkit.event.HandlerList</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getHandlerList()" class="member-name-link">getHandlerList</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the static Bukkit handler list for this event type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull org.bukkit.event.HandlerList</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHandlers()" class="member-name-link">getHandlers</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the Bukkit handler list for this event type.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNewValue()" class="member-name-link">getNewValue</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value that will be stored if the event completes.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOldValue()" class="member-name-link">getOldValue</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value stored before this update.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@NotNull <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a><wbr>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStat()" class="member-name-link">getStat</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the statistic key being updated.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCancelled()" class="member-name-link">isCancelled</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns whether the statistic update has been cancelled.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCancelled(boolean)" class="member-name-link">setCancelled</a><wbr>(boolean&nbsp;cancelled)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets whether the statistic update should be cancelled.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNewValue(T)" class="member-name-link">setNewValue</a><wbr>(<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;newValue)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Replaces the value that will be stored.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a compact debug representation of the statistic transition.</div>
+</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-dev.despical.kotl.api.events.player.PlayerEvent">Methods inherited from class&nbsp;<a href="PlayerEvent.html#method-summary" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a></h3>
-<code><a href="PlayerEvent.html#getUser()" title="getUser()">getUser</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.despical.kotl.api.events.KOTLEvent">Methods inherited from class&nbsp;<a href="../KOTLEvent.html#method-summary" title="class in dev.despical.kotl.api.events">KOTLEvent</a></h3>
-<code><a href="../KOTLEvent.html#getHandlerList()" title="getHandlerList()">getHandlerList</a>, <a href="../KOTLEvent.html#getHandlers()" title="getHandlers()">getHandlers</a></code></div>
+<code><a href="PlayerEvent.html#getPlayer()" title="getPlayer()">getPlayer</a>, <a href="PlayerEvent.html#getUser()" title="getUser()">getUser</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.bukkit.event.Event">Methods inherited from class&nbsp;org.bukkit.event.Event</h3>
 <code>callEvent, getEventName, isAsynchronous</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-org.bukkit.event.Cancellable">Methods inherited from interface&nbsp;org.bukkit.event.Cancellable</h3>
-<code>isCancelled, setCancelled</code></div>
 </section>
 </li>
 </ul>
@@ -238,10 +235,20 @@ public void onStatChange(PlayerStatisticChangeEvent event) {
 <section class="detail" id="&lt;init&gt;(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,T,T)">
 <h3 id="&lt;init&gt;(org.bukkit.entity.Player,dev.despical.kotl.stats.StatisticType,java.lang.Object,java.lang.Object)">PlayerStatisticChangeEvent</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerStatisticChangeEvent</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
- <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;&nbsp;stat,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerStatisticChangeEvent</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.entity.Player&nbsp;player,
+ @NotNull
+ @NotNull <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;&nbsp;stat,
  <a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;oldValue,
  <a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;newValue)</span></div>
+<div class="block">Constructs a new player statistic change event.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>player</code> - the player whose statistic is changing</dd>
+<dd><code>stat</code> - the statistic key being updated</dd>
+<dd><code>oldValue</code> - the value stored before the update</dd>
+<dd><code>newValue</code> - the value that will be stored unless modified or cancelled</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -254,13 +261,129 @@ public void onStatChange(PlayerStatisticChangeEvent event) {
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getNewValue()">
+<h3>getNewValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a></span>&nbsp;<span class="element-name">getNewValue</span>()</div>
+<div class="block">Returns the value that will be stored if the event completes.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the pending statistic value</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setNewValue(T)">
+<h3 id="setNewValue(java.lang.Object)">setNewValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNewValue</span><wbr><span class="parameters">(<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&nbsp;newValue)</span></div>
+<div class="block">Replaces the value that will be stored.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>newValue</code> - the replacement statistic value</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isCancelled()">
+<h3>isCancelled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCancelled</span>()</div>
+<div class="block">Returns whether the statistic update has been cancelled.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>isCancelled</code>&nbsp;in interface&nbsp;<code>org.bukkit.event.Cancellable</code></dd>
+<dt>Returns:</dt>
+<dd><code>true</code> when the old value must remain unchanged</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setCancelled(boolean)">
+<h3>setCancelled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCancelled</span><wbr><span class="parameters">(boolean&nbsp;cancelled)</span></div>
+<div class="block">Sets whether the statistic update should be cancelled.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>setCancelled</code>&nbsp;in interface&nbsp;<code>org.bukkit.event.Cancellable</code></dd>
+<dt>Parameters:</dt>
+<dd><code>cancelled</code> - <code>true</code> to reject the update</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStat()">
+<h3>getStat</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull <a href="../../../stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType</a>&lt;<a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a>&gt;</span>&nbsp;<span class="element-name">getStat</span>()</div>
+<div class="block">Returns the statistic key being updated.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the statistic key</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getOldValue()">
+<h3>getOldValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in PlayerStatisticChangeEvent">T</a></span>&nbsp;<span class="element-name">getOldValue</span>()</div>
+<div class="block">Returns the value stored before this update.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the previous statistic value</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getHandlers()">
+<h3>getHandlers</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@NotNull org.bukkit.event.HandlerList</span>&nbsp;<span class="element-name">getHandlers</span>()</div>
+<div class="block">Returns the Bukkit handler list for this event type.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code>getHandlers</code>&nbsp;in class&nbsp;<code>org.bukkit.event.Event</code></dd>
+<dt>Returns:</dt>
+<dd>this event's handler list</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getHandlerList()">
+<h3>getHandlerList</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@NotNull
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@NotNull org.bukkit.event.HandlerList</span>&nbsp;<span class="element-name">getHandlerList</span>()</div>
+<div class="block">Returns the static Bukkit handler list for this event type.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>this event's handler list</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="toString()">
 <h3>toString</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<div class="block">Returns a compact debug representation of the statistic transition.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="PlayerEvent.html#toString()">toString</a></code>&nbsp;in class&nbsp;<code><a href="PlayerEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a></code></dd>
+<dt>Returns:</dt>
+<dd>a string containing the player, statistic, values, and cancellation state</dd>
 </dl>
 </div>
 </section>

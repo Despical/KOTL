@@ -62,6 +62,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
+<li><a href="#isVerbose()" tabindex="0">isVerbose()</a></li>
 <li><a href="#reload()" tabindex="0">reload()</a></li>
 <li><a href="#record(org.bukkit.event.Event,long)" tabindex="0">record(Event, long)</a></li>
 <li><a href="#sendReport(org.bukkit.command.CommandSender)" tabindex="0">sendReport(CommandSender)</a></li>
@@ -80,8 +82,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">EventProfiler</span>
+<div class="type-signature"><span class="annotations">@Internal
+</span><span class="modifiers">public final class </span><span class="element-name type-name-label">EventProfiler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Collects optional execution timings for KOTL custom event listeners.
+<p>
+Profiling is disabled by default unless enabled through the plugin
+configuration. Recorded data is held in memory for the lifetime of the
+plugin and can be rendered to an authorized command sender.</div>
 </div>
 </section>
 <section class="summary">
@@ -94,8 +102,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.despical.kotl.KOTL)" class="member-name-link">EventProfiler</a><wbr>(<a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.despical.kotl.KOTL)" class="member-name-link">EventProfiler</a><wbr>(@NotNull <a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a profiler for the plugin event dispatcher.</div>
+</div>
 </div>
 </section>
 </li>
@@ -110,16 +120,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns whether event timing collection is enabled.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isVerbose()" class="member-name-link">isVerbose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns whether every event invocation is logged.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#record(org.bukkit.event.Event,long)" class="member-name-link">record</a><wbr>(org.bukkit.event.Event&nbsp;event,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#record(org.bukkit.event.Event,long)" class="member-name-link">record</a><wbr>(@NotNull org.bukkit.event.Event&nbsp;event,
  long&nbsp;durationNanos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Records one completed custom event invocation.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reload()" class="member-name-link">reload</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reloads profiler switches from the active configuration.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendReport(org.bukkit.command.CommandSender)" class="member-name-link">sendReport</a><wbr>(org.bukkit.command.CommandSender&nbsp;sender)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sendReport(org.bukkit.command.CommandSender)" class="member-name-link">sendReport</a><wbr>(@NotNull org.bukkit.command.CommandSender&nbsp;sender)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sends accumulated timing totals and averages to a command sender.</div>
+</div>
 </div>
 </div>
 </div>
@@ -141,7 +167,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(dev.despical.kotl.KOTL)">
 <h3>EventProfiler</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventProfiler</span><wbr><span class="parameters">(<a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EventProfiler</span><wbr><span class="parameters">(@NotNull
+ @NotNull <a href="../KOTL.html" title="class in dev.despical.kotl">KOTL</a>&nbsp;plugin)</span></div>
+<div class="block">Creates a profiler for the plugin event dispatcher.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>plugin</code> - the owning KOTL instance</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -154,10 +186,37 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="isEnabled()">
+<h3>isEnabled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEnabled</span>()</div>
+<div class="block">Returns whether event timing collection is enabled.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> when event timings are being recorded</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isVerbose()">
+<h3>isVerbose</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isVerbose</span>()</div>
+<div class="block">Returns whether every event invocation is logged.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> when verbose profiling output is enabled</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="reload()">
 <h3>reload</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reload</span>()</div>
+<div class="block">Reloads profiler switches from the active configuration.</div>
 </div>
 </section>
 </li>
@@ -165,8 +224,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="record(org.bukkit.event.Event,long)">
 <h3>record</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">record</span><wbr><span class="parameters">(org.bukkit.event.Event&nbsp;event,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">record</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.event.Event&nbsp;event,
  long&nbsp;durationNanos)</span></div>
+<div class="block">Records one completed custom event invocation.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>event</code> - the event that was dispatched</dd>
+<dd><code>durationNanos</code> - listener execution time in nanoseconds</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -174,7 +240,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="sendReport(org.bukkit.command.CommandSender)">
 <h3>sendReport</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendReport</span><wbr><span class="parameters">(org.bukkit.command.CommandSender&nbsp;sender)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">sendReport</span><wbr><span class="parameters">(@NotNull
+ @NotNull org.bukkit.command.CommandSender&nbsp;sender)</span></div>
+<div class="block">Sends accumulated timing totals and averages to a command sender.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>sender</code> - the report recipient</dd>
+</dl>
 </div>
 </section>
 </li>

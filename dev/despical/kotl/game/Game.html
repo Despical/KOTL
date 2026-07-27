@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#removePlayer(org.bukkit.entity.Player,boolean)" tabindex="0">removePlayer(Player, boolean)</a></li>
 <li><a href="#removePlayer(org.bukkit.entity.Player,boolean,boolean)" tabindex="0">removePlayer(Player, boolean, boolean)</a></li>
 <li><a href="#removePlayer(org.bukkit.entity.Player,boolean,boolean,boolean)" tabindex="0">removePlayer(Player, boolean, boolean, boolean)</a></li>
+<li><a href="#removePlayer(org.bukkit.entity.Player,boolean,boolean,boolean,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)" tabindex="0">removePlayer(Player, boolean, boolean, boolean, PlayerLeaveArenaEvent.LeaveReason)</a></li>
 <li><a href="#becomeKing(org.bukkit.entity.Player)" tabindex="0">becomeKing(Player)</a></li>
 <li><a href="#updateTopKing(java.lang.String,int)" tabindex="0">updateTopKing(String, int)</a></li>
 <li><a href="#restoreAfterRespawn(dev.despical.kotl.user.User)" tabindex="0">restoreAfterRespawn(User)</a></li>
@@ -117,7 +118,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addPlayer(org.bukkit.entity.Player)" class="member-name-link">addPlayer</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
@@ -150,12 +151,19 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;saveStats)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restoreAfterRespawn(dev.despical.kotl.user.User)" class="member-name-link">restoreAfterRespawn</a><wbr>(<a href="../user/User.html" title="class in dev.despical.kotl.user">User</a>&nbsp;user)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePlayer(org.bukkit.entity.Player,boolean,boolean,boolean,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)" class="member-name-link">removePlayer</a><wbr>(org.bukkit.entity.Player&nbsp;player,
+ boolean&nbsp;quit,
+ boolean&nbsp;restoreImmediately,
+ boolean&nbsp;saveStats,
+ <a href="../api/events/player/PlayerLeaveArenaEvent.LeaveReason.html" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a>&nbsp;reason)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateTopKing(java.lang.String,int)" class="member-name-link">updateTopKing</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
- int&nbsp;score)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#restoreAfterRespawn(dev.despical.kotl.user.User)" class="member-name-link">restoreAfterRespawn</a><wbr>(<a href="../user/User.html" title="class in dev.despical.kotl.user">User</a>&nbsp;user)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateTopKing(java.lang.String,int)" class="member-name-link">updateTopKing</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
+ int&nbsp;score)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -211,7 +219,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="addPlayer(org.bukkit.entity.Player)">
 <h3>addPlayer</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addPlayer</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addPlayer</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player)</span></div>
 </div>
 </section>
 </li>
@@ -242,6 +250,18 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;quit,
  boolean&nbsp;restoreImmediately,
  boolean&nbsp;saveStats)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="removePlayer(org.bukkit.entity.Player,boolean,boolean,boolean,dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent.LeaveReason)">
+<h3>removePlayer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removePlayer</span><wbr><span class="parameters">(org.bukkit.entity.Player&nbsp;player,
+ boolean&nbsp;quit,
+ boolean&nbsp;restoreImmediately,
+ boolean&nbsp;saveStats,
+ <a href="../api/events/player/PlayerLeaveArenaEvent.LeaveReason.html" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a>&nbsp;reason)</span></div>
 </div>
 </section>
 </li>

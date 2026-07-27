@@ -97,8 +97,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/option/ConfigOptions.html" title="class in dev.despical.kotl.option">ConfigOptions</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/handlers/cooldown/CooldownManager.html" title="class in dev.despical.kotl.handlers.cooldown">CooldownManager</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/cooldown/CooldownManager.html" title="class in dev.despical.kotl.cooldown">CooldownManager</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Stores named, player-specific cooldowns using wall-clock expiration times.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/CuboidSelector.html" title="class in dev.despical.kotl.util">CuboidSelector</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="dev/despical/kotl/util/CuboidSelector.Selection.html" title="class in dev.despical.kotl.util">CuboidSelector.Selection</a></div>
@@ -110,21 +112,38 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/DebugCommands.html" title="class in dev.despical.kotl.command">DebugCommands</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/EventManager.html" title="class in dev.despical.kotl.api">EventManager</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Central dispatcher for KOTL custom events.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/EventProfiler.html" title="class in dev.despical.kotl.api">EventProfiler</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Collects optional execution timings for KOTL custom event listeners.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/EventRegistry.html" title="class in dev.despical.kotl.api">EventRegistry</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Provides read-only discovery and type checks for KOTL custom events.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="dev/despical/kotl/api/EventType.html" title="enum class in dev.despical.kotl.api">EventType</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Enumerates every custom Bukkit event dispatched through the KOTL event API.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/database/FlatFileStorage.html" title="class in dev.despical.kotl.database">FlatFileStorage</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/game/Game.html" title="class in dev.despical.kotl.game">Game</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/game/GameManager.html" title="class in dev.despical.kotl.game">GameManager</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/GamemodeSelectionPage.html" title="class in dev.despical.kotl.setup.pages">GamemodeSelectionPage</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/game/GameEvent.html" title="class in dev.despical.kotl.api.events.game">GameEvent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Base class for events associated with one KOTL game instance.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/game/GameManager.html" title="class in dev.despical.kotl.game">GameManager</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/GamemodeSelectionPage.html" title="class in dev.despical.kotl.setup.pages">GamemodeSelectionPage</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/game/GameStopEvent.html" title="class in dev.despical.kotl.api.events.game">GameStopEvent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Called after a KOTL game has been stopped and its players have been cleaned
+up.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/event/GeneralEvents.html" title="class in dev.despical.kotl.event">GeneralEvents</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/scoreboard/formatter/GlobalFormatter.html" title="class in dev.despical.kotl.scoreboard.formatter">GlobalFormatter</a></div>
@@ -136,7 +155,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/KOTL.html" title="class in dev.despical.kotl">KOTL</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/KOTLEvent.html" title="class in dev.despical.kotl.api.events">KOTLEvent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Base type for every Bukkit event fired by KOTL.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="dev/despical/kotl/leaderboard/Leaderboard.html" title="class in dev.despical.kotl.leaderboard">Leaderboard&lt;T&gt;</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="dev/despical/kotl/leaderboard/LeaderboardEntry.html" title="class in dev.despical.kotl.leaderboard">LeaderboardEntry&lt;T&gt;</a></div>
@@ -166,63 +187,75 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/PlateMaterialSelectionPage.html" title="class in dev.despical.kotl.setup.pages">PlateMaterialSelectionPage</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerBecomeKingEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Called immediately before a player becomes king in a KOTL arena.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/PlayerCommands.html" title="class in dev.despical.kotl.command">PlayerCommands</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerEnterArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/PlayerSettingsPage.html" title="class in dev.despical.kotl.setup.pages">PlayerSettingsPage</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent&lt;T&gt;</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Called when a player's statistic is about to change.</div>
+<div class="block">Called when a player attempts to enter a KOTL arena.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/PlayingCommandPolicy.html" title="class in dev.despical.kotl.command">PlayingCommandPolicy</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Base class for KOTL events associated with one Bukkit player.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerLeaveArenaEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Called immediately before a player is removed from a KOTL arena.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="dev/despical/kotl/api/events/player/PlayerLeaveArenaEvent.LeaveReason.html" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Describes why a player is being removed from a KOTL arena.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/PlayerSettingsPage.html" title="class in dev.despical.kotl.setup.pages">PlayerSettingsPage</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/api/events/player/PlayerStatisticChangeEvent.html" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent&lt;T&gt;</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Called before a player's statistic value is stored.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/PlayingCommandPolicy.html" title="class in dev.despical.kotl.command">PlayingCommandPolicy</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/ResetArenaRecordsConfirmationPage.html" title="class in dev.despical.kotl.setup.pages">ResetArenaRecordsConfirmationPage</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/ResetArenaRecordsConfirmationPage.html" title="class in dev.despical.kotl.setup.pages">ResetArenaRecordsConfirmationPage</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab4"><a href="dev/despical/kotl/arena/managers/schedulers/SchedulerOptions.html" title="class in dev.despical.kotl.arena.managers.schedulers">SchedulerOptions</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Schedulers.html" title="class in dev.despical.kotl.util">Schedulers</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/scoreboard/ScoreboardManager.html" title="class in dev.despical.kotl.scoreboard">ScoreboardManager</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab4"><a href="dev/despical/kotl/arena/managers/schedulers/SchedulerOptions.html" title="class in dev.despical.kotl.arena.managers.schedulers">SchedulerOptions</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Schedulers.html" title="class in dev.despical.kotl.util">Schedulers</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/SetupHomePage.html" title="class in dev.despical.kotl.setup.pages">SetupHomePage</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/scoreboard/ScoreboardManager.html" title="class in dev.despical.kotl.scoreboard">ScoreboardManager</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/event/SetupListener.html" title="class in dev.despical.kotl.event">SetupListener</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/pages/SetupHomePage.html" title="class in dev.despical.kotl.setup.pages">SetupHomePage</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/SetupMenu.html" title="class in dev.despical.kotl.setup">SetupMenu</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/event/SetupListener.html" title="class in dev.despical.kotl.event">SetupListener</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/SetupPage.html" title="class in dev.despical.kotl.setup">SetupPage</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/SetupMenu.html" title="class in dev.despical.kotl.setup">SetupMenu</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/ShutdownDetector.html" title="class in dev.despical.kotl.util">ShutdownDetector</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/setup/SetupPage.html" title="class in dev.despical.kotl.setup">SetupPage</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/Statistics.html" title="class in dev.despical.kotl.stats">Statistics</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/ShutdownDetector.html" title="class in dev.despical.kotl.util">ShutdownDetector</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType&lt;T&gt;</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/Statistics.html" title="class in dev.despical.kotl.stats">Statistics</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/offline/StatsCacheManager.html" title="class in dev.despical.kotl.stats.offline">StatsCacheManager</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/StatisticType.html" title="class in dev.despical.kotl.stats">StatisticType&lt;T&gt;</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/menu/stats/StatsMenu.html" title="class in dev.despical.kotl.menu.stats">StatsMenu</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/stats/offline/StatsCacheManager.html" title="class in dev.despical.kotl.stats.offline">StatsCacheManager</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="dev/despical/kotl/game/StopReason.html" title="enum class in dev.despical.kotl.game">StopReason</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/StringUtils.html" title="class in dev.despical.kotl.util">StringUtils</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/TabCompleters.html" title="class in dev.despical.kotl.command">TabCompleters</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/menu/stats/StatsMenu.html" title="class in dev.despical.kotl.menu.stats">StatsMenu</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/user/User.html" title="class in dev.despical.kotl.user">User</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/user/UserManager.html" title="class in dev.despical.kotl.user">UserManager</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="dev/despical/kotl/game/StopReason.html" title="enum class in dev.despical.kotl.game">StopReason</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/StringUtils.html" title="class in dev.despical.kotl.util">StringUtils</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Utils.html" title="class in dev.despical.kotl.util">Utils</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/command/TabCompleters.html" title="class in dev.despical.kotl.command">TabCompleters</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Var.html" title="class in dev.despical.kotl.util">Var</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/user/User.html" title="class in dev.despical.kotl.user">User</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/user/UserManager.html" title="class in dev.despical.kotl.user">UserManager</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Utils.html" title="class in dev.despical.kotl.util">Utils</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="dev/despical/kotl/util/Var.html" title="class in dev.despical.kotl.util">Var</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 </div>
 </div>
 </div>

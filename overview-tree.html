@@ -54,6 +54,7 @@ loadScripts(document, 'script');</script>
 <li><a href="dev/despical/kotl/package-tree.html">dev.despical.kotl</a>, </li>
 <li><a href="dev/despical/kotl/api/package-tree.html">dev.despical.kotl.api</a>, </li>
 <li><a href="dev/despical/kotl/api/events/package-tree.html">dev.despical.kotl.api.events</a>, </li>
+<li><a href="dev/despical/kotl/api/events/game/package-tree.html">dev.despical.kotl.api.events.game</a>, </li>
 <li><a href="dev/despical/kotl/api/events/player/package-tree.html">dev.despical.kotl.api.events.player</a>, </li>
 <li><a href="dev/despical/kotl/arena/package-tree.html">dev.despical.kotl.arena</a>, </li>
 <li><a href="dev/despical/kotl/arena/managers/package-tree.html">dev.despical.kotl.arena.managers</a>, </li>
@@ -62,10 +63,10 @@ loadScripts(document, 'script');</script>
 <li><a href="dev/despical/kotl/bossbar/package-tree.html">dev.despical.kotl.bossbar</a>, </li>
 <li><a href="dev/despical/kotl/chat/package-tree.html">dev.despical.kotl.chat</a>, </li>
 <li><a href="dev/despical/kotl/command/package-tree.html">dev.despical.kotl.command</a>, </li>
+<li><a href="dev/despical/kotl/cooldown/package-tree.html">dev.despical.kotl.cooldown</a>, </li>
 <li><a href="dev/despical/kotl/database/package-tree.html">dev.despical.kotl.database</a>, </li>
 <li><a href="dev/despical/kotl/event/package-tree.html">dev.despical.kotl.event</a>, </li>
 <li><a href="dev/despical/kotl/game/package-tree.html">dev.despical.kotl.game</a>, </li>
-<li><a href="dev/despical/kotl/handlers/cooldown/package-tree.html">dev.despical.kotl.handlers.cooldown</a>, </li>
 <li><a href="dev/despical/kotl/leaderboard/package-tree.html">dev.despical.kotl.leaderboard</a>, </li>
 <li><a href="dev/despical/kotl/menu/package-tree.html">dev.despical.kotl.menu</a>, </li>
 <li><a href="dev/despical/kotl/menu/stats/package-tree.html">dev.despical.kotl.menu.stats</a>, </li>
@@ -111,7 +112,7 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">dev.despical.kotl.option.<a href="dev/despical/kotl/option/ConfigOptions.html" class="type-name-link" title="class in dev.despical.kotl.option">ConfigOptions</a></li>
-<li class="circle">dev.despical.kotl.handlers.cooldown.<a href="dev/despical/kotl/handlers/cooldown/CooldownManager.html" class="type-name-link" title="class in dev.despical.kotl.handlers.cooldown">CooldownManager</a></li>
+<li class="circle">dev.despical.kotl.cooldown.<a href="dev/despical/kotl/cooldown/CooldownManager.html" class="type-name-link" title="class in dev.despical.kotl.cooldown">CooldownManager</a></li>
 <li class="circle">dev.despical.kotl.util.<a href="dev/despical/kotl/util/CuboidSelector.html" class="type-name-link" title="class in dev.despical.kotl.util">CuboidSelector</a></li>
 <li class="circle">dev.despical.kotl.database.<a href="dev/despical/kotl/database/Database.html" class="type-name-link" title="class in dev.despical.kotl.database">Database</a>
 <ul>
@@ -123,10 +124,15 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">dev.despical.kotl.api.events.<a href="dev/despical/kotl/api/events/KOTLEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events">KOTLEvent</a>
 <ul>
+<li class="circle">dev.despical.kotl.api.events.game.<a href="dev/despical/kotl/api/events/game/GameEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.game">GameEvent</a>
+<ul>
+<li class="circle">dev.despical.kotl.api.events.game.<a href="dev/despical/kotl/api/events/game/GameStopEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.game">GameStopEvent</a></li>
+</ul>
+</li>
 <li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerEvent</a>
 <ul>
-<li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerBecomeKingEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a></li>
-<li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerEnterArenaEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a></li>
+<li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerBecomeKingEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerBecomeKingEvent</a> (implements org.bukkit.event.Cancellable)</li>
+<li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerEnterArenaEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerEnterArenaEvent</a> (implements org.bukkit.event.Cancellable)</li>
 <li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerLeaveArenaEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent</a></li>
 <li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerStatisticChangeEvent.html" class="type-name-link" title="class in dev.despical.kotl.api.events.player">PlayerStatisticChangeEvent</a>&lt;T&gt; (implements org.bukkit.event.Cancellable)</li>
 </ul>
@@ -219,6 +225,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">dev.despical.kotl.database.<a href="dev/despical/kotl/database/DatabaseType.html" class="type-name-link" title="enum class in dev.despical.kotl.database">DatabaseType</a></li>
 <li class="circle">dev.despical.kotl.api.<a href="dev/despical/kotl/api/EventType.html" class="type-name-link" title="enum class in dev.despical.kotl.api">EventType</a></li>
 <li class="circle">dev.despical.kotl.option.<a href="dev/despical/kotl/option/IntOption.html" class="type-name-link" title="enum class in dev.despical.kotl.option">IntOption</a> (implements dev.despical.kotl.option.<a href="dev/despical/kotl/option/ConfigOption.html" title="interface in dev.despical.kotl.option">ConfigOption</a>&lt;T&gt;)</li>
+<li class="circle">dev.despical.kotl.api.events.player.<a href="dev/despical/kotl/api/events/player/PlayerLeaveArenaEvent.LeaveReason.html" class="type-name-link" title="enum class in dev.despical.kotl.api.events.player">PlayerLeaveArenaEvent.LeaveReason</a></li>
 <li class="circle">dev.despical.kotl.game.<a href="dev/despical/kotl/game/StopReason.html" class="type-name-link" title="enum class in dev.despical.kotl.game">StopReason</a></li>
 </ul>
 </li>

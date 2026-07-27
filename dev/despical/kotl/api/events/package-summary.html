@@ -63,6 +63,13 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="package-signature">package <span class="element-name">dev.despical.kotl.api.events</span></div>
+<section class="package-description" id="package-description">
+<div class="block">Defines the common base type for Bukkit events emitted by KOTL.
+<p>
+Every concrete event extends <a href="KOTLEvent.html" title="class in dev.despical.kotl.api.events"><code>KOTLEvent</code></a> and owns a separate Bukkit handler
+list. Consumers should listen to concrete player or game event classes
+rather than the marker base class.</div>
+</section>
 </div>
 <section class="summary">
 <ul class="summary-list">
@@ -73,9 +80,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">dev.despical.kotl.api</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="player/package-summary.html">dev.despical.kotl.api.events.player</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Provides KOTL custom event discovery, dispatch, and diagnostics.</div>
+</div>
+<div class="col-first odd-row-color"><a href="game/package-summary.html">dev.despical.kotl.api.events.game</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Provides lifecycle events associated with complete KOTL game instances.</div>
+</div>
+<div class="col-first even-row-color"><a href="player/package-summary.html">dev.despical.kotl.api.events.player</a></div>
+<div class="col-last even-row-color">
+<div class="block">Provides KOTL events associated with individual players.</div>
+</div>
 </div>
 </div>
 </li>
@@ -86,7 +101,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="KOTLEvent.html" title="class in dev.despical.kotl.api.events">KOTLEvent</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Base type for every Bukkit event fired by KOTL.</div>
+</div>
 </div>
 </div>
 </li>
