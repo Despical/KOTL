@@ -51,9 +51,6 @@ public class GameManager {
     }
 
     public void stopGame(Game game, StopReason reason) {
-        game.getScoreboardManager().removeAllScoreboards();
-        game.getBossBarManager().removeAll();
-
         List<UUID> stoppedPlayers = game.getPlayers().stream()
             .map(Player::getUniqueId)
             .toList();
@@ -74,6 +71,9 @@ public class GameManager {
 
             game.removePlayer(player, false, true, saveStats, mapLeaveReason(reason));
         }
+
+        game.getScoreboardManager().removeAllScoreboards();
+        game.getBossBarManager().removeAll();
 
         plugin.getEventManager().gameStop(game, reason, stoppedPlayers);
     }
