@@ -19,26 +19,18 @@
 package dev.despical.kotl.api.events;
 
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 /**
+ * Base type for every Bukkit event fired by KOTL.
+ * <p>
+ * Each concrete event owns an independent Bukkit {@code HandlerList}. This
+ * class is only a shared marker for API discovery and should not be registered
+ * as a listener target directly.
+ *
  * @author Despical
  * @since 1.0.0
  * <p>
  * Created at 20.06.2020
  */
 public abstract class KOTLEvent extends Event {
-
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
 }
