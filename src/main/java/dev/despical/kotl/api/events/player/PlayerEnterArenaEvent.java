@@ -20,8 +20,6 @@ package dev.despical.kotl.api.events.player;
 
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.game.Game;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -42,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Created at 02.01.2024
  */
-@Getter
 public class PlayerEnterArenaEvent extends PlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -50,7 +47,6 @@ public class PlayerEnterArenaEvent extends PlayerEvent implements Cancellable {
     /**
      * Whether this arena entry has been cancelled.
      */
-    @Setter
     private boolean cancelled;
 
     /**
@@ -67,6 +63,36 @@ public class PlayerEnterArenaEvent extends PlayerEvent implements Cancellable {
     public PlayerEnterArenaEvent(@NotNull Player player, @NotNull Game game) {
         super(player);
         this.game = game;
+    }
+
+    /**
+     * Returns whether the arena entry has been cancelled.
+     *
+     * @return {@code true} when the player must remain outside the arena
+     */
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    /**
+     * Sets whether the arena entry should be cancelled.
+     *
+     * @param cancelled {@code true} to prevent the player from entering
+     */
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
+     * Returns the game the player is attempting to enter.
+     *
+     * @return the target game
+     */
+    @NotNull
+    public Game getGame() {
+        return game;
     }
 
     /**
