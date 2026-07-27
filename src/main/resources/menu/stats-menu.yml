@@ -1,3 +1,7 @@
+# =============================================================== #
+#          King of the Ladder - Statistics Menu                   #
+# =============================================================== #
+
 rows: 6
 title: "<dark_gray>➜ <gradient:#00E676:#2979FF><bold>Statistics</bold></gradient>"
 
@@ -108,8 +112,7 @@ items:
     name: "<#29B6F6><bold>✦ %arena%"
     lore:
       - "<dark_gray><st>───────────────"
-      - " <#B0BEC5>Your Top Score:"
-      - " <#00E676><bold>%score%"
+      - " <#B0BEC5>Your Top Score: <#00E676><bold>%score%"
       - ""
       - " <#FFD700><bold>⭐ LEADERBOARD TOP 3"
       - "<dark_gray><st>───────────────"

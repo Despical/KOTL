@@ -54,8 +54,6 @@ public final class Statistics {
         }
     };
 
-    public static final StatisticType<Integer> LOCAL_RESET_COOLDOWN = createLocalIntStat("local_reset_cooldown");
-
     private static StatisticType<Integer> createIntStat(String key) {
         return new StatisticType<>(key, 0, Integer.class) {
 
@@ -70,16 +68,6 @@ public final class Statistics {
         };
     }
 
-    private static StatisticType<Integer> createLocalIntStat(String key) {
-        return new StatisticType<>(key, 0, Integer.class) {
-
-            @Override
-            public boolean isPersistent() {
-                return false;
-            }
-        };
-    }
-
     public static List<StatisticType<?>> getAllStats() {
         return StatsHolder.ALL_STATS;
     }
@@ -90,7 +78,7 @@ public final class Statistics {
 
     private static class StatsHolder {
 
-        private static final List<StatisticType<?>> ALL_STATS = List.of(KILL, DEATH, SCORE, TOURS_PLAYED, ARENA_SCORES, LOCAL_RESET_COOLDOWN);
+        private static final List<StatisticType<?>> ALL_STATS = List.of(KILL, DEATH, SCORE, TOURS_PLAYED, ARENA_SCORES);
         private static final List<StatisticType<?>> PERSISTENT_STATS = ALL_STATS.stream().filter(StatisticType::isPersistent).toList();
     }
 }

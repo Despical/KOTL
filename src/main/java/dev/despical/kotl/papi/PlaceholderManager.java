@@ -80,15 +80,15 @@ public class PlaceholderManager extends PlaceholderExpansion {
         }
 
         if (id.equals("arenas_ready")) {
-//            return Integer.toString((int) plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getOption(ArenaKeys.READY)).count());
+            return Integer.toString((int) plugin.getArenaRegistry().getArenas().stream().filter(arena -> arena.getOption(ArenaKeys.READY)).count());
         }
 
         if (id.equals("active_games")) {
-//            return Integer.toString(plugin.getGameManager().getGames().size());
+            return Integer.toString(plugin.getGameManager().getGames().size());
         }
 
         if (id.equals("active_players")) {
-//            return Integer.toString(plugin.getGameManager().getGames().stream().mapToInt(game -> game.getUsers().size()).sum());
+            return Integer.toString(plugin.getGameManager().getGames().stream().mapToInt(game -> game.getPlayers().size()).sum());
         }
 
         if (id.startsWith("arena")) {
@@ -181,6 +181,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
         return switch (key) {
             case "players" -> Integer.toString(arena.getGame().getPlayers().size());
             case "ready" -> Boolean.toString(arena.getOption(ArenaKeys.READY));
+            case "enabled" -> Boolean.toString(arena.getOption(ArenaKeys.ENABLED));
             case "king" -> arena.getOption(ArenaKeys.KING) == null ? "None" : arena.getOption(ArenaKeys.KING);
             case "last_king", "last-king" -> arena.getOption(ArenaKeys.LAST_KING);
             case "top_king", "top-king" -> arena.getOption(ArenaKeys.TOP_KING);
