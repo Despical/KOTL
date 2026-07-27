@@ -19,6 +19,7 @@
 package dev.despical.kotl.event;
 
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.stats.Statistics;
@@ -117,7 +118,10 @@ public final class ArenaEvents extends ListenerAdapter {
 
         if (arena == null) return;
 
-        plugin.getArenaManager().leaveAttempt(userManager.getUser(player));
+        plugin.getArenaManager().leaveAttempt(
+            userManager.getUser(player),
+            PlayerLeaveArenaEvent.LeaveReason.DEATH
+        );
         event.setRespawnLocation(arena.getOption(ArenaKeys.END_LOCATION));
 
         User user = userManager.getUser(player);

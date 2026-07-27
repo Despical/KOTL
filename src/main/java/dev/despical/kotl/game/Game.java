@@ -20,6 +20,7 @@ package dev.despical.kotl.game;
 
 import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.bossbar.BossBarManager;
@@ -135,15 +136,25 @@ public class Game {
     }
 
     public void removePlayer(Player player, boolean quit) {
-        removePlayer(player, quit, false);
+        removePlayer(player, quit, false, true,
+            quit ? PlayerLeaveArenaEvent.LeaveReason.DISCONNECT : PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT);
     }
 
     public void removePlayer(Player player, boolean quit, boolean restoreImmediately) {
-        removePlayer(player, quit, restoreImmediately, true);
+        removePlayer(player, quit, restoreImmediately, true,
+            quit ? PlayerLeaveArenaEvent.LeaveReason.DISCONNECT : PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT);
     }
 
     public void removePlayer(Player player, boolean quit, boolean restoreImmediately, boolean saveStats) {
+        removePlayer(player, quit, restoreImmediately, saveStats,
+            quit ? PlayerLeaveArenaEvent.LeaveReason.DISCONNECT : PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT);
+    }
+
+    public void removePlayer(Player player, boolean quit, boolean restoreImmediately, boolean saveStats,
+                             PlayerLeaveArenaEvent.LeaveReason reason) {
         if (player == null) return;
+
+        plugin.getEventManager().playerLeaveArena(player, this, reason);
 
         User user = plugin.getUserManager().getUser(player);
 
@@ -178,7 +189,6 @@ public class Game {
             plugin.getDatabase().saveData(user);
         }
 
-        plugin.getEventManager().playerLeaveArena(player, this);
     }
 
     public boolean becomeKing(Player player) {

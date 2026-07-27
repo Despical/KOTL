@@ -19,6 +19,7 @@
 package dev.despical.kotl.game;
 
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.bossbar.BossBarConfig;
@@ -66,12 +67,22 @@ public class GameManager {
                 player.teleport(endLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
             }
 
-            game.removePlayer(player, false, true, saveStats);
+            game.removePlayer(player, false, true, saveStats, mapLeaveReason(reason));
         }
     }
 
     public void stopAllGames(StopReason reason) {
         getGames().forEach(game -> stopGame(game, reason));
+    }
+
+    private PlayerLeaveArenaEvent.LeaveReason mapLeaveReason(StopReason reason) {
+        return switch (reason) {
+            case ARENA_DELETED -> PlayerLeaveArenaEvent.LeaveReason.ARENA_DELETED;
+            case ARENA_DISABLED -> PlayerLeaveArenaEvent.LeaveReason.ARENA_DISABLED;
+            case SERVER_RELOAD -> PlayerLeaveArenaEvent.LeaveReason.SERVER_RELOAD;
+            case SERVER_SHUTDOWN -> PlayerLeaveArenaEvent.LeaveReason.SERVER_SHUTDOWN;
+            case STOP_COMMAND -> PlayerLeaveArenaEvent.LeaveReason.STOP_COMMAND;
+        };
     }
 
     public List<Game> getGames() {

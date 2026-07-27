@@ -19,6 +19,7 @@
 package dev.despical.kotl.arena.managers;
 
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import dev.despical.kotl.arena.managers.schedulers.SchedulerOptions;
@@ -68,6 +69,10 @@ public class ArenaManager {
     }
 
     public void leaveAttempt(User user) {
+        leaveAttempt(user, PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT);
+    }
+
+    public void leaveAttempt(User user, PlayerLeaveArenaEvent.LeaveReason reason) {
         Arena arena = user.getArena();
 
         if (arena == null) {
@@ -75,7 +80,7 @@ public class ArenaManager {
         }
 
         Game game = arena.getGame();
-        game.removePlayer(user.getPlayer(), false);
+        game.removePlayer(user.getPlayer(), false, false, true, reason);
     }
 
     public void quitPlayer(User user, Arena arena) {
@@ -84,7 +89,7 @@ public class ArenaManager {
         }
 
         Game game = arena.getGame();
-        game.removePlayer(user.getPlayer(), true);
+        game.removePlayer(user.getPlayer(), true, false, true, PlayerLeaveArenaEvent.LeaveReason.DISCONNECT);
     }
 
     public void handleDisable() {

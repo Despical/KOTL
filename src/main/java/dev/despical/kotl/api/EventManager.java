@@ -83,6 +83,11 @@ public final class EventManager {
         return callByType(EventType.PLAYER_LEAVE_ARENA, () -> new PlayerLeaveArenaEvent(player, game));
     }
 
+    public PlayerLeaveArenaEvent playerLeaveArena(Player player, Game game, PlayerLeaveArenaEvent.LeaveReason reason) {
+        return callByType(EventType.PLAYER_LEAVE_ARENA,
+            () -> new PlayerLeaveArenaEvent(player, game, reason));
+    }
+
     public PlayerBecomeKingEvent playerBecomeKing(Player player, Game game) {
         return callByType(EventType.PLAYER_BECOME_KING, () -> new PlayerBecomeKingEvent(player, game));
     }

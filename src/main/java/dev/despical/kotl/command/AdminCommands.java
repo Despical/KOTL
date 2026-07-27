@@ -21,6 +21,7 @@ package dev.despical.kotl.command;
 import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.game.Game;
 import dev.despical.kotl.game.StopReason;
@@ -177,7 +178,7 @@ public final class AdminCommands extends CommandCategory {
             return;
         }
 
-        arenaManager.leaveAttempt(targetUser);
+        arenaManager.leaveAttempt(targetUser, PlayerLeaveArenaEvent.LeaveReason.KICK);
         targetPlayer.teleport(playerArena.getOption(ArenaKeys.END_LOCATION));
 
         chatManager.sendMessage(arguments, "kick-command.kicked",
