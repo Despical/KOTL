@@ -23,7 +23,6 @@ import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.bossbar.BossBarManager;
 import dev.despical.kotl.game.Game;
 import dev.despical.kotl.scoreboard.ScoreboardManager;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,7 +45,6 @@ public abstract class GameEvent extends KOTLEvent {
     /**
      * The game instance associated with this event.
      */
-    @Getter
     @NotNull
     protected final Game game;
 
@@ -57,6 +55,16 @@ public abstract class GameEvent extends KOTLEvent {
      */
     protected GameEvent(@NotNull Game game) {
         this.game = game;
+    }
+
+    /**
+     * Returns the game instance associated with this event.
+     *
+     * @return the related game
+     */
+    @NotNull
+    public Game getGame() {
+        return game;
     }
 
     /**
