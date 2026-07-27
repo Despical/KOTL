@@ -1,27 +1,102 @@
 name: KOTL
 author: Despical
+main: dev.despical.kotl.KOTL
 version: ${version}
 api-version: 1.13
-main: dev.despical.kotl.KOTL
-description: An old, fun, classical Minecraft minigame.
-website: https://spigotmc.org/resources/80686/
+prefix: KOTL
+description: "A competitive Minecraft climbing minigame"
+
 softdepend:
   - PlaceholderAPI
   - Multiverse-Core
+  - SlimeWorldManager
+  - SlimeWorldPlugin
+  - MultiWorld
+  - My_Worlds
   - WorldGuard
 
 permissions:
-  kotl.admin.*:
+  kotl.*:
+    description: Grants access to all King of the Ladder commands and features.
     default: op
     children:
+      kotl.command.help: true
+      kotl.command.tabcompleter: true
       kotl.admin: true
-      kotl.admin.create: true
-      kotl.admin.delete: true
-      kotl.admin.edit: true
-      kotl.admin.list: true
-      kotl.admin.help: true
-      kotl.admin.reload: true
-      kotl.admin.kick: true
-      kotl.admin.version: true
+      kotl.arena.*: true
+      kotl.debug: true
       kotl.command.override: true
-      kotl.admin.cooldown: true
+
+  kotl.command.help:
+    description: Allows using the root and help commands to view King of the Ladder command information.
+    default: true
+  kotl.command.tabcompleter:
+    description: Allows receiving standard tab completions for King of the Ladder commands.
+    default: true
+  kotl.command.override:
+    description: Allows using blocked commands while playing.
+    default: op
+
+  kotl.admin:
+    description: Grants access to all administrative commands.
+    default: op
+    children:
+      kotl.admin.help: true
+      kotl.admin.kick: true
+      kotl.admin.reload: true
+      kotl.admin.stop: true
+      kotl.arena.*: true
+      kotl.command.override: true
+
+  kotl.admin.help:
+    description: Allows viewing the administrative help menu.
+    default: op
+  kotl.admin.kick:
+    description: Allows removing a player from a King of the Ladder arena.
+    default: op
+  kotl.admin.reload:
+    description: Allows reloading the plugin configuration.
+    default: op
+  kotl.admin.stop:
+    description: Allows stopping an active King of the Ladder game.
+    default: op
+
+  kotl.arena.*:
+    description: Grants access to all arena management commands.
+    default: op
+    children:
+      kotl.arena.create: true
+      kotl.arena.delete: true
+      kotl.arena.list: true
+      kotl.arena.edit: true
+
+  kotl.arena.create:
+    description: Allows creating a new arena.
+    default: op
+  kotl.arena.delete:
+    description: Allows deleting an existing arena.
+    default: op
+  kotl.arena.list:
+    description: Allows listing all arenas.
+    default: op
+  kotl.arena.edit:
+    description: Allows editing arena properties.
+    default: op
+
+  kotl.debug:
+    description: Grants access to all debug commands.
+    default: op
+    children:
+      kotl.debug.component: true
+      kotl.debug.dump: true
+      kotl.debug.tabcompleter: true
+
+  kotl.debug.component:
+    description: Allows testing MiniMessage components.
+    default: op
+  kotl.debug.dump:
+    description: Allows sending event timing reports.
+    default: op
+  kotl.debug.tabcompleter:
+    description: Allows receiving debug command tab completions.
+    default: op
