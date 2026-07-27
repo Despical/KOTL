@@ -5,6 +5,7 @@ version: ${version}
 api-version: 1.13
 prefix: KOTL
 description: "A competitive Minecraft climbing minigame"
+website: https://docs.despical.dev/kotl
 
 softdepend:
   - PlaceholderAPI
