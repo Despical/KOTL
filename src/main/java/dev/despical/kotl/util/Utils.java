@@ -21,9 +21,8 @@ package dev.despical.kotl.util;
 import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.Arena;
-import dev.despical.kotl.option.BooleanOption;
-import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
+import net.kyori.adventure.text.Component;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -43,92 +42,57 @@ public final class Utils {
     private Utils() {
     }
 
-    public static void applyActionBarCooldown(User user, int seconds) {
-        if (seconds == 0) return;
-
-        var options = plugin.getOptions();
-        boolean showCooldownOnRejoin = BooleanOption.SHOW_COOLDOWN_ON_REJOIN.value();
-        boolean outsideCooldownCount = BooleanOption.COUNT_COOLDOWN_OUTSIDE.value();
-        boolean separateCooldowns = BooleanOption.SEPARATE_COOLDOWNS.value();
-
-        String arenaId = user.getArena().getId();
-        String cooldownName = (separateCooldowns ? arenaId : "") + "king";
-
-        if (!outsideCooldownCount) {
-            user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 1);
-        }
+    public static void applyActionBarCooldown(User user, String arenaId, int totalSeconds) {
+        if (totalSeconds <= 0) return;
 
         new BukkitRunnable() {
-
-            private int ticks = 0;
 
             @Override
             public void run() {
                 Player player = user.getPlayer();
-
-                if (user.getStatistic(Statistics.LOCAL_RESET_COOLDOWN) == 1) {
+                if (player == null || !player.isOnline()) {
                     cancel();
-
-                    plugin.getCooldownManager().setCooldown(user, cooldownName, 0);
-
-                    user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
                     return;
                 }
 
                 Arena arena = user.getArena();
-
-                if (separateCooldowns && arena != null && !arenaId.equals(arena.getId())) {
-                    return;
-                }
-
-                if (!outsideCooldownCount) {
-                    plugin.getCooldownManager().setCooldown(user, cooldownName, seconds - Math.ceil(ticks / 20D));
-                } else if (ticks >= 20 * seconds) {
+                if (arena == null || !arenaId.equals(arena.getId())) {
+                    player.sendActionBar(Component.empty());
                     cancel();
-                }
-
-                if (arena == null || !arena.getGame().getPlayers().contains(player)) {
-                    if (!showCooldownOnRejoin) {
-                        cancel();
-
-                        user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
-                    }
-
-                    if (outsideCooldownCount) {
-                        ticks += 2;
-                    }
-
                     return;
                 }
 
-                String progress = getProgressBar(ticks, seconds * 20);
+                double remaining = plugin.getCooldownManager().getCooldown(user, kingCooldownName(arenaId));
+                if (remaining <= 0) {
+                    player.sendActionBar(Component.empty());
+                    cancel();
+                    return;
+                }
+
+                int elapsedTicks = (int) Math.max(0, Math.round((totalSeconds - remaining) * 20));
+                String progress = getProgressBar(elapsedTicks, totalSeconds * 20);
                 Var[] vars = {
                     Var.of("%progress%", progress),
-                    Var.of("%time%", Double.toString(((seconds * 20) - ticks) / 20D))
+                    Var.of("%time%", String.format(java.util.Locale.ENGLISH, "%.1f", remaining))
                 };
 
-                plugin.getChatManager().sendActionBar(user, "In-Game.Cooldown-Format", vars);
-
-                if (ticks >= seconds * 20) {
-                    cancel();
-
-                    user.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 0);
-                    return;
-                }
-
-                ticks += 2;
+                plugin.getChatManager().sendActionBar(user, "game.cooldown-format", vars);
             }
         }.runTaskTimer(plugin, 0, 2);
     }
 
+    public static String kingCooldownName(String arenaId) {
+        return "king:" + arenaId;
+    }
+
     private static String getProgressBar(int current, int max) {
         float percent = (float) current / max;
-        int progressBars = (int) (10 * percent), leftOver = (10 - progressBars);
+        int progressBars = (int) (12 * percent), leftOver = (12 - progressBars);
 
-        return "§a" +
-            "■".repeat(Math.max(0, progressBars)) +
-            "§c" +
-            "■".repeat(Math.max(0, leftOver));
+        return "<#FFD54F>" +
+            "▰".repeat(Math.max(0, progressBars)) +
+            "<#424242>" +
+            "▰".repeat(Math.max(0, leftOver));
     }
 
     public static String NONE = getMessage("none");

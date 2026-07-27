@@ -18,7 +18,6 @@
 
 package dev.despical.kotl.game;
 
-import dev.despical.commons.miscellaneous.MiscUtils;
 import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.Arena;
@@ -35,14 +34,20 @@ import dev.despical.kotl.util.Utils;
 import dev.despical.kotl.util.Var;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Despical
@@ -70,8 +75,15 @@ public class Game {
         players.forEach(player -> plugin.getChatManager().sendRawComponent(player, message, variables));
     }
 
+    public void broadcastMessage(String messagePath, Var... variables) {
+        players.forEach(player -> plugin.getChatManager().sendMessage(player, messagePath, variables));
+    }
+
     public void addPlayer(Player player) {
         players.add(player);
+        if (BooleanOption.JOIN_NOTIFY.value()) {
+            broadcastMessage("game.player-joined", Var.of("%player%", player.getName()));
+        }
 
         InventorySerializer.saveInventoryToFile(plugin, player);
 
@@ -103,19 +115,33 @@ public class Game {
 
         User user = plugin.getUserManager().getUser(player);
 
-        if (BooleanOption.REMOVE_COOLDOWN_ON_JOIN.value()) {
-            plugin.getCooldownManager().setCooldown(user, (BooleanOption.SEPARATE_COOLDOWNS.value() ? arena.getId() : "") + "king", 0);
+        if (IntOption.COOLDOWN.value() > 0
+            && BooleanOption.APPLY_KING_DELAY_BAR.value()
+            && BooleanOption.SHOW_COOLDOWN_ON_REJOIN.value()
+            && plugin.getCooldownManager().getCooldown(user, Utils.kingCooldownName(arena.getId())) > 0) {
+            Utils.applyActionBarCooldown(user, arena.getId(), IntOption.COOLDOWN.value());
         }
 
         plugin.getEventManager().playerEnterArena(player, this);
     }
 
     public void removePlayer(Player player, boolean quit) {
+        removePlayer(player, quit, false);
+    }
+
+    public void removePlayer(Player player, boolean quit, boolean restoreImmediately) {
+        removePlayer(player, quit, restoreImmediately, true);
+    }
+
+    public void removePlayer(Player player, boolean quit, boolean restoreImmediately, boolean saveStats) {
         if (player == null) return;
 
         User user = plugin.getUserManager().getUser(player);
 
         players.remove(player);
+        if (BooleanOption.LEAVE_NOTIFY.value()) {
+            broadcastMessage("game.player-left", Var.of("%player%", player.getName()));
+        }
 
         if (BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
             player.getInventory().clear();
@@ -126,63 +152,63 @@ public class Game {
         }
 
         if (!quit) {
-            Schedulers.runInTheNextTick(() -> InventorySerializer.loadInventory(plugin, player));
+            if (restoreImmediately) {
+                InventorySerializer.loadInventory(plugin, player);
+            } else {
+                Schedulers.runInTheNextTick(() -> InventorySerializer.loadInventory(plugin, player));
+            }
         }
 
         if (arena.getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED)) {
             scoreboardManager.removeScoreboard(player);
         }
 
-        if (BooleanOption.REMOVE_COOLDOWN_ON_LEAVE.value()) {
-            plugin.getCooldownManager().setCooldown(user, (BooleanOption.SEPARATE_COOLDOWNS.value() ? arena.getId() : "") + "king", 0);
-        }
-
         bossBarManager.removePlayer(player);
 
-        plugin.getDatabase().saveData(user);
+        if (saveStats) {
+            plugin.getDatabase().saveData(user);
+        }
+
         plugin.getEventManager().playerLeaveArena(player, this);
     }
 
-    public void becomeKing(Player player) {
+    public boolean becomeKing(Player player) {
         int size = players.size();
         String currentKing = arena.getOption(ArenaKeys.KING);
         boolean isSameKing = currentKing != null && currentKing.equals(player.getName());
 
-        if (isSameKing && size == 1 && !BooleanOption.BECOME_KING_IN_A_ROW.value()) return;
-
-        int cooldown = IntOption.COOLDOWN.value();
-        String cooldownName = (BooleanOption.SEPARATE_COOLDOWNS.value() ? arena.getId() : "") + "king";
-        User user = plugin.getUserManager().getUser(player);
-
-        if (plugin.getCooldownManager().getCooldown(user, cooldownName) > 0 || user.getStatistic(Statistics.LOCAL_RESET_COOLDOWN) == 1) {
-            return;
+        if (isSameKing && !BooleanOption.BECOME_KING_IN_A_ROW.value()) {
+            return false;
         }
 
-        cooldown_perm_check:
-        if (size > 1 || (size == 1 && BooleanOption.COOLDOWN_WHEN_ALONE.value())) {
-            String permission = plugin.getConfig().getString("King-Settings.Cooldown-Override-Perm", "");
+        int cooldown = IntOption.COOLDOWN.value();
+        String cooldownName = Utils.kingCooldownName(arena.getId());
+        User user = plugin.getUserManager().getUser(player);
+        boolean shouldApplyCooldown = cooldown > 0
+            && (size > 1 || BooleanOption.COOLDOWN_WHEN_ALONE.value());
+        String overridePermission = plugin.getConfig().getString("king-settings.cooldown-override-permission", "");
+        boolean bypassCooldown = !overridePermission.isEmpty() && player.hasPermission(overridePermission);
 
-            if (!permission.isEmpty() && player.hasPermission(permission)) {
-                break cooldown_perm_check;
-            }
+        if (shouldApplyCooldown
+            && !bypassCooldown
+            && plugin.getCooldownManager().getCooldown(user, cooldownName) > 0) {
+            return false;
+        }
 
-            if (BooleanOption.APPLY_KING_DELAY_BAR.value()) {
-                Utils.applyActionBarCooldown(user, cooldown);
-            }
-
+        if (shouldApplyCooldown && !bypassCooldown) {
             plugin.getCooldownManager().setCooldown(user, cooldownName, cooldown);
+            if (BooleanOption.APPLY_KING_DELAY_BAR.value()) {
+                Utils.applyActionBarCooldown(user, arena.getId(), cooldown);
+            }
         }
 
         plugin.getEventManager().playerBecomeKing(player, this);
 
         arena.setOption(ArenaKeys.KING, player.getName());
-
-        if (BooleanOption.RESET_COOLDOWNS_ON_NEW_KING.value()) {
-            Set<Player> targets = new HashSet<>(players);
-            targets.remove(player);
-
-            targets.stream().map(plugin.getUserManager()::getUser).forEach(pUser -> pUser.setStatistic(Statistics.LOCAL_RESET_COOLDOWN, 1));
-        }
+        broadcastMessage(
+            isSameKing ? "game.king-retained" : "game.new-king",
+            Var.of("%king%", player.getName())
+        );
 
         user.addStat(Statistics.SCORE, 1);
         user.addStat(Statistics.TOURS_PLAYED, 1);
@@ -192,16 +218,15 @@ public class Game {
         Set<Player> targets = getPlayers();
         targets.remove(player);
 
-        spawnFireworks(player);
+        spawnCelebrationFireworks();
 
         for (Player p : targets) {
             User loser = plugin.getUserManager().getUser(p);
             loser.addStat(Statistics.TOURS_PLAYED, 1);
-
-            spawnFireworks(p);
         }
 
         getScoreboardManager().updateAllScoreboards();
+        return true;
     }
 
     public void updateTopKing(String playerName, int score) {
@@ -230,22 +255,100 @@ public class Game {
         bossBarManager.removePlayer(player);
     }
 
-    private void spawnFireworks(Player player) {
+    private void spawnCelebrationFireworks() {
         if (!BooleanOption.FIREWORKS_ON_NEW_KING.value()) return;
 
-        new BukkitRunnable() {
+        Location plate = arena.getOption(ArenaKeys.PLATE_LOCATION);
+        if (plate != null && plate.getWorld() != null) {
+            spawnFirework(findOpenLocationAbovePlate(plate));
+        }
 
-            private int i = 0;
+        for (int index = 1; index <= 6; index++) {
+            long delay = index * 5L;
+            Schedulers.runTaskLater(() -> spawnFirework(findRandomFireworkLocation()), delay);
+        }
+    }
 
-            public void run() {
-                if (i == 2 || !players.contains(player)) {
-                    cancel();
-                }
+    private Location findRandomFireworkLocation() {
+        Location min = arena.getOption(ArenaKeys.MIN_CORNER);
+        Location max = arena.getOption(ArenaKeys.MAX_CORNER);
+        Location plate = arena.getOption(ArenaKeys.PLATE_LOCATION);
 
-                MiscUtils.spawnRandomFirework(player.getLocation());
-                i++;
+        if (min == null || max == null || min.getWorld() == null || !min.getWorld().equals(max.getWorld())) {
+            return plate == null ? null : findOpenLocationAbovePlate(plate);
+        }
+
+        World world = min.getWorld();
+        int minX = Math.min(min.getBlockX(), max.getBlockX());
+        int maxX = Math.max(min.getBlockX(), max.getBlockX());
+        int minY = Math.min(min.getBlockY(), max.getBlockY());
+        int maxY = Math.max(min.getBlockY(), max.getBlockY());
+        int minZ = Math.min(min.getBlockZ(), max.getBlockZ());
+        int maxZ = Math.max(min.getBlockZ(), max.getBlockZ());
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+
+        for (int attempt = 0; attempt < 12; attempt++) {
+            Location candidate = new Location(
+                world,
+                random.nextInt(minX, maxX + 1) + 0.5,
+                random.nextInt(minY, maxY + 1) + 0.5,
+                random.nextInt(minZ, maxZ + 1) + 0.5
+            );
+
+            boolean awayFromPlayers = players.stream()
+                .filter(player -> player.getWorld().equals(world))
+                .allMatch(player -> player.getLocation().distanceSquared(candidate) >= 4);
+
+            if (isOpenForFirework(candidate) && awayFromPlayers) {
+                return candidate;
             }
-        }.runTaskTimer(plugin, 10, 20);
+        }
+
+        return plate == null ? min.clone().add(0.5, 0.5, 0.5) : findOpenLocationAbovePlate(plate);
+    }
+
+    private Location findOpenLocationAbovePlate(Location plate) {
+        Location candidate = plate.clone().add(0.5, 2.5, 0.5);
+
+        for (int offset = 0; offset < 5; offset++) {
+            if (isOpenForFirework(candidate)) {
+                return candidate;
+            }
+
+            candidate.add(0, 1, 0);
+        }
+
+        return plate.clone().add(0.5, 2.5, 0.5);
+    }
+
+    private boolean isOpenForFirework(Location location) {
+        return location.getBlock().isPassable()
+            && location.clone().add(0, 1, 0).getBlock().isPassable();
+    }
+
+    private void spawnFirework(Location location) {
+        if (location == null || location.getWorld() == null) {
+            return;
+        }
+
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        Firework firework = location.getWorld().spawn(location, Firework.class);
+        FireworkMeta meta = firework.getFireworkMeta();
+        FireworkEffect.Type[] types = FireworkEffect.Type.values();
+
+        meta.addEffect(FireworkEffect.builder()
+            .with(types[random.nextInt(types.length)])
+            .withColor(Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256)))
+            .withFade(Color.fromRGB(random.nextInt(256), random.nextInt(256), random.nextInt(256)))
+            .flicker(random.nextBoolean())
+            .trail(true)
+            .build());
+        meta.setPower(0);
+
+        firework.setFireworkMeta(meta);
+        firework.setVelocity(new org.bukkit.util.Vector(0, 0.6, 0));
+        firework.setInvulnerable(true);
+        firework.setPersistent(false);
     }
 
     public Set<Player> getPlayers() {

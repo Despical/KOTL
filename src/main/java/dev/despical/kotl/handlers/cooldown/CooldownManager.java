@@ -19,11 +19,10 @@
 package dev.despical.kotl.handlers.cooldown;
 
 import dev.despical.kotl.user.User;
-import dev.despical.kotl.util.Schedulers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Despical
@@ -32,62 +31,41 @@ import java.util.UUID;
  */
 public class CooldownManager {
 
-    private double cooldownCounter = 0;
-
-    private final List<Cooldown> cooldowns;
+    private final Map<CooldownKey, Long> cooldowns;
 
     public CooldownManager() {
-        this.cooldowns = new ArrayList<>();
-        this.initializeCooldownTask();
-    }
-
-    private void initializeCooldownTask() {
-        Schedulers.runTaskTimerAsynchronously(() -> cooldownCounter += .5, 20, 10);
-
+        this.cooldowns = new ConcurrentHashMap<>();
     }
 
     public void setCooldown(User user, String name, double seconds) {
-        var cooldownOpt = cooldowns.stream().filter(cooldown -> cooldown.uuid.equals(user.getUniqueId()) && cooldown.name.equals(name)).findFirst();
+        CooldownKey key = new CooldownKey(user.getUniqueId(), name);
 
-        if (seconds == 0) {
-            cooldownOpt.ifPresent(cooldowns::remove);
+        if (seconds <= 0) {
+            cooldowns.remove(key);
             return;
         }
 
-        if (cooldownOpt.isPresent() && cooldowns.contains(cooldownOpt.get())) {
-            cooldownOpt.get().seconds = seconds + cooldownCounter;
-            return;
-        }
-
-        cooldowns.add(new Cooldown(user.getUniqueId(), name, seconds + cooldownCounter));
+        long durationMillis = (long) Math.ceil(seconds * 1000);
+        cooldowns.put(key, System.currentTimeMillis() + durationMillis);
     }
 
     public double getCooldown(User user, String name) {
-        var cooldownOptional = cooldowns.stream().filter(cooldown -> cooldown.uuid.equals(user.getUniqueId()) && cooldown.name.equals(name)).findFirst();
+        CooldownKey key = new CooldownKey(user.getUniqueId(), name);
+        Long expiresAt = cooldowns.get(key);
 
-        if (cooldownOptional.isEmpty() || cooldownOptional.get().seconds <= cooldownCounter) {
+        if (expiresAt == null) {
             return 0;
         }
 
-        if (cooldownOptional.get().seconds < cooldownCounter) {
-            cooldowns.remove(cooldownOptional.get());
+        long remainingMillis = expiresAt - System.currentTimeMillis();
+        if (remainingMillis <= 0) {
+            cooldowns.remove(key, expiresAt);
             return 0;
         }
 
-        return cooldownOptional.get().seconds - cooldownCounter;
+        return remainingMillis / 1000D;
     }
 
-    private static class Cooldown {
-
-        double seconds;
-
-        final UUID uuid;
-        final String name;
-
-        Cooldown(UUID uuid, String name, double seconds) {
-            this.uuid = uuid;
-            this.name = name;
-            this.seconds = seconds;
-        }
+    private record CooldownKey(UUID uuid, String name) {
     }
 }
