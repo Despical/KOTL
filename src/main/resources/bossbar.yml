@@ -1,6 +1,6 @@
-# ==========================================================
-#         KOTL - BossBar Configuration                     #
-# ==========================================================
+# ======================================================== #
+#      King of the Ladder - BossBar Configuration          #
+# ======================================================== #
 #                                                          #
 #  BAR STYLES:                                             #
 #    - PROGRESS   : Solid, undivided bar                   #
@@ -12,13 +12,14 @@
 #  BAR COLORS:                                             #
 #    - PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE       #
 #                                                          #
-# ==========================================================
+# ======================================================== #
 
-# Determines whether the BossBar system is enabled.
-# If set to 'false', the bar will not be displayed.
+# Determines whether this BossBar configuration is enabled.
+# The global and arena-specific BossBar switches must also be enabled.
 enabled: true
 
-# BossBar uses a single line for all stages.
+# BossBar appearance used while players are inside a King of the Ladder arena.
+# The text supports Adventure MiniMessage formatting.
 text: "<yellow><bold>Playing <gradient:#ff3b3b:#ff7a7a>KING OF THE LADDER</gradient> <yellow><bold>by <aqua><bold>DESPICAL"
 overlay: PROGRESS
-color: PINK
+color: BLUE

@@ -21,6 +21,7 @@ package dev.despical.kotl.bossbar;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.game.Game;
+import dev.despical.kotl.option.BooleanOption;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -121,6 +122,8 @@ public class BossBarManager {
     }
 
     private boolean isEnabled() {
-        return configProvider.isEnabled() && game.getArena().getOption(ArenaKeys.ARENA_BOSSBAR_ENABLED);
+        return BooleanOption.BOSS_BAR_ENABLED.value()
+            && configProvider.isEnabled()
+            && game.getArena().getOption(ArenaKeys.ARENA_BOSSBAR_ENABLED);
     }
 }
