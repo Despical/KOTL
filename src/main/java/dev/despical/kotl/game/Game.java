@@ -79,7 +79,16 @@ public class Game {
         players.forEach(player -> plugin.getChatManager().sendMessage(player, messagePath, variables));
     }
 
-    public void addPlayer(Player player) {
+    public boolean addPlayer(Player player) {
+        if (players.contains(player)) {
+            return false;
+        }
+
+        var enterEvent = plugin.getEventManager().playerEnterArena(player, this);
+        if (enterEvent.isCancelled()) {
+            return false;
+        }
+
         players.add(player);
         if (BooleanOption.JOIN_NOTIFY.value()) {
             broadcastMessage("game.player-joined", Var.of("%player%", player.getName()));
@@ -122,7 +131,7 @@ public class Game {
             Utils.applyActionBarCooldown(user, arena.getId(), IntOption.COOLDOWN.value());
         }
 
-        plugin.getEventManager().playerEnterArena(player, this);
+        return true;
     }
 
     public void removePlayer(Player player, boolean quit) {

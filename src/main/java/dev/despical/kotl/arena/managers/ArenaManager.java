@@ -64,8 +64,7 @@ public class ArenaManager {
             return false;
         }
 
-        game.addPlayer(user.getPlayer());
-        return true;
+        return game.addPlayer(user.getPlayer());
     }
 
     public void leaveAttempt(User user) {
