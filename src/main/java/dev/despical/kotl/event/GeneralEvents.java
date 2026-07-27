@@ -30,9 +30,12 @@ import dev.despical.kotl.util.Utils;
 import dev.despical.kotl.util.Var;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
@@ -90,6 +93,8 @@ public class GeneralEvents extends ListenerAdapter {
         if (arena != null) {
             quitPlayers.put(uuid, arena);
             arenaManager.quitPlayer(user, arena);
+        } else {
+            plugin.getDatabase().saveData(user);
         }
 
         userManager.removeUser(user);
@@ -122,7 +127,7 @@ public class GeneralEvents extends ListenerAdapter {
         Schedulers.runInTheNextTick(() -> game.restoreAfterRespawn(user));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         Arena arena = arenaRegistry.getArena(player);
@@ -150,7 +155,13 @@ public class GeneralEvents extends ListenerAdapter {
         }
 
         boolean enableFormatting = BooleanOption.ENABLE_CHAT_FORMATTING.value();
-        if (!enableFormatting && !separateChat) {
+
+        if (separateChat) {
+            Set<Player> arenaPlayers = arena.getGame().getPlayers();
+            recipients.removeIf(recipient -> !arenaPlayers.contains(recipient));
+        }
+
+        if (!enableFormatting) {
             return;
         }
 
@@ -162,17 +173,44 @@ public class GeneralEvents extends ListenerAdapter {
             Var.of("%message%", event.getMessage())
         );
 
-        if (separateChat) {
-            arena.getGame().broadcastRawComponent(formattedMessage);
-            return;
-        }
-
-        plugin.getServer().broadcast(formattedMessage);
+        recipients.forEach(recipient -> chatManager.sendRawComponent(recipient, formattedMessage));
+        plugin.getServer().getConsoleSender().sendMessage(formattedMessage);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent event) {
-        cancelIfTaskIsNull(event);
+        if (!(event.getEntity() instanceof Player damagedPlayer)) {
+            return;
+        }
+
+        Player attackingPlayer = getAttackingPlayer(event);
+        Arena damagedArena = arenaRegistry.getArena(damagedPlayer);
+        Arena attackingArena = attackingPlayer == null ? null : arenaRegistry.getArena(attackingPlayer);
+
+        if (damagedArena == null && attackingArena == null) {
+            return;
+        }
+
+        boolean sameArena = damagedArena != null && damagedArena == attackingArena;
+        if (sameArena) {
+            event.setCancelled(false);
+            event.setDamage(0d);
+            return;
+        }
+
+        event.setCancelled(true);
+    }
+
+    private Player getAttackingPlayer(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player player) {
+            return player;
+        }
+
+        if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            return player;
+        }
+
+        return null;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -190,6 +228,20 @@ public class GeneralEvents extends ListenerAdapter {
         }
 
         event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
+            event.setCancelled(true);
+        }
     }
 
     private <T extends EntityEvent & Cancellable> void cancelIfTaskIsNull(T event) {
@@ -231,7 +283,7 @@ public class GeneralEvents extends ListenerAdapter {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onItemPickup(EntityPickupItemEvent event) {
-        if (!BooleanOption.PICK_UP_ITEMS.value()) return;
+        if (BooleanOption.PICK_UP_ITEMS.value()) return;
         if (!(event.getEntity() instanceof Player player)) return;
 
         Arena arena = arenaRegistry.getArena(player);
@@ -240,6 +292,15 @@ public class GeneralEvents extends ListenerAdapter {
         }
 
         event.getItem().remove();
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onArrowPickup(PlayerPickupArrowEvent event) {
+        if (BooleanOption.PICK_UP_ITEMS.value()) return;
+        if (!arenaRegistry.isInArena(event.getPlayer())) return;
+
+        event.getArrow().remove();
         event.setCancelled(true);
     }
 }

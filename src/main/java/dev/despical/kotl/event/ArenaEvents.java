@@ -24,15 +24,15 @@ import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.util.Schedulers;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.util.Vector;
 
 /**
  * @author Despical
@@ -55,48 +55,33 @@ public final class ArenaEvents extends ListenerAdapter {
         Block block = event.getClickedBlock();
         if (block == null) return;
 
-        if (block.getLocation().equals(arena.getOption(ArenaKeys.PLATE_LOCATION))) {
-            arena.getGame().becomeKing(player);
+        if (block.getLocation().equals(arena.getOption(ArenaKeys.PLATE_LOCATION))
+            && arena.getGame().becomeKing(player)) {
+            knockPlayerFromPlate(player, block.getLocation());
         }
     }
 
-    @EventHandler
-    public void onInteractWithDeathBlocks(PlayerInteractEvent event) {
-        var player = event.getPlayer();
-
-        if (!BooleanOption.DEATH_BLOCKS_ENABLED.value()) {
+    private void knockPlayerFromPlate(Player player, Location plateLocation) {
+        if (!BooleanOption.KING_PLATE_KNOCKBACK_ENABLED.value()) {
             return;
         }
 
-        User user = userManager.getUser(player);
-        Arena arena = user.getArena();
+        Location plateCenter = plateLocation.clone().add(0.5, 0, 0.5);
+        Vector direction = player.getLocation().toVector().subtract(plateCenter.toVector()).setY(0);
 
-        if (arena == null) return;
-
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            for (String material : plugin.getConfig().getStringList("Death-Blocks.Blacklisted-Blocks")) {
-                if (event.getClickedBlock().getType() == Material.valueOf(material.toUpperCase())) {
-                    plugin.getArenaManager().leaveAttempt(user);
-
-                    player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
-                    return;
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player entity && event.getDamager() instanceof Player damager)) {
-            return;
+        if (direction.lengthSquared() < 0.01) {
+            direction = player.getLocation().getDirection().setY(0).multiply(-1);
         }
 
-        if (arenaRegistry.isInArena(entity) && arenaRegistry.isInArena(damager)) {
-            if (!BooleanOption.DAMAGE_ENABLED.value()) {
-                event.setCancelled(false);
-                event.setDamage(0d);
-            }
+        if (direction.lengthSquared() < 0.01) {
+            direction = new Vector(1, 0, 0);
         }
+
+        double horizontalStrength = plugin.getConfig().getDouble("king-settings.plate-knockback.horizontal-strength", 1.25);
+        double verticalStrength = plugin.getConfig().getDouble("king-settings.plate-knockback.vertical-strength", 0.45);
+
+        direction.normalize().multiply(horizontalStrength).setY(verticalStrength);
+        player.setVelocity(direction);
     }
 
     @EventHandler
