@@ -27,6 +27,7 @@ import dev.despical.commons.scoreboard.common.EntryBuilder;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.game.Game;
+import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.scoreboard.formatter.GlobalFormatter;
 import dev.despical.kotl.user.User;
 import net.kyori.adventure.text.Component;
@@ -110,6 +111,7 @@ public class ScoreboardManager {
                 resetPlayerScoreboard(player);
             }
         });
+
         scoreboards.clear();
     }
 
@@ -126,9 +128,8 @@ public class ScoreboardManager {
     }
 
     private List<Entry> getLines(Player player) {
-        EntryBuilder builder = new EntryBuilder();
-
         User user = plugin.getUserManager().getUser(player);
+        EntryBuilder builder = new EntryBuilder();
 
         for (String line : contents.lines) {
             builder.next(formatLine(line, user));
@@ -160,7 +161,8 @@ public class ScoreboardManager {
     }
 
     private boolean isEnabled() {
-        return game.getArena().getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED);
+        return BooleanOption.SCOREBOARD_ENABLED.value()
+            && game.getArena().getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED);
     }
 
     public static void resetPlayerScoreboard(Player player) {

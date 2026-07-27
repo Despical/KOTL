@@ -1,12 +1,25 @@
-# =================================================================
-#             King of the Ladder - Scoreboard Configuration
-# =================================================================
-# Supported placeholders:
-#   %player%, %date%, %arena%, %players%, %king%, %last_king%
-#   %top_king%, %top_king_score%, %score%, %arena_score%
-#   %tours_played%, %kills%, %deaths%
-# =================================================================
+# =============================================================== #
+#         King of the Ladder - Scoreboard Configuration           #
+# =============================================================== #
+#                                                                 #
+# SUPPORTED PLACEHOLDERS:                                         #
+#   %player%          : Name of the player                        #
+#   %date%            : Current date                              #
+#   %arena%           : Id of the current arena                   #
+#   %players%         : Current number of players in the arena    #
+#   %king%            : Current king                              #
+#   %last_king%       : Most recent king                          #
+#   %top_king%        : Arena record holder                       #
+#   %top_king_score%  : Arena record score                        #
+#   %score%           : Player's total king score                 #
+#   %arena_score%     : Player's score in the current arena       #
+#   %tours_played%    : Player's total tours played               #
+#   %kills%           : Player's total kills                      #
+#   %deaths%          : Player's total deaths                     #
+#                                                                 #
+# =============================================================== #
 
+# Scoreboard shown while a player is inside a King of the Ladder arena.
 title: "<#FFC800><bold>KING OF THE LADDER"
 lines:
   - "<#B0C4DE>%date%"
