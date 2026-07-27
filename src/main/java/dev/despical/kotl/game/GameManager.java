@@ -31,6 +31,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -53,6 +54,10 @@ public class GameManager {
         game.getScoreboardManager().removeAllScoreboards();
         game.getBossBarManager().removeAll();
 
+        List<UUID> stoppedPlayers = game.getPlayers().stream()
+            .map(Player::getUniqueId)
+            .toList();
+
         Arena arena = game.getArena();
         Location endLocation = arena.getOption(ArenaKeys.END_LOCATION);
         String messagePath = reason.getMessagePath();
@@ -69,6 +74,8 @@ public class GameManager {
 
             game.removePlayer(player, false, true, saveStats, mapLeaveReason(reason));
         }
+
+        plugin.getEventManager().gameStop(game, reason, stoppedPlayers);
     }
 
     public void stopAllGames(StopReason reason) {

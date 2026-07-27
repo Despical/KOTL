@@ -18,6 +18,7 @@
 
 package dev.despical.kotl.api;
 
+import dev.despical.kotl.api.events.game.GameStopEvent;
 import dev.despical.kotl.api.events.player.PlayerEnterArenaEvent;
 import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.api.events.player.PlayerBecomeKingEvent;
@@ -34,6 +35,8 @@ import org.bukkit.event.Event;
 @Getter
 @AllArgsConstructor
 public enum EventType {
+
+    GAME_STOP(GameStopEvent.class),
 
     PLAYER_ENTER_ARENA(PlayerEnterArenaEvent.class),
     PLAYER_LEAVE_ARENA(PlayerLeaveArenaEvent.class),

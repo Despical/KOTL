@@ -19,17 +19,21 @@
 package dev.despical.kotl.api;
 
 import dev.despical.kotl.KOTL;
+import dev.despical.kotl.api.events.game.GameStopEvent;
 import dev.despical.kotl.api.events.player.PlayerBecomeKingEvent;
 import dev.despical.kotl.api.events.player.PlayerEnterArenaEvent;
 import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.api.events.player.PlayerStatisticChangeEvent;
 import dev.despical.kotl.game.Game;
+import dev.despical.kotl.game.StopReason;
 import dev.despical.kotl.stats.StatisticType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
+import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 /**
@@ -73,6 +77,10 @@ public final class EventManager {
 
     public void reload() {
         profiler.reload();
+    }
+
+    public void gameStop(Game game, StopReason reason, List<UUID> stoppedPlayers) {
+        callByType(EventType.GAME_STOP, () -> new GameStopEvent(game, reason, stoppedPlayers));
     }
 
     public PlayerEnterArenaEvent playerEnterArena(Player player, Game game) {
