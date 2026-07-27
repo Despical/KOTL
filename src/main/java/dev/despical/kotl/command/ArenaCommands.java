@@ -125,10 +125,15 @@ public final class ArenaCommands extends CommandCategory {
 
         for (Arena arena : arenas) {
             boolean isReady = arena.getOption(ArenaKeys.READY);
+            boolean isEnabled = arena.getOption(ArenaKeys.ENABLED);
 
-            if (isReady) {
+            if (isReady && isEnabled) {
                 arenasJoiner.add(
                     "<#00E676><hover:show_text:'<#00E676><b>✔ Ready to play!</b><br><gray>Click to join.'><click:run_command:'/kotl join %s'>%1$s</click></hover>".formatted(arena.getId())
+                );
+            } else if (isReady) {
+                arenasJoiner.add(
+                    "<#B0BEC5><hover:show_text:'<#FFCA28><b>Temporarily disabled</b><br><gray>Click to edit.'><click:run_command:'/kotl edit %s'>%1$s</click></hover>".formatted(arena.getId())
                 );
             } else {
                 arenasJoiner.add(
