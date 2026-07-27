@@ -14,8 +14,8 @@ import dev.despical.commons.reflection.XReflection;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.Arena;
-import dev.despical.kotl.arena.ArenaDataSaver;
 import dev.despical.kotl.arena.options.ArenaKeys;
+import dev.despical.kotl.setup.pages.SetupHomePage;
 import dev.despical.kotl.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -97,11 +97,20 @@ public class CuboidSelector {
 
             User user = plugin.getUserManager().getUser(event.getPlayer());
             UUID uuid = user.getUniqueId();
+            Arena arena = plugin.getArenaRegistry().getArena(arenaId);
+
+            if (arena == null) {
+                return;
+            }
 
             switch (event.getAction()) {
                 case LEFT_CLICK_BLOCK -> {
                     Location first = event.getClickedBlock().getLocation();
                     selections.put(uuid, new Selection(first, null));
+
+                    arena.setOption(ArenaKeys.MIN_CORNER, first);
+                    plugin.getOutlineManager().handleOutlines(arena);
+
                     plugin.getChatManager().sendMessage(event.getPlayer(), "setup.area-first-position-set", locationVars("%first", first));
                 }
 
@@ -117,20 +126,17 @@ public class CuboidSelector {
                     Selection selection = new Selection(currentSelection.firstPos(), second);
                     selections.put(uuid, selection);
 
-                    Arena arena = plugin.getArenaRegistry().getArena(arenaId);
-                    if (arena == null) {
-                        return;
-                    }
-
                     arena.setOption(ArenaKeys.MIN_CORNER, selection.firstPos());
                     arena.setOption(ArenaKeys.MAX_CORNER, selection.secondPos());
-                    new ArenaDataSaver(plugin).saveAllArenas();
+
+                    plugin.getOutlineManager().handleOutlines(arena);
 
                     plugin.getChatManager().sendMessage(event.getPlayer(), "setup.area-selection-complete",
                         locationVars("%first", selection.firstPos()),
                         locationVars("%second", selection.secondPos()),
                         Var.of("%blocks%", countBlocks(selection))
                     );
+                    SetupHomePage.warnIfKingPlateOutsideArea(event.getPlayer(), arena);
                 }
             }
         }

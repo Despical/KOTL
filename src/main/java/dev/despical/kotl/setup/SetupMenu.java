@@ -27,6 +27,7 @@ import dev.despical.kotl.menu.Menu;
 import dev.despical.kotl.setup.pages.GamemodeSelectionPage;
 import dev.despical.kotl.setup.pages.PlateMaterialSelectionPage;
 import dev.despical.kotl.setup.pages.PlayerSettingsPage;
+import dev.despical.kotl.setup.pages.ResetArenaRecordsConfirmationPage;
 import dev.despical.kotl.setup.pages.SetupHomePage;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.util.Var;
@@ -131,6 +132,21 @@ public class SetupMenu implements Menu {
         SetupPage platePage = new PlateMaterialSelectionPage(this);
         platePage.beforeOpening(gui);
         platePage.injectItems(basePane);
+
+        basePane.setPage(0);
+
+        gui.update();
+    }
+
+    public void openArenaRecordResetConfirmation() {
+        gui.removePanes();
+
+        basePane = new PaginatedPane(9, 6);
+        gui.addPane(basePane);
+
+        SetupPage confirmationPage = new ResetArenaRecordsConfirmationPage(this);
+        confirmationPage.beforeOpening(gui);
+        confirmationPage.injectItems(basePane);
 
         basePane.setPage(0);
 

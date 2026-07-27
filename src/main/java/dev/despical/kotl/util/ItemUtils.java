@@ -19,11 +19,13 @@
 package dev.despical.kotl.util;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import dev.despical.commons.XMaterial;
 import dev.despical.fileitems.SpecialItem;
 import dev.despical.kotl.KOTL;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemFlag;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * @author Despical
@@ -46,6 +49,10 @@ public final class ItemUtils {
     public static final ItemStack[] EMPTY_ARMORS = new ItemStack[4];
 
     private static final KOTL PLUGIN = KOTL.getInstance();
+    private static final UUID OFFLINE_MODE_RESET_HEAD_UUID = UUID.fromString("e57c4a3a-6ec5-4f6b-8bfa-fb287b2a6ed8");
+    private static final String OFFLINE_MODE_RESET_HEAD_NAME = "mrdespi.1";
+    private static final String OFFLINE_MODE_RESET_HEAD_TEXTURE_VALUE = "ewogICJ0aW1lc3RhbXAiIDogMTc3ODQ5MjA0NDk1NSwKICAicHJvZmlsZUlkIiA6ICJlNTdjNGEzYTZlYzU0ZjZiOGJmYWZiMjg3YjJhNmVkOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJtcmRlc3BpIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzdjYTg1YzE1NjNiZjU2OWQ4OGJmN2JjMzc1Y2JjODIwZDdkNGE3M2M5MmFhZjdkOTQ3OWFmNWVmNTI1NWQwNDAiCiAgICB9CiAgfQp9";
+    private static final String OFFLINE_MODE_RESET_HEAD_TEXTURE_SIGNATURE = "gJQwuBIayG/9eleAu1NB14dvu2uXrSuSNTlUnFiaZAuDE4vgfGGcyuKTY/u2JPKZGKgr/S8WGvdqNyEUzFRpQf4spWF6u6FW0njE/p5Wcpg7RqxBcnoafgn/mrqllCIOelhI6coWkODkhfBZEEgZmgbD7PVWuJKTDPIyCcc2+ZAebYDQl6dvzOSjrEr5Af55ePil9aQAKBOtAU82joVcwvWcPrYse0UiqQLpo/lLVAQRuJqwJF5C1IjAAA7t9YnaDmfvZOnhI+SIpUuQBtjGJ1sfjH8qiCcv9QrPKRzRqT61NyBJWN/4vp2UMSGpl6NZXg6KaR7pjcX1+12iFoU20UHwsB/LOrnR2CYOX6qZqDj5qPk4kDPftIKqyBl0IIfA2eZ1vEMFkFEcXrdzGGW/0DxmA8aowKp1VLyN2PDXiJ+gPbAibFExHsTNokhJpYuxp0DH1DP6b5jGaLJYfRQr4TvEITvtlI1+S9aOkmHZQ2Lsf02Qrt7vQUXf4z+pGs1lWUsly9nIePQKLRw6CIpjwVejQTmvsQrljPpSe7Qd4+u1hLZcONd0afLB5DWe0b3dtZzUsiEZc/n/j11Jp64MsIIfwwRKgj6WN76JOey387ARjjXLoY3KMVuMiqXkBatUtSy2Yta2JPlr4wzlYSqv0/1jIK2uv3iocRwmfqqbaeE=";
 
     public static void applyPlayerProfileIfSkull(OfflinePlayer player, ItemStack item) {
         if (item.getType() == XMaterial.PLAYER_HEAD.get()) {
@@ -53,6 +60,22 @@ public final class ItemUtils {
             skullMeta.setPlayerProfile(player.getPlayerProfile());
 
             item.setItemMeta(skullMeta);
+        }
+    }
+
+    public static void applyArenaRecordResetHead(ItemStack item, String recordHolderName) {
+        if (item.getType() != XMaterial.PLAYER_HEAD.get()) {
+            return;
+        }
+
+        if (!Bukkit.getOnlineMode()) {
+            applyProfileIfSkull(createOfflineModeResetHeadProfile(), item);
+            return;
+        }
+
+        OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(recordHolderName);
+        if (player != null) {
+            applyPlayerProfileIfSkull(player, item);
         }
     }
 
@@ -64,6 +87,12 @@ public final class ItemUtils {
         SkullMeta skullMeta = (SkullMeta) item.getItemMeta();
         skullMeta.setPlayerProfile(profile);
         item.setItemMeta(skullMeta);
+    }
+
+    private static PlayerProfile createOfflineModeResetHeadProfile() {
+        PlayerProfile profile = Bukkit.createProfile(OFFLINE_MODE_RESET_HEAD_UUID, OFFLINE_MODE_RESET_HEAD_NAME);
+        profile.setProperty(new ProfileProperty("textures", OFFLINE_MODE_RESET_HEAD_TEXTURE_VALUE, OFFLINE_MODE_RESET_HEAD_TEXTURE_SIGNATURE));
+        return profile;
     }
 
     @Contract(pure = true)

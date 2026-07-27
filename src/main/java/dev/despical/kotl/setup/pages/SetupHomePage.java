@@ -7,6 +7,7 @@ import dev.despical.inventoryframework.pane.PaginatedPane;
 import dev.despical.inventoryframework.pane.StaticPane;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.options.ArenaKeys;
+import dev.despical.kotl.game.StopReason;
 import dev.despical.kotl.setup.SetupMenu;
 import dev.despical.kotl.setup.SetupPage;
 import dev.despical.kotl.util.ItemUtils;
@@ -34,26 +35,23 @@ public class SetupHomePage extends SetupPage {
 
     @Override
     public void beforeOpening(Gui gui) {
-        int rows = arena.getOption(ArenaKeys.READY) ? 3 : 4;
-        gui.setRows(rows);
+        gui.setRows(5);
     }
 
     @Override
     public void injectItems(PaginatedPane paginatedPane) {
-        StaticPane pane = new StaticPane(9, 4);
+        StaticPane pane = new StaticPane(9, 5);
 
         pane.addItem(createEndLocationItem(), 1, 1);
         pane.addItem(createKingPlateItem(), 3, 1);
         pane.addItem(createAreaSelectorItem(), 5, 1);
         pane.addItem(createPlayerSettingsItem(), 7, 1);
-
-        GuiItem resetArenaRecordsItem = createArenaRecordResetItem();
-        if (resetArenaRecordsItem != null) {
-            pane.addItem(resetArenaRecordsItem, 3, 3);
-        }
+        pane.addItem(createArenaRecordResetItem(), 1, 3);
 
         if (!arena.getOption(ArenaKeys.READY)) {
-            pane.addItem(createRegisterItem(), 8, 3);
+            pane.addItem(createRegisterItem(), 8, 4);
+        } else {
+            pane.addItem(createArenaToggleItem(), 8, 4);
         }
 
         paginatedPane.addPane(0, pane);
@@ -139,6 +137,18 @@ public class SetupHomePage extends SetupPage {
 
         plugin.getChatManager().sendMessage(player, "setup.king-plate-set");
         player.playSound(player.getLocation(), Sound.BLOCK_LODESTONE_PLACE, 1f, 1f);
+        warnIfKingPlateOutsideArea(player, arena);
+    }
+
+    public static void warnIfKingPlateOutsideArea(Player player, Arena arena) {
+        Location plateLocation = arena.getOption(ArenaKeys.PLATE_LOCATION);
+        if (!plugin.getArenaRegistry().hasValidArea(arena)
+            || plugin.getArenaRegistry().isLocationInArea(arena, plateLocation)) {
+            return;
+        }
+
+        plugin.getChatManager().sendMessage(player, "setup.king-plate-outside-game-area");
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1f, 0.7f);
     }
 
     private void setKingPlate(Player player, Location location) {
@@ -195,24 +205,55 @@ public class SetupHomePage extends SetupPage {
         int topScore = arena.getOption(ArenaKeys.TOP_KING_SCORE);
         String topName = arena.getOption(ArenaKeys.TOP_KING);
 
-        if (topScore <= 0 || topName.equalsIgnoreCase("None")) {
-            return null;
-        }
-
         SpecialItem specialItem = itemManager.getItem("arena-record-reset");
         ItemStack item = ItemUtils.formatItemStack(specialItem,
             Var.of("%record_holder%", topName),
             Var.of("%record_score%", topScore)
         );
+        ItemUtils.applyArenaRecordResetHead(item, topName);
 
         return GuiItem.of(item, event -> {
-            plugin.getUserManager().getUsers().forEach(user -> user.resetArenaStats(arena.getId()));
+            Player player = (Player) event.getWhoClicked();
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1.15f);
 
-            arena.setOption(ArenaKeys.TOP_KING, "None");
-            arena.setOption(ArenaKeys.TOP_KING_SCORE, 0);
+            menu.openArenaRecordResetConfirmation();
+        });
+    }
+
+    private GuiItem createArenaToggleItem() {
+        boolean enabled = arena.getOption(ArenaKeys.ENABLED);
+        SpecialItem specialItem = itemManager.getItem("arena-toggle");
+        ItemStack item = ItemUtils.formatItemStack(
+            specialItem,
+            Var.of("%toggle_action%", enabled ? "<#FF5252>disable" : "<#00E676>enable"),
+            Var.of("%arena_state_description%", enabled
+                ? "<#B0BEC5>This arena is currently detecting players."
+                : "<#B0BEC5>This arena is now safe to be edited"),
+            Var.of("%arena_edit_description%", enabled
+                ? "<#B0BEC5>Disable it before editing the Game Area."
+                : "<#B0BEC5>and won't detect any players.")
+        );
+        item.setType(enabled ? Material.LIME_DYE : Material.GRAY_DYE);
+
+        return GuiItem.of(item, event -> {
+            boolean newState = !arena.getOption(ArenaKeys.ENABLED);
+            arena.setOption(ArenaKeys.ENABLED, newState);
+
+            if (!newState) {
+                plugin.getGameManager().stopGame(arena.getGame(), StopReason.ARENA_DISABLED);
+            }
+
+            plugin.getArenaDataSaver().saveAllArenas();
 
             Player player = (Player) event.getWhoClicked();
-            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 0.8f);
+            if (newState) {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1.8f);
+                chatManager.sendMessage(player, "setup.arena-enabled", Var.of("%arena_id%", arena.getId()));
+            } else {
+                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1f);
+                chatManager.sendMessage(player, "setup.arena-disabled", Var.of("%arena_id%", arena.getId()));
+            }
+
             menu.setPage(0);
         });
     }
@@ -231,7 +272,7 @@ public class SetupHomePage extends SetupPage {
             } else if (arena.getOption(ArenaKeys.PLATE_LOCATION) == null) {
                 missingInfo = "King Plate";
             } else if (arena.getOption(ArenaKeys.MIN_CORNER) == null || arena.getOption(ArenaKeys.MAX_CORNER) == null) {
-                missingInfo = "Arena Area";
+                missingInfo = "Game Area";
             }
 
             if (missingInfo != null) {
@@ -244,7 +285,21 @@ public class SetupHomePage extends SetupPage {
                 return;
             }
 
+            if (!plugin.getArenaRegistry().hasValidArea(arena)) {
+                chatManager.sendCenteredMessage(player, specialItem.<List<String>>getCustomKey("invalid-game-area"));
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 0.5f, 0.5f);
+                return;
+            }
+
+            if (!plugin.getArenaRegistry().isLocationInArea(arena, arena.getOption(ArenaKeys.PLATE_LOCATION))) {
+                chatManager.sendCenteredMessage(player, specialItem.<List<String>>getCustomKey("king-plate-outside-area"));
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 0.5f, 0.5f);
+                return;
+            }
+
             arena.setOption(ArenaKeys.READY, true);
+            arena.setOption(ArenaKeys.ENABLED, true);
+            plugin.getArenaDataSaver().saveAllArenas();
 
             Var[] vars = {
                 Var.of("%arena_id%", arena.getId())

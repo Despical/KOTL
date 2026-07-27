@@ -12,6 +12,10 @@ public final class SetupListener extends ListenerAdapter {
 
     @EventHandler
     public void onKingPlatePlace(BlockPlaceEvent event) {
+        if (arenaRegistry.isInArena(event.getPlayer())) {
+            return;
+        }
+
         ItemStack item = event.getItemInHand();
         ItemMeta meta = item.getItemMeta();
 

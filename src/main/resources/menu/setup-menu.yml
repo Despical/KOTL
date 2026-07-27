@@ -1,3 +1,7 @@
+# =============================================================== #
+#             King of the Ladder - Setup Menu                     #
+# =============================================================== #
+
 title: "<gradient:#FF5252:#D50000><bold>GAME SETUP</bold></gradient> <dark_gray><bold>></bold></dark_gray> <gold><bold>%arena_id%</bold>"
 
 items:
@@ -54,7 +58,7 @@ items:
       - HIDE_ADDITIONAL_TOOLTIP
 
   platform-selector:
-    name: "<!i><#FFAB00><bold>Select Arena Area"
+    name: "<!i><#FFAB00><bold>Select Game Area"
     material: BLAZE_ROD
     lore:
       - "<!i><#2F2F2F>• <#FFCA28>LEFT  <#BDBDBD>click <#FFF8E1>→ receive the tool"
@@ -66,7 +70,7 @@ items:
       - "<!i><#2F2F2F>• <#B0BEC5>Visualizer: %outline_status%"
 
   area-selector:
-    name: "<#FFAB00><bold>Arena Area Selector"
+    name: "<#FFAB00><bold>Game Area Selector"
     material: BLAZE_ROD
     lore:
       - "<italic:false><#2F2F2F>• <#FFCA28>LEFT <#BDBDBD>click a block"
@@ -87,13 +91,37 @@ items:
     name: "<!i><#FF5252><bold>Reset Arena King Records"
     material: PLAYER_HEAD
     lore:
-      - "<!i><#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to clear loaded records"
+      - "<!i><#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to open reset confirmation"
       - ""
       - "<!i><#2F2F2F>• <#B0BEC5>Record Holder: <#81D4FA>%record_holder%"
       - "<!i><#2F2F2F>• <#B0BEC5>Best Score: <#FFD54F>%record_score%"
       - ""
       - "<!i><#2F2F2F>• <#EF9A9A>Removes this arena's score"
-      - "<!i><#EF9A9A>  from currently loaded players."
+      - "<!i><#EF9A9A>  from currently loaded players"
+      - "<!i><#EF9A9A>  and clears all king records."
+
+  confirm-arena-record-reset:
+    name: "<#00E676><bold>Confirm Reset"
+    material: LIME_DYE
+    lore:
+      - "<#2F2F2F>• <#00E676>CLICK <#BDBDBD>to permanently clear this"
+      - "<#BDBDBD>  arena's king records and loaded scores."
+
+  cancel-arena-record-reset:
+    name: "<#FF5252><bold>Cancel"
+    material: RED_DYE
+    lore:
+      - "<#2F2F2F>• <#FF5252>CLICK <#BDBDBD>to go back without"
+      - "<#BDBDBD>  changing any records."
+
+  arena-toggle:
+    name: "<#29B6F6><bold>Arena Availability"
+    material: LIME_DYE
+    lore:
+      - "<#2F2F2F>• <#29B6F6>CLICK <#BDBDBD>to %toggle_action% this arena"
+      - ""
+      - "<#2F2F2F>• %arena_state_description%"
+      - "  %arena_edit_description%"
 
   register-arena:
     name: "<#00E676><bold>Register the Arena"
@@ -107,6 +135,22 @@ items:
       - "<gray>A mandatory configuration value is missing."
       - ""
       - "<gray>Missing arena option: <#FFD54F>%option%"
+      - ""
+      - "<#37474F><st>                                                                                 </st>"
+    invalid-game-area:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<#FF5252><bold>REGISTRATION FAILED"
+      - ""
+      - "<gray>The Game Area corners must be in the same loaded world."
+      - "<gray>Select both corners again before registering the arena."
+      - ""
+      - "<#37474F><st>                                                                                 </st>"
+    king-plate-outside-area:
+      - "<#37474F><st>                                                                                 </st>"
+      - "<#FF5252><bold>REGISTRATION FAILED"
+      - ""
+      - "<gray>The King Plate must be located inside the Game Area."
+      - "<gray>Move the plate or select the Game Area again."
       - ""
       - "<#37474F><st>                                                                                 </st>"
     registered-successfully:

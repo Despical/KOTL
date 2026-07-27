@@ -83,6 +83,7 @@ public class PlayerSettingsPage extends SetupPage {
         return GuiItem.of(item, event -> {
             boolean newValue = !arena.getOption(ArenaKeys.ARENA_BOSSBAR_ENABLED);
             arena.setOption(ArenaKeys.ARENA_BOSSBAR_ENABLED, newValue);
+            arena.getGame().getBossBarManager().update();
 
             clickAndReopen(event, newValue);
         });
