@@ -36,11 +36,11 @@ import org.bukkit.event.Cancellable;
  * </ul>
  *
  * <p>The {@code newValue} is mutable, meaning listeners can override the final value
- * using {@link #setNewValue)}.</p>
+ * using {@code setNewValue(...)}.</p>
  *
  * <p>If the event is canceled, the statistic update will NOT be applied.</p>
  *
- * <h3>Example: Apply a 2x booster</h3>
+ * <h2>Example: Apply a 2x booster</h2>
  * <pre>{@code
  * @EventHandler
  * public void onStatChange(PlayerStatisticChangeEvent event) {
@@ -50,7 +50,7 @@ import org.bukkit.event.Cancellable;
  * }
  * }</pre>
  *
- * <h3>Example: Cap a statistic value</h3>
+ * <h2>Example: Cap a statistic value</h2>
  * <pre>{@code
  * @EventHandler
  * public void onStatChange(PlayerStatisticChangeEvent event) {
@@ -62,7 +62,7 @@ import org.bukkit.event.Cancellable;
  * }
  * }</pre>
  *
- * <h3>Example: Block suspicious stat increases</h3>
+ * <h2>Example: Block suspicious stat increases</h2>
  * <pre>{@code
  * @EventHandler
  * public void onStatChange(PlayerStatisticChangeEvent event) {
@@ -74,7 +74,7 @@ import org.bukkit.event.Cancellable;
  * }
  * }</pre>
  *
- * <h3>Example: Reduce stat gain in specific conditions</h3>
+ * <h2>Example: Reduce stat gain in specific conditions</h2>
  * <pre>{@code
  * @EventHandler
  * public void onStatChange(PlayerStatisticChangeEvent event) {
