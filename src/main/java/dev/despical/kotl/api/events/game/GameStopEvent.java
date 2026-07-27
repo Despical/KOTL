@@ -20,7 +20,6 @@ package dev.despical.kotl.api.events.game;
 
 import dev.despical.kotl.game.Game;
 import dev.despical.kotl.game.StopReason;
-import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +44,6 @@ import java.util.UUID;
  * <p>
  * Created at 27.07.2026
  */
-@Getter
 public class GameStopEvent extends GameEvent {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -83,6 +81,26 @@ public class GameStopEvent extends GameEvent {
         super(game);
         this.reason = reason;
         this.stoppedPlayers = List.copyOf(stoppedPlayers);
+    }
+
+    /**
+     * Returns why the game was stopped.
+     *
+     * @return the stop reason
+     */
+    @NotNull
+    public StopReason getReason() {
+        return reason;
+    }
+
+    /**
+     * Returns the immutable UUID snapshot captured before player cleanup.
+     *
+     * @return the players present before the game stopped
+     */
+    @NotNull
+    public List<UUID> getStoppedPlayers() {
+        return stoppedPlayers;
     }
 
     /**
