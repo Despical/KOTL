@@ -1,7 +1,7 @@
 items:
   area-selector:
     material: BLAZE_ROD
-    name: "&6&lArea selector"
+    name: "<#FFAB00><bold>Game Area Selector"
     lore:
-      - "&eLEFT CLICK to select first corner."
-      - "&eRIGHT CLICK to select second corner."
+      - "<#FFCA28><bold>LEFT CLICK <#B0BEC5>to select the first corner."
+      - "<#FFD54F><bold>RIGHT CLICK <#B0BEC5>to select and save the second corner."
