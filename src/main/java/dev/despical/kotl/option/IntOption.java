@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum IntOption implements ConfigOption<Integer> {
 
-    COOLDOWN("King-Settings.Cooldown", 5);
+    COOLDOWN("king-settings.cooldown", 5);
 
     private final String path;
     private final Integer defaultValue;

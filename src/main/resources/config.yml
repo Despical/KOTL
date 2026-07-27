@@ -1,131 +1,103 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                             #
 #                     King of the Ladder                      #
-#                          Despical                           #
+#                         by Despical                         #
 #                                                             #
-#                https://discord.gg/uXVU8jmtpU                #
-#            https://www.buymeacoffee.com/despical            #
+#               https://github.com/Despical/KOTL              #
+#                https://docs.despical.dev/kotl               #
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# If you want to translate for us check out: https://github.com/Despical/LocaleStorage#locale-storage
+# Choose the storage method for player statistics. Supported values are flat_file or mysql.
+# Data migration is not supported, and changes only take effect after a server restart or plugin reload.
+database: flat_file
 
-# Available locales:
-#    default - English
-#    de - Deutsche
-#    tr - Türkçe
-locale: default
+arena-schedulers:
+  # Select how players entering and leaving game areas are detected.
+  # Type 1 periodically checks all online players; type 2 listens for block-to-block movement.
+  type: 1
 
-# -----------------------------------------------------------------------------
-# STORAGE SETTINGS
-# -----------------------------------------------------------------------------
-#
-# Define the storage method for player statistics and game data.
-#
-# Available Types:
-#   - flat_file: Saves data in local files (YAML). Best for small servers.
-#   - mysql:     Saves data to an external database. Best for networks/bungeecord.
-#
-# [!] WARNING: There is currently no migration support between storage types.
-# Switching this on an active server will result in previous data being ignored.
-Database: flat_file
+  # How often the type 1 arena detector should run, in server ticks.
+  # Lower values detect transitions sooner; higher values reduce check frequency.
+  interval: 2
 
-Arena-Schedulers:
-  # Type 1: Creates a general task that loops all arenas and players to check
-  # if they are inside any arena, if they are they'll be put in the game.
-  #
-  # Type 2 (Slowest for big networks): Registers a PlayerMoveEvent and checks in
-  # the event if player is inside any arena.
-  Type: 1
+  # Whether arena detection may use asynchronous processing where supported.
+  # Keep this disabled unless the selected scheduler explicitly supports asynchronous checks.
+  async: false
 
-  # How many ticks should we wait to lookup for players to put in arenas
-  Interval: 2
+king-settings:
+  # If enabled, the current king can earn the crown again after their arena cooldown expires.
+  become-king-in-a-row: true
 
-  # Should we search for arenas asynchronously?
-  # In most cases events firing in main thread so async won't work for Type 3.
-  Async: false
+  # Delay, in seconds, before a player can become king again in the same arena.
+  # Set to 0 to disable the king cooldown.
+  cooldown: 5
 
-King-Settings:
-  # Should we allow players to become king in a row?
-  Become-King-In-A-Row: false
+  # Players with this permission bypass the king cooldown.
+  # Leave empty to disable permission-based bypassing.
+  cooldown-override-permission: ""
 
-  # Should we prevent players to become king again without a delay?
-  Cooldown: 5
+  # If enabled, the remaining king cooldown is displayed in the action bar.
+  cooldown-bar: true
 
-  # The permission to override king cooldown.
-  Cooldown-Override-Perm: ""
+  # If enabled, king cooldowns are also applied when only one player is in the arena.
+  cooldown-when-alone: false
 
-  # Should we apply an action bar message that displays current cooldown of player?
-  Cooldown-Bar: true
+  # If enabled, an active cooldown bar is restored when a player rejoins the same arena.
+  show-cooldown-on-rejoin: true
 
-  # Should we count the cooldown if player is not in an arena and the option above is true?
-  Count-Cooldown-Bar-Outside: false
+  # Pushes a successful king away from the plate so narrow towers cannot be held indefinitely.
+  plate-knockback:
+    # If enabled, becoming king applies knockback from the king plate.
+    enabled: true
 
-  # Should we apply the cooldown to the king when there is only one player in the arena?
-  Cooldown-When-Alone: false
+    # Horizontal knockback strength applied away from the plate.
+    horizontal-strength: 1.25
 
-  # Should we show the cooldown bar if player has cooldown and rejoins the arena again?
-  Show-Cooldown-If-Rejoin: true
+    # Upward velocity applied together with horizontal knockback.
+    vertical-strength: 0.45
 
-  # Should we reset players' cooldown, other than new king, when someone becomes king?
-  Reset-Cooldowns-On-New-King: true
+# If enabled, players can see the King of the Ladder boss bar while playing.
+# This is the global boss bar switch; arenas can still disable their own boss bar separately.
+boss-bar-enabled: true
 
-  # Should players have different cooldowns for each arena they join?
-  Separate-Cooldowns: true
+# If enabled, players can see the King of the Ladder scoreboard while playing.
+# This is the global scoreboard switch; arenas can still disable their own scoreboard separately.
+scoreboard-enabled: true
 
-  Remove-Cooldown-On:
-    # Should we remove player's becoming king cooldown when they join an arena, if they have?
-    Join: false
-    # Should we remove player's becoming king cooldown when they leave an arena, if they have?
-    Leave: false
+player-settings:
+  # If enabled, player inventories are cleared while they are inside an arena.
+  # Saved inventory contents are restored when the player leaves.
+  clear-inventory-on-join: true
 
-# Enable boss bar support?
-Boss-Bar-Enabled: true
+  # If enabled, active potion effects are cleared when players enter an arena.
+  clear-effects-on-join: true
 
-# Enable scoreboard support?
-Scoreboard-Enabled: true
+chat-settings:
+  # When enabled, each arena has an isolated chat channel.
+  # Arena players only see messages from players in the same arena.
+  separate-chat: true
 
-# Enable Inventory Manager for your games? (Very useful feature for MULTI ARENA)
-# This saves inventory of players and restores it after player leaves arena.
-# Saved elements: max health, health, food, experience, full inventory, armor contents, and more.
-Inventory-Manager:
-  Enabled: true
-  # Usable attributes:
-  #  game-mode, hunger, exp, level
-  #  health, max-health, health-scale
-  #  saturation, allow-flight, fire-ticks
-  Do-Not-Restore:
-    - "max-health"
-    - "health-scale"
+  # When enabled, players inside arenas cannot receive messages sent outside games.
+  block-outside-chat: true
 
-# Should we clear player's inventory on joining and leaving the game area?
-# Also disable InventoryManager option before enabling this option.
-Clear-Inventory: true
+  # When enabled, players who are actively in an arena cannot send chat messages.
+  disable-chat-in-game: false
 
-# Should we clear player's active potion effects when player join the arena?
-Clear-Effects: true
+  # Whether the plugin should format arena chat using the chat-format value in messages.yml.
+  # If false, the server's normal chat formatting is preserved.
+  enable-formatting: true
 
-# Should in game chat format be enabled?
-# You can edit the formatting in messages.yml
-Chat-Format-Enabled: true
+# If enabled, fall damage is cancelled for players inside arenas.
+disable-fall-damage: true
 
-# Should we disable all chat related stuff?
-# It will disable the separated chat.
-Disable-Separate-Chat: false
+# Controls the particle outline shown while an administrator previews a game area.
+arena-outlines:
+  # Distance between particles along each edge of the selected area.
+  step: .4
 
-# Should players get fall damage?
-Disable-Fall-Damage: true
-
-# Which game mode should we set for players when they enter the arena?
-Game-Mode: SURVIVAL
-
-# Show a cuboid particle effect around the arena corners.
-Arena-Outlines:
-  Step: .4
-  Particle: FLAME
-
-# The delay between hitting players. ONLY EFFECTED in Minecraft 1.9+
-Hit-Cooldown-Delay: 16
+  # Bukkit particle used to draw the game area outline.
+  particle: FLAME
 
 command-settings:
   # When enabled, players who are actively in a KOTL arena can only use commands listed below.
@@ -136,38 +108,20 @@ command-settings:
   allowed-commands:
     - "kotl leave"
     - "kotl stats"
-    - "kotl top"
-    - "kotl"
-    - "kingoftheladder"
-    - "me"
-    - "help"
 
-# Should we spawn some cool fireworks around the game area when someone becomes king?
-Fireworks-On-New-King: true
+# If enabled, a firework celebration is spawned around the game area when a player becomes king.
+fireworks-on-new-king: true
 
-# Should we enable damage?
-# This option may be helpful if you enabled the kits.
-Damage-Enabled: true
+# If enabled, players can pick up dropped items and arrows while inside arenas.
+# When disabled, attempted pickups are removed from the world.
+pick-up-items: false
 
-# When players click these blocks should we remove them from the game?
-Death-Blocks-Enabled: true
+notify:
+  # If enabled, arena players are notified when another player joins.
+  join: true
 
-# Should players can be able to pick up items in-game?
-Pick-Up-Items: false
+  # If enabled, remaining arena players are notified when someone leaves.
+  leave: true
 
-# Blocks which you should not click in game, remove all of them to disable.
-# If player interacts with a death block they will be kicked from the game.
-Death-Blocks:
-  - BEDROCK
-  - GLASS
-
-# When player enters the game area should we notify players?
-Join-Notify: true
-
-# When player leaves the game area should we notify players?
-Leave-Notify: true
-
-# Should we check for updates on plugin start/after admin join?
-Update-Notifier-Enabled: true
-
-# No way! You've reached the end! But... where's the dragon!?
+# If enabled, the plugin checks for newer releases on startup.
+update-notifier: true

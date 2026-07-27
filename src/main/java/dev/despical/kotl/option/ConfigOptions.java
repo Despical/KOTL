@@ -20,6 +20,7 @@ package dev.despical.kotl.option;
 
 import dev.despical.kotl.KOTL;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Contract;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,9 +44,10 @@ public class ConfigOptions {
     }
 
     public <T> T get(ConfigOption<T> option) {
-        return option.getType().cast(options.computeIfAbsent(option, opt -> option.getDefaultValue()));
+        return option.getType().cast(options.computeIfAbsent(option, _ -> option.getDefaultValue()));
     }
 
+    @Contract(pure = true)
     public boolean isEnabled(BooleanOption option) {
         return this.<Boolean>get(option);
     }
@@ -57,10 +59,11 @@ public class ConfigOptions {
     }
 
     private void loadOptions() {
-        FileConfiguration config = plugin.getConfig();
+        options.clear();
 
+        FileConfiguration config = plugin.getConfig();
         Stream.of(BooleanOption.values(), IntOption.values())
             .flatMap(Arrays::stream)
-            .forEach(option -> options.put(option, config.get(option.getPath())));
+            .forEach(option -> options.put(option, config.get(option.getPath(), option.getDefaultValue())));
     }
 }
