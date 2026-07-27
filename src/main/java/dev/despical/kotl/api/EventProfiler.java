@@ -20,9 +20,10 @@ package dev.despical.kotl.api;
 
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.option.BooleanOption;
-import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Map;
@@ -31,30 +32,69 @@ import java.util.concurrent.atomic.LongAdder;
 import java.util.logging.Level;
 
 /**
+ * Collects optional execution timings for KOTL custom event listeners.
+ * <p>
+ * Profiling is disabled by default unless enabled through the plugin
+ * configuration. Recorded data is held in memory for the lifetime of the
+ * plugin and can be rendered to an authorized command sender.
+ *
  * @author Despical
  * <p>
  * Created at 05.06.2026
  */
+@ApiStatus.Internal
 public final class EventProfiler {
 
-    @Getter
-    private boolean enabled, verbose;
+    private boolean enabled;
+    private boolean verbose;
 
     private final KOTL plugin;
     private final Map<Class<? extends Event>, ProfileData> profiles;
 
-    public EventProfiler(KOTL plugin) {
+    /**
+     * Creates a profiler for the plugin event dispatcher.
+     *
+     * @param plugin the owning KOTL instance
+     */
+    public EventProfiler(@NotNull KOTL plugin) {
         this.plugin = plugin;
         this.profiles = new ConcurrentHashMap<>();
         this.reload();
     }
 
+    /**
+     * Returns whether event timing collection is enabled.
+     *
+     * @return {@code true} when event timings are being recorded
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Returns whether every event invocation is logged.
+     *
+     * @return {@code true} when verbose profiling output is enabled
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Reloads profiler switches from the active configuration.
+     */
     public void reload() {
         this.enabled = BooleanOption.EVENT_PROFILING_ENABLED.value();
         this.verbose = BooleanOption.EVENT_PROFILING_VERBOSE.value();
     }
 
-    public void record(Event event, long durationNanos) {
+    /**
+     * Records one completed custom event invocation.
+     *
+     * @param event the event that was dispatched
+     * @param durationNanos listener execution time in nanoseconds
+     */
+    public void record(@NotNull Event event, long durationNanos) {
         if (!enabled) {
             return;
         }
@@ -67,7 +107,12 @@ public final class EventProfiler {
         }
     }
 
-    public void sendReport(CommandSender sender) {
+    /**
+     * Sends accumulated timing totals and averages to a command sender.
+     *
+     * @param sender the report recipient
+     */
+    public void sendReport(@NotNull CommandSender sender) {
         if (!enabled) {
             plugin.getChatManager().sendRawMessage(sender,
                 "<#FF1744>✖ <#ff5c5c>Event timings system is currently disabled."
