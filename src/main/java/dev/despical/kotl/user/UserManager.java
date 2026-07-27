@@ -22,10 +22,10 @@ import dev.despical.kotl.KOTL;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Despical
@@ -39,7 +39,7 @@ public class UserManager {
 
     public UserManager(KOTL plugin) {
         this.plugin = plugin;
-        this.users = new HashMap<>();
+        this.users = new ConcurrentHashMap<>();
         this.loadDataOfOnlinePlayers();
     }
 

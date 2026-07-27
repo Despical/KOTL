@@ -23,13 +23,14 @@ import dev.despical.kotl.stats.StatisticType;
 import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.stats.offline.OfflineStats;
 import dev.despical.kotl.user.User;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Despical
@@ -41,7 +42,7 @@ public final class FlatFileStorage extends Database {
     private final FileConfiguration config = ConfigUtils.getConfig(plugin, "data/stats");
 
     @Override
-    public void loadData(User user) {
+    public synchronized void loadData(User user) {
         String path = user.getUUID() + ".";
 
         for (StatisticType<?> type : Statistics.getPersistentStats()) {
@@ -64,7 +65,12 @@ public final class FlatFileStorage extends Database {
     }
 
     @Override
-    public void saveData(User user) {
+    public synchronized void saveData(User user) {
+        updateData(user);
+        saveConfig();
+    }
+
+    private void updateData(User user) {
         String path = user.getUUID() + ".";
         config.set(path + "name", user.getName());
 
@@ -82,12 +88,16 @@ public final class FlatFileStorage extends Database {
 
     @Override
     @Nullable
-    public OfflineStats loadOfflineData(OfflinePlayer player) {
+    public synchronized OfflineStats loadOfflineData(OfflinePlayer player) {
         String path = player.getUniqueId() + ".";
         if (!config.contains(path + "name")) return null;
 
         String name = config.getString(path + "name");
-        OfflineStats offlineStats = new OfflineStats(player.getUniqueId(), name);
+        return loadOfflineData(player.getUniqueId(), name, path);
+    }
+
+    private OfflineStats loadOfflineData(UUID uuid, String name, String path) {
+        OfflineStats offlineStats = new OfflineStats(uuid, name);
 
         for (StatisticType<?> type : Statistics.getPersistentStats()) {
             loadSingleOfflineStat(offlineStats, path, type);
@@ -111,36 +121,40 @@ public final class FlatFileStorage extends Database {
     }
 
     @Override
-    public Set<OfflineStats> getAllPlayers() {
+    public synchronized Set<OfflineStats> getAllPlayers() {
         Set<OfflineStats> offlineStats = new HashSet<>();
 
-        for (String uuid : config.getKeys(false)) {
-            String name = config.getString(uuid + ".name");
+        for (String uuidString : config.getKeys(false)) {
+            String path = uuidString + ".";
+            String name = config.getString(path + "name");
             if (name == null) continue;
 
-            OfflinePlayer player = Bukkit.getOfflinePlayerIfCached(name);
-            if (player == null) continue;
-
-            OfflineStats stats = loadOfflineData(player);
-            if (stats != null) {
-                offlineStats.add(stats);
+            UUID uuid;
+            try {
+                uuid = UUID.fromString(uuidString);
+            } catch (IllegalArgumentException ignored) {
+                continue;
             }
+
+            offlineStats.add(loadOfflineData(uuid, name, path));
         }
 
         return offlineStats;
     }
 
     @Override
-    public void saveAllData() {
-        plugin.getUserManager().getUsers().forEach(this::saveData);
+    public synchronized CompletableFuture<Void> saveAllData() {
+        plugin.getUserManager().getUsers().forEach(this::updateData);
+        saveConfig();
+        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public void shutdown() {
-        for (User user : plugin.getUserManager().getUsers()) {
-            saveData(user);
-        }
+    public synchronized void shutdown() {
+        saveAllData();
+    }
 
+    private void saveConfig() {
         ConfigUtils.saveConfig(plugin, config, "data/stats");
     }
 }

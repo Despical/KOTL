@@ -30,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Despical
@@ -49,7 +50,7 @@ public class User {
     public User(Player player) {
         this.uuid = player.getUniqueId();
         this.name = player.getName();
-        this.stats = new HashMap<>();
+        this.stats = new ConcurrentHashMap<>();
     }
 
     public Arena getArena() {
