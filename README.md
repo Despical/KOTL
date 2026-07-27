@@ -133,8 +133,12 @@ dependencies {
 Optional integrations declared by the plugin include:
 
 - PlaceholderAPI
-- WorldGuard
 - Multiverse-Core
+- SlimeWorldManager
+- SlimeWorldPlugin
+- MultiWorld
+- My_Worlds
+- WorldGuard
 
 ---
 
