@@ -23,13 +23,10 @@ import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.arena.managers.schedulers.ArenaScheduler;
 import dev.despical.kotl.arena.managers.schedulers.SchedulerOptions;
 import dev.despical.kotl.game.Game;
-import dev.despical.kotl.game.GameManager;
 import dev.despical.kotl.game.StopReason;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.util.ShutdownDetector;
 import lombok.Getter;
-
-import java.util.Objects;
 
 /**
  * @author Despical
@@ -47,13 +44,13 @@ public class ArenaManager {
         this.plugin = plugin;
         final var config = plugin.getConfig();
 
-        this.arenaScheduler = switch (config.getInt("Arena-Schedulers.Type")) {
+        this.arenaScheduler = switch (config.getInt("arena-schedulers.type")) {
             case 1 -> ArenaScheduler.GENERAL;
             default -> ArenaScheduler.EVENT;
         };
 
-        final int interval = config.getInt("Arena-Schedulers.Interval");
-        final boolean async = config.getBoolean("Arena-Schedulers.Async");
+        final int interval = config.getInt("arena-schedulers.interval");
+        final boolean async = config.getBoolean("arena-schedulers.async");
 
         this.options = new SchedulerOptions(async, interval);
 
@@ -92,13 +89,8 @@ public class ArenaManager {
     }
 
     public void handleDisable() {
-        GameManager gameManager = plugin.getGameManager();
         StopReason reason = resolveStopReason();
-
-        plugin.getArenaRegistry().getArenas().stream()
-            .map(Arena::getGame)
-            .filter(Objects::nonNull)
-            .forEach(game -> gameManager.stopGame(game, reason));
+        plugin.getGameManager().stopAllGames(reason);
     }
 
     private StopReason resolveStopReason() {

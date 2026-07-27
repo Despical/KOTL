@@ -113,10 +113,9 @@ public class KOTL extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        new ArenaDataSaver(this).saveAllArenas();
-
-        outlineManager.cancelAll();
         arenaManager.handleDisable();
+        outlineManager.cancelAll();
+        arenaDataSaver.saveAllArenas();
         database.shutdown();
         metrics.shutdown();
     }
@@ -139,6 +138,7 @@ public class KOTL extends JavaPlugin {
         gameManager = new GameManager(this);
         outlineManager = new OutlineManager(this);
         arenaRegistry = new ArenaRegistry(this);
+        outlineManager.refreshAll(arenaRegistry.getArenas());
         arenaManager = new ArenaManager(this);
         cooldownManager = new CooldownManager();
         eventManager = new EventManager(this);
@@ -171,7 +171,7 @@ public class KOTL extends JavaPlugin {
     }
 
     private Database createDatabase() {
-        String databaseType = getConfig().getString("Database", getConfig().getString("database"));
+        String databaseType = getConfig().getString("database");
 
         return switch (DatabaseType.getByName(databaseType)) {
             case FLAT_FILE -> new FlatFileStorage();

@@ -24,7 +24,6 @@ import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.particle.ParticleBuilder;
 import dev.despical.particle.ParticleEffect;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -34,25 +33,21 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class OutlineTask extends BukkitRunnable {
 
+    private final Arena arena;
     private final Location location;
     private final double step;
     private final ParticleBuilder particleBuilder;
-    private final double[] xArr, yArr, zArr;
 
     public OutlineTask(KOTL plugin, Arena arena) {
         Location min = arena.getOption(ArenaKeys.MIN_CORNER);
-        Location max = arena.getOption(ArenaKeys.MAX_CORNER);
-        World world = min.getWorld();
 
-        this.location = new Location(world, 0, 0, 0);
+        this.arena = arena;
+        this.location = new Location(min.getWorld(), 0, 0, 0);
 
-        ParticleEffect particle = ParticleEffect.valueOf(plugin.getConfig().getString("Arena-Outlines.Particle", "flame").toUpperCase());
+        ParticleEffect particle = ParticleEffect.valueOf(plugin.getConfig().getString("arena-outlines.particle", "flame").toUpperCase());
 
-        this.step = plugin.getConfig().getDouble("Arena-Outlines.Step", .4);
+        this.step = plugin.getConfig().getDouble("arena-outlines.step", .4);
         this.particleBuilder = new ParticleBuilder(particle);
-        this.xArr = new double[]{Math.min(min.getX(), max.getX()), Math.max(min.getX(), max.getX())};
-        this.yArr = new double[]{Math.min(min.getY(), max.getY()), Math.max(min.getY(), max.getY())};
-        this.zArr = new double[]{Math.min(min.getZ(), max.getZ()), Math.max(min.getZ(), max.getZ())};
     }
 
     private Location setLocation(Location location, double x, double y, double z) {
@@ -64,6 +59,19 @@ public class OutlineTask extends BukkitRunnable {
 
     @Override
     public void run() {
+        Location min = arena.getOption(ArenaKeys.MIN_CORNER);
+        Location max = arena.getOption(ArenaKeys.MAX_CORNER);
+
+        if (min == null || max == null || min.getWorld() == null || !min.getWorld().equals(max.getWorld())) {
+            return;
+        }
+
+        location.setWorld(min.getWorld());
+
+        double[] xArr = {Math.min(min.getX(), max.getX()), Math.max(min.getX(), max.getX())};
+        double[] yArr = {Math.min(min.getY(), max.getY()), Math.max(min.getY(), max.getY())};
+        double[] zArr = {Math.min(min.getZ(), max.getZ()), Math.max(min.getZ(), max.getZ())};
+
         for (double x = xArr[0]; x < xArr[1]; x += step) {
             for (double y : yArr) {
                 for (double z : zArr) {

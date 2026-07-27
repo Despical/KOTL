@@ -54,7 +54,7 @@ public final class AdminCommands extends CommandCategory {
             return;
         }
 
-        arguments.sendMessage("unrecognized-arguments", Var.of("%label%", arguments.getLabel()), Var.of("%arguments%", arguments.concatArguments()));
+        chatManager.sendMessage(arguments, "unrecognized-arguments", Var.of("%label%", arguments.getLabel()), Var.of("%arguments%", arguments.concatArguments()));
     }
 
     @Command(
@@ -64,12 +64,15 @@ public final class AdminCommands extends CommandCategory {
         desc = "Reloads configuration files."
     )
     public void reloadCommand(CommandArguments arguments) {
+        gameManager.stopAllGames(StopReason.SERVER_RELOAD);
+
         chatManager.loadFile();
         plugin.getOptions().reloadOptions();
         plugin.registerItems();
         plugin.getEventManager().reload();
         plugin.getPlayingCommandPolicy().reload();
         gameManager.reload();
+        plugin.getOutlineManager().refreshAll(arenaRegistry.getArenas());
 
         chatManager.sendMessage(arguments, "reloaded-configuration");
     }

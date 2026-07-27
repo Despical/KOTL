@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public enum StopReason {
 
     ARENA_DELETED("game-stopped-due-to-arena-deletion"),
+    ARENA_DISABLED("game-stopped-due-to-arena-disable"),
     SERVER_RELOAD("server-reload-detected"),
     SERVER_SHUTDOWN("server-shutdown-detected"),
     STOP_COMMAND("game-stopped-by-command");

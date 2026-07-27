@@ -25,7 +25,9 @@ import dev.despical.kotl.bossbar.BossBarConfig;
 import dev.despical.kotl.user.User;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
 
@@ -51,16 +53,25 @@ public class GameManager {
         game.getBossBarManager().removeAll();
 
         Arena arena = game.getArena();
+        Location endLocation = arena.getOption(ArenaKeys.END_LOCATION);
         String messagePath = reason.getMessagePath();
+        boolean saveStats = reason != StopReason.SERVER_RELOAD && reason != StopReason.SERVER_SHUTDOWN;
 
         for (Player player : game.getPlayers()) {
             if (messagePath != null) {
                 plugin.getChatManager().sendMessage(player, messagePath);
             }
 
-            game.removePlayer(player, false);
-            player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
+            if (endLocation != null && endLocation.getWorld() != null) {
+                player.teleport(endLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+            }
+
+            game.removePlayer(player, false, true, saveStats);
         }
+    }
+
+    public void stopAllGames(StopReason reason) {
+        getGames().forEach(game -> stopGame(game, reason));
     }
 
     public List<Game> getGames() {

@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Despical
@@ -63,6 +64,11 @@ public class OutlineManager {
         if (task != null) {
             task.cancel();
         }
+    }
+
+    public void refreshAll(Set<Arena> arenas) {
+        cancelAll();
+        arenas.forEach(this::handleOutlines);
     }
 
     public void cancelAll() {
