@@ -19,8 +19,6 @@
 package dev.despical.kotl.api.events.player;
 
 import dev.despical.kotl.stats.StatisticType;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -45,7 +43,6 @@ import org.jetbrains.annotations.NotNull;
  * @author Despical
  * @since 20.06.2020
  */
-@Getter
 public class PlayerStatisticChangeEvent<T> extends PlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -55,13 +52,11 @@ public class PlayerStatisticChangeEvent<T> extends PlayerEvent implements Cancel
      * <p>
      * Listeners may replace this value to modify the statistic update.
      */
-    @Setter
     private T newValue;
 
     /**
      * Whether this statistic update has been cancelled.
      */
-    @Setter
     private boolean cancelled;
 
     /**
@@ -87,6 +82,63 @@ public class PlayerStatisticChangeEvent<T> extends PlayerEvent implements Cancel
         this.stat = stat;
         this.oldValue = oldValue;
         this.newValue = newValue;
+    }
+
+    /**
+     * Returns the value that will be stored if the event completes.
+     *
+     * @return the pending statistic value
+     */
+    public T getNewValue() {
+        return newValue;
+    }
+
+    /**
+     * Replaces the value that will be stored.
+     *
+     * @param newValue the replacement statistic value
+     */
+    public void setNewValue(T newValue) {
+        this.newValue = newValue;
+    }
+
+    /**
+     * Returns whether the statistic update has been cancelled.
+     *
+     * @return {@code true} when the old value must remain unchanged
+     */
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    /**
+     * Sets whether the statistic update should be cancelled.
+     *
+     * @param cancelled {@code true} to reject the update
+     */
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    /**
+     * Returns the statistic key being updated.
+     *
+     * @return the statistic key
+     */
+    @NotNull
+    public StatisticType<T> getStat() {
+        return stat;
+    }
+
+    /**
+     * Returns the value stored before this update.
+     *
+     * @return the previous statistic value
+     */
+    public T getOldValue() {
+        return oldValue;
     }
 
     /**
