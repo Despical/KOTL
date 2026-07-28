@@ -40,7 +40,6 @@ public final class AdminCommands extends CommandCategory {
     @Command(
         name = "kotl",
         fallbackPrefix = "thekotl",
-        permission = "kotl.command.help",
         usage = "/kotl help",
         desc = "Main command of the King of the Ladder."
     )
@@ -107,14 +106,12 @@ public final class AdminCommands extends CommandCategory {
         }
 
         Arena arena = arenaRegistry.getArena(arguments.getFirst());
-
         if (arena == null) {
             chatManager.sendMessage(arguments, "no-arena-found-with-that-name");
             return;
         }
 
         Game game = arena.getGame();
-
         if (game == null) {
             chatManager.sendMessage(arguments, "stop-command.not-playing");
             return;
