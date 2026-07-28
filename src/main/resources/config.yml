@@ -8,9 +8,9 @@
 #                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Choose the storage method for player statistics. Supported values are flat_file or mysql.
-# Data migration is not supported, and changes only take effect after a server restart or plugin reload.
-database: flat_file
+# Choose the storage method for player data. Supported values are flat or mysql.
+# Please note that data migration is not supported, and changes will only take effect after a server restart or plugin reload.
+database: flat
 
 arena-schedulers:
   # Select how players entering and leaving game areas are detected.
@@ -125,3 +125,16 @@ notify:
 
 # If enabled, the plugin checks for newer releases on startup.
 update-notifier: true
+
+# Enabling debug mode allows administrators to access advanced troubleshooting commands.
+# Keep this disabled on production servers unless you are actively testing or diagnosing an issue.
+debug: false
+
+# Event profiling measures how long KOTL event listeners take to execute.
+# Useful for diagnosing lag or slow integrations, but usually not needed during normal gameplay.
+event-profiling:
+  enabled: false
+
+  # If enabled, every profiled event execution is logged with timing details.
+  # This can spam the console heavily, so only enable it for short debugging sessions.
+  verbose: false
