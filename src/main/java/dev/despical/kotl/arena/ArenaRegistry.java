@@ -75,7 +75,7 @@ public class ArenaRegistry {
     }
 
     public Optional<Arena> findArena(String id) {
-        return Optional.ofNullable(arenas.get(id));
+        return id == null ? Optional.empty() : Optional.ofNullable(arenas.get(ArenaIdValidator.normalize(id)));
     }
 
     public Optional<Arena> findArena(Player player) {
@@ -83,16 +83,21 @@ public class ArenaRegistry {
     }
 
     public boolean isArenaExists(String id) {
-        return arenas.containsKey(id);
+        return id != null && arenas.containsKey(ArenaIdValidator.normalize(id));
     }
 
-    public void registerNewArena(String id) {
-        arenas.put(id, new Arena(id));
+    public boolean registerNewArena(String id) {
+        if (!ArenaIdValidator.isValid(id) || isArenaExists(id)) {
+            return false;
+        }
+
+        arenas.put(ArenaIdValidator.normalize(id), new Arena(id));
+        return true;
     }
 
     public void unregisterArena(Arena arena) {
         plugin.getOutlineManager().hideOutlines(arena);
-        arenas.remove(arena.getId());
+        arenas.remove(ArenaIdValidator.normalize(arena.getId()));
         config.set(arena.getId(), null);
     }
 
@@ -101,7 +106,7 @@ public class ArenaRegistry {
     }
 
     public Set<String> getArenaNames() {
-        return arenas.keySet();
+        return arenas.values().stream().map(Arena::getId).collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
 
     public void registerArenas() {
@@ -112,10 +117,21 @@ public class ArenaRegistry {
                 continue;
             }
 
+            if (!ArenaIdValidator.isValid(id)) {
+                plugin.getLogger().warning("Skipping arena with invalid ID in arenas.yml: " + id);
+                continue;
+            }
+
+            String normalizedId = ArenaIdValidator.normalize(id);
+            if (arenas.containsKey(normalizedId)) {
+                plugin.getLogger().warning("Skipping duplicate arena ID in arenas.yml (case-insensitive): " + id);
+                continue;
+            }
+
             Arena arena = new Arena(id);
             loadOptionsFor(arena, config);
 
-            arenas.put(id, arena);
+            arenas.put(normalizedId, arena);
         }
     }
 

@@ -88,6 +88,17 @@ created-arena:
   - ""
   - "<#37474F><st>                                                                                 </st>"
 
+invalid-arena-id:
+  - "<#37474F><st>                                                                                 </st>"
+  - ""
+  - "<gradient:#FF1744:#D50000><bold>OPERATION FAILED</bold></gradient>"
+  - ""
+  - "<#FF1744>⚠ <#BDBDBD>Invalid arena ID '<#FF5252>%id%<#BDBDBD>'."
+  - ""
+  - "<#BDBDBD>Use 1-64 characters without spaces or periods."
+  - ""
+  - "<#37474F><st>                                                                                 </st>"
+
 arena-already-exists:
   - "<#37474F><st>                                                                                 </st>"
   - "<gradient:#FF1744:#D50000><bold>OPERATION FAILED</bold></gradient>"

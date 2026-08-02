@@ -22,6 +22,7 @@ import dev.despical.commandframework.CommandArguments;
 import dev.despical.commandframework.annotations.Command;
 import dev.despical.commandframework.annotations.Flag;
 import dev.despical.kotl.arena.Arena;
+import dev.despical.kotl.arena.ArenaIdValidator;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.game.Game;
 import dev.despical.kotl.game.StopReason;
@@ -53,6 +54,12 @@ public final class ArenaCommands extends CommandCategory {
         Player player = arguments.getSender();
         String arenaId = arguments.getFirst();
         Var var = Var.of("%id%", arenaId);
+
+        if (!ArenaIdValidator.isValid(arenaId)) {
+            chatManager.sendCenteredMessage(player, "invalid-arena-id", var);
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            return;
+        }
 
         if (arenaRegistry.isArenaExists(arenaId)) {
             chatManager.sendCenteredMessage(player, "arena-already-exists", var);
