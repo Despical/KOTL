@@ -46,7 +46,8 @@ public final class ArenaCommands extends CommandCategory {
         permission = "kotl.arena.create",
         usage = "/%label% create <arena id>",
         min = 1,
-        max = 1
+        max = 1,
+        senderType = Command.SenderType.PLAYER
     )
     public void createArenaCommand(CommandArguments arguments) {
         Player player = arguments.getSender();
