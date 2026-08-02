@@ -130,6 +130,7 @@ public class ArenaRegistry {
 
             Arena arena = new Arena(id);
             loadOptionsFor(arena, config);
+            validateReadyState(arena);
 
             arenas.put(normalizedId, arena);
         }
@@ -152,6 +153,27 @@ public class ArenaRegistry {
         } else {
             arena.setOption(option, option.getDefaultValue());
         }
+    }
+
+    private void validateReadyState(Arena arena) {
+        if (!arena.getOption(ArenaKeys.READY)) {
+            return;
+        }
+
+        Location end = arena.getOption(ArenaKeys.END_LOCATION);
+        Location plate = arena.getOption(ArenaKeys.PLATE_LOCATION);
+        boolean invalidLocation = end == null
+            || end.getWorld() == null
+            || !isLocationInArea(arena, plate);
+
+        if (!invalidLocation) {
+            return;
+        }
+
+        arena.setOption(ArenaKeys.READY, false);
+        config.set(arena.getId() + "." + ArenaKeys.READY.getKey(), false);
+        plugin.getLogger().warning("Arena '" + arena.getId()
+            + "' was marked not ready because one or more required locations are missing or invalid.");
     }
 
     public Arena findTargetArena(Player player) {
