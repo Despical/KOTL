@@ -169,10 +169,6 @@ public class Game {
             player.getInventory().clear();
         }
 
-        if (BooleanOption.CLEAR_EFFECTS_ON_JOIN.value()) {
-            Schedulers.runInTheNextTick(() -> player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType())));
-        }
-
         if (!quit) {
             if (restoreImmediately) {
                 plugin.getPlayerInventoryManager().restore(player);
