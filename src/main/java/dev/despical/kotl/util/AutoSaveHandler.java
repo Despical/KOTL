@@ -34,7 +34,8 @@ public class AutoSaveHandler extends BukkitRunnable {
 
     @Override
     public void run() {
-        plugin.getDatabase().saveAllData()
-            .thenRun(() -> plugin.getLeaderboardManager().refreshAllLeaderboards());
+        var databaseSave = plugin.getDatabase().saveAllData();
+        plugin.getArenaDataSaver().saveAllArenas();
+        databaseSave.thenRun(() -> plugin.getLeaderboardManager().refreshAllLeaderboards());
     }
 }
