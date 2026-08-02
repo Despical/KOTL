@@ -26,7 +26,6 @@ import dev.despical.kotl.scoreboard.ScoreboardManager;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.util.ItemUtils;
 import dev.despical.kotl.util.Schedulers;
-import dev.despical.kotl.util.Utils;
 import dev.despical.kotl.util.Var;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -61,18 +60,20 @@ public class GeneralEvents extends ListenerAdapter {
         userManager.createNewUser(player);
 
         Arena arena = quitPlayers.remove(player.getUniqueId());
-        if (arena == null) {
+        if (!plugin.getPlayerInventoryManager().hasSnapshot(player)) {
             return;
         }
 
         Schedulers.runInTheNextTick(() -> {
-            player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
+            Optional.ofNullable(arena)
+                .map(target -> target.getOption(ArenaKeys.END_LOCATION))
+                .ifPresent(player::teleport);
 
             PlayerInventory inventory = player.getInventory();
             inventory.clear();
             inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
-            Utils.restoreSavedPlayerState(player);
+            plugin.getPlayerInventoryManager().restore(player);
         });
     }
 

@@ -18,7 +18,6 @@
 
 package dev.despical.kotl.game;
 
-import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.Arena;
@@ -90,12 +89,15 @@ public class Game {
             return false;
         }
 
+        if (!plugin.getPlayerInventoryManager().save(player)) {
+            plugin.getLogger().severe("Could not save inventory for " + player.getName() + "; refusing to add them to the arena.");
+            return false;
+        }
+
         players.add(player);
         if (BooleanOption.JOIN_NOTIFY.value()) {
             broadcastMessage("game.player-joined", Var.of("%player%", player.getName()));
         }
-
-        InventorySerializer.saveInventoryToFile(plugin, player);
 
         player.setHealth(20);
 
@@ -163,7 +165,7 @@ public class Game {
             broadcastMessage("game.player-left", Var.of("%player%", player.getName()));
         }
 
-        if (BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
+        if (!quit && BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
             player.getInventory().clear();
         }
 
@@ -173,9 +175,9 @@ public class Game {
 
         if (!quit) {
             if (restoreImmediately) {
-                InventorySerializer.loadInventory(plugin, player);
+                plugin.getPlayerInventoryManager().restore(player);
             } else {
-                Schedulers.runInTheNextTick(() -> InventorySerializer.loadInventory(plugin, player));
+                Schedulers.runInTheNextTick(() -> plugin.getPlayerInventoryManager().restore(player));
             }
         }
 
@@ -269,7 +271,7 @@ public class Game {
         inventory.clear();
         inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
-        Utils.restoreSavedPlayerState(player);
+        plugin.getPlayerInventoryManager().restore(player);
 
         player.teleport(arena.getOption(ArenaKeys.END_LOCATION));
 

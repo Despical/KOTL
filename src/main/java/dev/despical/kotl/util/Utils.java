@@ -18,7 +18,6 @@
 
 package dev.despical.kotl.util;
 
-import dev.despical.commons.serializer.InventorySerializer;
 import dev.despical.kotl.KOTL;
 import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.user.User;
@@ -159,11 +158,6 @@ public final class Utils {
 
     public static String listToString(List<String> list) {
         return String.join("\n", list);
-    }
-
-    public static void restoreSavedPlayerState(Player player) {
-        player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-        InventorySerializer.loadInventory(plugin, player);
     }
 
     public static String formatTime(long millis) {

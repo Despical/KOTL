@@ -53,6 +53,7 @@ import dev.despical.kotl.user.User;
 import dev.despical.kotl.user.UserManager;
 import dev.despical.kotl.util.AutoSaveHandler;
 import dev.despical.kotl.util.CuboidSelector;
+import dev.despical.kotl.util.PlayerInventoryManager;
 import dev.despical.kotl.util.ShutdownDetector;
 import dev.despical.kotl.util.Var;
 import lombok.Getter;
@@ -96,6 +97,7 @@ public class KOTL extends JavaPlugin {
     private StatsCacheManager statsCacheManager;
     private PlayingCommandPolicy playingCommandPolicy;
     private ArenaDataSaver arenaDataSaver;
+    private PlayerInventoryManager playerInventoryManager;
     private Metrics metrics;
 
     @Override
@@ -133,6 +135,7 @@ public class KOTL extends JavaPlugin {
         chatManager = new ChatManager(this);
         database = this.createDatabase();
         userManager = new UserManager(this);
+        playerInventoryManager = new PlayerInventoryManager(this);
         statsCacheManager = new StatsCacheManager(this);
         cuboidSelector = new CuboidSelector(this);
         gameManager = new GameManager(this);
