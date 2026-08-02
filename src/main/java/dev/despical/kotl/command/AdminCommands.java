@@ -131,7 +131,7 @@ public final class AdminCommands extends CommandCategory {
         permission = "kotl.command.help",
         usage = "/%label% help"
     )
-    public void helpCommand(User user, CommandArguments arguments) {
+    public void helpCommand(CommandArguments arguments) {
         Var var = Var.of("%label%", arguments.getLabel());
         chatManager.sendMessage(arguments, "help-message", var);
 
