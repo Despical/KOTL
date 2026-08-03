@@ -29,7 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -254,13 +253,11 @@ public final class MySQLStorage extends Database {
     }
 
     @Override
-    public CompletableFuture<Void> saveAllData() {
+    public void saveAllData() {
         List<User> activeUsers = List.copyOf(plugin.getUserManager().getUsers());
-        if (activeUsers.isEmpty()) {
-            return CompletableFuture.completedFuture(null);
-        }
+        if (activeUsers.isEmpty()) return;
 
-        return CompletableFuture.runAsync(() -> {
+        executor.submit(() -> {
             try (Connection connection = database.getConnection();
                  PreparedStatement statement = connection.prepareStatement(upsertQuery)
             ) {
@@ -286,7 +283,6 @@ public final class MySQLStorage extends Database {
             }
         }, executor);
     }
-
 
     private void applySaveParameters(PreparedStatement statement, User user) throws SQLException {
         int index = 1;

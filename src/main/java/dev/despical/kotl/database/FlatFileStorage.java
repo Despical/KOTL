@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Despical
@@ -42,7 +41,7 @@ public final class FlatFileStorage extends Database {
     private final FileConfiguration config = ConfigUtils.getConfig(plugin, "data/stats");
 
     @Override
-    public synchronized void loadData(User user) {
+    public void loadData(User user) {
         String path = user.getUUID() + ".";
 
         for (StatisticType<?> type : Statistics.getPersistentStats()) {
@@ -65,7 +64,7 @@ public final class FlatFileStorage extends Database {
     }
 
     @Override
-    public synchronized void saveData(User user) {
+    public void saveData(User user) {
         updateData(user);
         saveConfig();
     }
@@ -88,7 +87,7 @@ public final class FlatFileStorage extends Database {
 
     @Override
     @Nullable
-    public synchronized OfflineStats loadOfflineData(OfflinePlayer player) {
+    public OfflineStats loadOfflineData(OfflinePlayer player) {
         String path = player.getUniqueId() + ".";
         if (!config.contains(path + "name")) return null;
 
@@ -121,7 +120,7 @@ public final class FlatFileStorage extends Database {
     }
 
     @Override
-    public synchronized Set<OfflineStats> getAllPlayers() {
+    public Set<OfflineStats> getAllPlayers() {
         Set<OfflineStats> offlineStats = new HashSet<>();
 
         for (String uuidString : config.getKeys(false)) {
@@ -143,14 +142,14 @@ public final class FlatFileStorage extends Database {
     }
 
     @Override
-    public synchronized CompletableFuture<Void> saveAllData() {
+    public void saveAllData() {
         plugin.getUserManager().getUsers().forEach(this::updateData);
+
         saveConfig();
-        return CompletableFuture.completedFuture(null);
     }
 
     @Override
-    public synchronized void shutdown() {
+    public void shutdown() {
         saveAllData();
     }
 

@@ -24,7 +24,6 @@ import dev.despical.kotl.user.User;
 import org.bukkit.OfflinePlayer;
 
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author Despical
@@ -43,7 +42,7 @@ public sealed abstract class Database permits FlatFileStorage, MySQLStorage {
 
     public abstract void saveData(User user);
 
-    public abstract CompletableFuture<Void> saveAllData();
+    public abstract void saveAllData();
 
     public abstract void shutdown();
 }
