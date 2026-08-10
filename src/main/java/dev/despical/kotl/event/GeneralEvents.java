@@ -282,7 +282,7 @@ public class GeneralEvents extends ListenerAdapter {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent event) {
         if (BooleanOption.PICK_UP_ITEMS.value()) return;
         if (!(event.getEntity() instanceof Player player)) return;
@@ -296,7 +296,7 @@ public class GeneralEvents extends ListenerAdapter {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onArrowPickup(PlayerPickupArrowEvent event) {
         if (BooleanOption.PICK_UP_ITEMS.value()) return;
         if (!arenaRegistry.isInArena(event.getPlayer())) return;
