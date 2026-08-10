@@ -209,12 +209,12 @@ public class ArenaRegistry {
 
         if (!min.getWorld().equals(origin.getWorld())) return false;
 
-        double minX = Math.min(min.getX(), max.getX()), maxX = Math.max(min.getX(), max.getX());
-        double minY = Math.min(min.getY(), max.getY()), maxY = Math.max(min.getY(), max.getY());
-        double minZ = Math.min(min.getZ(), max.getZ()), maxZ = Math.max(min.getZ(), max.getZ());
+        int minX = Math.min(min.getBlockX(), max.getBlockX()), maxX = Math.max(min.getBlockX(), max.getBlockX());
+        int minY = Math.min(min.getBlockY(), max.getBlockY()), maxY = Math.max(min.getBlockY(), max.getBlockY());
+        int minZ = Math.min(min.getBlockZ(), max.getBlockZ()), maxZ = Math.max(min.getBlockZ(), max.getBlockZ());
 
-        return origin.getX() >= minX && origin.getX() <= maxX
-            && origin.getY() >= minY && origin.getY() <= maxY
-            && origin.getZ() >= minZ && origin.getZ() <= maxZ;
+        return origin.getBlockX() >= minX && origin.getBlockX() <= maxX
+            && origin.getBlockY() >= minY && origin.getBlockY() <= maxY
+            && origin.getBlockZ() >= minZ && origin.getBlockZ() <= maxZ;
     }
 }
