@@ -130,7 +130,8 @@ public class Game {
         if (IntOption.COOLDOWN.value() > 0
             && BooleanOption.APPLY_KING_DELAY_BAR.value()
             && BooleanOption.SHOW_COOLDOWN_ON_REJOIN.value()
-            && plugin.getCooldownManager().getCooldown(user, Utils.kingCooldownName(arena.getId())) > 0) {
+            && plugin.getCooldownManager().getCooldown(user, Utils.kingCooldownName(arena.getId())) > 0
+        ) {
             Utils.applyActionBarCooldown(user, arena.getId(), IntOption.COOLDOWN.value());
         }
 
@@ -152,8 +153,13 @@ public class Game {
             quit ? PlayerLeaveArenaEvent.LeaveReason.DISCONNECT : PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT);
     }
 
-    public void removePlayer(Player player, boolean quit, boolean restoreImmediately, boolean saveStats,
-                             PlayerLeaveArenaEvent.LeaveReason reason) {
+    public void removePlayer(
+        Player player,
+        boolean quit,
+        boolean restoreImmediately,
+        boolean saveStats,
+        PlayerLeaveArenaEvent.LeaveReason reason
+    ) {
         if (player == null) return;
 
         plugin.getEventManager().playerLeaveArena(player, this, reason);
@@ -186,7 +192,6 @@ public class Game {
         if (saveStats) {
             plugin.getDatabase().saveData(user);
         }
-
     }
 
     public boolean becomeKing(Player player) {
@@ -201,8 +206,7 @@ public class Game {
         int cooldown = IntOption.COOLDOWN.value();
         String cooldownName = Utils.kingCooldownName(arena.getId());
         User user = plugin.getUserManager().getUser(player);
-        boolean shouldApplyCooldown = cooldown > 0
-            && (size > 1 || BooleanOption.COOLDOWN_WHEN_ALONE.value());
+        boolean shouldApplyCooldown = cooldown > 0 && (size > 1 || BooleanOption.COOLDOWN_WHEN_ALONE.value());
         String overridePermission = plugin.getConfig().getString("king-settings.cooldown-override-permission", "");
         boolean bypassCooldown = !overridePermission.isEmpty() && player.hasPermission(overridePermission);
 
