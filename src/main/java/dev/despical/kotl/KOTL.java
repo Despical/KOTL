@@ -47,6 +47,7 @@ import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.option.ConfigOptions;
 import dev.despical.kotl.papi.PlaceholderManager;
 import dev.despical.kotl.particle.OutlineManager;
+import dev.despical.kotl.rewards.RewardManager;
 import dev.despical.kotl.scoreboard.ScoreboardManager;
 import dev.despical.kotl.stats.offline.StatsCacheManager;
 import dev.despical.kotl.user.User;
@@ -98,6 +99,7 @@ public class KOTL extends JavaPlugin {
     private PlayingCommandPolicy playingCommandPolicy;
     private ArenaDataSaver arenaDataSaver;
     private PlayerInventoryManager playerInventoryManager;
+    private RewardManager rewardManager;
     private Metrics metrics;
 
     @Override
@@ -136,6 +138,7 @@ public class KOTL extends JavaPlugin {
         database = this.createDatabase();
         userManager = new UserManager(this);
         playerInventoryManager = new PlayerInventoryManager(this);
+        rewardManager = new RewardManager(this);
         statsCacheManager = new StatsCacheManager(this);
         cuboidSelector = new CuboidSelector(this);
         gameManager = new GameManager(this);
