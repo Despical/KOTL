@@ -71,6 +71,7 @@ public final class AdminCommands extends CommandCategory {
         plugin.registerItems();
         plugin.getEventManager().reload();
         plugin.getPlayingCommandPolicy().reload();
+        plugin.getRewardManager().reload();
         gameManager.reload();
         plugin.getOutlineManager().refreshAll(arenaRegistry.getArenas());
 
