@@ -22,6 +22,7 @@ import dev.despical.kotl.arena.Arena;
 import dev.despical.kotl.api.events.player.PlayerLeaveArenaEvent;
 import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.option.BooleanOption;
+import dev.despical.kotl.rewards.RewardType;
 import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
 import dev.despical.kotl.util.Schedulers;
@@ -34,6 +35,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.Vector;
+
+import java.util.Map;
 
 /**
  * @author Despical
@@ -108,6 +111,15 @@ public final class ArenaEvents extends ListenerAdapter {
         if (killerFound) {
             User killerUser = userManager.getUser(killer);
             killerUser.addStat(Statistics.KILL, 1);
+            plugin.getRewardManager().dispatch(
+                RewardType.PLAYER_KILL,
+                killer,
+                arena.getGame(),
+                Map.of(
+                    "%target%", deadPlayer.getName(),
+                    "%target-uuid%", deadPlayer.getUniqueId().toString()
+                )
+            );
         }
     }
 
@@ -126,5 +138,6 @@ public final class ArenaEvents extends ListenerAdapter {
 
         User user = userManager.getUser(player);
         user.addStat(Statistics.DEATH, 1);
+        plugin.getRewardManager().dispatch(RewardType.PLAYER_DEATH, player, arena.getGame());
     }
 }
