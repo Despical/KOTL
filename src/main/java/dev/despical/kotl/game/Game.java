@@ -25,6 +25,7 @@ import dev.despical.kotl.arena.options.ArenaKeys;
 import dev.despical.kotl.bossbar.BossBarManager;
 import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.option.IntOption;
+import dev.despical.kotl.rewards.RewardType;
 import dev.despical.kotl.scoreboard.ScoreboardManager;
 import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
@@ -46,6 +47,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -135,6 +137,7 @@ public class Game {
             Utils.applyActionBarCooldown(user, arena.getId(), IntOption.COOLDOWN.value());
         }
 
+        plugin.getRewardManager().dispatch(RewardType.GAME_JOIN, player, this);
         return true;
     }
 
@@ -164,9 +167,21 @@ public class Game {
 
         plugin.getEventManager().playerLeaveArena(player, this, reason);
 
-        User user = plugin.getUserManager().getUser(player);
+        if (reason == PlayerLeaveArenaEvent.LeaveReason.AREA_EXIT
+            || reason == PlayerLeaveArenaEvent.LeaveReason.KICK
+            || reason == PlayerLeaveArenaEvent.LeaveReason.DISCONNECT
+            ) {
+            plugin.getRewardManager().dispatch(
+                RewardType.GAME_QUIT,
+                player,
+                this,
+                Map.of("%reason%", reason.name())
+            );
+        }
 
+        User user = plugin.getUserManager().getUser(player);
         players.remove(player);
+
         if (BooleanOption.LEAVE_NOTIFY.value()) {
             broadcastMessage("game.player-left", Var.of("%player%", player.getName()));
         }
