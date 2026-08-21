@@ -254,6 +254,13 @@ public class Game {
         user.addArenaScore(arena.getId(), 1);
         updateTopKing(user.getName(), user.getArenaScore(arena.getId()));
 
+        plugin.getRewardManager().dispatch(
+            RewardType.BECOME_KING,
+            player,
+            this,
+            Map.of("%previous-king%", currentKing == null ? "NONE" : currentKing)
+        );
+
         Set<Player> targets = getPlayers();
         targets.remove(player);
 
