@@ -18,36 +18,49 @@
 #   %target-uuid%  : Killed player's UUID, or NONE                #
 #   %reason%       : Leave reason for game-quit, or NONE          #
 #                                                                 #
+# REWARD ACTIONS:                                                 #
+#   command              : Runs as console (default)              #
+#   p:command            : Runs as the rewarded player            #
+#   broadcast:message    : Sends message to players in the arena  #
+#   broadcast_server:msg : Sends message to everyone online       #
+#                                                                 #
+# All actions support the placeholders above. Broadcast messages  #
+# support hex colors, for example <#55FF55>; arena broadcasts     #
+# also support MiniMessage formatting.                            #
+#                                                                 #
 # =============================================================== #
 
 # Set to false to disable every reward trigger and command.
 enabled: true
 
-# Commands run as the console by default; use "p:" for player execution.
-# A leading slash is optional. Hex colors such as <#55FF55> are supported.
-
 # Runs after the player successfully joins a KOTL arena.
 game-join:
   # - 'say <#00E676>%player% joined KOTL arena %arena%!'
   # - 'p:me entered arena %arena%.'
+  # - 'broadcast:<#00E676>%player% joined the %arena% arena!'
 
 # Runs when the player leaves by crossing the game area, being kicked, or
 # disconnecting. Death and administrative game stops do not run this trigger.
 game-quit:
   # - 'say <#FFCA28>%player% left %arena% with %arena-score% arena points.'
+  # - 'broadcast:<#FFCA28>%player% left %arena% with %arena-score% arena points.'
 
 # Runs after a successful plate capture and all score statistics are updated.
 # %previous-king% is NONE when the arena did not have a king.
 become-king:
   # - 'eco give %player% 10'
   # - 'say <#FFD740>%player% became the king of %arena%!'
+  # - 'broadcast:<#FFD740>%player% is now the king of %arena%!'
+  # - 'broadcast_server:<#FFD740>%player% became king in %arena%!'
 
 # Runs after a player kill updates the killer's kill statistic.
 # %target% and %target-uuid% identify the killed player.
 player-kill:
   # - 'eco give %player% 5'
   # - 'p:msg Admin <#00E676>I defeated %target% in %arena%.'
+  # - 'broadcast:<#FF5252>%player% defeated %target% in %arena%!'
 
 # Runs after the player's death statistic is updated during respawn.
 player-death:
   # - 'effect give %player% resistance 3 0 true'
+  # - 'broadcast:<#FF5252>%player% died in %arena%.'
