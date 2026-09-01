@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Loads and executes commands for reward triggers.
+ * Loads and executes commands and broadcasts for reward triggers.
  *
  * @author Despical
  * <p>
@@ -113,6 +113,16 @@ public final class RewardManager {
             return;
         }
 
+        if (command.regionMatches(true, 0, "broadcast:", 0, 10)) {
+            broadcastToGame(command.substring(10).trim(), context);
+            return;
+        }
+
+        if (command.regionMatches(true, 0, "broadcast_server:", 0, 17)) {
+            broadcastToServer(command.substring(17).trim(), context);
+            return;
+        }
+
         boolean playerCommand = command.regionMatches(true, 0, "p:", 0, 2);
         if (playerCommand) {
             command = command.substring(2).trim();
@@ -131,6 +141,18 @@ public final class RewardManager {
             context.player().performCommand(command);
         } else {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+    }
+
+    private void broadcastToGame(String message, RewardContext context) {
+        if (!message.isBlank()) {
+            context.game().broadcastRawComponent(plugin.getChatManager().parseMessage(context.format(message)));
+        }
+    }
+
+    private void broadcastToServer(String message, RewardContext context) {
+        if (!message.isBlank()) {
+            Bukkit.broadcast(plugin.getChatManager().parseMessage(context.format(message)));
         }
     }
 

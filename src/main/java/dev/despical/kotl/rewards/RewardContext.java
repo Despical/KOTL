@@ -35,7 +35,7 @@ import java.util.Map;
  * <p>
  * Created at 21.08.2026
  */
-record RewardContext(Player player, Map<String, String> placeholders) {
+record RewardContext(Player player, Game game, Map<String, String> placeholders) {
 
     static RewardContext from(KOTL plugin, Player player, Game game, Map<String, String> triggerPlaceholders) {
         if (player == null || game == null) {
@@ -67,7 +67,7 @@ record RewardContext(Player player, Map<String, String> placeholders) {
         placeholders.put("%reason%", "NONE");
         placeholders.putAll(triggerPlaceholders);
 
-        return new RewardContext(player, Map.copyOf(placeholders));
+        return new RewardContext(player, game, Map.copyOf(placeholders));
     }
 
     String format(String command) {
