@@ -97,7 +97,6 @@ public enum ArenaScheduler {
 
         if (current != null && target != null && !current.equals(target)) {
             plugin.getArenaManager().leaveAttempt(user);
-            plugin.getArenaManager().joinAttempt(user, target);
         }
     }
 
