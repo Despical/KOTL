@@ -49,6 +49,10 @@ public class ArenaRegistry {
     }
 
     public Arena getArena(User user) {
+        if (user == null) {
+            return null;
+        }
+
         Player player = user.getPlayer();
         if (player == null) {
             return null;
