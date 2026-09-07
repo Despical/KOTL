@@ -178,7 +178,7 @@ public class GeneralEvents extends ListenerAdapter {
         plugin.getServer().getConsoleSender().sendMessage(formattedMessage);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player damagedPlayer)) {
             return;
@@ -194,7 +194,6 @@ public class GeneralEvents extends ListenerAdapter {
 
         boolean sameArena = damagedArena != null && damagedArena == attackingArena;
         if (sameArena) {
-            event.setCancelled(false);
             event.setDamage(0d);
             return;
         }
