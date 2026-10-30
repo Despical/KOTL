@@ -27,9 +27,16 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
 
 /**
  * @author Despical
@@ -39,6 +46,10 @@ import java.util.UUID;
 public final class FlatFileStorage extends Database {
 
     private final FileConfiguration config = ConfigUtils.getConfig(plugin, "data/stats");
+    private final File statsFile = new File(plugin.getDataFolder(), "data/stats.yml");
+    private final AtomicBoolean saveQueued = new AtomicBoolean();
+    private final AtomicLong saveSequence = new AtomicLong();
+    private long writtenSequence;
 
     @Override
     public void loadData(User user) {
@@ -66,7 +77,12 @@ public final class FlatFileStorage extends Database {
     @Override
     public void saveData(User user) {
         updateData(user);
-        saveConfig();
+
+        // Every save rewrites the whole stats file, so doing it on the main thread for each quit
+        // freezes servers with many stored players. Queue one async write; quits meanwhile share it.
+        if (saveQueued.compareAndSet(false, true)) {
+            plugin.getServer().getScheduler().runTaskLater(plugin, this::saveConfigAsync, 20L);
+        }
     }
 
     private void updateData(User user) {
@@ -154,6 +170,31 @@ public final class FlatFileStorage extends Database {
     }
 
     private void saveConfig() {
-        ConfigUtils.saveConfig(plugin, config, "data/stats");
+        saveQueued.set(false);
+        writeSnapshot(saveSequence.incrementAndGet(), config.saveToString());
+    }
+
+    private void saveConfigAsync() {
+        saveQueued.set(false);
+
+        long sequence = saveSequence.incrementAndGet();
+        String data = config.saveToString();
+
+        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> writeSnapshot(sequence, data));
+    }
+
+    private synchronized void writeSnapshot(long sequence, String data) {
+        // An older async snapshot must not overwrite a newer one, e.g. the sync save on shutdown
+        if (sequence < writtenSequence) {
+            return;
+        }
+
+        writtenSequence = sequence;
+
+        try {
+            Files.writeString(statsFile.toPath(), data, StandardCharsets.UTF_8);
+        } catch (IOException exception) {
+            plugin.getLogger().log(Level.WARNING, "Could not save data/stats.yml", exception);
+        }
     }
 }

@@ -101,7 +101,8 @@ public class Game {
             broadcastMessage("game.player-joined", Var.of("%player%", player.getName()));
         }
 
-        player.setHealth(20);
+        // Max health is not always 20 (e.g. a modified max health attribute), and setHealth throws above it.
+        player.setHealth(player.getMaxHealth());
 
         if (arena.getOption(ArenaKeys.ARENA_SCOREBOARD_ENABLED)) {
             Schedulers.runInTheNextTick(() -> getScoreboardManager().createScoreboard(player));

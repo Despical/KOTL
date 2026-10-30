@@ -42,8 +42,12 @@ public enum DatabaseType {
     }
 
     public static DatabaseType getByName(String name) {
+        if (name == null) {
+            return null;
+        }
+
         return Arrays.stream(values())
-            .filter(type -> type.names.contains(name))
+            .filter(type -> type.names.stream().anyMatch(name::equalsIgnoreCase))
             .findFirst()
             .orElse(null);
     }
