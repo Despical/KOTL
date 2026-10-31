@@ -29,7 +29,6 @@ import dev.despical.kotl.rewards.RewardType;
 import dev.despical.kotl.scoreboard.ScoreboardManager;
 import dev.despical.kotl.stats.Statistics;
 import dev.despical.kotl.user.User;
-import dev.despical.kotl.util.ItemUtils;
 import dev.despical.kotl.util.Schedulers;
 import dev.despical.kotl.util.Utils;
 import dev.despical.kotl.util.Var;
@@ -42,7 +41,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -91,7 +89,7 @@ public class Game {
             return false;
         }
 
-        if (!plugin.getPlayerInventoryManager().save(player)) {
+        if (BooleanOption.SAVE_INVENTORY.value() && !plugin.getPlayerInventoryManager().save(player)) {
             plugin.getLogger().severe("Could not save inventory for " + player.getName() + "; refusing to add them to the arena.");
             return false;
         }
@@ -107,7 +105,8 @@ public class Game {
             Schedulers.runInTheNextTick(() -> getScoreboardManager().createScoreboard(player));
         }
 
-        if (BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
+        // Without a snapshot there is nothing to give the items back from.
+        if (BooleanOption.SAVE_INVENTORY.value() && BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
             player.getInventory().clear();
         }
 
@@ -186,11 +185,7 @@ public class Game {
             broadcastMessage("game.player-left", Var.of("%player%", player.getName()));
         }
 
-        if (!quit && BooleanOption.CLEAR_INVENTORY_ON_JOIN.value()) {
-            player.getInventory().clear();
-        }
-
-        if (!quit) {
+        if (!quit && plugin.getPlayerInventoryManager().hasSnapshot(player)) {
             if (restoreImmediately) {
                 plugin.getPlayerInventoryManager().restore(player);
             } else {
@@ -288,10 +283,6 @@ public class Game {
     public void restoreAfterRespawn(User user) {
         Player player = user.getPlayer();
         if (player == null || !player.isOnline()) return;
-
-        PlayerInventory inventory = player.getInventory();
-        inventory.clear();
-        inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
         plugin.getPlayerInventoryManager().restore(player);
 

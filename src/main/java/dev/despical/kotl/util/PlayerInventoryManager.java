@@ -57,6 +57,10 @@ public final class PlayerInventoryManager {
         }
 
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
+
+        // loadInventory only sets the saved non-empty slots, so anything left in the other slots
+        // (e.g. an item swapped into the offhand) would be kept next to the restored copy.
+        player.getInventory().clear();
         InventorySerializer.loadInventory(plugin, player);
 
         return snapshotFile(player).delete();
