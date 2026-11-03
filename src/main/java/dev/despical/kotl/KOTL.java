@@ -179,6 +179,12 @@ public class KOTL extends JavaPlugin {
     private Database createDatabase() {
         String databaseType = getConfig().getString("database");
 
+        // Configs from before the "database" key only have the old boolean, keep honoring it
+        if (databaseType == null && getConfig().getBoolean("Database-Enabled")) {
+            getLogger().info("Using MySQL from the old Database-Enabled option. Set 'database: mysql' in config.yml instead.");
+            databaseType = "mysql";
+        }
+
         return switch (DatabaseType.getByName(databaseType)) {
             case FLAT_FILE -> new FlatFileStorage();
             case MYSQL -> new MySQLStorage();
