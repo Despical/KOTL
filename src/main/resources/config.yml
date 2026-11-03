@@ -70,6 +70,11 @@ player-settings:
   # Saved inventory contents are restored when the player leaves.
   clear-inventory-on-join: true
 
+  # If enabled, inventories are saved when players enter an arena and restored when they leave or respawn.
+  # If disabled, players keep their own inventory the whole time (and on death in the arena),
+  # and clear-inventory-on-join is ignored.
+  save-inventory: true
+
   # If enabled, active potion effects are cleared when players enter an arena.
   clear-effects-on-join: true
 

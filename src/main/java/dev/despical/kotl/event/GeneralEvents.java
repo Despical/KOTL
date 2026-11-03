@@ -24,7 +24,6 @@ import dev.despical.kotl.game.Game;
 import dev.despical.kotl.option.BooleanOption;
 import dev.despical.kotl.scoreboard.ScoreboardManager;
 import dev.despical.kotl.user.User;
-import dev.despical.kotl.util.ItemUtils;
 import dev.despical.kotl.util.Schedulers;
 import dev.despical.kotl.util.Var;
 import net.kyori.adventure.text.Component;
@@ -38,7 +37,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
 
@@ -68,10 +66,6 @@ public class GeneralEvents extends ListenerAdapter {
             Optional.ofNullable(arena)
                 .map(target -> target.getOption(ArenaKeys.END_LOCATION))
                 .ifPresent(player::teleport);
-
-            PlayerInventory inventory = player.getInventory();
-            inventory.clear();
-            inventory.setArmorContents(ItemUtils.EMPTY_ARMORS);
 
             plugin.getPlayerInventoryManager().restore(player);
         });
@@ -107,6 +101,11 @@ public class GeneralEvents extends ListenerAdapter {
     public void onDeath(PlayerDeathEvent event) {
         if (!arenaRegistry.isInArena(event.getEntity())) {
             return;
+        }
+
+        if (!plugin.getPlayerInventoryManager().hasSnapshot(event.getEntity())) {
+            event.setKeepInventory(true);
+            event.setKeepLevel(true);
         }
 
         event.getDrops().clear();
@@ -220,6 +219,8 @@ public class GeneralEvents extends ListenerAdapter {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
+        // Moving items only matters when the inventory is restored from a snapshot on leave.
+        if (!BooleanOption.SAVE_INVENTORY.value()) return;
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
         Arena arena = arenaRegistry.getArena(player);
@@ -267,6 +268,13 @@ public class GeneralEvents extends ListenerAdapter {
         if (arena == null) return;
 
         event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSwapHandItems(PlayerSwapHandItemsEvent event) {
+        if (BooleanOption.SAVE_INVENTORY.value() && arenaRegistry.isInArena(event.getPlayer())) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

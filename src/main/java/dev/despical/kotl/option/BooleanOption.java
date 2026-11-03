@@ -49,6 +49,7 @@ public enum BooleanOption implements ConfigOption<Boolean> {
     KING_PLATE_KNOCKBACK_ENABLED("king-settings.plate-knockback.enabled", true),
     LEAVE_NOTIFY("notify.leave", true),
     PICK_UP_ITEMS("pick-up-items", false),
+    SAVE_INVENTORY("player-settings.save-inventory", true),
     SCOREBOARD_ENABLED("scoreboard-enabled", true),
     SEPARATE_CHAT("chat-settings.separate-chat", true),
     SHOW_COOLDOWN_ON_REJOIN("king-settings.show-cooldown-on-rejoin", true),
