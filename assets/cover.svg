@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="480" viewBox="0 0 1280 480"><defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1b4d"/>
+      <stop offset="1" stop-color="#120c26"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe29a"/>
+      <stop offset="1" stop-color="#e8a93a"/>
+    </linearGradient>
+  
+<linearGradient id="night" x2="1" y2="1"><stop stop-color="#181430"/><stop offset=".55" stop-color="#211c3f"/><stop offset="1" stop-color="#14302f"/></linearGradient>
+<linearGradient id="gl" x2="1"><stop stop-color="#c48a3e"/><stop offset=".5" stop-color="#ffe2a0"/><stop offset="1" stop-color="#c79049"/></linearGradient>
+<pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#b9a8ff" stroke-opacity=".05"/></pattern></defs>
+<g font-family="Verdana,DejaVu Sans,sans-serif">
+<rect width="1280" height="480" rx="24" fill="url(#night)"/><rect width="1280" height="480" rx="24" fill="url(#grid)"/>
+<rect x="4" y="4" width="1272" height="472" rx="21" fill="none" stroke="url(#gl)" stroke-opacity=".7" stroke-width="2"/>
+<g transform="translate(110 112) scale(1.0)">
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <rect x="6" y="6" width="244" height="244" rx="50" fill="none" stroke="#ffd27a" stroke-opacity=".55" stroke-width="3"/>
+  <g fill="none" stroke="#c9b8ff" stroke-width="10" stroke-linecap="round">
+    <path d="M92 112 L72 226"/>
+    <path d="M164 112 L184 226"/>
+  </g>
+  <g stroke="#c9b8ff" stroke-width="9" stroke-linecap="round">
+    <path d="M88 140 H168"/>
+    <path d="M83 168 H173"/>
+    <path d="M78 196 H178"/>
+  </g>
+  <path d="M70 100 L58 48 L98 76 L128 34 L158 76 L198 48 L186 100 Z" fill="url(#gold)" stroke="#fff3cf" stroke-width="3" stroke-linejoin="round"/>
+  <rect x="70" y="100" width="116" height="12" rx="4" fill="#e8a93a"/>
+  <circle cx="58" cy="48" r="7" fill="#ffd27a"/>
+  <circle cx="128" cy="34" r="8" fill="#ffd27a"/>
+  <circle cx="198" cy="48" r="7" fill="#ffd27a"/>
+
+</g>
+<text x="420" y="196" fill="#fff3cf" font-size="76" font-weight="700">King of the Ladder</text>
+<rect x="422" y="216" width="520" height="4" rx="2" fill="url(#gl)"/>
+<text x="422" y="272" fill="#d9ceff" font-size="30">Climb the tower. Claim the crown.</text>
+<text x="422" y="316" fill="#d9ceff" font-size="30">Knock every challenger back down.</text>
+<text x="422" y="392" fill="#ffd27a" font-size="22" font-weight="700">GUI ARENA SETUP  ·  LEADERBOARDS  ·  REWARDS  ·  MYSQL  ·  API</text>
+</g></svg>
