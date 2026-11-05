@@ -10,7 +10,7 @@
   <a href="https://github.com/Despical/KOTL/actions/workflows/build.yml"><img src="https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/Java-25-007396.svg" alt="Java 25">
   <img src="https://img.shields.io/badge/Gradle-9.8.2-079ec0?logo=gradle&amp;logoColor=white" alt="Gradle 9.8.2">
-  <img src="https://img.shields.io/badge/Minecraft-26.2-62b47a" alt="Minecraft 26.2">
+  <img src="https://img.shields.io/badge/Minecraft-26.3-62b47a" alt="Minecraft 26.3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3 license"></a>
 </p>
 
