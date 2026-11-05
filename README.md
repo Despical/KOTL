@@ -1,12 +1,22 @@
-# King of the Ladder
+<p align="center">
+  <img src="assets/kotl-icon.svg" width="128" height="128" alt="King of the Ladder icon">
+</p>
 
-[![CI](https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg)](https://github.com/Despical/KOTL/actions/workflows/build.yml)
-![Java 25](https://img.shields.io/badge/Java-25-007396.svg)
-![Gradle](https://img.shields.io/badge/Gradle-9.7.1-079ec0?logo=gradle&logoColor=white)
-![Minecraft](https://img.shields.io/badge/Minecraft-26.2-62b47a)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+<h1 align="center">King of the Ladder</h1>
 
-King of the Ladder is a competitive Minecraft minigame where players climb to the top of a ladder tower, claim the crown, and knock challengers back down.
+<p align="center">A competitive minigame where players climb the ladder tower, claim the crown and knock challengers back down.</p>
+
+<p align="center">
+  <a href="https://github.com/Despical/KOTL/actions/workflows/build.yml"><img src="https://github.com/Despical/KOTL/actions/workflows/build.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/Java-25-007396.svg" alt="Java 25">
+  <img src="https://img.shields.io/badge/Gradle-9.8.2-079ec0?logo=gradle&amp;logoColor=white" alt="Gradle 9.8.2">
+  <img src="https://img.shields.io/badge/Minecraft-26.2-62b47a" alt="Minecraft 26.2">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GPLv3 license"></a>
+</p>
+
+<p align="center"><a href="https://spigotmc.org/resources/king-of-the-ladder.80686/">SpigotMC</a> · <a href="https://builtbybit.com/resources/king-of-the-ladder.51128/">BuiltByBit</a> · <a href="https://docs.despical.dev/kotl/">Documentation</a> · <a href="https://javadoc.despical.dev/kotl/">Javadocs</a> · <a href="#building">Building</a> · <a href="#api">API</a></p>
+
+---
 
 Players enter an arena built around a ladder and fight their way toward the king plate at the top. Reaching the plate makes a player the king and adds to their score, but holding the position becomes harder as other players climb up and try to take the crown. The goal is to become king as many times as possible while keeping opponents away from the top.
 
