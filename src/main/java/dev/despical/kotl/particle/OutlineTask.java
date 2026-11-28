@@ -44,7 +44,15 @@ public class OutlineTask extends BukkitRunnable {
         this.arena = arena;
         this.location = new Location(min.getWorld(), 0, 0, 0);
 
-        ParticleEffect particle = ParticleEffect.valueOf(plugin.getConfig().getString("arena-outlines.particle", "flame").toUpperCase());
+        String particleName = plugin.getConfig().getString("arena-outlines.particle", "flame");
+        ParticleEffect particle;
+
+        try {
+            particle = ParticleEffect.valueOf(particleName.trim().replaceFirst("(?i)^minecraft:", "").toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
+            plugin.getLogger().warning("Unknown arena-outlines.particle '%s', using flame instead.".formatted(particleName));
+            particle = ParticleEffect.FLAME;
+        }
 
         this.step = plugin.getConfig().getDouble("arena-outlines.step", .4);
         this.particleBuilder = new ParticleBuilder(particle);
