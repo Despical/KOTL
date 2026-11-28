@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/kotl-icon.svg" width="128" height="128" alt="King of the Ladder icon">
+  <img src="https://docs.despical.dev/images/kotl/icon.png" width="128" height="128" alt="King of the Ladder icon">
 </p>
 
 <h1 align="center">King of the Ladder</h1>
